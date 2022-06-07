@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "CommonJS",
+    "strict": false,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true, //
+    "importHelpers": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true, //
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "lib": ["ES6", "DOM"],
+    "incremental": true,
+    "moduleResolution": "node", //
+    "forceConsistentCasingInFileNames": true, //
+    "isolatedModules": true, //
+    
+    "rootDir": "./src",
+    "outDir": "./bin",
+    // "outFile": "./bin/index.js",
+    "composite": true,
+  },
+  "typedocOptions": {
+    "entryPoints": ["src/observables","src/viewObservables", "src/types", "src/actions" ],
+    "out": "docs",
+    "excludeInternal": true,
+  } 
+}

@@ -1,0 +1,1 @@
+{"version":3,"file":"appConfig.js","sourceRoot":"","sources":["../../src/observables/appConfig.ts"],"names":[],"mappings":";;;;AAAA,+BAAuC;AAGvC,0BAA0B;AAC1B,kFAAmD;AAEnD,gBAAgB;AACH,QAAA,UAAU,GAAkC,IAAI,sBAAe,CAAC,sBAAa,CAAC,CAAC;AACrF,MAAM,iBAAiB,GAAG,CAAC,SAAuB,EAAE,EAAE;IAC3D,kBAAU,CAAC,IAAI,iCAAM,sBAAa,GAAK,SAAS,EAAG,CAAC;AACtD,CAAC,CAAC;AAFW,QAAA,iBAAiB,qBAE5B"}

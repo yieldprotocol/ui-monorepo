@@ -1,0 +1,17 @@
+{
+  "name": "@yield-protocol/ui-redux",
+  "version": "1.0.0",
+  "description": "redux wrapper",
+  "main": "./bin/index.js",
+  "author": "bruce donovan",
+  "license": "MIT",
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.8.2",
+    "react-redux": "^8.0.2",
+    "@yield-protocol/ui-core": "1.0.0"
+  },
+  "scripts": {
+    "compile": "tsc -b",
+    "watch": " tsc -b -w"
+  }
+}

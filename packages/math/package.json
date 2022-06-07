@@ -1,0 +1,15 @@
+{
+  "name": "@yield-protocol/ui-math",
+  "version": "1.0.0",
+  "main": "./bin/index.js",
+  "author": "brucedonovan",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "compile": "tsc -b",
+    "watch": " tsc -b -w"
+  },
+  "dependencies": {
+
+  }
+}

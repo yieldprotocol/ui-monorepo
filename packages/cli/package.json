@@ -1,0 +1,18 @@
+{
+  "name": "@yield-protocol/ui-cli",
+  "version": "1.0.0",
+  "main": "./bin/index.js",
+  "author": "brucedonovan",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "compile": "tsc -b",
+    "watch": " tsc -b -w"
+  },
+  "dependencies": {
+    "@yield-protocol/ui-core": "1.0.0",
+    "@yield-protocol/ui-redux": "1.0.0",
+    "commander": "^9.2.0",
+    "rxjs": "^7.5.5"
+  }
+}
