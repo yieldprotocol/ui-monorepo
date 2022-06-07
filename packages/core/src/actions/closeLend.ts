@@ -16,7 +16,7 @@ export const closeLend = async (amount: string | undefined, series: ISeries) => 
 
   const txCode = getProcessCode(ActionCodes.CLOSE_POSITION, series.id);
   const base = assetMap.get(series.baseId)!;
-  const _amount = inputToTokenValue(amount, base.decimals );
+  const _amount = inputToTokenValue(amount, base.decimals);
 
   const { fyTokenAddress, poolAddress } = series;
   const ladleAddress = ladle.address;

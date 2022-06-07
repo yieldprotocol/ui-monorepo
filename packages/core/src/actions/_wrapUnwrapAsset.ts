@@ -18,11 +18,10 @@ export const wrapAsset = async (
   processCode: string,
   to?: string | undefined // optional send destination : DEFAULT is assetJoin address
 ): Promise<ICallData[]> => {
+  console.log(processCode); // TODO remove this
 
-  console.log( processCode) // TODO remove this 
-  
-  const provider = provider$.subscribe( );
-  const {chainId} = yieldProtocol$.value;
+  const provider = provider$.subscribe();
+  const { chainId } = yieldProtocol$.value;
 
   // const ladleAddress = yieldProtocol$.value.ladle.address;
   const assetMap = assetMap$.value;
@@ -39,23 +38,23 @@ export const wrapAsset = async (
 
   /* NB! IF a wraphandler exists, we assume that it is Yield uses the wrapped version of the token */
   if (wrapHandlerAddress && value.gt(ZERO_BN)) {
-    const wrapHandlerContract: Contract = new Contract(wrapHandlerAddress, wrapHandlerAbi, ); // TODO: SIGNER here
+    const wrapHandlerContract: Contract = new Contract(wrapHandlerAddress, wrapHandlerAbi); // TODO: SIGNER here
     const { assetContract } = assetMap.get(asset.id)!; // NOTE: -> this is NOT the proxyID
 
     console.log('Asset Contract to be signed for wrapping: ', assetContract.id);
 
     /* Gather all the required signatures - sign() processes them and returns them as ICallData types */
-      // const permitCallData: ICallData[] = await sign(
-      //   [
-      //     {
-      //       target: asset, // full target contract
-      //       spender: ladleAddress,
-      //       amount: value,
-      //       ignoreIf: false,
-      //     },
-      //   ],
-      //   processCode
-      // );
+    // const permitCallData: ICallData[] = await sign(
+    //   [
+    //     {
+    //       target: asset, // full target contract
+    //       spender: ladleAddress,
+    //       amount: value,
+    //       ignoreIf: false,
+    //     },
+    //   ],
+    //   processCode
+    // );
 
     return [
       // ...permitCallData,
@@ -82,7 +81,7 @@ export const wrapAsset = async (
  * */
 export const unwrapAsset = async (asset: IAsset, receiver: string): Promise<ICallData[]> => {
   // const provider = provider$.value ;
-  const {chainId} = yieldProtocol$.value;
+  const { chainId } = yieldProtocol$.value;
   const unwrapHandlerAddress = asset.unwrapHandlerAddresses?.has(chainId)
     ? asset.unwrapHandlerAddresses.get(chainId)
     : undefined;
@@ -92,7 +91,7 @@ export const unwrapAsset = async (asset: IAsset, receiver: string): Promise<ICal
   /* if there is an unwrap handler we assume the token needs to be unwrapped  ( unless the 'unwrapTokens' setting is false) */
   if (unwrapTokens && unwrapHandlerAddress) {
     console.log('Unwrapping tokens before return');
-    const unwraphandlerContract: Contract = new Contract(unwrapHandlerAddress, wrapHandlerAbi, ); // TODO: signer
+    const unwraphandlerContract: Contract = new Contract(unwrapHandlerAddress, wrapHandlerAbi); // TODO: signer
     return [
       {
         operation: LadleActions.Fn.ROUTE,

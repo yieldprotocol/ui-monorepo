@@ -23,7 +23,6 @@ export const borrow = async (
   vault?: IVault | string,
   getValuesFromNetwork: boolean = true // Get market values by network call or offline calc (default: NETWORK)
 ) => {
-
   /* Get the values from the observables/subjects */
   const ladleAddress = yieldProtocol$.value.ladle.address;
   const { moduleMap } = yieldProtocol$.value;
@@ -38,19 +37,19 @@ export const borrow = async (
   const { slippageTolerance } = userSettings$.value;
 
   /** Use the vault/vaultId provided else use blank vault TODO: Add a check for existing vault */
-  const getValidatedVault = (v:IVault | string | undefined ): IVault | undefined => {
+  const getValidatedVault = (v: IVault | string | undefined): IVault | undefined => {
     if (v) {
-      if ((v as IVault).id) return (v as IVault);
+      if ((v as IVault).id) return v as IVault;
       if (vaultMap.has(v as string)) return vaultMap.get(v as string);
-      sendMsg({ message: 'Vault ID provided, but not recognised.', type: MessageType.WARNING, origin: 'Borrow()' })
+      sendMsg({ message: 'Vault ID provided, but not recognised.', type: MessageType.WARNING, origin: 'Borrow()' });
       throw new Error('Vault ID provided, but was not recognised.');
-      // return undefined //TODO: should pass this instead of throwing error? 
-    } 
-    sendMsg({ message: 'No Vault ID provided. Creating a new Vault...', type: MessageType.INFO, origin: 'Borrow()' })
+      // return undefined //TODO: should pass this instead of throwing error?
+    }
+    sendMsg({ message: 'No Vault ID provided. Creating a new Vault...', type: MessageType.INFO, origin: 'Borrow()' });
     return undefined;
   };
 
-  const _vault = getValidatedVault(vault) 
+  const _vault = getValidatedVault(vault);
   const vaultId: string = _vault ? _vault.id : BLANK_VAULT;
 
   /* Set the series and ilk based on the vault that has been selected or if it's a new vault, get from the globally selected SeriesId */

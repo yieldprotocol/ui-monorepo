@@ -14,7 +14,7 @@ export const removeCollateral = async (amount: string, vault: IVault, unwrapOnRe
   const txCode = getProcessCode(ActionCodes.REMOVE_COLLATERAL, vault.id);
 
   /* Get the values from the observables/subjects */
-  const { ladle, chainId }  = yieldProtocol$.value;
+  const { ladle, chainId } = yieldProtocol$.value;
   const assetMap = assetMap$.value;
   const account = account$.value;
   const provider = provider$.value;
@@ -29,7 +29,7 @@ export const removeCollateral = async (amount: string, vault: IVault, unwrapOnRe
   const isEthCollateral = ETH_BASED_ASSETS.includes(ilk.proxyId);
 
   /* parse inputs to BigNumber in Wei */
-  const _amount = inputToTokenValue( amount, ilk.decimals );
+  const _amount = inputToTokenValue(amount, ilk.decimals);
 
   /* handle wrapped tokens:  */
   const unwrapCallData: ICallData[] = unwrapOnRemove ? await unwrapAsset(ilk, account!) : [];

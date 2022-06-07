@@ -49,8 +49,8 @@ export const removeLiquidity = async (
 
   const _base: IAsset = assetMap.get(series.baseId)!;
   const _strategy: any = selected.strategy!;
-  
-  const _amount = inputToTokenValue(amount, _base.decimals );
+
+  const _amount = inputToTokenValue(amount, _base.decimals);
 
   const [cachedBaseReserves, cachedFyTokenReserves] = await series.poolContract.getCache();
   const cachedRealReserves = cachedFyTokenReserves.sub(series.totalSupply);
@@ -87,7 +87,7 @@ export const removeLiquidity = async (
 
   const matchingVaultId: string | undefined = matchingVault?.id;
   const matchingVaultDebt: BigNumber = matchingVault?.accruedArt || ZERO_BN;
-  
+
   // Choose use use matching vault:
   const useMatchingVault: boolean = !!matchingVault && matchingVaultDebt.gt(ethers.constants.Zero);
   // const useMatchingVault: boolean = !!matchingVault && ( _fyTokenReceived.lte(matchingVaultDebt) || !tradeFyToken) ;
@@ -205,7 +205,7 @@ export const removeLiquidity = async (
       args: [ladleAddress, ladleAddress, minRatio, maxRatio] as RoutedActions.Args.BURN_POOL_TOKENS,
       fnName: RoutedActions.Fn.BURN_POOL_TOKENS,
       targetContract: series.poolContract,
-      ignoreIf: seriesIsMature|| fyTokenReceivedGreaterThanDebt || !useMatchingVault,
+      ignoreIf: seriesIsMature || fyTokenReceivedGreaterThanDebt || !useMatchingVault,
     },
     {
       operation: LadleActions.Fn.REPAY_FROM_LADLE,
@@ -269,7 +269,7 @@ export const removeLiquidity = async (
      *
      * */
 
-    /* OPTION 3. remove Liquidity and redeem  - AFTER MATURITY */  // FIRST CHOICE after maturity
+    /* OPTION 3. remove Liquidity and redeem  - AFTER MATURITY */ // FIRST CHOICE after maturity
 
     // (ladle.transferAction(pool, pool, lpTokensBurnt),  ^^^^ DONE ABOVE^^^^)
     // ladle.routeAction(pool, ['burn', [receiver, fyToken, minBaseReceived, minFYTokenReceived]),

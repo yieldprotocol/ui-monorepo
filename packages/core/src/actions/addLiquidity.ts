@@ -2,7 +2,15 @@ import { calculateSlippage, fyTokenForMint, calcPoolRatios, splitLiquidity } fro
 import { ethers, BigNumber } from 'ethers';
 import { sign, transact } from '../chainActions';
 import { ETH_BASED_ASSETS } from '../config/assets';
-import { account$, assetMap$, selected$, seriesMap$, strategyMap$, userSettings$, yieldProtocol$ } from '../observables';
+import {
+  account$,
+  assetMap$,
+  selected$,
+  seriesMap$,
+  strategyMap$,
+  userSettings$,
+  yieldProtocol$,
+} from '../observables';
 import {
   IStrategy,
   AddLiquidityType,
@@ -24,7 +32,6 @@ const addLiquidity = async (
   method: AddLiquidityType = AddLiquidityType.BUY,
   matchingVault: IVault | undefined = undefined
 ) => {
-
   /* Get the values from the observables/subjects */
   const ladleAddress = yieldProtocol$.value.ladle.address;
   const assetMap = assetMap$.value;
@@ -35,7 +42,7 @@ const addLiquidity = async (
 
   // /** use the strategy/ strategy address provided, else use selected Strategy TODO: Add a check for existing vault */
   // const _strategy: IStrategy | undefined = strategy && (strategy as IStrategy).id ? strategy : strategyMap.get(strategy as string);
-  // const strategyId: string = _strategy ? _strategy.id : ''; 
+  // const strategyId: string = _strategy ? _strategy.id : '';
 
   const account = account$.value;
   const { slippageTolerance } = userSettings$.value;
@@ -46,7 +53,7 @@ const addLiquidity = async (
   const txCode = getProcessCode(ActionCodes.ADD_LIQUIDITY, strategy.id);
 
   const matchingVaultId: string | undefined = matchingVault ? matchingVault.id : undefined;
-  const _amount = inputToTokenValue( amount, _base?.decimals)
+  const _amount = inputToTokenValue(amount, _base?.decimals);
 
   const _amountLessSlippage = calculateSlippage(_amount, slippageTolerance.toString(), true);
 
@@ -149,7 +156,7 @@ const addLiquidity = async (
     /**
      * Provide liquidity by BUYING :
      * */
-    
+
     {
       operation: LadleActions.Fn.TRANSFER,
       args: [_base.address, _series.poolAddress, _amount] as LadleActions.Args.TRANSFER,

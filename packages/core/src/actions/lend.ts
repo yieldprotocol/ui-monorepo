@@ -3,7 +3,7 @@ import { sellBase, calculateSlippage } from '@yield-protocol/ui-math';
 
 import { ETH_BASED_ASSETS } from '../config/assets';
 
-import { userSettings$, yieldProtocol$, assetMap$, account$  } from '../observables';
+import { userSettings$, yieldProtocol$, assetMap$, account$ } from '../observables';
 import { sign } from '../chainActions';
 
 import { ISeries, ActionCodes, ICallData, LadleActions, RoutedActions } from '../types';
@@ -23,7 +23,7 @@ export const lend = async (amount: string | undefined, series: ISeries) => {
 
   const base = assetMap.get(series.baseId)!;
 
-  const _amount = inputToTokenValue(amount, base?.decimals)
+  const _amount = inputToTokenValue(amount, base?.decimals);
 
   const _inputAsFyToken = sellBase(
     series.baseReserves,

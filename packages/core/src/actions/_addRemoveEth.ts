@@ -5,7 +5,6 @@ import { ICallData, LadleActions } from '../types';
 import { ModuleActions } from '../types/operations';
 import { ZERO_BN } from '../utils/constants';
 
-
 /**
  * @internal
  * */
@@ -41,7 +40,7 @@ export const addEth = (
   ];
 };
 
-// 
+//
 
 /**
  * @internal
