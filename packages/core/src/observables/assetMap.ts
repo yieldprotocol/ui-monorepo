@@ -12,13 +12,12 @@ import { truncateValue } from '../utils';
 import { MessageType, sendMsg } from './messages';
 
 /** @internal */
-export const assetMap$: BehaviorSubject<Map<string, IAsset>> = new BehaviorSubject(new Map([]));
-
+export const assetMap$ = new BehaviorSubject<Map<string, IAsset>>(new Map([]));
 
 /**
  * Unsubscribed Assetmap observable
  */
-export const assetMapø: Observable<Map<string, IAsset>> = assetMap$.pipe(share());
+export const assetMapø = assetMap$.pipe<Map<string, IAsset>>(share());
 
 /**
  * Update Assets function
@@ -41,15 +40,15 @@ export const updateAssets = async (assetList?: IAsset[], account?: string) => {
  * */
 yieldProtocol$
   .pipe(
-    filter((protocol )=> protocol.assetRootMap.size > 0 ),
+    filter((protocol) => protocol.assetRootMap.size > 0),
     withLatestFrom(provider$)
-    )
+  )
   .subscribe(async ([_protocol, _provider]: [IYieldProtocol, ethers.providers.BaseProvider]) => {
     /* 'Charge' all the assets (using the current provider) */
     const chargedList = Array.from(_protocol.assetRootMap.values()).map((a: IAssetRoot) => _chargeAsset(a, _provider));
     /* Update the assets with dynamic/user data */
     await updateAssets(chargedList);
-    sendMsg({message:'Strategies Loaded', type: MessageType.INTERNAL})
+    sendMsg({ message: 'Strategies Loaded', type: MessageType.INTERNAL });
   });
 // .unsubscribe() ??
 
@@ -94,7 +93,7 @@ const _chargeAsset = (asset: any, provider: ethers.providers.BaseProvider): IAss
   let getBalance: (acc: string, asset?: string) => Promise<BigNumber>;
   let getAllowance: (acc: string, spender: string, asset?: string) => Promise<BigNumber>;
 
-  // TODO: refactor this 
+  // TODO: refactor this
   switch (asset.tokenType) {
     case TokenType.ERC20_:
       assetContract = contracts.ERC20__factory.connect(asset.address, provider);
@@ -134,7 +133,7 @@ const _chargeAsset = (asset: any, provider: ethers.providers.BaseProvider): IAss
     getBalance,
     getAllowance,
   };
-}
+};
 
 const _updateAsset = async (asset: IAsset, account?: string | undefined): Promise<IAsset> => {
   /* Setup users asset info  */

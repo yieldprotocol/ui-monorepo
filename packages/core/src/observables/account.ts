@@ -1,16 +1,17 @@
-import { BehaviorSubject, Observable, share } from "rxjs";
+import { BehaviorSubject, Observable, share } from 'rxjs';
 
 /** @internal */
-export const account$: BehaviorSubject<string | undefined> = new BehaviorSubject(undefined as string | undefined); // TODO weird typing here ??
+export const account$ = new BehaviorSubject<string | undefined>(undefined);
 
 /**
  * The current user account address.
- * */
-export const accountø: Observable<string | undefined> = account$.pipe(share());
+ *
+ */
+export const accountø = account$.pipe(share());
 
 /**
- * @param newAccount 
+ * @param newAccount
  */
 export const updateAccount = (newAccount?: string) => {
-  account$.next(newAccount || undefined);
+  account$.next(newAccount);
 };
