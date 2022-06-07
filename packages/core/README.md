@@ -2,7 +2,7 @@
 
 The core package provides all the core [observables](https://rxjs.dev/guide/observable) and user functions: 
 
-### [Core Observables](https://silver-engine-e5b67cb1.pages.github.io/modules/observable.html)
+### [Core Observables](https://silver-engine-e5b67cb1.pages.github.io/modules/observables.html)
 Streams of *mission critical* protocol data.
 
 _Note: Every dApp implemetation should subscribe to these observables._
