@@ -3,7 +3,7 @@
 ## Included Packages ##
 - core
 - react
-- cli
+- (cli)
 - (history)
 
 ## Included Examples ##
