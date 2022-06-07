@@ -21,10 +21,12 @@ export declare const maximumCloseø: Observable<BigNumber>;
  * */
 export declare const lendValueAtMaturityø: Observable<BigNumber>;
 /**
+ * Get the base value of the existing lending position. i.e. the CURRENT base value of the fyTokens held by the user
  * @category Lend
  * */
 export declare const lendPostionValueø: Observable<BigNumber>;
 /**
+ * Maximum rollable base
  * @category Lend | Roll
  * */
 export declare const maximumLendRollø: Observable<BigNumber>;

@@ -16,7 +16,7 @@
   "scripts": {
     "test": "tsc -b && jest",
     "compile": "tsc -b",
-    "docs": "typedoc --json docs/docs.json",
+    "docs": "typedoc",
     "watch": "tsc -b -w",
     "minify": "uglifyjs --compress --mangle --output name.min.js -- ./bin/index.js",
     "type-contracts": "typechain --target=ethers-v5 './src/contracts/abis/*.json' --out-dir './src/contracts/'"

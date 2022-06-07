@@ -60,6 +60,7 @@ exports.lendValueAtMaturityø = (0, rxjs_1.combineLatest)([input_1.lendInputø, 
     return valueAtMaturity;
 }));
 /**
+ * Get the base value of the existing lending position. i.e. the CURRENT base value of the fyTokens held by the user
  * @category Lend
  * */
 exports.lendPostionValueø = observables_1.selectedø.pipe((0, rxjs_1.map)(({ series }) => {
@@ -72,6 +73,7 @@ exports.lendPostionValueø = observables_1.selectedø.pipe((0, rxjs_1.map)(({ se
     return value.lte(utils_1.ZERO_BN) ? utils_1.ZERO_BN : value;
 }));
 /**
+ * Maximum rollable base
  * @category Lend | Roll
  * */
 exports.maximumLendRollø = observables_1.selectedø.pipe(
