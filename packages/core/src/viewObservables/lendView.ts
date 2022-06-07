@@ -11,7 +11,7 @@ import { closeInputø, lendInputø } from './input';
  * Get the maximum lendable to the protocol based on selected series
  * @category Lend
  * */
-export const maximumLendø: Observable<BigNumber> = selectedø.pipe(
+export const maximumLendø = selectedø.pipe(
   map(({ series, base }) => {
     if (!!series) {
       /* checks the protocol limits  (max Base allowed in ) */
@@ -34,7 +34,7 @@ export const maximumLendø: Observable<BigNumber> = selectedø.pipe(
  * Flag indicating if lending is limited by the protocol based on both account blaance ( and possibly input? )
  * @category Lend
  * */
-export const isLendingLimitedø: Observable<boolean> = combineLatest([maximumLendø, selectedø]).pipe(
+export const isLendingLimitedø = combineLatest([maximumLendø, selectedø]).pipe(
   map(([maxLend, { base }]) => {
     // if (input.gt(maxLend)) return true;
     if (base?.balance.gt(maxLend)) return true;
@@ -46,7 +46,7 @@ export const isLendingLimitedø: Observable<boolean> = combineLatest([maximumLen
  * Maximum allowable when closing a lending posiiton
  * @category Lend | Close
  * */
-export const maximumCloseø: Observable<BigNumber> = selectedø.pipe(
+export const maximumCloseø = selectedø.pipe(
   map(({ series }) => {
     /* If the series is mature, simply sned back the fyToken value (always closable) */
     if (series && series.isMature()) return series.fyTokenBalance!;
@@ -74,7 +74,7 @@ export const maximumCloseø: Observable<BigNumber> = selectedø.pipe(
  * Predicted Base Value at maturity based on the [[input]] provided.
  * @category Lend
  * */
-export const lendValueAtMaturityø: Observable<BigNumber> = combineLatest([lendInputø, selectedø]).pipe(
+export const lendValueAtMaturityø = combineLatest([lendInputø, selectedø]).pipe(
   map(([input, { series }]) => {
     const { baseReserves, fyTokenReserves } = series!;
     const valueAtMaturity = sellBase(
@@ -94,7 +94,7 @@ export const lendValueAtMaturityø: Observable<BigNumber> = combineLatest([lendI
  * Get the base value of the existing lending position. i.e. the CURRENT base value of the fyTokens held by the user
  * @category Lend
  * */
-export const lendPostionValueø: Observable<BigNumber> = selectedø.pipe(
+export const lendPostionValueø = selectedø.pipe(
   map(({ series }) => {
     /* If the series is mature, simply send back the fyToken value (always closable) */
     if (series && series.isMature()) return series.fyTokenBalance!;
@@ -117,7 +117,7 @@ export const lendPostionValueø: Observable<BigNumber> = selectedø.pipe(
  * Maximum rollable base
  * @category Lend | Roll
  * */
-export const maximumLendRollø: Observable<BigNumber> = selectedø.pipe(
+export const maximumLendRollø = selectedø.pipe(
   /* only do calcs if there is a future series selected */
   filter((selected) => !!selected.futureSeries && !!selected.series),
   map(({ futureSeries, series }) => {
