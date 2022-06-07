@@ -14,7 +14,6 @@ export const buildAssetMap = async (
   chainId: number,
   browserCaching: boolean
 ): Promise<Map<string, IAssetRoot>> => {
-
   /* Check for cached assets or start with empty array */
   const assetList: any[] = (browserCaching && getBrowserCachedValue(`${chainId}_assets`)) || [];
   /* Check the last time the assets were fetched */
@@ -28,15 +27,15 @@ export const buildAssetMap = async (
     cauldron.queryFilter(assetAddedFilter, lastAssetUpdate, 'latest'),
     ladle.queryFilter(joinAddedfilter, lastAssetUpdate, 'latest'),
   ]);
-  
+
   /* Create a map from the joinAdded event data or hardcoded join data if available */
-  const joinMap = new Map( joinAddedEvents.map((e: JoinAddedEvent) => e.args ) ); // event values);
+  const joinMap = new Map(joinAddedEvents.map((e: JoinAddedEvent) => e.args)); // event values);
   /* Create a array from the assetAdded event data or hardcoded asset data if available */
-  const assetsAdded = assetAddedEvents.map( (evnt: AssetAddedEvent) => evnt );
+  const assetsAdded = assetAddedEvents.map((evnt: AssetAddedEvent) => evnt);
 
   try {
     await Promise.all(
-      assetsAdded.map(async (_evnt: any ) => {
+      assetsAdded.map(async (_evnt: any) => {
         const { assetId: id, asset: address } = _evnt.args;
         /* Get the basic hardcoded token info, if tooken is known, else get 'UNKNOWN' token */
         const assetInfo = ASSETS.has(id) ? (ASSETS.get(id) as IAssetInfo) : (ASSETS.get(UNKNOWN) as IAssetInfo);
@@ -52,12 +51,10 @@ export const buildAssetMap = async (
           try {
             [name, symbol, decimals] = await Promise.all([contract.name(), contract.symbol(), contract.decimals()]);
           } catch (e) {
-
             console.warn(
               address,
               ': ERC20 contract auto-validation unsuccessfull. Please manually ensure symbol and decimals are correct.'
             );
-
           }
         }
 
@@ -104,7 +101,7 @@ export const buildAssetMap = async (
 
           /* asset creation info */
           createdBlock: _evnt.blockNumber,
-          createdTxHash: _evnt.transactionHash
+          createdTxHash: _evnt.transactionHash,
         };
 
         /* push the new asset to the List */
@@ -119,13 +116,13 @@ export const buildAssetMap = async (
   setBrowserCachedValue(`${chainId}_assets`, assetList);
   // Set the 'last checked' block
   const _blockNum = await provider.getBlockNumber(); // TODO: maybe lose this
-  setBrowserCachedValue(`${chainId}_lastAssetUpdate`, _blockNum );
+  setBrowserCachedValue(`${chainId}_lastAssetUpdate`, _blockNum);
 
   /* create a map from the 'charged' asset list */
   // const assetRootMap: Map<string, IAssetRoot> = new Map(assetList.map((a: any) => [a.id, _chargeAsset(a, provider)]));
   const assetRootMap: Map<string, IAssetRoot> = new Map(assetList.map((a: any) => [a.id, a]));
 
-  console.log(`Yield Protocol ASSET data updated [Block: ${_blockNum }]`);
+  console.log(`Yield Protocol ASSET data updated [Block: ${_blockNum}]`);
 
   return assetRootMap;
 };
