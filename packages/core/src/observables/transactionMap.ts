@@ -2,10 +2,10 @@ import { Observable, BehaviorSubject, share } from 'rxjs';
 import { IYieldProcess, ProcessStage } from '../types';
 
 /** @internal */
-export const transactionMap$: BehaviorSubject<Map<string, IYieldProcess>> = new BehaviorSubject(new Map([]));
-export const transactionMapø: Observable<Map<string, IYieldProcess>> = transactionMap$.pipe(share());
+export const transactionMap$ = new BehaviorSubject<Map<string, IYieldProcess>>(new Map([]));
+export const transactionMapø = transactionMap$.pipe<Map<string, IYieldProcess>>(share());
 
-/* Update a process  */ 
+/* Update a process  */
 export const updateProcess = (process: IYieldProcess) => {
   const prevProcess = transactionMap$.value.get(process.processCode);
   const updatedProcess = transactionMap$.value.set(process.processCode, { ...prevProcess, ...process });

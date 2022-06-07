@@ -40,9 +40,7 @@ yieldProtocol$
   )
   .subscribe(async ([_protocol, _provider]) => {
     /* 'Charge' all the series (using the current provider) */
-    const chargedList = Array.from(_protocol.seriesRootMap.values()).map((s: ISeriesRoot) =>
-      _chargeSeries(s, _provider)
-    );
+    const chargedList = Array.from(_protocol.seriesRootMap.values()).map((s) => _chargeSeries(s, _provider));
     /* Update the assets with dynamic/user data */
     await updateSeries(chargedList);
     sendMsg({ message: 'Series Loaded', type: MessageType.INTERNAL });

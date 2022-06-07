@@ -1,8 +1,7 @@
 import { format } from 'date-fns';
 import { ethers, BigNumber } from 'ethers';
 import { bytesToBytes32, calcAccruedDebt } from '@yield-protocol/ui-math';
-import { BehaviorSubject, Observable, share, combineLatest} from 'rxjs';
-
+import { BehaviorSubject, Observable, share, combineLatest } from 'rxjs';
 
 import { buildVaultMap } from '../initProtocol/buildVaultMap';
 import { ISeries, IVault, IVaultRoot, IYieldProtocol, MessageType } from '../types';
@@ -13,8 +12,8 @@ import { yieldProtocol$ } from './yieldProtocol';
 import { sendMsg } from './messages';
 
 /** @internal */
-export const vaultMap$: BehaviorSubject<Map<string, IVault>> = new BehaviorSubject(new Map([]));
-export const vaultMapø: Observable<Map<string, IVault>> = vaultMap$.pipe(share());
+export const vaultMap$ = new BehaviorSubject<Map<string, IVault>>(new Map([]));
+export const vaultMapø = vaultMap$.pipe<Map<string, IVault>>(share());
 
 /* Update vaults function */
 export const updateVaults = async (vaultList?: IVault[] | IVaultRoot[]) => {
@@ -26,7 +25,7 @@ export const updateVaults = async (vaultList?: IVault[] | IVaultRoot[]) => {
 };
 
 /**
- *  Observe yieldProtocol$ and account$ changes TOGETHER >  Initiate or Empty VAULT Map 
+ *  Observe yieldProtocol$ and account$ changes TOGETHER >  Initiate or Empty VAULT Map
  * */
 combineLatest([account$, yieldProtocol$])
   // .pipe( filter( (a, yp) => a !== undefined ))
@@ -35,12 +34,12 @@ combineLatest([account$, yieldProtocol$])
       console.log('Getting vaults for: ', _account);
       const vaultMap = await buildVaultMap(_protocol, _account);
       await updateVaults(Array.from(vaultMap.values()));
-      sendMsg({message:'Vaults Loaded', type: MessageType.INTERNAL})
+      sendMsg({ message: 'Vaults Loaded', type: MessageType.INTERNAL });
     } else {
       /* if account changes and is undefined > EMPTY the vaultMap */
       vaultMap$.next(new Map([]));
     }
-});
+  });
 
 const _updateVault = async (
   vault: IVault | IVaultRoot,
@@ -58,7 +57,7 @@ const _updateVault = async (
   ] = await Promise.all([
     cauldron.balances(vault.id),
     cauldron.vaults(vault.id),
-    witch.queryFilter(witch.filters.Auctioned(bytesToBytes32(vault.id, 12), null), 'earliest','latest'),
+    witch.queryFilter(witch.filters.Auctioned(bytesToBytes32(vault.id, 12), null), 'earliest', 'latest'),
   ]);
 
   /* Check for liquidation event date */
