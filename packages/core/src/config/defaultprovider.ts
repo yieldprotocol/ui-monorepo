@@ -11,7 +11,9 @@ import { ethers } from 'ethers';
 // const defaultProvider: ethers.providers.BaseProvider = new ethers.providers.JsonRpcProvider('https://mainnet.infura.io/v3/2af222f674024a0f84b5f0aad0da72a2')
 // const defaultProvider : ethers.providers.BaseProvider = new ethers.providers.WebSocketProvider('wss://mainnet.infura.io/ws/v3/de43fd0c912d4bdc94712ab4b37613ea');
 
-const defaultProvider : ethers.providers.BaseProvider = new ethers.providers.WebSocketProvider('wss://goerli.infura.io/ws/v3/de43fd0c912d4bdc94712ab4b37613ea');
+const defaultProvider: ethers.providers.BaseProvider = new ethers.providers.WebSocketProvider(
+  'wss://goerli.infura.io/ws/v3/de43fd0c912d4bdc94712ab4b37613ea'
+);
 
 // const defaultProvider: ethers.providers.BaseProvider = new ethers.providers.AlchemyProvider(
 //   42161,

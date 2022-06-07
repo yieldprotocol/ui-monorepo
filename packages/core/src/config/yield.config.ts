@@ -27,5 +27,4 @@ export default {
   mockUser: false, // mock the user
   diagnostics: true, // show app diagnostics in the console
   forceTransactions: false, // don't throw an error if the transaction is likely to fail.
-
 } as IYieldConfig;

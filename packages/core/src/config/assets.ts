@@ -24,7 +24,7 @@ export const FUSDC2209 = '0x313700000000';
 export const CVX3CRV = '0x313900000000';
 
 /* logic lists */
-export const CONVEX_BASED_ASSETS = [ CVX3CRV ];
+export const CONVEX_BASED_ASSETS = [CVX3CRV];
 export const ETH_BASED_ASSETS = ['WETH', 'ETH', WETH];
 export const IGNORE_BASE_ASSETS = ['ENS'];
 

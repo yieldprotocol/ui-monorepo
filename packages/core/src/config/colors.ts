@@ -11,5 +11,3 @@ export const arbitrumColorMap = new Map([
   ['SUMMER', ['#01ABC9', '#FDB904', '#333333']],
   ['FALL', ['#F1C40F', '#D8572A', '#ffffff']],
 ]);
-
-

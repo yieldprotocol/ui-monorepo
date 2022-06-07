@@ -1,6 +1,6 @@
 import * as assets from './assets';
 
-interface IOracleAddress{
+interface IOracleAddress {
   // ethereum
   CompoundMultiOracle?: string;
   ChainlinkMultiOracle?: string;

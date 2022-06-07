@@ -1,4 +1,4 @@
-import { ARBITRUM, ETHEREUM } from "../utils/constants";
+import { ARBITRUM, ETHEREUM } from '../utils/constants';
 
 interface YieldBaseAddresses {
   Cauldron: string;
@@ -12,11 +12,11 @@ interface YieldModuleAddresses {
   ConvexLadleModule?: string; // optional
 }
 
-export const supportedChains = new Map <string, number[]> ([
-  [ ETHEREUM, [ 1, 4, 5 ]  ],
-  [ ARBITRUM, [ 42161 ] ],
+export const supportedChains = new Map<string, number[]>([
+  [ETHEREUM, [1, 4, 5]],
+  [ARBITRUM, [42161]],
   // [ 'OPTIMISM', [] ],
-])
+]);
 
 export const baseAddresses = new Map<number, YieldBaseAddresses>([
   [
