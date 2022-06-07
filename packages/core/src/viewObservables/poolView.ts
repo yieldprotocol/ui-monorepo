@@ -28,7 +28,7 @@ import { addLiquidityInputø, removeLiquidityInputø } from './input';
 /**
  * @category Pool | Add Liquidity
  */
-export const maximumAddLiquidityø: Observable<BigNumber> = selectedø.pipe(
+export const maximumAddLiquidityø = selectedø.pipe(
   map(({ base }) => {
     return base?.balance || ZERO_BN;
   })
@@ -38,15 +38,11 @@ export const maximumAddLiquidityø: Observable<BigNumber> = selectedø.pipe(
  * Check if it is possible to use BUY and POOL strategy is available for a particular INPUT and selected strategy.
  * @category Pool | Add Liquidity
  */
-export const isBuyAndPoolPossibleø: Observable<boolean> = combineLatest([
-  addLiquidityInputø,
-  selectedø,
-  userSettingsø,
-]).pipe(
+export const isBuyAndPoolPossible = combineLatest([addLiquidityInputø, selectedø, userSettingsø]).pipe(
   /* don't emit if input is zero or there isn't a strategy selected */
   filter(([input, selected]) => input.gt(ZERO_BN) && !!selected.strategy?.currentSeries),
   map(([input, { strategy }, { slippageTolerance }]) => {
-    const strategySeries = strategy?.currentSeries!; // filtered, we can safetly assume current series defined.
+    const strategySeries = strategy?.currentSeries!; // filtered, we can safely assume current series is defined.
 
     let _fyTokenToBuy = ZERO_BN;
     const _maxFyTokenOut = maxFyTokenOut(
@@ -87,15 +83,13 @@ export const isBuyAndPoolPossibleø: Observable<boolean> = combineLatest([
  *
  * @category Pool | Remove Liquidity
  */
-export const maximumRemoveLiquidityø: Observable<BigNumber> = selectedø.pipe(
-  map(({ strategy }) => strategy?.accountBalance || ZERO_BN)
-);
+export const maximumRemoveLiquidityø = selectedø.pipe(map(({ strategy }) => strategy?.accountBalance || ZERO_BN));
 
 /**
  * Get the vault ( if adding liquidity was done using the 'Borrow and Pool' method. )
  * @category Pool | Remove Liquidity
  */
-export const borrowAndPoolVaultø: Observable<IVault | undefined> = combineLatest([selectedø, vaultMapø]).pipe(
+export const borrowAndPoolVaultø = combineLatest([selectedø, vaultMapø]).pipe(
   filter(([selected]) => !!selected.strategy),
   map(([{ strategy }, vaultMap]) => {
     const { baseId, currentSeriesId } = strategy as IStrategy;
@@ -117,11 +111,7 @@ export const borrowAndPoolVaultø: Observable<IVault | undefined> = combineLates
  * @category Pool | Remove Liquidity
  *
  * */
-export const partialRemoveReturnø: Observable<BigNumber[]> = combineLatest([
-  removeLiquidityInputø,
-  selectedø,
-  borrowAndPoolVaultø,
-]).pipe(
+export const partialRemoveReturnø = combineLatest([removeLiquidityInputø, selectedø, borrowAndPoolVaultø]).pipe(
   filter(([input, selected]) => input.gt(ZERO_BN) && !!selected.strategy?.currentSeries),
   map(([input, { strategy }, borrowAndPoolVault]) => {
     const strategySeries = strategy?.currentSeries; // NOTE: filtered, we can safetly assume strategy currentSeries is defined.
@@ -227,7 +217,7 @@ export const partialRemoveReturnø: Observable<BigNumber[]> = combineLatest([
  * Check if not all liquidity can be removed, and a partial removal is required.
  * @category Pool | Remove Liquidity
  */
-export const isPartialRemoveRequiredø: Observable<boolean> = partialRemoveReturnø.pipe(
+export const isPartialRemoveRequiredø = partialRemoveReturnø.pipe(
   map((removals) => {
     //diagnostics &&  console.log( 'partial removal is required')
     const areFyTokensReturned = removals[1].gt(ZERO_BN);
