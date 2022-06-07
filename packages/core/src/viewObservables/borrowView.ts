@@ -10,12 +10,12 @@ import { borrowInputø, repayInputø } from './input';
 import { appConfig$ } from '../observables/appConfig';
 const diagnostics = appConfig$.value.diagnostics;
 
-/** 
- * @module 
+/**
+ * @module
  * Borrow Helpers
-  */
+ */
 
-/** 
+/**
  * Maximum amount of debt allowed by the protocol for a particular [[IAssetPair | Asset Pair]]
  * @category Borrow
  * */
@@ -27,10 +27,10 @@ export const maxDebtLimitø: Observable<BigNumber> = combineLatest([selectedø, 
     const assetPair = selected.base && selected.ilk && pairMap.get(getAssetPairId(selected.base.id, selected.ilk.id));
     console.log('Max: ', assetPair?.maxDebtLimit.toString());
     return assetPair?.maxDebtLimit || ZERO_BN;
-  }),
+  })
 );
 
-/** 
+/**
  * Minimum amount of debt allowed by the protocol ( Dust level ) for a particular [[IAssetPair | Asset Pair]]
  * @category Borrow
  * */
@@ -45,9 +45,8 @@ export const minDebtLimitø: Observable<BigNumber> = combineLatest([selectedø, 
   })
 );
 
-
-/** 
- * Check if the user can borrow the specified [[borrowInputø | amount]] based on current protocol baseReserves 
+/**
+ * Check if the user can borrow the specified [[borrowInputø | amount]] based on current protocol baseReserves
  * @category Borrow
  * */
 export const isBorrowPossibleø: Observable<boolean> = combineLatest([borrowInputø, selectedø]).pipe(
@@ -64,7 +63,7 @@ export const isBorrowPossibleø: Observable<boolean> = combineLatest([borrowInpu
 );
 
 /**
- *  TODO:  Check if the particular borrow [[borrowInputø | amount]] is limited by the liquidity in the protocol 
+ *  TODO:  Check if the particular borrow [[borrowInputø | amount]] is limited by the liquidity in the protocol
  * @category Borrow
  * */
 export const isBorrowLimitedø: Observable<boolean> = combineLatest([borrowInputø, selectedø]).pipe(
@@ -74,8 +73,8 @@ export const isBorrowLimitedø: Observable<boolean> = combineLatest([borrowInput
   })
 );
 
-/** 
- * Check if the user can roll the selected vault to a new [future] series 
+/**
+ * Check if the user can roll the selected vault to a new [future] series
  * @category Borrow | Roll
  * */
 export const isRollVaultPossibleø: Observable<boolean> = combineLatest([selectedø, assetPairMapø]).pipe(
@@ -112,12 +111,7 @@ export const isRollVaultPossibleø: Observable<boolean> = combineLatest([selecte
       futureSeries!.decimals
     );
 
-    const _minCollat = calculateMinCollateral(
-      pairInfo!.pairPrice,
-      newDebt,
-      pairInfo!.minRatio.toString(),
-      undefined
-    );
+    const _minCollat = calculateMinCollateral(pairInfo!.pairPrice, newDebt, pairInfo!.minRatio.toString(), undefined);
 
     // conditions for allowing rolling
     const areRollConditionsMet =
@@ -128,9 +122,9 @@ export const isRollVaultPossibleø: Observable<boolean> = combineLatest([selecte
   })
 );
 
-/**  TODO:   
- * 
- * Check if the particular repay [input] is limited by the liquidity in the protocol 
+/**  TODO:
+ *
+ * Check if the particular repay [input] is limited by the liquidity in the protocol
  * @category Borrow | Repay
  *  */
 export const isRepayLimitedø: Observable<boolean> = combineLatest([repayInputø, selectedø]).pipe(
@@ -140,7 +134,7 @@ export const isRepayLimitedø: Observable<boolean> = combineLatest([repayInputø
   })
 );
 
-/** 
+/**
  * Calculate how much debt will be remaining after successful repayment of [input]
  * @category Borrow | Repay
  */
@@ -150,15 +144,15 @@ export const debtAfterRepayø: Observable<BigNumber> = combineLatest([repayInput
   )
 );
 
-/** 
+/**
  * Calculate the expected NEW debt @ maturity ( any exisiting debt + new debt )  previously 'borrowEstimate'
  * @category Borrow
  * */
 export const debtEstimateø: Observable<BigNumber> = combineLatest([borrowInputø, selectedø]).pipe(
   // simple filter out input changes that are zero, and make sure there is a series selected.
-  filter(([borrowInput, selected]) => borrowInput.gt(ZERO_BN) && !!selected.series ),
+  filter(([borrowInput, selected]) => borrowInput.gt(ZERO_BN) && !!selected.series),
   map(([input, selected]) => {
-    const { series, vault }  = selected!
+    const { series, vault } = selected!;
     const estimate = buyBase(
       series!.baseReserves,
       series!.fyTokenReserves,
@@ -168,13 +162,11 @@ export const debtEstimateø: Observable<BigNumber> = combineLatest([borrowInput�
       series!.g1,
       series!.decimals
     );
-    return vault && vault.accruedArt.gt(ZERO_BN) 
-      ? vault.accruedArt.add(estimate)
-      : estimate
+    return vault && vault.accruedArt.gt(ZERO_BN) ? vault.accruedArt.add(estimate) : estimate;
   })
 );
 
-/** 
+/**
  * Maximum amount that can be repayed (limited by: either the max tokens owned OR max debt available )
  * @category Borrow | Repay
  * */
@@ -193,8 +185,8 @@ export const maximumRepayø: Observable<BigNumber> = combineLatest([selectedø])
   })
 );
 
-/** 
- * Min amount that can be repayed (limited by assetPair dustlevels/minDebt ) 
+/**
+ * Min amount that can be repayed (limited by assetPair dustlevels/minDebt )
  * @category Borrow | Repay
  * */
 export const minimumRepayø: Observable<BigNumber> = combineLatest([selectedø, minDebtLimitø, maximumRepayø]).pipe(
@@ -207,8 +199,8 @@ export const minimumRepayø: Observable<BigNumber> = combineLatest([selectedø, 
 );
 
 /** TODO:  Maximum amount that can be rolled  ( NOTE : Not NB for now because we are only rolling entire [vaults] )
-* @category Borrow | Repay
-*/
+ * @category Borrow | Repay
+ */
 export const maximumRollø: Observable<BigNumber> = selectedø.pipe(
   /* only do calcs if there is a future series selected */
   map(() => {

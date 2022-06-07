@@ -49,7 +49,7 @@ export const isLendingLimitedø: Observable<boolean> = combineLatest([maximumLen
 export const maximumCloseø: Observable<BigNumber> = selectedø.pipe(
   map(({ series }) => {
     /* If the series is mature, simply sned back the fyToken value (always closable) */
-    if (series && series.isMature() ) return series.fyTokenBalance!;
+    if (series && series.isMature()) return series.fyTokenBalance!;
     /* else process */
     const value = sellFYToken(
       series!.baseReserves,
@@ -97,7 +97,7 @@ export const lendValueAtMaturityø: Observable<BigNumber> = combineLatest([lendI
 export const lendPostionValueø: Observable<BigNumber> = selectedø.pipe(
   map(({ series }) => {
     /* If the series is mature, simply send back the fyToken value (always closable) */
-    if (series && series.isMature() ) return series.fyTokenBalance!;
+    if (series && series.isMature()) return series.fyTokenBalance!;
     /* else process */
     const value = sellFYToken(
       series!.baseReserves,
@@ -141,7 +141,7 @@ export const maximumLendRollø: Observable<BigNumber> = selectedø.pipe(
           series!.g2,
           series!.decimals
         );
-        
+
     /* if the protocol is limited return the max rollab as the max base in */
     if (_maxBaseIn.lte(_fyTokenValue)) return _maxBaseIn;
     /* else */

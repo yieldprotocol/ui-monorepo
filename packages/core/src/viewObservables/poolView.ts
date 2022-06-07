@@ -188,7 +188,7 @@ export const partialRemoveReturnø: Observable<BigNumber[]> = combineLatest([
         //   );
         return [_value, ZERO_BN];
       }
-    } else {      
+    } else {
       /**
        * SCENARIO > No matching vault exists : USE REMOVE OPTION 4
        * */
@@ -223,15 +223,14 @@ export const partialRemoveReturnø: Observable<BigNumber[]> = combineLatest([
   })
 );
 
-  /**
+/**
  * Check if not all liquidity can be removed, and a partial removal is required.
  * @category Pool | Remove Liquidity
  */
-   export const isPartialRemoveRequiredø: Observable<boolean> = partialRemoveReturnø.pipe(
-    map((removals) =>   {
-      //diagnostics &&  console.log( 'partial removal is required')
-      const areFyTokensReturned = removals[1].gt(ZERO_BN)
-      return areFyTokensReturned;
-    })
-  );
-
+export const isPartialRemoveRequiredø: Observable<boolean> = partialRemoveReturnø.pipe(
+  map((removals) => {
+    //diagnostics &&  console.log( 'partial removal is required')
+    const areFyTokensReturned = removals[1].gt(ZERO_BN);
+    return areFyTokensReturned;
+  })
+);

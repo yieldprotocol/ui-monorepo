@@ -82,7 +82,7 @@ const _totalCollateralWithInputø: Observable<BigNumber[]> = combineLatest([coll
     if (ilk) {
       const existingCollateral_ = vault?.ink || ZERO_BN; // if no vault simply return zero.
       const existingCollateralAsWei = decimalNToDecimal18(existingCollateral_, ilk.decimals);
-      
+
       /* TODO: there is a weird bug if inputting before selecting ilk. */
       const newCollateralAsWei = decimalNToDecimal18(collInput, ilk.decimals);
       const totalCollateral = existingCollateralAsWei.add(newCollateralAsWei);
@@ -128,7 +128,7 @@ export const collateralizationRatioø: Observable<number | undefined> = combineL
  * @category Borrow | Collateral
  * */
 export const collateralizationPercentø: Observable<number> = collateralizationRatioø.pipe(
-  map((ratio) => ratioToPercent(ratio!,2)),
+  map((ratio) => ratioToPercent(ratio!, 2)),
   share()
 );
 

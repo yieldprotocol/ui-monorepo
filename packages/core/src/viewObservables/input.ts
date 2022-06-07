@@ -1,4 +1,4 @@
-/** 
+/**
  * @module
  * Inputs
  */
@@ -21,9 +21,9 @@ const _getValueFromInputEvent = (event: Observable<InputEvent>): Observable<stri
 
 /** @internal */
 export const borrowInput$: BehaviorSubject<string> = new BehaviorSubject('0');
-/** 
- * Borrow input 
- * @category Input 
+/**
+ * Borrow input
+ * @category Input
  * */
 export const borrowInputø: Observable<BigNumber> = borrowInput$.pipe(
   map((inp: string | undefined) => {
@@ -35,11 +35,10 @@ export const borrowInputø: Observable<BigNumber> = borrowInput$.pipe(
 /* Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
 export const updateBorrowInput = (input: string) => borrowInput$.next(input);
 
-
 /** @internal */
 export const collateralInput$: BehaviorSubject<string> = new BehaviorSubject('0');
-/** 
- * Collateral input 
+/**
+ * Collateral input
  * @category Input
  * */
 export const collateralInputø: Observable<BigNumber> = collateralInput$.pipe(
@@ -48,16 +47,15 @@ export const collateralInputø: Observable<BigNumber> = collateralInput$.pipe(
     return ZERO_BN;
   }),
   share()
-); 
+);
 
 /* Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
 export const updateCollateralInput = (input: string) => collateralInput$.next(input);
 
-
 /** @internal */
 export const repayInput$: Subject<string> = new Subject();
-/** 
- * Repayment input 
+/**
+ * Repayment input
  * @category Input
  * */
 export const repayInputø: Observable<BigNumber> = repayInput$.pipe(
@@ -71,44 +69,42 @@ export const repayInputø: Observable<BigNumber> = repayInput$.pipe(
 export const updateRepayInput = (input: string) => repayInput$.next(input);
 
 /** @internal */
- export const lendInput$: BehaviorSubject<string> = new BehaviorSubject('');
- /** 
-  * Lending input 
-  * @category Input
+export const lendInput$: BehaviorSubject<string> = new BehaviorSubject('');
+/**
+ * Lending input
+ * @category Input
  */
- export const lendInputø: Observable<BigNumber> = lendInput$.pipe(
-   map((inp: string | undefined) => {
-     if (inp) return inputToTokenValue(inp, selected$.value.base?.decimals!);
-     return ZERO_BN;
-   })
- );
- /* Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
- export const updateLendInput = (input: string) => lendInput$.next(input);
-
+export const lendInputø: Observable<BigNumber> = lendInput$.pipe(
+  map((inp: string | undefined) => {
+    if (inp) return inputToTokenValue(inp, selected$.value.base?.decimals!);
+    return ZERO_BN;
+  })
+);
+/* Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
+export const updateLendInput = (input: string) => lendInput$.next(input);
 
 /** @internal */
-  export const closeInput$: BehaviorSubject<string> = new BehaviorSubject('');
-   /** 
-    * Close Position input 
-    * @category Input
-   */
-  export const closeInputø: Observable<BigNumber> = closeInput$.pipe(
-    map((inp: string | undefined) => {
-      if (inp) return inputToTokenValue(inp, selected$.value.base?.decimals!);
-      return ZERO_BN;
-    })
-  );
-  /* Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
-  export const updateCloseInput = (input: string) => closeInput$.next(input);
-
+export const closeInput$: BehaviorSubject<string> = new BehaviorSubject('');
+/**
+ * Close Position input
+ * @category Input
+ */
+export const closeInputø: Observable<BigNumber> = closeInput$.pipe(
+  map((inp: string | undefined) => {
+    if (inp) return inputToTokenValue(inp, selected$.value.base?.decimals!);
+    return ZERO_BN;
+  })
+);
+/* Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
+export const updateCloseInput = (input: string) => closeInput$.next(input);
 
 /** @internal */
 export const addLiquidityInput$: BehaviorSubject<string> = new BehaviorSubject('');
- /** 
-  * Add liquidity input
-  * @category Input
-  *  */
-export const addLiquidityInputø: Observable<BigNumber> =addLiquidityInput$.pipe(
+/**
+ * Add liquidity input
+ * @category Input
+ *  */
+export const addLiquidityInputø: Observable<BigNumber> = addLiquidityInput$.pipe(
   map((inp: string | undefined) => {
     if (inp) return inputToTokenValue(inp, selected$.value.strategy?.decimals!);
     return ZERO_BN;
@@ -118,17 +114,17 @@ export const addLiquidityInputø: Observable<BigNumber> =addLiquidityInput$.pipe
 export const updateAddLiqInput = (input: string) => addLiquidityInput$.next(input);
 
 /** @internal */
- export const removeLiquidityInput$: BehaviorSubject<string> = new BehaviorSubject('');
-/** 
- * Remove liquidity input 
+export const removeLiquidityInput$: BehaviorSubject<string> = new BehaviorSubject('');
+/**
+ * Remove liquidity input
  * @category Input
  * */
- export const removeLiquidityInputø: Observable<BigNumber> = removeLiquidityInput$.pipe(
-   map((inp: string | undefined) => {
-     if (inp) return inputToTokenValue(inp, selected$.value.strategy?.decimals!);
-     return ZERO_BN;
-   })
- );
+export const removeLiquidityInputø: Observable<BigNumber> = removeLiquidityInput$.pipe(
+  map((inp: string | undefined) => {
+    if (inp) return inputToTokenValue(inp, selected$.value.strategy?.decimals!);
+    return ZERO_BN;
+  })
+);
 /** Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
 export const updateRemoveLiqInput = (input: string) => removeLiquidityInput$.next(input);
 
@@ -139,40 +135,39 @@ export const updateRemoveLiqInput = (input: string) => removeLiquidityInput$.nex
  * */
 
 if (typeof window !== 'undefined') {
-/* If there is a borrowInput html element, subcribe to that event */
-const _borrowInputElement: HTMLInputElement = document.getElementById('borrowInput') as HTMLInputElement;
-_borrowInputElement &&
-  fromEvent<InputEvent>(_borrowInputElement, 'input')
-    .pipe(_getValueFromInputEvent)
-    .subscribe((val: string) => {
-      borrowInput$.next(val);
-    });
+  /* If there is a borrowInput html element, subcribe to that event */
+  const _borrowInputElement: HTMLInputElement = document.getElementById('borrowInput') as HTMLInputElement;
+  _borrowInputElement &&
+    fromEvent<InputEvent>(_borrowInputElement, 'input')
+      .pipe(_getValueFromInputEvent)
+      .subscribe((val: string) => {
+        borrowInput$.next(val);
+      });
 
-/* If there is a borrowInput html element, subcribe to that event */
-const _repayInputElement: HTMLInputElement = document.getElementById('repayInput') as HTMLInputElement;
-_repayInputElement &&
-  fromEvent<InputEvent>(_repayInputElement, 'input')
-    .pipe(_getValueFromInputEvent)
-    .subscribe((val: string) => {
-      repayInput$.next(val);
-    });
+  /* If there is a borrowInput html element, subcribe to that event */
+  const _repayInputElement: HTMLInputElement = document.getElementById('repayInput') as HTMLInputElement;
+  _repayInputElement &&
+    fromEvent<InputEvent>(_repayInputElement, 'input')
+      .pipe(_getValueFromInputEvent)
+      .subscribe((val: string) => {
+        repayInput$.next(val);
+      });
 
-/* If there is a borrowInput html element, subcribe to that event */
-const _poolInputElement: HTMLInputElement = document.getElementById('poolInput') as HTMLInputElement;
-_poolInputElement &&
-  fromEvent<InputEvent>(_poolInputElement, 'input')
-    .pipe(_getValueFromInputEvent)
-    .subscribe((val: string) => {
-      addLiquidityInput$.next(val);
-    });
- 
-/* If there is a collateralInput html element, subcribe to that event */
-const _collateralInputElement: HTMLInputElement = document.getElementById('collateralInput') as HTMLInputElement;
-_collateralInputElement &&
-  fromEvent<InputEvent>(_collateralInputElement, 'input')
-    .pipe(_getValueFromInputEvent)
-    .subscribe((val: string) => {
-      collateralInput$.next(val);
-    });
+  /* If there is a borrowInput html element, subcribe to that event */
+  const _poolInputElement: HTMLInputElement = document.getElementById('poolInput') as HTMLInputElement;
+  _poolInputElement &&
+    fromEvent<InputEvent>(_poolInputElement, 'input')
+      .pipe(_getValueFromInputEvent)
+      .subscribe((val: string) => {
+        addLiquidityInput$.next(val);
+      });
 
+  /* If there is a collateralInput html element, subcribe to that event */
+  const _collateralInputElement: HTMLInputElement = document.getElementById('collateralInput') as HTMLInputElement;
+  _collateralInputElement &&
+    fromEvent<InputEvent>(_collateralInputElement, 'input')
+      .pipe(_getValueFromInputEvent)
+      .subscribe((val: string) => {
+        collateralInput$.next(val);
+      });
 }
