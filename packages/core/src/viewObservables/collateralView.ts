@@ -21,7 +21,7 @@ const diagnostics = appConfig$.value.diagnostics;
  * INTERNAL:
  * Keeps the track of the current selectedPair
  * */
-const _selectedPairø: Observable<IAssetPair | undefined> = combineLatest([selectedø, assetPairMapø]).pipe(
+const _selectedPairø = combineLatest([selectedø, assetPairMapø]).pipe(
   map(([selected, pairMap]) => {
     if (!!selected.ilk && !!selected.base) {
       const _pairId = getAssetPairId(selected.base.id, selected.ilk.id);
@@ -40,7 +40,7 @@ const _selectedPairø: Observable<IAssetPair | undefined> = combineLatest([selec
  *
  * RETURNS [ totalDebt, exisitingDebt ] in decimals18
  */
-const _totalDebtWithInputø: Observable<BigNumber[]> = combineLatest([borrowInputø, selectedø]).pipe(
+const _totalDebtWithInputø = combineLatest([borrowInputø, selectedø]).pipe(
   // filter(([, selected]) => !!selected.series),
   map(([debtInput, selected]) => {
     const { vault, series } = selected; // we can safetly assume 'series' is defined - not vault.
@@ -76,7 +76,7 @@ const _totalDebtWithInputø: Observable<BigNumber[]> = combineLatest([borrowInpu
  *
  * RETURNS [ totalCollateral, exisitingCollateral] in decimals18 for comparative calcs
  */
-const _totalCollateralWithInputø: Observable<BigNumber[]> = combineLatest([collateralInputø, selectedø]).pipe(
+const _totalCollateralWithInputø = combineLatest([collateralInputø, selectedø]).pipe(
   map(([collInput, selected]) => {
     const { vault, ilk } = selected;
     if (ilk) {
@@ -99,7 +99,7 @@ const _totalCollateralWithInputø: Observable<BigNumber[]> = combineLatest([coll
  * The PREDICTED collateralization ratio based on the current INPUT expressed as a ratio
  * @category Borrow | Collateral
  * */
-export const collateralizationRatioø: Observable<number | undefined> = combineLatest([
+export const collateralizationRatioø = combineLatest([
   _totalDebtWithInputø,
   _totalCollateralWithInputø,
   _selectedPairø,
@@ -127,7 +127,7 @@ export const collateralizationRatioø: Observable<number | undefined> = combineL
  * ( for display )
  * @category Borrow | Collateral
  * */
-export const collateralizationPercentø: Observable<number> = collateralizationRatioø.pipe(
+export const collateralizationPercentø = collateralizationRatioø.pipe(
   map((ratio) => ratioToPercent(ratio!, 2)),
   share()
 );
@@ -139,7 +139,7 @@ export const isUnhealthyCollateralizationø: Observable<boolean> = combineLatest
  * The minimum protocol allowed collaterallisation level expressed as a ratio
  * @category Borrow | Collateral
  * */
-export const minCollateralRatioø: Observable<number> = _selectedPairø.pipe(
+export const minCollateralRatioø = _selectedPairø.pipe(
   /* Only emit if assetPair exists */
   filter((assetPair) => !!assetPair),
   /* filtered: we can safelty assume assetPair is defined in here. */
@@ -152,7 +152,7 @@ export const minCollateralRatioø: Observable<number> = _selectedPairø.pipe(
  * ( for display )
  * @category Borrow | Collateral
  * */
-export const minCollateralPercentø: Observable<number> = minCollateralRatioø.pipe(
+export const minCollateralPercentø = minCollateralRatioø.pipe(
   map((ratio) => ratioToPercent(ratio, 2)),
   share()
 );
@@ -161,7 +161,7 @@ export const minCollateralPercentø: Observable<number> = minCollateralRatioø.p
  * The minimum collateral required to meet the minimum protocol-allowed levels
  * @category Borrow | Collateral
  * */
-export const minCollateralRequiredø: Observable<BigNumber> = combineLatest([
+export const minCollateralRequiredø = combineLatest([
   _selectedPairø,
   minCollateralRatioø,
   _totalDebtWithInputø,
@@ -179,7 +179,7 @@ export const minCollateralRequiredø: Observable<BigNumber> = combineLatest([
  *  TODO: would this be better specified with the assetPair data? - possibly
  * @category Borrow | Collateral
  * */
-export const minimumSafeRatioø: Observable<number> = minCollateralRatioø.pipe(
+export const minimumSafeRatioø = minCollateralRatioø.pipe(
   map((minRatio: number) => {
     if (minRatio >= 1.5) return minRatio + 1; // eg. 150% -> 250%
     if (minRatio < 1.5 && minRatio >= 1.4) return minRatio + 0.65; // eg. 140% -> 200%
@@ -193,7 +193,7 @@ export const minimumSafeRatioø: Observable<number> = minCollateralRatioø.pipe(
  *  Minimum Safe collatearalization level expressed as a percentage
  * @category Borrow | Collateral
  * */
-export const minimumSafePercentø: Observable<number> = minimumSafeRatioø.pipe(
+export const minimumSafePercentø = minimumSafeRatioø.pipe(
   map((ratio) => ratioToPercent(ratio, 2)),
   share()
 );
@@ -202,7 +202,7 @@ export const minimumSafePercentø: Observable<number> = minimumSafeRatioø.pipe(
  * Maximum collateral based selected Ilk and users balance
  * @category Borrow | Collateral
  */
-export const maxCollateralø: Observable<BigNumber | undefined> = selectedø.pipe(
+export const maxCollateralø = selectedø.pipe(
   map((selectedø) => (selectedø.ilk ? selectedø.ilk.balance : undefined)),
   share()
 );
@@ -212,7 +212,7 @@ export const maxCollateralø: Observable<BigNumber | undefined> = selectedø.pip
  * without leaving the vault undercollateralised
  * @category Borrow | Collateral
  * */
-export const maxRemovableCollateralø: Observable<BigNumber | undefined> = combineLatest([
+export const maxRemovableCollateralø = combineLatest([
   selectedø,
   _totalCollateralWithInputø,
   minCollateralRequiredø,
@@ -231,7 +231,7 @@ export const maxRemovableCollateralø: Observable<BigNumber | undefined> = combi
  * Price at which the vault will get liquidated
  * @category Borrow | Collateral
  * */
-export const vaultLiquidatePriceø: Observable<String> = combineLatest([selectedø, _selectedPairø]).pipe(
+export const vaultLiquidatePriceø = combineLatest([selectedø, _selectedPairø]).pipe(
   filter(([selected, pairInfo]) => !!selected.vault && !!pairInfo),
   map(([selected, pairInfo]) =>
     calcLiquidationPrice(selected.vault!.ink_, selected.vault!.accruedArt_, pairInfo!.minRatio)
@@ -244,7 +244,7 @@ export const vaultLiquidatePriceø: Observable<String> = combineLatest([selected
  * based on collateral and debt INPUT ( and existing colalteral and debt)
  * @category Borrow | Collateral
  * */
-export const estimatedLiquidatePriceø: Observable<String> = combineLatest([
+export const estimatedLiquidatePriceø = combineLatest([
   _totalDebtWithInputø,
   _totalCollateralWithInputø,
   _selectedPairø,
