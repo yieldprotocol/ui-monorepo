@@ -1,7 +1,7 @@
 # yield protocol UI monorepo #
 
 ## Included Packages ##
-- core
+- core  [Documentation](https://silver-engine-e5b67cb1.pages.github.io/)
 - react
 - (cli)
 - (history)
