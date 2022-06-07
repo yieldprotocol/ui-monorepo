@@ -1,4 +1,15 @@
-import { Observable, BehaviorSubject, share, map, tap, takeWhile, takeUntil, distinctUntilChanged, takeLast, take } from 'rxjs';
+import {
+  Observable,
+  BehaviorSubject,
+  share,
+  map,
+  tap,
+  takeWhile,
+  takeUntil,
+  distinctUntilChanged,
+  takeLast,
+  take,
+} from 'rxjs';
 import { IAsset, ISelected, ISeries, IStrategy, IVault } from '../types';
 import { appConfig$ } from './appConfig';
 import { assetMap$ } from './assetMap';
@@ -17,37 +28,37 @@ const initSelection: ISelected = {
 };
 
 /** @internal */
-export const selected$: BehaviorSubject<ISelected> = new BehaviorSubject(initSelection);
-export const selectedø: Observable<ISelected> = selected$.pipe(share());
+export const selected$ = new BehaviorSubject<ISelected>(initSelection);
+export const selectedø = selected$.pipe<ISelected>(share());
 
 /**
- * Set first of array as default series(base gets automatically selected based on the series choice, 
+ * Set first of array as default series(base gets automatically selected based on the series choice,
  * this automatically selects the base)
- *  TODO: consider handling this better. 
+ *  TODO: consider handling this better.
  * */
 seriesMapø
-  .pipe( take(2) ) // take after the first series has been added. 
+  .pipe(take(2)) // take after the first series has been added.
   .subscribe(([sMap]) => sMap && selectSeries(appConfig$.value.defaultSeriesId || [...sMap][0]));
 
 /**
- * 
+ *
  *  Functions to selecting elements
- * 
+ *
  */
-
 export const selectBase = (asset?: IAsset | string) => {
   const base = (asset as IAsset)?.id ? (asset as IAsset) : assetMap$.value.get(asset as string);
   /* only switch the base if the asset in question is a valid YIELD base */
-  if (!base?.isYieldBase) { sendMsg({message:'Not a Yield base asset'}) }
-  else {
-      /* Update the selected$ */
-  selected$.next({ 
-    ...selected$.value, 
-    base: base || null,
-    /* if a base is selected, then auto select the first 'mature' series that has that base */
-    series: [...seriesMap$.value.values() ].find((s: ISeries) => s.baseId === base!.id && !s.isMature()  ) || null
-  });
-  console.log(base ? `Selected Base: ${base.id}` : 'Bases unselected');
+  if (!base?.isYieldBase) {
+    sendMsg({ message: 'Not a Yield base asset' });
+  } else {
+    /* Update the selected$ */
+    selected$.next({
+      ...selected$.value,
+      base: base || null,
+      /* if a base is selected, then auto select the first 'mature' series that has that base */
+      series: [...seriesMap$.value.values()].find((s: ISeries) => s.baseId === base!.id && !s.isMature()) || null,
+    });
+    console.log(base ? `Selected Base: ${base.id}` : 'Bases unselected');
   }
 };
 
@@ -76,14 +87,13 @@ export const selectSeries = (series?: ISeries | string, futureSeries: boolean = 
   /* log to console */
   console.log(
     _series
-      ? `Selected ${futureSeries? '':'future '} Series: ${_series.id}`
-      : `${futureSeries? '': 'future '} Series unselected`
+      ? `Selected ${futureSeries ? '' : 'future '} Series: ${_series.id}`
+      : `${futureSeries ? '' : 'future '} Series unselected`
   );
 };
 
 export const selectVault = (vault?: IVault | string) => {
-  
-  if ( vault ) {
+  if (vault) {
     const _vault = (vault as IVault).id ? (vault as IVault) : vaultMap$.value.get(vault as string);
     /* Update the selected$ */
     selected$.next({
@@ -96,24 +106,23 @@ export const selectVault = (vault?: IVault | string) => {
     });
   }
   /* if undefined sent in, deselect vault only */
-  !vault && selected$.next({ ...selected$.value, vault: null});
-  console.log(vault ? `Selected Vault: ${ (vault as IVault)?.id || vault}` : 'Vault Unselected');
-
+  !vault && selected$.next({ ...selected$.value, vault: null });
+  console.log(vault ? `Selected Vault: ${(vault as IVault)?.id || vault}` : 'Vault Unselected');
 };
 
 export const selectStrategy = (strategy?: IStrategy | string) => {
-  if ( strategy ) {
-  const _strategy = (strategy as IStrategy).id ? (strategy as IStrategy) : strategyMap$.value.get(strategy as string);
-  /* Update the selected$ */
-  selected$.next({
-    ...selected$.value,
-    strategy: _strategy || null,
-    /* Ensure the other releant components match the vault */
-    base: assetMap$.value.get(_strategy!.baseId) || selected$.value.base,
-    // series: seriesMap$.value.get(_strategy!.currentSeries!.id) || selected$.value.series,
-  });
-}
+  if (strategy) {
+    const _strategy = (strategy as IStrategy).id ? (strategy as IStrategy) : strategyMap$.value.get(strategy as string);
+    /* Update the selected$ */
+    selected$.next({
+      ...selected$.value,
+      strategy: _strategy || null,
+      /* Ensure the other releant components match the vault */
+      base: assetMap$.value.get(_strategy!.baseId) || selected$.value.base,
+      // series: seriesMap$.value.get(_strategy!.currentSeries!.id) || selected$.value.series,
+    });
+  }
   /* if undefined sent in, deselect vault only */
-  !strategy && selected$.next({ ...selected$.value, vault: null});
-  console.log(strategy ? `Selected Strategy: ${ (strategy as IStrategy)?.id || strategy}` : 'Vaults unselected');
+  !strategy && selected$.next({ ...selected$.value, vault: null });
+  console.log(strategy ? `Selected Strategy: ${(strategy as IStrategy)?.id || strategy}` : 'Vaults unselected');
 };

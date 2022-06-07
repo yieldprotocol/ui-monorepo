@@ -1,6 +1,13 @@
 import { BehaviorSubject, filter, Observable, share, withLatestFrom } from 'rxjs';
 import { ethers } from 'ethers';
-import { sellFYToken, secondsToFrom, calculateAPR, floorDecimal, mulDecimal, divDecimal } from '@yield-protocol/ui-math';
+import {
+  sellFYToken,
+  secondsToFrom,
+  calculateAPR,
+  floorDecimal,
+  mulDecimal,
+  divDecimal,
+} from '@yield-protocol/ui-math';
 
 import * as contracts from '../contracts';
 
@@ -13,32 +20,32 @@ import { ETH_BASED_ASSETS } from '../config/assets';
 import { sendMsg } from './messages';
 
 /** @internal */
-export const seriesMap$: BehaviorSubject<Map<string, ISeries>> = new BehaviorSubject(new Map([]));
-export const seriesMapø: Observable<Map<string, ISeries>> = seriesMap$.pipe(share());
+export const seriesMap$ = new BehaviorSubject<Map<string, ISeries>>(new Map([]));
+export const seriesMapø = seriesMap$.pipe<Map<string, ISeries>>(share());
 
 /* Update series function */
 export const updateSeries = async (seriesList?: ISeries[], account?: string) => {
-    const list = seriesList?.length ? seriesList : Array.from(seriesMap$.value.values());
-    list.map(async (series: ISeries) => {
-      const seriesUpdate = await _updateSeries(series, account);
-      seriesMap$.next(new Map(seriesMap$.value.set(series.id, seriesUpdate))); // note: new Map to enforce ref update
-    });
+  const list = seriesList?.length ? seriesList : Array.from(seriesMap$.value.values());
+  list.map(async (series: ISeries) => {
+    const seriesUpdate = await _updateSeries(series, account);
+    seriesMap$.next(new Map(seriesMap$.value.set(series.id, seriesUpdate))); // note: new Map to enforce ref update
+  });
 };
 
 /* Observe YieldProtocol$ changes, an update map accordingly */
 yieldProtocol$
   .pipe(
-    filter((protocol )=> protocol.seriesRootMap.size > 0 ),
+    filter((protocol) => protocol.seriesRootMap.size > 0),
     withLatestFrom(provider$)
-    )
-  .subscribe(async ([_protocol, _provider]: [IYieldProtocol, ethers.providers.BaseProvider]) => {
+  )
+  .subscribe(async ([_protocol, _provider]) => {
     /* 'Charge' all the series (using the current provider) */
     const chargedList = Array.from(_protocol.seriesRootMap.values()).map((s: ISeriesRoot) =>
       _chargeSeries(s, _provider)
     );
     /* Update the assets with dynamic/user data */
     await updateSeries(chargedList);
-    sendMsg({message:'Series Loaded', type: MessageType.INTERNAL})
+    sendMsg({ message: 'Series Loaded', type: MessageType.INTERNAL });
   });
 
 /* Observe provider$ changes, and update map accordingly ('charge assets/series' with live contracts & listeners ) */
