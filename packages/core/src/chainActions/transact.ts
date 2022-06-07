@@ -35,13 +35,8 @@ const _totalBatchValue = (calls: ICallData[]) =>
     return sum.add(call.overrides?.value ? BigNumber.from(call?.overrides?.value) : ZERO_BN);
   }, ZERO_BN);
 
-/* Handle the transaction error */ 
-const _handleTxError = () => {
-
-
-
-
-};
+/* Handle the transaction error */
+const _handleTxError = () => {};
 
 /* handle case when user or wallet rejects the tx (before submission) */
 const _handleTxRejection = (err: any, processCode: string) => {
@@ -93,7 +88,6 @@ export const transact = async (calls: ICallData[], processCode: string) => {
   let res: any;
 
   try {
-
     /* first try the transaction with connected wallet and catch any 'pre-chain'/'pre-tx' errors */
     try {
       tx = await ladleContract.batch(encodedCalls, {
@@ -111,7 +105,7 @@ export const transact = async (calls: ICallData[], processCode: string) => {
       _handleTxRejection(e, processCode);
     }
 
-    /* wait for the tx to complete */ 
+    /* wait for the tx to complete */
     res = await tx!.wait();
 
     /* check the tx status ( failed/success ) */
@@ -122,11 +116,9 @@ export const transact = async (calls: ICallData[], processCode: string) => {
       stage: ProcessStage.PROCESS_COMPLETE,
       tx: { ...tx!, receipt: res, status: txSuccess ? TxState.SUCCESSFUL : TxState.FAILED },
     });
-
   } catch (e: any) {
     /* catch tx errors */
     //  _handleTxError('Transaction failed', e.transaction, processCode);
-    console.log(' Error' ,  e.transaction, processCode  )
+    console.log(' Error', e.transaction, processCode);
   }
 };
-

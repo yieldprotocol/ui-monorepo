@@ -181,7 +181,6 @@ export const sign = async (requestedSignatures: ISignData[], processCode: string
         processCode,
         signMap: new Map(_signMap.set(getSignId(reqSig), { signData: reqSig, status: TxState.SUCCESSFUL })),
       });
-
     } else {
       /* else use a regular approval */
       const connectedERC20 = ERC20Permit__factory.connect(reqSig.target.address, signer);
@@ -197,12 +196,10 @@ export const sign = async (requestedSignatures: ISignData[], processCode: string
     }
     /* Approval transaction complete: return a dummy ICalldata ( which will ALWAYS get ignored )*/
     return IGNORED_CALLDATA;
-
   });
 
   /* Returns the processed list of txs required as ICallData[] if all successful (  may as well filter out ignored values here too ) */
   const signedList = await Promise.all(_processedSigs);
-
 
   return signedList.filter((x: ICallData) => !x.ignoreIf);
 };

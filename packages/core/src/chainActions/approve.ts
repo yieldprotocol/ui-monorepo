@@ -9,11 +9,8 @@ import { IAsset, ICallData, ISignData, IYieldProcess, LadleActions, ProcessStage
 import { ZERO_BN } from '../utils/constants';
 import { resetProcess, transactionMap$, updateProcess } from '../observables/transactionMap';
 
-/* Handle the transaction error */ 
-const _handleApproveError = () => {
-
-
-};
+/* Handle the transaction error */
+const _handleApproveError = () => {};
 
 /* handle case when user or wallet rejects the tx (before submission) */
 const _handleApproveRejection = (err: any, processCode: string) => {
@@ -33,26 +30,24 @@ const _handleApproveRejection = (err: any, processCode: string) => {
 };
 
 export const approve = async (requestedSig: ISignData, processCode: string) => {
-  
   /* Bring in observables */
   const account = account$.value;
   const provider = provider$.value as Web3Provider;
-  
-  const {target, spender, amount } = requestedSig;
 
-  console.log(processCode)
+  const { target, spender, amount } = requestedSig;
+
+  console.log(processCode);
 
   /* Get the signer */
   const signer = account ? provider.getSigner(account) : provider.getSigner(0);
 
   let approvalTx;
   try {
-    approvalTx = target.tokenType === TokenType.ERC1155_ 
+    approvalTx =
+      target.tokenType === TokenType.ERC1155_
         ? await ERC1155__factory.connect(target.address, signer).setApprovalForAll(spender, true)
-        : await ERC20Permit__factory.connect(target.address, signer).approve(spender, amount as string)
+        : await ERC20Permit__factory.connect(target.address, signer).approve(spender, amount as string);
   } catch (e) {
-
-      console.log(e)
+    console.log(e);
   }
-  
 };
