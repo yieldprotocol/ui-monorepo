@@ -15,10 +15,9 @@ export const buildSeriesMap = async (
   ladle: contracts.Ladle,
   assetRootMap: Map<string, IAssetRoot>,
   provider: ethers.providers.BaseProvider,
-  chainId: number, 
+  chainId: number,
   browserCaching: boolean
 ): Promise<Map<string, ISeriesRoot>> => {
-
   /* Check for cached assets or start with empty array */
   const seriesList: any[] = (browserCaching && getBrowserCachedValue(`${chainId}_series`)) || [];
   /* Check the last time the assets were fetched */
