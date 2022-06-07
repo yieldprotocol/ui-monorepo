@@ -31,5 +31,5 @@ export const buildModuleMap = (provider: ethers.providers.BaseProvider, chainId:
     // Modules
   }
 
-  return  moduleMap;
+  return moduleMap;
 };
