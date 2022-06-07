@@ -72,7 +72,6 @@ export interface IYieldProtocol {
   assetRootMap: Map<string, IAssetRoot>;
   seriesRootMap: Map<string, ISeriesRoot>;
   strategyRootMap: Map<string, IStrategyRoot>;
-
 }
 
 export interface IYieldObservables {
@@ -104,7 +103,7 @@ export interface IYieldFunctions {
   selectBase: (asset: string | IAsset) => void;
   selectVault: (vault: string | IVault) => void;
   selectSeries: (series: string | ISeries, futureSeries: boolean) => void;
-  selectStrategy:  (strategy: string | IStrategy) => void;
+  selectStrategy: (strategy: string | IStrategy) => void;
 }
 
 export interface ISelected {
@@ -168,7 +167,6 @@ export interface ISeriesRoot extends ISignable {
   poolVersion: string; // for signing
   poolSymbol: string; // for signing
 
-
   ts: BigNumber;
   g1: BigNumber;
   g2: BigNumber;
@@ -180,7 +178,6 @@ export interface ISeriesRoot extends ISignable {
   createdBlock: number;
   createdTxHash: string;
 }
-
 
 export enum TokenType {
   ERC20_,
@@ -238,7 +235,6 @@ export interface IAssetPair {
 
   baseDecimals: number;
   ilkDecimals: number;
-  
 
   minRatio: number;
 
@@ -445,16 +441,16 @@ export enum MessageType {
   INFO,
   WARNING,
   ERROR,
-  INTERNAL
+  INTERNAL,
 }
 
 export interface IMessage {
   message: string;
-  type? : MessageType;
-  origin?: any; // defaults to app 
+  type?: MessageType;
+  origin?: any; // defaults to app
   persistent?: boolean;
   timeoutOverride?: number;
-  id?: string|number; // for multi?
+  id?: string | number; // for multi?
 }
 
 export enum TxState {
