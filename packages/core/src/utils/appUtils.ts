@@ -1,4 +1,4 @@
-import { getMonth} from 'date-fns';
+import { getMonth } from 'date-fns';
 
 export const copyToClipboard = (str: string) => {
   const el = document.createElement('textarea');
@@ -9,18 +9,18 @@ export const copyToClipboard = (str: string) => {
   document.body.removeChild(el);
 };
 
-/** 
- * 
- * Caching fns 
- * 
+/**
+ *
+ * Caching fns
+ *
  * */
 export const getBrowserCachedValue = (index: string) =>
-  (typeof window !== "undefined") && localStorage.getItem(index) !== null && JSON.parse(localStorage.getItem(index)!);
+  typeof window !== 'undefined' && localStorage.getItem(index) !== null && JSON.parse(localStorage.getItem(index)!);
 
 export const setBrowserCachedValue = (index: string, valueToStore: any) =>
-  (typeof window !== "undefined") && localStorage.setItem(index, JSON.stringify(valueToStore));
+  typeof window !== 'undefined' && localStorage.setItem(index, JSON.stringify(valueToStore));
 
-  export const clearCachedItems = (keys: string[]) => {
+export const clearCachedItems = (keys: string[]) => {
   if (keys.length > 0) {
     keys.forEach((k: string) => {
       window.localStorage.removeItem(k);
@@ -29,15 +29,13 @@ export const setBrowserCachedValue = (index: string, valueToStore: any) =>
 };
 
 /**
- * Get the name of a function that calls this Fn. :) 
- * @returns name of the function that called it 
+ * Get the name of a function that calls this Fn. :)
+ * @returns name of the function that called it
  */
-export const getOrigin = () =>  {
-
-  console.log( getOrigin.caller )
+export const getOrigin = () => {
+  console.log(getOrigin.caller);
   // return getOrigin.caller
-}
-
+};
 
 /**
  * Convert array to chunks of arrays with size n
@@ -53,7 +51,6 @@ export const logToConsole = (message: string, type: string = 'info') => {
   // eslint-disable-next-line no-console
   console.log(type, message);
 };
-
 
 // TODO make it change based on hemisphere ( ie swap winter and summer)
 export enum SeasonType {
@@ -84,7 +81,7 @@ export const getSeason = (dateInSecs: number): SeasonType => {
 /* Trunctate a string value to a certain number of 'decimal' point */
 export const truncateValue = (input: string | undefined, decimals: number) => {
   const re = new RegExp(`(\\d+\\.\\d{${decimals}})(\\d)`);
-  if (input !== undefined && parseInt(input) ) {
+  if (input !== undefined && parseInt(input)) {
     const input_ = input![0] === '.' ? '0'.concat(input!) : input;
     const inpu = input_?.match(re); // inpu = truncated 'input'... get it?
     if (inpu) {
@@ -94,7 +91,6 @@ export const truncateValue = (input: string | undefined, decimals: number) => {
   }
   return '0.0';
 };
-
 
 /* handle Address/hash shortening */
 export const abbreviateHash = (addr: string, buffer: number = 4) =>

@@ -22,7 +22,7 @@ export const RATE = ethers.utils.formatBytes32String('rate');
 export const BLANK_ADDRESS = ethers.constants.AddressZero;
 export const BLANK_VAULT = '0x000000000000000000000000';
 export const BLANK_SERIES = '0x000000000000';
-export const IGNORED_CALLDATA = { operation: '', args: new Array(7), ignoreIf: true }
+export const IGNORED_CALLDATA = { operation: '', args: new Array(7), ignoreIf: true };
 
 export const ETHEREUM = 'ETHEREUM';
 export const ARBITRUM = 'ARBITRUM';
