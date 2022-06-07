@@ -5,7 +5,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "clean": "lerna clean --yes",
-    "docs": "lerna run docs",
+    "document": "typedoc" ,
     "lint": "yarn run eslint --ext .ts,.tsx .",
     "test": "lerna run test",
     "build": "lerna run build",
@@ -21,7 +21,8 @@
   },
   "devDependencies": {
     "esbuild-serve": "^1.0.1",
-    "lerna": "^4.0.0"
+    "lerna": "^4.0.0",
+    "typedoc": "^0.22.17"
   },
   "workspaces": [
     "packages/*",
