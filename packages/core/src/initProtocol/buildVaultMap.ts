@@ -18,7 +18,8 @@ export const buildVaultMap = async (
   /* Check for cached assets or start with empty array */
   const cachedVaults: any[] = (browserCaching && getBrowserCachedValue(`${chainId}_vaults#${account}`)) || [];
   /* Check the last time the assets were fetched */
-  const lastVaultUpdate = (browserCaching && getBrowserCachedValue(`${chainId}_lastVaultUpdate#${account}`)) || 'earliest';
+  const lastVaultUpdate =
+    (browserCaching && getBrowserCachedValue(`${chainId}_lastVaultUpdate#${account}`)) || 'earliest';
 
   /** vaults can either be 'built' or 'given by a third party, so both events neded to be checked */
   const vaultsBuiltFilter = cauldron.filters.VaultBuilt(null, account, null);
