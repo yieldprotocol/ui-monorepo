@@ -9,8 +9,8 @@ const _handleTimeout = (msg: IMessage | undefined) => {
 };
 
 /** @internal */
-export const messages$: Subject<IMessage | undefined> = new Subject();
-export const messagesø: Observable<IMessage | undefined> = messages$.pipe(
+export const messages$ = new Subject<IMessage | undefined>();
+export const messagesø = messages$.pipe<IMessage | undefined, IMessage | undefined>(
   tap((msg) => _handleTimeout(msg)),
   share()
 );
