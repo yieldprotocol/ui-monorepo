@@ -6,13 +6,11 @@ import * as contracts from '../contracts';
 import { strategyAddresses } from '../config/protocol';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils/appUtils';
 
-
 export const buildStrategyMap = async (
   provider: ethers.providers.BaseProvider,
   chainId: number,
   browserCaching: boolean
 ): Promise<Map<string, IStrategyRoot>> => {
-
   const _strategyAddresses = strategyAddresses.get(chainId);
   const strategyList: any[] = (browserCaching && getBrowserCachedValue(`${chainId}_strategies`)) || [];
 
@@ -52,14 +50,12 @@ export const buildStrategyMap = async (
   setBrowserCachedValue(`${chainId}_strategies`, strategyList);
   // Set the 'last checked' block
   const _blockNum = await provider.getBlockNumber(); // TODO: maybe lose this
-  setBrowserCachedValue(`${chainId}_lastStrategyUpdate`, _blockNum );
+  setBrowserCachedValue(`${chainId}_lastStrategyUpdate`, _blockNum);
 
   /* create a map from the 'charged' asset list */
-  const strategyRootMap: Map<string, IStrategyRoot> = new Map(
-    strategyList.map((s: any) => [s.id, s])
-  );
+  const strategyRootMap: Map<string, IStrategyRoot> = new Map(strategyList.map((s: any) => [s.id, s]));
 
-  console.log(`Yield Protocol STRATEGY data updated [Block: ${_blockNum }]`);
+  console.log(`Yield Protocol STRATEGY data updated [Block: ${_blockNum}]`);
 
   return strategyRootMap;
 };
