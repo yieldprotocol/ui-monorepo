@@ -29,20 +29,14 @@ export const buildProtocol = async (
   const cauldron = contracts.Cauldron__factory.connect(_baseAddresses!.Cauldron, provider) as contracts.Cauldron;
   const ladle = contracts.Ladle__factory.connect(_baseAddresses!.Ladle, provider) as contracts.Ladle;
   const witch = contracts.Witch__factory.connect(_baseAddresses!.Witch, provider) as contracts.Witch;
-  
+
   /* 2. Build the oralceMap */
   const oracleMap = buildOracleMap(provider, chainId);
   /* 3. Build the moduleMap */
   const moduleMap = buildModuleMap(provider, chainId);
 
   /* 4. Build the AssetRootMap - note: async */
-  const assetRootMap: Map<string, IAssetRoot> = await buildAssetMap(
-    cauldron,
-    ladle,
-    provider,
-    chainId,
-    cacheProtocol
-  );
+  const assetRootMap = await buildAssetMap(cauldron, ladle, provider, chainId, cacheProtocol);
 
   /* 5. Build the seriesRootMAp - note : async */
   const seriesRootMap = await buildSeriesMap(cauldron, ladle, assetRootMap, provider, chainId, cacheProtocol);
@@ -60,6 +54,6 @@ export const buildProtocol = async (
     moduleMap,
     assetRootMap,
     seriesRootMap,
-    strategyRootMap
+    strategyRootMap,
   };
 };
