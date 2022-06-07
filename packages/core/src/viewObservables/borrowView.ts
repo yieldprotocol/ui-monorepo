@@ -19,7 +19,7 @@ const diagnostics = appConfig$.value.diagnostics;
  * Maximum amount of debt allowed by the protocol for a particular [[IAssetPair | Asset Pair]]
  * @category Borrow
  * */
-export const maxDebtLimitø: Observable<BigNumber> = combineLatest([selectedø, assetPairMapø]).pipe(
+export const maxDebtLimitø = combineLatest([selectedø, assetPairMapø]).pipe(
   /* only proceed if pairMap has the reqd info */
   filter(([selected, pairMap]) => pairMap.has(getAssetPairId(selected.base!.id, selected.ilk!.id))),
   /* return the max debt of the asset pair */
@@ -34,7 +34,7 @@ export const maxDebtLimitø: Observable<BigNumber> = combineLatest([selectedø, 
  * Minimum amount of debt allowed by the protocol ( Dust level ) for a particular [[IAssetPair | Asset Pair]]
  * @category Borrow
  * */
-export const minDebtLimitø: Observable<BigNumber> = combineLatest([selectedø, assetPairMapø]).pipe(
+export const minDebtLimitø = combineLatest([selectedø, assetPairMapø]).pipe(
   /* only let events proceed if pairMap has the reqd info */
   filter(([selected, pairMap]) => pairMap.has(getAssetPairId(selected.base!.id, selected.ilk!.id))),
   /* return the min required debt of the asset pair */
@@ -49,7 +49,7 @@ export const minDebtLimitø: Observable<BigNumber> = combineLatest([selectedø, 
  * Check if the user can borrow the specified [[borrowInputø | amount]] based on current protocol baseReserves
  * @category Borrow
  * */
-export const isBorrowPossibleø: Observable<boolean> = combineLatest([borrowInputø, selectedø]).pipe(
+export const isBorrowPossibleø = combineLatest([borrowInputø, selectedø]).pipe(
   map(([input, selected]) => {
     if (selected.series! && input.gt(ZERO_BN) && input.lte(selected.series.baseReserves)) return true;
     input.gt(ZERO_BN) &&
@@ -66,7 +66,7 @@ export const isBorrowPossibleø: Observable<boolean> = combineLatest([borrowInpu
  *  TODO:  Check if the particular borrow [[borrowInputø | amount]] is limited by the liquidity in the protocol
  * @category Borrow
  * */
-export const isBorrowLimitedø: Observable<boolean> = combineLatest([borrowInputø, selectedø]).pipe(
+export const isBorrowLimitedø = combineLatest([borrowInputø, selectedø]).pipe(
   map(([input, selected]) => {
     console.log(input, selected);
     return false;
@@ -77,7 +77,7 @@ export const isBorrowLimitedø: Observable<boolean> = combineLatest([borrowInput
  * Check if the user can roll the selected vault to a new [future] series
  * @category Borrow | Roll
  * */
-export const isRollVaultPossibleø: Observable<boolean> = combineLatest([selectedø, assetPairMapø]).pipe(
+export const isRollVaultPossibleø = combineLatest([selectedø, assetPairMapø]).pipe(
   /* only let events proceed if futureSeries and vault, and has a validasset pair has the reqd info */
   filter(([selected, assetPairMap]) => {
     const { vault, futureSeries } = selected;
@@ -127,7 +127,7 @@ export const isRollVaultPossibleø: Observable<boolean> = combineLatest([selecte
  * Check if the particular repay [input] is limited by the liquidity in the protocol
  * @category Borrow | Repay
  *  */
-export const isRepayLimitedø: Observable<boolean> = combineLatest([repayInputø, selectedø]).pipe(
+export const isRepayLimitedø = combineLatest([repayInputø, selectedø]).pipe(
   map(([input, selected]) => {
     console.log(input, selected);
     return false;
@@ -138,7 +138,7 @@ export const isRepayLimitedø: Observable<boolean> = combineLatest([repayInputø
  * Calculate how much debt will be remaining after successful repayment of [input]
  * @category Borrow | Repay
  */
-export const debtAfterRepayø: Observable<BigNumber> = combineLatest([repayInputø, selectedø]).pipe(
+export const debtAfterRepayø = combineLatest([repayInputø, selectedø]).pipe(
   map(([input, selected]) =>
     selected.vault!.accruedArt.sub(input).gte(ZERO_BN) ? selected.vault!.accruedArt.sub(input) : ZERO_BN
   )
@@ -148,7 +148,7 @@ export const debtAfterRepayø: Observable<BigNumber> = combineLatest([repayInput
  * Calculate the expected NEW debt @ maturity ( any exisiting debt + new debt )  previously 'borrowEstimate'
  * @category Borrow
  * */
-export const debtEstimateø: Observable<BigNumber> = combineLatest([borrowInputø, selectedø]).pipe(
+export const debtEstimateø = combineLatest([borrowInputø, selectedø]).pipe(
   // simple filter out input changes that are zero, and make sure there is a series selected.
   filter(([borrowInput, selected]) => borrowInput.gt(ZERO_BN) && !!selected.series),
   map(([input, selected]) => {
@@ -170,7 +170,7 @@ export const debtEstimateø: Observable<BigNumber> = combineLatest([borrowInput�
  * Maximum amount that can be repayed (limited by: either the max tokens owned OR max debt available )
  * @category Borrow | Repay
  * */
-export const maximumRepayø: Observable<BigNumber> = combineLatest([selectedø]).pipe(
+export const maximumRepayø = combineLatest([selectedø]).pipe(
   map(([selected]) => {
     if (selected.base?.balance && selected.vault?.accruedArt.gt(selected.base!.balance)) {
       sendMsg({
@@ -189,7 +189,7 @@ export const maximumRepayø: Observable<BigNumber> = combineLatest([selectedø])
  * Min amount that can be repayed (limited by assetPair dustlevels/minDebt )
  * @category Borrow | Repay
  * */
-export const minimumRepayø: Observable<BigNumber> = combineLatest([selectedø, minDebtLimitø, maximumRepayø]).pipe(
+export const minimumRepayø = combineLatest([selectedø, minDebtLimitø, maximumRepayø]).pipe(
   map(([selected, minLimit, maxRepay]) => {
     const { vault } = selected;
     /* Set the min repayable, as the maximum value that can be paid without going below the dust limit */
@@ -201,7 +201,7 @@ export const minimumRepayø: Observable<BigNumber> = combineLatest([selectedø, 
 /** TODO:  Maximum amount that can be rolled  ( NOTE : Not NB for now because we are only rolling entire [vaults] )
  * @category Borrow | Repay
  */
-export const maximumRollø: Observable<BigNumber> = selectedø.pipe(
+export const maximumRollø = selectedø.pipe(
   /* only do calcs if there is a future series selected */
   map(() => {
     /* The maximum amount rollable is the maxfyTokenIn or art (if art is less than the max FyToken In  )  */
