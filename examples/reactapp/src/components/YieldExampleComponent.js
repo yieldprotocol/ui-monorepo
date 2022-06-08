@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { useObservable, YieldContext } from "@yield-protocol/ui-react";
 
 import config from "../yield.config";
+import { ethers } from "ethers";
 
 const YieldExampleComponent = () => {
 
@@ -28,7 +29,7 @@ const YieldExampleComponent = () => {
     ...yieldProtocol,
   }; // tricksy destructuring for error avoidance :)
 
-  const { updateAccount, updateYieldConfig, selectIlk, selectVault, selectBase, selectSeries, selectStrategy } = yieldFunctions;
+  const { updateProvider, updateAccount, updateYieldConfig, selectIlk, selectVault, selectBase, selectSeries, selectStrategy } = yieldFunctions;
 
   const { updateBorrowInput, updateCollateralInput } = viewFunctions;
 
@@ -76,13 +77,14 @@ const YieldExampleComponent = () => {
       <div>
         <h2>ChainId: {chainId}</h2>
         <button
-          onClick={async () => {
-            const accs = await window.ethereum.request({
-              method: "eth_requestAccounts",
-              params: [],
-            });
-            updateAccount(accs[0]);
-          }}
+          // onClick={async () => {
+          //   const accs = await window.ethereum.request({
+          //     method: "eth_requestAccounts",
+          //     params: [],
+          //   });
+          //   updateAccount(accs[0]);
+          // }}
+          onClick={async () => { updateProvider( new ethers.providers.Web3Provider( window.ethereum )) } }
         >
           Set account as Metamask
         </button>

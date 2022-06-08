@@ -11,10 +11,6 @@ const input_1 = require("./input");
 const appConfig_1 = require("../observables/appConfig");
 const diagnostics = appConfig_1.appConfig$.value.diagnostics;
 /**
- * @module
- * Borrow Helpers
-  */
-/**
  * Maximum amount of debt allowed by the protocol for a particular [[IAssetPair | Asset Pair]]
  * @category Borrow
  * */

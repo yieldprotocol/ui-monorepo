@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.estimatedLiquidatePriceø = exports.vaultLiquidatePriceø = exports.maxRemovableCollateralø = exports.maxCollateralø = exports.minimumSafePercentø = exports.minimumSafeRatioø = exports.minCollateralRequiredø = exports.minCollateralPercentø = exports.minCollateralRatioø = exports.isUnhealthyCollateralizationø = exports.isUndercollateralizedø = exports.collateralizationPercentø = exports.collateralizationRatioø = void 0;
+exports.estimatedLiquidatePriceø = exports.vaultLiquidatePriceø = exports.maxRemovableCollateralø = exports.maxCollateralø = exports.minimumSafePercentø = exports.minimumSafeRatioø = exports.minCollateralRequiredø = exports.isUnhealthyCollateralizationø = exports.isUndercollateralizedø = exports.minCollateralizationPercentø = exports.minCollateralizationRatioø = exports.collateralizationPercentø = exports.collateralizationRatioø = void 0;
 const ui_math_1 = require("@yield-protocol/ui-math");
 const rxjs_1 = require("rxjs");
 const observables_1 = require("../observables");
@@ -97,13 +97,11 @@ exports.collateralizationRatioø = (0, rxjs_1.combineLatest)([
  * @category Borrow | Collateral
  * */
 exports.collateralizationPercentø = exports.collateralizationRatioø.pipe((0, rxjs_1.map)((ratio) => (0, yieldUtils_1.ratioToPercent)(ratio, 2)), (0, rxjs_1.share)());
-exports.isUndercollateralizedø = (0, rxjs_1.combineLatest)([]).pipe((0, rxjs_1.share)());
-exports.isUnhealthyCollateralizationø = (0, rxjs_1.combineLatest)([]).pipe((0, rxjs_1.share)());
 /**
  * The minimum protocol allowed collaterallisation level expressed as a ratio
  * @category Borrow | Collateral
  * */
-exports.minCollateralRatioø = _selectedPairø.pipe(
+exports.minCollateralizationRatioø = _selectedPairø.pipe(
 /* Only emit if assetPair exists */
 (0, rxjs_1.filter)((assetPair) => !!assetPair), 
 /* filtered: we can safelty assume assetPair is defined in here. */
@@ -113,14 +111,27 @@ exports.minCollateralRatioø = _selectedPairø.pipe(
  * ( for display )
  * @category Borrow | Collateral
  * */
-exports.minCollateralPercentø = exports.minCollateralRatioø.pipe((0, rxjs_1.map)((ratio) => (0, yieldUtils_1.ratioToPercent)(ratio, 2)), (0, rxjs_1.share)());
+exports.minCollateralizationPercentø = exports.minCollateralizationRatioø.pipe((0, rxjs_1.map)((ratio) => (0, yieldUtils_1.ratioToPercent)(ratio, 2)), (0, rxjs_1.share)());
+/**
+ * Check if the debt amount is undercollaterallized
+ * @category Borrow | Collateral
+ * */
+exports.isUndercollateralizedø = (0, rxjs_1.combineLatest)([
+    exports.collateralizationRatioø,
+    exports.minCollateralizationRatioø,
+]).pipe((0, rxjs_1.map)(([ratio, minRatio]) => ratio <= minRatio), (0, rxjs_1.share)());
+/**
+ * Check if the collateraillization level of a vault is consdired 'unhealthy'
+ * @category Borrow | Collateral
+ * */
+exports.isUnhealthyCollateralizationø = (0, rxjs_1.combineLatest)([]).pipe((0, rxjs_1.share)());
 /**
  * The minimum collateral required to meet the minimum protocol-allowed levels
  * @category Borrow | Collateral
  * */
 exports.minCollateralRequiredø = (0, rxjs_1.combineLatest)([
     _selectedPairø,
-    exports.minCollateralRatioø,
+    exports.minCollateralizationRatioø,
     _totalDebtWithInputø,
     _totalCollateralWithInputø,
 ]).pipe((0, rxjs_1.map)(([assetPair, minCollatRatio, totalDebt, totalCollat]) => {
@@ -132,7 +143,7 @@ exports.minCollateralRequiredø = (0, rxjs_1.combineLatest)([
  *  TODO: would this be better specified with the assetPair data? - possibly
  * @category Borrow | Collateral
  * */
-exports.minimumSafeRatioø = exports.minCollateralRatioø.pipe((0, rxjs_1.map)((minRatio) => {
+exports.minimumSafeRatioø = exports.minCollateralizationRatioø.pipe((0, rxjs_1.map)((minRatio) => {
     if (minRatio >= 1.5)
         return minRatio + 1; // eg. 150% -> 250%
     if (minRatio < 1.5 && minRatio >= 1.4)

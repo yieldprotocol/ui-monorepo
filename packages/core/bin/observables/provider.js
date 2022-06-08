@@ -12,4 +12,6 @@ const updateProvider = (newProvider) => {
     exports.provider$.next(newProvider); // update to whole new protocol
 };
 exports.updateProvider = updateProvider;
+exports.providerø
+    .subscribe((provider) => tslib_1.__awaiter(void 0, void 0, void 0, function* () { return console.log('NEW CHAIN ID', (yield provider.getNetwork()).chainId); }));
 //# sourceMappingURL=provider.js.map

@@ -136,11 +136,11 @@ export const collateralizationPercentø: Observable<number> = collateralizationR
  * The minimum protocol allowed collaterallisation level expressed as a ratio
  * @category Borrow | Collateral
  * */
-export const minCollateralizationRatioø: Observable<number> = _selectedPairø.pipe(
+export const minCollateralizationRatioø = _selectedPairø.pipe(
   /* Only emit if assetPair exists */
   filter((assetPair) => !!assetPair),
   /* filtered: we can safelty assume assetPair is defined in here. */
-  map((assetPair) => assetPair!.minRatio),
+  map((assetPair): number => assetPair!.minRatio),
   share()
 );
 
@@ -170,7 +170,18 @@ export const isUndercollateralizedø: Observable<boolean> = combineLatest([
  * Check if the collateraillization level of a vault is consdired 'unhealthy'
  * @category Borrow | Collateral
  * */
-export const isUnhealthyCollateralizationø: Observable<boolean> = combineLatest([]).pipe(share());
+export const isUnhealthyCollateralizationø: Observable<boolean> = combineLatest([
+  collateralizationRatioø,
+  selectedø,
+  minCollateralizationRatioø,
+]).pipe(
+  filter(([, { vault }]) => !!vault),
+  map(([ratio, { vault }, minRatio]) => {
+    if (vault?.accruedArt.lte(ZERO_BN)) return false;
+    return ratio! < minRatio + 0.2;
+  }),
+  share()
+);
 
 /**
  * The minimum collateral required to meet the minimum protocol-allowed levels

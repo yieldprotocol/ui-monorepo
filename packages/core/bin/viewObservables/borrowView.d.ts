@@ -1,10 +1,6 @@
 import { BigNumber } from 'ethers';
 import { Observable } from 'rxjs';
 /**
- * @module
- * Borrow Helpers
-  */
-/**
  * Maximum amount of debt allowed by the protocol for a particular [[IAssetPair | Asset Pair]]
  * @category Borrow
  * */

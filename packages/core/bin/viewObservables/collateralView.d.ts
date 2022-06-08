@@ -11,19 +11,27 @@ export declare const collateralizationRatioø: Observable<number | undefined>;
  * @category Borrow | Collateral
  * */
 export declare const collateralizationPercentø: Observable<number>;
-export declare const isUndercollateralizedø: Observable<boolean>;
-export declare const isUnhealthyCollateralizationø: Observable<boolean>;
 /**
  * The minimum protocol allowed collaterallisation level expressed as a ratio
  * @category Borrow | Collateral
  * */
-export declare const minCollateralRatioø: Observable<number>;
+export declare const minCollateralizationRatioø: Observable<number>;
 /**
  * The minimum protocol-allowed collaterallisation level expressed as a percentage
  * ( for display )
  * @category Borrow | Collateral
  * */
-export declare const minCollateralPercentø: Observable<number>;
+export declare const minCollateralizationPercentø: Observable<number>;
+/**
+ * Check if the debt amount is undercollaterallized
+ * @category Borrow | Collateral
+ * */
+export declare const isUndercollateralizedø: Observable<boolean>;
+/**
+ * Check if the collateraillization level of a vault is consdired 'unhealthy'
+ * @category Borrow | Collateral
+ * */
+export declare const isUnhealthyCollateralizationø: Observable<boolean>;
 /**
  * The minimum collateral required to meet the minimum protocol-allowed levels
  * @category Borrow | Collateral
