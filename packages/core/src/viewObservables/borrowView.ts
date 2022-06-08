@@ -11,11 +11,6 @@ import { appConfig$ } from '../observables/appConfig';
 const diagnostics = appConfig$.value.diagnostics;
 
 /** 
- * @module 
- * Borrow Helpers
-  */
-
-/** 
  * Maximum amount of debt allowed by the protocol for a particular [[IAssetPair | Asset Pair]]
  * @category Borrow
  * */

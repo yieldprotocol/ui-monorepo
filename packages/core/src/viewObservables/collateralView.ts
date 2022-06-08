@@ -21,7 +21,7 @@ const diagnostics = appConfig$.value.diagnostics;
  * INTERNAL:
  * Keeps the track of the current selectedPair
  * */
-const _selectedPairø: Observable<IAssetPair | undefined> = combineLatest([selectedø, assetPairMapø]).pipe(
+const _selectedPairø = combineLatest([selectedø, assetPairMapø]).pipe(
   map(([selected, pairMap]) => {
     if (!!selected.ilk && !!selected.base) {
       const _pairId = getAssetPairId(selected.base.id, selected.ilk.id);
@@ -82,7 +82,7 @@ const _totalCollateralWithInputø: Observable<BigNumber[]> = combineLatest([coll
     if (ilk) {
       const existingCollateral_ = vault?.ink || ZERO_BN; // if no vault simply return zero.
       const existingCollateralAsWei = decimalNToDecimal18(existingCollateral_, ilk.decimals);
-      
+
       /* TODO: there is a weird bug if inputting before selecting ilk. */
       const newCollateralAsWei = decimalNToDecimal18(collInput, ilk.decimals);
       const totalCollateral = existingCollateralAsWei.add(newCollateralAsWei);
@@ -128,18 +128,15 @@ export const collateralizationRatioø: Observable<number | undefined> = combineL
  * @category Borrow | Collateral
  * */
 export const collateralizationPercentø: Observable<number> = collateralizationRatioø.pipe(
-  map((ratio) => ratioToPercent(ratio!,2)),
+  map((ratio) => ratioToPercent(ratio!, 2)),
   share()
 );
-
-export const isUndercollateralizedø: Observable<boolean> = combineLatest([]).pipe(share());
-export const isUnhealthyCollateralizationø: Observable<boolean> = combineLatest([]).pipe(share());
 
 /**
  * The minimum protocol allowed collaterallisation level expressed as a ratio
  * @category Borrow | Collateral
  * */
-export const minCollateralRatioø: Observable<number> = _selectedPairø.pipe(
+export const minCollateralizationRatioø: Observable<number> = _selectedPairø.pipe(
   /* Only emit if assetPair exists */
   filter((assetPair) => !!assetPair),
   /* filtered: we can safelty assume assetPair is defined in here. */
@@ -152,10 +149,28 @@ export const minCollateralRatioø: Observable<number> = _selectedPairø.pipe(
  * ( for display )
  * @category Borrow | Collateral
  * */
-export const minCollateralPercentø: Observable<number> = minCollateralRatioø.pipe(
+export const minCollateralizationPercentø: Observable<number> = minCollateralizationRatioø.pipe(
   map((ratio) => ratioToPercent(ratio, 2)),
   share()
 );
+
+/**
+ * Check if the debt amount is undercollaterallized
+ * @category Borrow | Collateral
+ * */
+export const isUndercollateralizedø: Observable<boolean> = combineLatest([
+  collateralizationRatioø,
+  minCollateralizationRatioø,
+]).pipe(
+  map(([ratio, minRatio]) => ratio! <= minRatio),
+  share()
+);
+
+/**
+ * Check if the collateraillization level of a vault is consdired 'unhealthy'
+ * @category Borrow | Collateral
+ * */
+export const isUnhealthyCollateralizationø: Observable<boolean> = combineLatest([]).pipe(share());
 
 /**
  * The minimum collateral required to meet the minimum protocol-allowed levels
@@ -163,7 +178,7 @@ export const minCollateralPercentø: Observable<number> = minCollateralRatioø.p
  * */
 export const minCollateralRequiredø: Observable<BigNumber> = combineLatest([
   _selectedPairø,
-  minCollateralRatioø,
+  minCollateralizationRatioø,
   _totalDebtWithInputø,
   _totalCollateralWithInputø,
 ]).pipe(
@@ -179,7 +194,7 @@ export const minCollateralRequiredø: Observable<BigNumber> = combineLatest([
  *  TODO: would this be better specified with the assetPair data? - possibly
  * @category Borrow | Collateral
  * */
-export const minimumSafeRatioø: Observable<number> = minCollateralRatioø.pipe(
+export const minimumSafeRatioø: Observable<number> = minCollateralizationRatioø.pipe(
   map((minRatio: number) => {
     if (minRatio >= 1.5) return minRatio + 1; // eg. 150% -> 250%
     if (minRatio < 1.5 && minRatio >= 1.4) return minRatio + 0.65; // eg. 140% -> 200%
