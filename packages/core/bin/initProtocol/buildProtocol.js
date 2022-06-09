@@ -11,8 +11,6 @@ const buildSeriesMap_1 = require("./buildSeriesMap");
 const buildStrategyMap_1 = require("./buildStrategyMap");
 const connection_1 = require("../observables/connection");
 const buildProtocol = (provider, cacheProtocol = true) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    /** Set the chain id */
-    console.log('Provider chain Id: ', connection_1.chainId$.value);
     /* 1. build the base protocol components */
     const _baseAddresses = protocol_1.baseAddresses.get(connection_1.chainId$.value);
     const cauldron = contracts.Cauldron__factory.connect(_baseAddresses.Cauldron, provider);

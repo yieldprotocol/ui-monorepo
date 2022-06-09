@@ -34,7 +34,8 @@ exports.updateVaults = updateVaults;
  *  Observe yieldProtocol$ and account$ changes TOGETHER >  Initiate or Empty VAULT Map
  * */
 (0, rxjs_1.combineLatest)([connection_1.account$, yieldProtocol_1.yieldProtocol$])
-    // .pipe( filter( (a, yp) => a !== undefined ))
+    // only emit if account is defined and yp.cauldron adress exists - indicating protocol has mostly loaded
+    .pipe((0, rxjs_1.filter)(([a, yp]) => a !== undefined && yp.cauldron.address !== ''))
     .subscribe(([_account, _protocol]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (_account !== undefined) {
         console.log('Getting vaults for: ', _account);

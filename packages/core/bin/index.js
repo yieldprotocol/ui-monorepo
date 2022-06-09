@@ -33,7 +33,6 @@ appConfig_1.appConfig$
     // console.log(config.diagnostics);
     connection_2.provider$.next(config.defaultProvider);
 }));
-// .unsubscribe(); // maybe not needed becasue of first() operator?
 /**
  * Observe provider$ changes  => Load/re-load protocol (TODO only if network id changes?)
  * */

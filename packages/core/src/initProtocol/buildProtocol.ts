@@ -18,9 +18,6 @@ export const buildProtocol = async (
   cacheProtocol: boolean = true
 ): Promise<IYieldProtocol> => {
 
-  /** Set the chain id */
-  console.log('Provider chain Id: ', chainId$.value);
-
   /* 1. build the base protocol components */
   const _baseAddresses = baseAddresses.get(chainId$.value);
   const cauldron = contracts.Cauldron__factory.connect(_baseAddresses!.Cauldron, provider) as contracts.Cauldron;

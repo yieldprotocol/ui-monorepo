@@ -53,11 +53,11 @@ appConfig$
     // console.log(config.diagnostics);
     provider$.next(config.defaultProvider);
   });
-// .unsubscribe(); // maybe not needed becasue of first() operator?
 
 /**
  * Observe provider$ changes  => Load/re-load protocol (TODO only if network id changes?)
  * */
+
 provider$
   .pipe(withLatestFrom(appConfig$))
   .subscribe(async ([provider, config]: [ethers.providers.BaseProvider, IYieldConfig]) => {

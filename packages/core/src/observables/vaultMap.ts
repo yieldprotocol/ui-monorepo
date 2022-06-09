@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { ethers, BigNumber } from 'ethers';
 import { bytesToBytes32, calcAccruedDebt } from '@yield-protocol/ui-math';
-import { BehaviorSubject, Observable, share, combineLatest } from 'rxjs';
+import { BehaviorSubject, Observable, share, combineLatest, filter } from 'rxjs';
 
 import { buildVaultMap } from '../initProtocol/buildVaultMap';
 import { ISeries, IVault, IVaultRoot, IYieldProtocol, MessageType } from '../types';
@@ -33,7 +33,8 @@ export const updateVaults = async (vaultList?: IVault[] | IVaultRoot[]) => {
  *  Observe yieldProtocol$ and account$ changes TOGETHER >  Initiate or Empty VAULT Map
  * */
 combineLatest([account$, yieldProtocol$])
-  // .pipe( filter( (a, yp) => a !== undefined ))
+  // only emit if account is defined and yp.cauldron adress exists - indicating protocol has mostly loaded
+  .pipe( filter( ([a,yp]) => a !== undefined && yp.cauldron.address !== ''))
   .subscribe(async ([_account, _protocol]) => {
     if (_account !== undefined ) {
       console.log('Getting vaults for: ', _account);

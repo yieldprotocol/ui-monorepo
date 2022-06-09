@@ -14,6 +14,7 @@ export const buildVaultMap = async (
   account: string,
   browserCaching: boolean = true
 ): Promise<Map<string, IVaultRoot>> => {
+
   const { cauldron, seriesRootMap, assetRootMap } = yieldProtocol;
 
   /* Check for cached assets or start with empty array */
@@ -24,7 +25,6 @@ export const buildVaultMap = async (
   /** vaults can either be 'built' or 'given by a third party, so both events neded to be checked */
   const vaultsBuiltFilter = cauldron.filters.VaultBuilt(null, account, null);
   const vaultsReceivedfilter = cauldron.filters.VaultGiven(null, account);
-
   const [vaultsBuilt, vaultsReceived] = await Promise.all([
     cauldron.queryFilter(vaultsBuiltFilter, lastVaultUpdate, 'latest'),
     cauldron.queryFilter(vaultsReceivedfilter, lastVaultUpdate, 'latest'),
