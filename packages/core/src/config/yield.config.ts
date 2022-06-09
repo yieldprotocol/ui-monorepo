@@ -6,8 +6,10 @@ export default {
   defaultChainId: 5,
 
   defaultAccountProvider, // the default provider used for getting the account information and signing/transacting
-  useAccountProviderAsProvider: false, // link the default provider to the account provider
-
+  useAccountProviderAsProvider: false, // link the default provider to the account provider.
+  autoConnectAccountProvider: false, // try to automatically connect to the injected provider.
+  supressInjectedListeners: false, // ignore the EIP1192 events emited by the injected provider.
+  
   defaultSeriesId: undefined,
   defaultBaseId: undefined,
 
@@ -30,5 +32,6 @@ export default {
   mockUser: false, // mock the user
   diagnostics: true, // show app diagnostics in the console
   forceTransactions: false, // don't throw an error if the transaction is likely to fail.
+  
 
 } as IYieldConfig;

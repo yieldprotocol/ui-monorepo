@@ -35,7 +35,7 @@ export const updateVaults = async (vaultList?: IVault[] | IVaultRoot[]) => {
 combineLatest([account$, yieldProtocol$])
   // .pipe( filter( (a, yp) => a !== undefined ))
   .subscribe(async ([_account, _protocol]) => {
-    if (_account !== undefined) {
+    if (_account !== undefined ) {
       console.log('Getting vaults for: ', _account);
       const vaultMap = await buildVaultMap(_protocol, _account);
       console.log('vaults: ', Array.from(vaultMap.values()));

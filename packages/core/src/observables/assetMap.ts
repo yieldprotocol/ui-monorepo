@@ -74,16 +74,16 @@ provider$
 /**
  * Observe Account$ changes ('update dynamic/User Data')
  * */
-account$
-  .pipe(
-    withLatestFrom(assetMap$),
-    skip(1)
-    // filter( (acc) => acc !== undefined )
-  )
-  .subscribe(([account]) => {
-    console.log('account changed:', account);
-    updateAssets();
-  });
+// account$
+//   .pipe(
+//     withLatestFrom(assetMap$),
+//     skip(1)
+//     // filter( (acc) => acc !== undefined )
+//   )
+//   .subscribe(([account]) => {
+//     console.log('account changed:', account);
+//     updateAssets();
+//   });
 
 /* Add on extra/calculated ASSET info, contract instances and methods (note: no async ) */
 const _chargeAsset = (asset: any, provider: ethers.providers.BaseProvider): IAsset => {

@@ -32,6 +32,10 @@ export interface IUserSettings {
 export interface IYieldConfig {
     defaultProvider: ethers.providers.BaseProvider;
     defaultChainId: number;
+    defaultAccountProvider: ethers.providers.Web3Provider;
+    useAccountProviderAsProvider: boolean;
+    autoConnectAccountProvider: boolean;
+    supressInjectedListeners: boolean;
     defaultUserSettings: IUserSettings;
     defaultSeriesId: string | undefined;
     defaultBaseId: string | undefined;

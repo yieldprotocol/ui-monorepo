@@ -65,14 +65,16 @@ connection_1.provider$
 /**
  * Observe Account$ changes ('update dynamic/User Data')
  * */
-connection_1.account$
-    .pipe((0, rxjs_1.withLatestFrom)(exports.assetMap$), (0, rxjs_1.skip)(1)
-// filter( (acc) => acc !== undefined )
-)
-    .subscribe(([account]) => {
-    console.log('account changed:', account);
-    (0, exports.updateAssets)();
-});
+// account$
+//   .pipe(
+//     withLatestFrom(assetMap$),
+//     skip(1)
+//     // filter( (acc) => acc !== undefined )
+//   )
+//   .subscribe(([account]) => {
+//     console.log('account changed:', account);
+//     updateAssets();
+//   });
 /* Add on extra/calculated ASSET info, contract instances and methods (note: no async ) */
 const _chargeAsset = (asset, provider) => {
     /* add any asset listeners required */

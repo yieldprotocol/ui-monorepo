@@ -2,6 +2,7 @@ import { Web3Provider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
 import { Observable, BehaviorSubject, share } from 'rxjs';
 import { defaultProvider, defaultAccountProvider } from '../config/defaultprovider';
+import { appConfig$ } from './appConfig';
 declare const window: any;
 
 /** @internal */
@@ -29,20 +30,29 @@ export const updateAccountProvider = (newProvider: ethers.providers.Web3Provider
 
 /* handle any events on the accountProvider ( web3Provider ) */
 accountProviderø.subscribe(async(accProvider) =>  {
-
+  
   console.log('NEW CHAIN ID', (await accProvider.getNetwork()).chainId);
-  // MetaMask requires requesting permission to connect users accounts
-  await accProvider.send("eth_requestAccounts", []);
-  account$.next( (await accProvider.send("eth_requestAccounts", []))[0] )
+  /** 
+   * MetaMask requires requesting permission to connect users accounts >
+   * however, we can attempt to skip this if the user already has a connected account
+   * */
+  try {
+    appConfig$.value.autoConnectAccountProvider && 
+    account$.next( (await accProvider.send("eth_requestAccounts", []))[0] )
+  } catch (e) { console.log(e) }
 
-  /* Attach listeners for EIP1193 events */
-  window.ethereum.on('accountsChanged', (addr:any) => account$.next(addr) )
-  /* reload the page on every network change as per reccommendation */
-  window.ethereum.on('chainChanged', () => location.reload())
-
-  /* connect/disconnect */
-  window.ethereum.on('connect',  console.log)
-  window.ethereum.on('disconnect', console.log)
+  /**
+   * Attach listeners for EIP1193 events
+   * ( Unless supressed )
+   * */
+  if (!appConfig$.value.supressInjectedListeners) {
+    window.ethereum.on('accountsChanged', (addr:string[]) => account$.next(addr[0]) )
+    /* Reload the page on every network change as per reccommendation */
+    window.ethereum.on('chainChanged', () => location.reload())
+    /* Connect/Disconnect listeners */
+    window.ethereum.on('connect', ()=> console.log('connected'))
+    window.ethereum.on('disconnect',()=> console.log('disconnected'))
+  }
 
 });
 

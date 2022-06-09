@@ -7,6 +7,8 @@ exports.default = {
     defaultChainId: 5,
     defaultAccountProvider: defaultprovider_1.defaultAccountProvider,
     useAccountProviderAsProvider: false,
+    autoConnectAccountProvider: false,
+    supressInjectedListeners: false,
     defaultSeriesId: undefined,
     defaultBaseId: undefined,
     defaultUserSettings: {
