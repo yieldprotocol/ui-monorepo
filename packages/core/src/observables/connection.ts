@@ -29,16 +29,21 @@ export const updateAccountProvider = (newProvider: ethers.providers.Web3Provider
 
 /* handle any events on the accountProvider ( web3Provider ) */
 accountProviderø.subscribe(async(accProvider) =>  {
+
   console.log('NEW CHAIN ID', (await accProvider.getNetwork()).chainId);
   // MetaMask requires requesting permission to connect users accounts
   await accProvider.send("eth_requestAccounts", []);
+  account$.next( (await accProvider.send("eth_requestAccounts", []))[0] )
 
   /* Attach listeners for EIP1193 events */
   window.ethereum.on('accountsChanged', (addr:any) => account$.next(addr) )
-  window.ethereum.on('chainChanged', (x:any) => console.log(x))
-  
-  // console.log('NEW ADDRESSS', await accProvider.getSigner().getAddress() );
-  // account$.next(await accProvider.getSigner().getAddress());
+  /* reload the page on every network change as per reccommendation */
+  window.ethereum.on('chainChanged', () => location.reload())
+
+  /* connect/disconnect */
+  window.ethereum.on('connect',  console.log)
+  window.ethereum.on('disconnect', console.log)
+
 });
 
 /** @internal */

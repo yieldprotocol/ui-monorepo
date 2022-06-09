@@ -18,11 +18,16 @@ exports.vaultMap$ = new rxjs_1.BehaviorSubject(new Map([]));
 exports.vaultMapø = exports.vaultMap$.pipe((0, rxjs_1.share)());
 /* Update vaults function */
 const updateVaults = (vaultList) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    const list = (vaultList === null || vaultList === void 0 ? void 0 : vaultList.length) ? vaultList : Array.from(exports.vaultMap$.value.values());
-    list.map((_vault) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const vaultUpdate = yield _updateVault(_vault, connection_1.account$.value, yieldProtocol_1.yieldProtocol$.value);
-        exports.vaultMap$.next(new Map(exports.vaultMap$.value.set(_vault.id, vaultUpdate))); // note: new Map to enforce ref update
-    }));
+    const list = vaultList !== undefined ? vaultList : Array.from(exports.vaultMap$.value.values());
+    /* if there are some vaults: */
+    if (list.length) {
+        list.map((_vault) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+            const vaultUpdate = yield _updateVault(_vault, connection_1.account$.value, yieldProtocol_1.yieldProtocol$.value);
+            exports.vaultMap$.next(new Map(exports.vaultMap$.value.set(_vault.id, vaultUpdate))); // note: new Map to enforce ref update
+        }));
+    }
+    /* if the list is empty, return an empty vaultMap */
+    exports.vaultMap$.next(new Map([]));
 });
 exports.updateVaults = updateVaults;
 /**
@@ -34,6 +39,7 @@ exports.updateVaults = updateVaults;
     if (_account !== undefined) {
         console.log('Getting vaults for: ', _account);
         const vaultMap = yield (0, buildVaultMap_1.buildVaultMap)(_protocol, _account);
+        console.log('vaults: ', Array.from(vaultMap.values()));
         yield (0, exports.updateVaults)(Array.from(vaultMap.values()));
         (0, messages_1.sendMsg)({ message: 'Vaults Loaded', type: types_1.MessageType.INTERNAL });
     }

@@ -1,8 +1,7 @@
 import { format } from 'date-fns';
 import { ethers, BigNumber } from 'ethers';
 import { bytesToBytes32, calcAccruedDebt } from '@yield-protocol/ui-math';
-import { BehaviorSubject, Observable, share, combineLatest} from 'rxjs';
-
+import { BehaviorSubject, Observable, share, combineLatest } from 'rxjs';
 
 import { buildVaultMap } from '../initProtocol/buildVaultMap';
 import { ISeries, IVault, IVaultRoot, IYieldProtocol, MessageType } from '../types';
@@ -18,15 +17,20 @@ export const vaultMapø: Observable<Map<string, IVault>> = vaultMap$.pipe(share(
 
 /* Update vaults function */
 export const updateVaults = async (vaultList?: IVault[] | IVaultRoot[]) => {
-  const list = vaultList?.length ? vaultList : Array.from(vaultMap$.value.values());
-  list.map(async (_vault: IVault | IVaultRoot) => {
-    const vaultUpdate = await _updateVault(_vault, account$.value as string, yieldProtocol$.value);
-    vaultMap$.next(new Map(vaultMap$.value.set(_vault.id, vaultUpdate))); // note: new Map to enforce ref update
-  });
+  const list = vaultList !== undefined ? vaultList : Array.from(vaultMap$.value.values());
+  /* if there are some vaults: */
+  if (list.length) {
+    list.map(async (_vault: IVault | IVaultRoot) => {
+      const vaultUpdate = await _updateVault(_vault, account$.value as string, yieldProtocol$.value);
+      vaultMap$.next(new Map(vaultMap$.value.set(_vault.id, vaultUpdate))); // note: new Map to enforce ref update
+    });
+  }
+  /* if the list is empty, return an empty vaultMap */
+  vaultMap$.next(new Map([]));
 };
 
 /**
- *  Observe yieldProtocol$ and account$ changes TOGETHER >  Initiate or Empty VAULT Map 
+ *  Observe yieldProtocol$ and account$ changes TOGETHER >  Initiate or Empty VAULT Map
  * */
 combineLatest([account$, yieldProtocol$])
   // .pipe( filter( (a, yp) => a !== undefined ))
@@ -34,13 +38,14 @@ combineLatest([account$, yieldProtocol$])
     if (_account !== undefined) {
       console.log('Getting vaults for: ', _account);
       const vaultMap = await buildVaultMap(_protocol, _account);
+      console.log('vaults: ', Array.from(vaultMap.values()));
       await updateVaults(Array.from(vaultMap.values()));
-      sendMsg({message:'Vaults Loaded', type: MessageType.INTERNAL})
+      sendMsg({ message: 'Vaults Loaded', type: MessageType.INTERNAL });
     } else {
       /* if account changes and is undefined > EMPTY the vaultMap */
       vaultMap$.next(new Map([]));
     }
-});
+  });
 
 const _updateVault = async (
   vault: IVault | IVaultRoot,
@@ -58,7 +63,7 @@ const _updateVault = async (
   ] = await Promise.all([
     cauldron.balances(vault.id),
     cauldron.vaults(vault.id),
-    witch.queryFilter(witch.filters.Auctioned(bytesToBytes32(vault.id, 12), null), 'earliest','latest'),
+    witch.queryFilter(witch.filters.Auctioned(bytesToBytes32(vault.id, 12), null), 'earliest', 'latest'),
   ]);
 
   /* Check for liquidation event date */

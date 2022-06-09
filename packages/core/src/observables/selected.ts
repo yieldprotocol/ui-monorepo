@@ -81,8 +81,7 @@ export const selectSeries = (series?: ISeries | string, futureSeries: boolean = 
   );
 };
 
-export const selectVault = (vault?: IVault | string) => {
-  
+export const selectVault = (vault?: IVault | string) => { 
   if ( vault ) {
     const _vault = (vault as IVault).id ? (vault as IVault) : vaultMap$.value.get(vault as string);
     /* Update the selected$ */
@@ -98,7 +97,6 @@ export const selectVault = (vault?: IVault | string) => {
   /* if undefined sent in, deselect vault only */
   !vault && selected$.next({ ...selected$.value, vault: null});
   console.log(vault ? `Selected Vault: ${ (vault as IVault)?.id || vault}` : 'Vault Unselected');
-
 };
 
 export const selectStrategy = (strategy?: IStrategy | string) => {
