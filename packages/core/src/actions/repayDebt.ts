@@ -12,7 +12,7 @@ import { transact } from "../chainActions/transact";
 import { removeEth, addEth } from "./_addRemoveEth";
 import { unwrapAsset } from "./_wrapUnwrapAsset";
 
-import { account$, assetMap$, provider$, seriesMap$, userSettings$, yieldProtocol$} from '../observables'; 
+import { account$, assetMap$, chainId$, provider$, seriesMap$, userSettings$, yieldProtocol$} from '../observables'; 
 
   /**
    * REPAY FN
@@ -23,11 +23,11 @@ import { account$, assetMap$, provider$, seriesMap$, userSettings$, yieldProtoco
    export const repayDebt = async (amount: string | undefined, vault: IVault, reclaimCollateral: boolean) => {
     const txCode = getProcessCode(ActionCodes.REPAY, vault.id);
 
-    const { ladle, chainId } = yieldProtocol$.value;
+    const { ladle } = yieldProtocol$.value;
+    const chainId = chainId$.value;
     const provider = provider$.value;
     const seriesMap = seriesMap$.value;
     const assetMap = assetMap$.value;
-
     const account = account$.value;
 
     const {slippageTolerance} = userSettings$.value;

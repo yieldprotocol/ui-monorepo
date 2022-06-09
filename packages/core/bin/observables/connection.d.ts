@@ -16,7 +16,8 @@ export declare const updateAccountProvider: (newProvider: ethers.providers.Web3P
 /** @internal */
 export declare const account$: BehaviorSubject<string | undefined>;
 export declare const accountø: Observable<string | undefined>;
-/**
- * @param newAccount
- */
 export declare const updateAccount: (newAccount?: string) => void;
+/** @internal */
+export declare const chainId$: BehaviorSubject<number>;
+export declare const chainIdø: Observable<number>;
+export declare const updateChainId: (chainId: number | string) => void;

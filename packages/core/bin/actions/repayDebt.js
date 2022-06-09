@@ -22,7 +22,8 @@ const observables_1 = require("../observables");
  */
 const repayDebt = (amount, vault, reclaimCollateral) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const txCode = (0, yieldUtils_1.getProcessCode)(types_1.ActionCodes.REPAY, vault.id);
-    const { ladle, chainId } = observables_1.yieldProtocol$.value;
+    const { ladle } = observables_1.yieldProtocol$.value;
+    const chainId = observables_1.chainId$.value;
     const provider = observables_1.provider$.value;
     const seriesMap = observables_1.seriesMap$.value;
     const assetMap = observables_1.assetMap$.value;

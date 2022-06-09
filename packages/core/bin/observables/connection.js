@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateAccount = exports.accountø = exports.account$ = exports.updateAccountProvider = exports.accountProviderø = exports.accountProvider$ = exports.updateProvider = exports.providerø = exports.provider$ = void 0;
+exports.updateChainId = exports.chainIdø = exports.chainId$ = exports.updateAccount = exports.accountø = exports.account$ = exports.updateAccountProvider = exports.accountProviderø = exports.accountProvider$ = exports.updateProvider = exports.providerø = exports.provider$ = void 0;
 const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
 const defaultprovider_1 = require("../config/defaultprovider");
@@ -42,9 +42,9 @@ exports.accountProviderø.subscribe((accProvider) => tslib_1.__awaiter(void 0, v
     }
     /**
      * Attach listeners for EIP1193 events
-     * ( unless supressed )
+     * ( Unless supressed, or not in a browser environment )
      * */
-    if (!appConfig_1.appConfig$.value.supressInjectedListeners) {
+    if (typeof window !== 'undefined' && !appConfig_1.appConfig$.value.supressInjectedListeners) {
         window.ethereum.on('accountsChanged', (addr) => exports.account$.next(addr[0]));
         /* Reload the page on every network change as per reccommendation */
         window.ethereum.on('chainChanged', () => location.reload());
@@ -54,13 +54,18 @@ exports.accountProviderø.subscribe((accProvider) => tslib_1.__awaiter(void 0, v
     }
 }));
 /** @internal */
-exports.account$ = new rxjs_1.BehaviorSubject(undefined); // TODO weird typing here ??
+exports.account$ = new rxjs_1.BehaviorSubject(undefined);
 exports.accountø = exports.account$.pipe((0, rxjs_1.share)());
-/**
- * @param newAccount
- */
 const updateAccount = (newAccount) => {
     exports.account$.next(newAccount || undefined);
 };
 exports.updateAccount = updateAccount;
+/** @internal */
+exports.chainId$ = new rxjs_1.BehaviorSubject(appConfig_1.appConfig$.value.defaultChainId);
+exports.chainIdø = exports.chainId$.pipe((0, rxjs_1.share)());
+const updateChainId = (chainId) => {
+    const asNum = parseInt(chainId);
+    exports.chainId$.next(asNum);
+};
+exports.updateChainId = updateChainId;
 //# sourceMappingURL=connection.js.map

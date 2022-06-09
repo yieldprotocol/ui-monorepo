@@ -16,7 +16,8 @@ const removeCollateral = (amount, vault, unwrapOnRemove = true) => tslib_1.__awa
     /* generate the txCode for tx tracking and tracing */
     const txCode = (0, utils_1.getProcessCode)(types_1.ActionCodes.REMOVE_COLLATERAL, vault.id);
     /* Get the values from the observables/subjects */
-    const { ladle, chainId } = observables_1.yieldProtocol$.value;
+    const { ladle } = observables_1.yieldProtocol$.value;
+    const chainId = observables_1.chainId$.value;
     const assetMap = observables_1.assetMap$.value;
     const account = observables_1.account$.value;
     const provider = observables_1.provider$.value;

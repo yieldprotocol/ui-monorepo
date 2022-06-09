@@ -8,7 +8,6 @@ const appConfig_1 = require("./appConfig");
 // TODO: try to get rid of this init? 
 const _blankProtocol = {
     protocolVersion: '0.0.0',
-    chainId: 1,
     cauldron: contracts.Cauldron__factory.connect('', appConfig_1.appConfig$.value.defaultProvider),
     ladle: contracts.Ladle__factory.connect('', appConfig_1.appConfig$.value.defaultProvider),
     witch: contracts.Witch__factory.connect('', appConfig_1.appConfig$.value.defaultProvider),

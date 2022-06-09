@@ -9,9 +9,14 @@ export {
   accountProvider$,
   updateAccountProvider,
   updateProvider,
+  
   account$,
   accountø,
   updateAccount,
+
+  chainId$,
+  chainIdø,
+  updateChainId,
 } from './connection';
 export { selected$, selectedø, selectBase, selectIlk, selectSeries, selectVault, selectStrategy } from './selected';
 export { seriesMap$, seriesMapø, updateSeries } from './seriesMap';

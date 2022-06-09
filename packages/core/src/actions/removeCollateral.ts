@@ -2,7 +2,7 @@ import { ethers } from 'ethers';
 import { transact } from '../chainActions';
 import { ETH_BASED_ASSETS, CONVEX_BASED_ASSETS } from '../config/assets';
 import { ConvexJoin__factory } from '../contracts';
-import { yieldProtocol$, assetMap$, account$, provider$ } from '../observables';
+import { yieldProtocol$, assetMap$, account$, provider$, chainId$ } from '../observables';
 import { IVault, ActionCodes, ICallData, LadleActions, RoutedActions } from '../types';
 import { getProcessCode, ONE_BN, ZERO_BN } from '../utils';
 import { inputToTokenValue } from '../utils/yieldUtils';
@@ -14,7 +14,8 @@ export const removeCollateral = async (amount: string, vault: IVault, unwrapOnRe
   const txCode = getProcessCode(ActionCodes.REMOVE_COLLATERAL, vault.id);
 
   /* Get the values from the observables/subjects */
-  const { ladle, chainId }  = yieldProtocol$.value;
+  const { ladle }  = yieldProtocol$.value;
+  const chainId = chainId$.value;
   const assetMap = assetMap$.value;
   const account = account$.value;
   const provider = provider$.value;

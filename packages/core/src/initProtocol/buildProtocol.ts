@@ -11,18 +11,16 @@ import { buildModuleMap } from './buildModuleMap';
 import { buildAssetMap } from './buildAssetMap';
 import { buildSeriesMap } from './buildSeriesMap';
 import { buildStrategyMap } from './buildStrategyMap';
+import { chainId$ } from '../observables/connection';
 
 export const buildProtocol = async (
   provider: ethers.providers.BaseProvider,
   cacheProtocol: boolean = true
 ): Promise<IYieldProtocol> => {
-  /** Set the chain id */
-  const chainId = (await provider.getNetwork()).chainId;
-  console.log('Provider chain Id: ', chainId);
 
-  /** Check the latest blocknumber */
-  // const _blockNum = await provider.getBlockNumber();
-  // console.log('Block Number: ', _blockNum);
+  /** Set the chain id */
+  const chainId = chainId$.value;
+  console.log('Provider chain Id: ', chainId);
 
   /* 1. build the base protocol components */
   const _baseAddresses = baseAddresses.get(chainId);
@@ -52,7 +50,6 @@ export const buildProtocol = async (
 
   return {
     protocolVersion: process.env.YIELD_UI_VERSION || '0.0.0',
-    chainId,
     cauldron,
     ladle,
     witch,

@@ -9,13 +9,11 @@ const buildModuleMap_1 = require("./buildModuleMap");
 const buildAssetMap_1 = require("./buildAssetMap");
 const buildSeriesMap_1 = require("./buildSeriesMap");
 const buildStrategyMap_1 = require("./buildStrategyMap");
+const connection_1 = require("../observables/connection");
 const buildProtocol = (provider, cacheProtocol = true) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /** Set the chain id */
-    const chainId = (yield provider.getNetwork()).chainId;
+    const chainId = connection_1.chainId$.value;
     console.log('Provider chain Id: ', chainId);
-    /** Check the latest blocknumber */
-    // const _blockNum = await provider.getBlockNumber();
-    // console.log('Block Number: ', _blockNum);
     /* 1. build the base protocol components */
     const _baseAddresses = protocol_1.baseAddresses.get(chainId);
     const cauldron = contracts.Cauldron__factory.connect(_baseAddresses.Cauldron, provider);
@@ -33,7 +31,6 @@ const buildProtocol = (provider, cacheProtocol = true) => tslib_1.__awaiter(void
     const strategyRootMap = yield (0, buildStrategyMap_1.buildStrategyMap)(provider, chainId, cacheProtocol); // TODO this could be loaded at same time as seriesMap
     return {
         protocolVersion: process.env.YIELD_UI_VERSION || '0.0.0',
-        chainId,
         cauldron,
         ladle,
         witch,

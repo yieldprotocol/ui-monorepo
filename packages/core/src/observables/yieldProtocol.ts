@@ -7,7 +7,6 @@ import { appConfig$ } from "./appConfig";
 // TODO: try to get rid of this init? 
 const _blankProtocol = {
   protocolVersion: '0.0.0',
-  chainId: 1,
 
   cauldron: contracts.Cauldron__factory.connect('', appConfig$.value.defaultProvider) as contracts.Cauldron,
   ladle: contracts.Ladle__factory.connect('', appConfig$.value.defaultProvider) as contracts.Ladle,

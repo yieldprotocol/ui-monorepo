@@ -43,9 +43,9 @@ accountProviderø.subscribe(async(accProvider) =>  {
 
   /**
    * Attach listeners for EIP1193 events
-   * ( Unless supressed )
+   * ( Unless supressed, or not in a browser environment )
    * */
-  if (!appConfig$.value.supressInjectedListeners) {
+  if ( typeof window !== 'undefined' && !appConfig$.value.supressInjectedListeners) {
     window.ethereum.on('accountsChanged', (addr:string[]) => account$.next(addr[0]) )
     /* Reload the page on every network change as per reccommendation */
     window.ethereum.on('chainChanged', () => location.reload())
@@ -53,16 +53,19 @@ accountProviderø.subscribe(async(accProvider) =>  {
     window.ethereum.on('connect', ()=> console.log('connected'))
     window.ethereum.on('disconnect',()=> console.log('disconnected'))
   }
-
 });
 
 /** @internal */
-export const account$: BehaviorSubject<string | undefined> = new BehaviorSubject(undefined as string | undefined); // TODO weird typing here ??
+export const account$ = new BehaviorSubject(undefined as string | undefined); 
 export const accountø: Observable<string | undefined> = account$.pipe(share());
-
-/**
- * @param newAccount 
- */
 export const updateAccount = (newAccount?: string) => {
   account$.next(newAccount || undefined);
+};
+
+/** @internal */
+export const chainId$ = new BehaviorSubject( appConfig$.value.defaultChainId ); 
+export const chainIdø: Observable<number> = chainId$.pipe(share());
+export const updateChainId = (chainId: number| string ) => {
+  const asNum = parseInt(chainId as string);
+  chainId$.next( asNum );
 };

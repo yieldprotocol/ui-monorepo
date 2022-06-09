@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateYieldProtocol = exports.yieldProtocolø = exports.yieldProtocol$ = exports.updateVaults = exports.vaultMapø = exports.vaultMap$ = exports.updateUserSettings = exports.userSettingsø = exports.userSettings$ = exports.resetProcess = exports.updateProcess = exports.transactionMapø = exports.transactionMap$ = exports.updateStrategies = exports.strategyMapø = exports.strategyMap$ = exports.updateSeries = exports.seriesMapø = exports.seriesMap$ = exports.selectStrategy = exports.selectVault = exports.selectSeries = exports.selectIlk = exports.selectBase = exports.selectedø = exports.selected$ = exports.updateAccount = exports.accountø = exports.account$ = exports.updateProvider = exports.updateAccountProvider = exports.accountProvider$ = exports.accountProviderø = exports.providerø = exports.provider$ = exports.updatePair = exports.assetPairMapø = exports.assetPairMap$ = exports.updateAssets = exports.assetMapø = exports.assetMap$ = exports.updateYieldConfig = exports.appConfig$ = void 0;
+exports.updateYieldProtocol = exports.yieldProtocolø = exports.yieldProtocol$ = exports.updateVaults = exports.vaultMapø = exports.vaultMap$ = exports.updateUserSettings = exports.userSettingsø = exports.userSettings$ = exports.resetProcess = exports.updateProcess = exports.transactionMapø = exports.transactionMap$ = exports.updateStrategies = exports.strategyMapø = exports.strategyMap$ = exports.updateSeries = exports.seriesMapø = exports.seriesMap$ = exports.selectStrategy = exports.selectVault = exports.selectSeries = exports.selectIlk = exports.selectBase = exports.selectedø = exports.selected$ = exports.updateChainId = exports.chainIdø = exports.chainId$ = exports.updateAccount = exports.accountø = exports.account$ = exports.updateProvider = exports.updateAccountProvider = exports.accountProvider$ = exports.accountProviderø = exports.providerø = exports.provider$ = exports.updatePair = exports.assetPairMapø = exports.assetPairMap$ = exports.updateAssets = exports.assetMapø = exports.assetMap$ = exports.updateYieldConfig = exports.appConfig$ = void 0;
 // export { account$, accountø, updateAccount } from './account';
 var appConfig_1 = require("./appConfig");
 Object.defineProperty(exports, "appConfig$", { enumerable: true, get: function () { return appConfig_1.appConfig$; } });
@@ -23,6 +23,9 @@ Object.defineProperty(exports, "updateProvider", { enumerable: true, get: functi
 Object.defineProperty(exports, "account$", { enumerable: true, get: function () { return connection_1.account$; } });
 Object.defineProperty(exports, "account\u00F8", { enumerable: true, get: function () { return connection_1.accountø; } });
 Object.defineProperty(exports, "updateAccount", { enumerable: true, get: function () { return connection_1.updateAccount; } });
+Object.defineProperty(exports, "chainId$", { enumerable: true, get: function () { return connection_1.chainId$; } });
+Object.defineProperty(exports, "chainId\u00F8", { enumerable: true, get: function () { return connection_1.chainIdø; } });
+Object.defineProperty(exports, "updateChainId", { enumerable: true, get: function () { return connection_1.updateChainId; } });
 var selected_1 = require("./selected");
 Object.defineProperty(exports, "selected$", { enumerable: true, get: function () { return selected_1.selected$; } });
 Object.defineProperty(exports, "selected\u00F8", { enumerable: true, get: function () { return selected_1.selectedø; } });

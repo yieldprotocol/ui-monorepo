@@ -66,7 +66,6 @@ export interface IYieldConfig {
 
 export interface IYieldProtocol {
   protocolVersion: string;
-  chainId: number;
 
   cauldron: Cauldron;
   ladle: Ladle;

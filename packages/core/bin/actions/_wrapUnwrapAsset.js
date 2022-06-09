@@ -13,9 +13,8 @@ const wrapHandlerAbi = ['function wrap(address to)', 'function unwrap(address to
 const wrapAsset = (value, asset, processCode, to // optional send destination : DEFAULT is assetJoin address
 ) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    console.log(processCode); // TODO remove this 
-    const provider = observables_1.provider$.subscribe();
-    const { chainId } = observables_1.yieldProtocol$.value;
+    console.log(processCode); // TODO maybe remove this 
+    const chainId = observables_1.chainId$.value;
     // const ladleAddress = yieldProtocol$.value.ladle.address;
     const assetMap = observables_1.assetMap$.value;
     // const account = account$.value;
@@ -68,8 +67,7 @@ exports.wrapAsset = wrapAsset;
  * */
 const unwrapAsset = (asset, receiver) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     var _b;
-    // const provider = provider$.value ;
-    const { chainId } = observables_1.yieldProtocol$.value;
+    const chainId = observables_1.chainId$.value;
     const unwrapHandlerAddress = ((_b = asset.unwrapHandlerAddresses) === null || _b === void 0 ? void 0 : _b.has(chainId))
         ? asset.unwrapHandlerAddresses.get(chainId)
         : undefined;
