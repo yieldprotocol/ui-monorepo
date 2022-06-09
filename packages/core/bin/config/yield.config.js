@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
 const types_1 = require("../types");
-const defaultprovider_1 = tslib_1.__importDefault(require("./defaultprovider"));
+const defaultprovider_1 = require("./defaultprovider");
 exports.default = {
-    defaultProvider: defaultprovider_1.default,
+    defaultProvider: defaultprovider_1.defaultProvider,
     defaultChainId: 5,
+    defaultAccountProvider: defaultprovider_1.defaultAccountProvider,
+    useAccountProviderAsProvider: false,
     defaultSeriesId: undefined,
     defaultBaseId: undefined,
     defaultUserSettings: {

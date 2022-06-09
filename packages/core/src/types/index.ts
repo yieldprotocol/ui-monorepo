@@ -80,6 +80,8 @@ export interface IYieldObservables {
   providerø: Observable<ethers.providers.BaseProvider>;
   accountø: Observable<string | undefined>;
 
+  accountProviderø: Observable<ethers.providers.Web3Provider>;
+
   /* maps */
   seriesMapø: Observable<Map<string, ISeries>>;
   assetMapø: Observable<Map<string, IAsset>>;

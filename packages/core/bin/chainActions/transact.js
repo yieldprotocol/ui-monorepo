@@ -3,10 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.transact = void 0;
 const tslib_1 = require("tslib");
 const ethers_1 = require("ethers");
-const account_1 = require("../observables/account");
-const appConfig_1 = require("../observables/appConfig");
-const provider_1 = require("../observables/provider");
-const yieldProtocol_1 = require("../observables/yieldProtocol");
+const observables_1 = require("../observables/");
 const types_1 = require("../types");
 const constants_1 = require("../utils/constants");
 const transactionMap_1 = require("../observables/transactionMap");
@@ -54,10 +51,10 @@ const _handleTxRejection = (err, processCode) => {
 const transact = (calls, processCode) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     (0, transactionMap_1.updateProcess)({ processCode, stage: types_1.ProcessStage.TRANSACTION_REQUESTED });
     /* Bring in observables */
-    const { ladle } = yieldProtocol_1.yieldProtocol$.value;
-    const account = account_1.account$.value;
-    const provider = provider_1.provider$.value;
-    const { forceTransactions } = appConfig_1.appConfig$.value;
+    const { ladle } = observables_1.yieldProtocol$.value;
+    const account = observables_1.account$.value;
+    const provider = observables_1.provider$.value;
+    const { forceTransactions } = observables_1.appConfig$.value;
     /* Get the signer */
     const signer = account ? provider.getSigner(account) : provider.getSigner(0);
     /* Set the connected contract instance, ladle by default */

@@ -1,10 +1,8 @@
 import { BigNumber } from 'ethers';
-import { account$ } from '../observables/account';
-import { yieldProtocol$ } from '../observables/yieldProtocol';
+import { account$, yieldProtocol$  } from '../observables';
 import { ICallData, LadleActions } from '../types';
 import { ModuleActions } from '../types/operations';
 import { ZERO_BN } from '../utils/constants';
-
 
 /**
  * @internal

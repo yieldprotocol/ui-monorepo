@@ -1,9 +1,7 @@
 import { ethers } from 'ethers';
-
-// declare const window: any;
+declare const window: any;
 
 // what MetaMask injects as window.ethereum into each page
-
 // const defaultProvider = window.ethereum
 //     ? new ethers.providers.Web3Provider(window.ethereum)
 //     : new ethers.providers.JsonRpcProvider() // deafult localhost:8545
@@ -11,7 +9,8 @@ import { ethers } from 'ethers';
 // const defaultProvider: ethers.providers.BaseProvider = new ethers.providers.JsonRpcProvider('https://mainnet.infura.io/v3/2af222f674024a0f84b5f0aad0da72a2')
 // const defaultProvider : ethers.providers.BaseProvider = new ethers.providers.WebSocketProvider('wss://mainnet.infura.io/ws/v3/de43fd0c912d4bdc94712ab4b37613ea');
 
-const defaultProvider : ethers.providers.BaseProvider = new ethers.providers.WebSocketProvider('wss://goerli.infura.io/ws/v3/de43fd0c912d4bdc94712ab4b37613ea');
+export const defaultProvider: ethers.providers.BaseProvider = new ethers.providers.WebSocketProvider('wss://goerli.infura.io/ws/v3/de43fd0c912d4bdc94712ab4b37613ea');
+export const defaultAccountProvider = new ethers.providers.Web3Provider(window.ethereum);
 
 // const defaultProvider: ethers.providers.BaseProvider = new ethers.providers.AlchemyProvider(
 //   42161,
@@ -37,4 +36,4 @@ const defaultProvider : ethers.providers.BaseProvider = new ethers.providers.Web
 //     // },
 // });
 
-export default defaultProvider;
+

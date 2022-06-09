@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.removeEth = exports.addEth = void 0;
-const account_1 = require("../observables/account");
-const yieldProtocol_1 = require("../observables/yieldProtocol");
+const observables_1 = require("../observables");
 const types_1 = require("../types");
 const operations_1 = require("../types/operations");
 const constants_1 = require("../utils/constants");
@@ -10,9 +9,9 @@ const constants_1 = require("../utils/constants");
  * @internal
  * */
 const addEth = (value, to = undefined, alternateEthAssetId = undefined) => {
-    const { moduleMap } = yieldProtocol_1.yieldProtocol$.value;
+    const { moduleMap } = observables_1.yieldProtocol$.value;
     const WrapEtherModuleContract = moduleMap.get('WrapEtherModule');
-    const account = account_1.account$.value;
+    const account = observables_1.account$.value;
     /* if there is a destination 'to' then use the ladle module (wrapEtherModule) */
     if (to)
         return [
@@ -44,7 +43,7 @@ exports.addEth = addEth;
 const removeEth = (value, to = undefined) => [
     {
         operation: types_1.LadleActions.Fn.EXIT_ETHER,
-        args: [to || account_1.account$.value],
+        args: [to || observables_1.account$.value],
         ignoreIf: value.eq(constants_1.ZERO_BN), // ignores if value is ZERO. NB NOTE: sign (+-) is irrelevant here
     },
 ];

@@ -1,3 +1,3 @@
 import { ethers } from 'ethers';
-declare const defaultProvider: ethers.providers.BaseProvider;
-export default defaultProvider;
+export declare const defaultProvider: ethers.providers.BaseProvider;
+export declare const defaultAccountProvider: ethers.providers.Web3Provider;

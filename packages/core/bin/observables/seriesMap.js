@@ -7,8 +7,7 @@ const ethers_1 = require("ethers");
 const ui_math_1 = require("@yield-protocol/ui-math");
 const contracts = tslib_1.__importStar(require("../contracts"));
 const types_1 = require("../types");
-const account_1 = require("./account");
-const provider_1 = require("./provider");
+const connection_1 = require("./connection");
 const yieldProtocol_1 = require("./yieldProtocol");
 const assets_1 = require("../config/assets");
 const messages_1 = require("./messages");
@@ -26,7 +25,7 @@ const updateSeries = (seriesList, account) => tslib_1.__awaiter(void 0, void 0, 
 exports.updateSeries = updateSeries;
 /* Observe YieldProtocol$ changes, an update map accordingly */
 yieldProtocol_1.yieldProtocol$
-    .pipe((0, rxjs_1.filter)((protocol) => protocol.seriesRootMap.size > 0), (0, rxjs_1.withLatestFrom)(provider_1.provider$))
+    .pipe((0, rxjs_1.filter)((protocol) => protocol.seriesRootMap.size > 0), (0, rxjs_1.withLatestFrom)(connection_1.provider$))
     .subscribe(([_protocol, _provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* 'Charge' all the series (using the current provider) */
     const chargedList = Array.from(_protocol.seriesRootMap.values()).map((s) => _chargeSeries(s, _provider));
@@ -39,7 +38,7 @@ yieldProtocol_1.yieldProtocol$
 //   console.log('Series map updated' ) // [provider, seriesMap]);
 // });
 /* Observe Account$ changes ('update dynamic/User Data') */
-account_1.account$.pipe((0, rxjs_1.withLatestFrom)(exports.seriesMap$)).subscribe(([account]) => {
+connection_1.account$.pipe((0, rxjs_1.withLatestFrom)(exports.seriesMap$)).subscribe(([account]) => {
     console.log('account changed:', account);
 });
 /**

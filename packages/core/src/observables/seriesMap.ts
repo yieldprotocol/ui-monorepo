@@ -5,9 +5,7 @@ import { sellFYToken, secondsToFrom, calculateAPR, floorDecimal, mulDecimal, div
 import * as contracts from '../contracts';
 
 import { ISeries, ISeriesRoot, IYieldProtocol, MessageType } from '../types';
-import { account$ } from './account';
-
-import { provider$ } from './provider';
+import { account$, provider$ } from './connection';
 import { yieldProtocol$ } from './yieldProtocol';
 import { ETH_BASED_ASSETS } from '../config/assets';
 import { sendMsg } from './messages';

@@ -5,8 +5,7 @@ import { mulDecimal, divDecimal } from '@yield-protocol/ui-math';
 import * as contracts from '../contracts';
 import { ISeries, IStrategy, IStrategyRoot, IYieldProtocol, MessageType } from "../types";
 
-import { account$ } from "./account";
-import { provider$ } from "./provider";
+import { account$, provider$ } from './connection';
 import { yieldProtocol$ } from "./yieldProtocol";
 import { seriesMap$ } from "./seriesMap";
 import { ZERO_BN } from "../utils/constants";

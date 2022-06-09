@@ -1,9 +1,5 @@
 import { BigNumber, Contract } from 'ethers';
-import { account$ } from '../observables/account';
-import { assetMap$ } from '../observables/assetMap';
-import { provider$ } from '../observables/provider';
-import { userSettings$ } from '../observables/userSettings';
-import { yieldProtocol$ } from '../observables/yieldProtocol';
+import {assetMap$, provider$ , userSettings$, yieldProtocol$  } from '../observables';
 import { IAsset, ICallData, LadleActions, RoutedActions } from '../types';
 import { ZERO_BN } from '../utils/constants';
 

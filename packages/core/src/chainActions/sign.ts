@@ -1,8 +1,7 @@
 import { signDaiPermit, signERC2612Permit } from 'eth-permit';
 import { ethers } from 'ethers';
 import { ERC20Permit__factory, ERC1155__factory } from '../contracts';
-import { account$ } from '../observables/account';
-import { provider$ } from '../observables/provider';
+import { account$, provider$  } from '../observables';
 import { userSettings$ } from '../observables/userSettings';
 import {
   ISignData,

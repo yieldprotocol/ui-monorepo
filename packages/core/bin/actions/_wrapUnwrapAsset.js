@@ -3,10 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.unwrapAsset = exports.wrapAsset = void 0;
 const tslib_1 = require("tslib");
 const ethers_1 = require("ethers");
-const assetMap_1 = require("../observables/assetMap");
-const provider_1 = require("../observables/provider");
-const userSettings_1 = require("../observables/userSettings");
-const yieldProtocol_1 = require("../observables/yieldProtocol");
+const observables_1 = require("../observables");
 const types_1 = require("../types");
 const constants_1 = require("../utils/constants");
 const wrapHandlerAbi = ['function wrap(address to)', 'function unwrap(address to)'];
@@ -17,10 +14,10 @@ const wrapAsset = (value, asset, processCode, to // optional send destination : 
 ) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     var _a;
     console.log(processCode); // TODO remove this 
-    const provider = provider_1.provider$.subscribe();
-    const { chainId } = yieldProtocol_1.yieldProtocol$.value;
+    const provider = observables_1.provider$.subscribe();
+    const { chainId } = observables_1.yieldProtocol$.value;
     // const ladleAddress = yieldProtocol$.value.ladle.address;
-    const assetMap = assetMap_1.assetMap$.value;
+    const assetMap = observables_1.assetMap$.value;
     // const account = account$.value;
     /* get the signer from the provider */
     // const signer = account ? provider?.getSigner(account) : provider?.getSigner(0);
@@ -72,11 +69,11 @@ exports.wrapAsset = wrapAsset;
 const unwrapAsset = (asset, receiver) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     var _b;
     // const provider = provider$.value ;
-    const { chainId } = yieldProtocol_1.yieldProtocol$.value;
+    const { chainId } = observables_1.yieldProtocol$.value;
     const unwrapHandlerAddress = ((_b = asset.unwrapHandlerAddresses) === null || _b === void 0 ? void 0 : _b.has(chainId))
         ? asset.unwrapHandlerAddresses.get(chainId)
         : undefined;
-    const { unwrapTokens } = userSettings_1.userSettings$.value;
+    const { unwrapTokens } = observables_1.userSettings$.value;
     /* if there is an unwrap handler we assume the token needs to be unwrapped  ( unless the 'unwrapTokens' setting is false) */
     if (unwrapTokens && unwrapHandlerAddress) {
         console.log('Unwrapping tokens before return');

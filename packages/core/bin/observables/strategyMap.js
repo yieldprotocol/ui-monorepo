@@ -7,8 +7,7 @@ const ethers_1 = require("ethers");
 const ui_math_1 = require("@yield-protocol/ui-math");
 const contracts = tslib_1.__importStar(require("../contracts"));
 const types_1 = require("../types");
-const account_1 = require("./account");
-const provider_1 = require("./provider");
+const connection_1 = require("./connection");
 const yieldProtocol_1 = require("./yieldProtocol");
 const seriesMap_1 = require("./seriesMap");
 const constants_1 = require("../utils/constants");
@@ -20,14 +19,14 @@ exports.strategyMapø = exports.strategyMap$.pipe((0, rxjs_1.share)());
 const updateStrategies = (strategyList) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const list = (strategyList === null || strategyList === void 0 ? void 0 : strategyList.length) ? strategyList : Array.from(exports.strategyMap$.value.values());
     list.map((_strategy) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const strategyUpdate = yield _updateStrategy(_strategy, seriesMap_1.seriesMap$.value, account_1.account$.value);
+        const strategyUpdate = yield _updateStrategy(_strategy, seriesMap_1.seriesMap$.value, connection_1.account$.value);
         exports.strategyMap$.next(new Map(exports.strategyMap$.value.set(_strategy.id, strategyUpdate))); // note: new Map to enforce ref update
     }));
 });
 exports.updateStrategies = updateStrategies;
 /* Observe YieldProtocol$ changes, and update map accordingly */
 yieldProtocol_1.yieldProtocol$
-    .pipe((0, rxjs_1.filter)((protocol) => protocol.strategyRootMap.size > 0), (0, rxjs_1.withLatestFrom)(provider_1.provider$))
+    .pipe((0, rxjs_1.filter)((protocol) => protocol.strategyRootMap.size > 0), (0, rxjs_1.withLatestFrom)(connection_1.provider$))
     .subscribe(([_protocol, _provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* 'Charge' all the assets (using the current provider) */
     const chargedList = Array.from(_protocol.strategyRootMap.values()).map((st) => _chargeStrategy(st, _provider));
@@ -43,7 +42,7 @@ yieldProtocol_1.yieldProtocol$
 //   console.log( [provider, seriesMap] )
 // })
 /* Observe Account$ changes ('update dynamic/User Data') */
-account_1.account$
+connection_1.account$
     .pipe((0, rxjs_1.withLatestFrom)(exports.strategyMap$))
     .subscribe(([account]) => {
     console.log('account changed:', account);

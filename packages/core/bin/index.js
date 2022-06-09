@@ -4,14 +4,14 @@ exports.viewFunctions = exports.viewObservables = exports.yieldConstants = expor
 const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
 const buildProtocol_1 = require("./initProtocol/buildProtocol");
-const account_1 = require("./observables/account");
+const connection_1 = require("./observables/connection");
 const assetMap_1 = require("./observables/assetMap");
 const seriesMap_1 = require("./observables/seriesMap");
 const yieldProtocol_1 = require("./observables/yieldProtocol");
 const strategyMap_1 = require("./observables/strategyMap");
 const vaultMap_1 = require("./observables/vaultMap");
 const appConfig_1 = require("./observables/appConfig");
-const provider_1 = require("./observables/provider");
+const connection_2 = require("./observables/connection");
 const selected_1 = require("./observables/selected");
 const constants = tslib_1.__importStar(require("./utils/constants"));
 const assetConstants = tslib_1.__importStar(require("./config/assets"));
@@ -31,13 +31,13 @@ appConfig_1.appConfig$
 (0, rxjs_1.first)())
     .subscribe((config) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     // console.log(config.diagnostics);
-    provider_1.provider$.next(config.defaultProvider);
+    connection_2.provider$.next(config.defaultProvider);
 }));
 // .unsubscribe(); // maybe not needed becasue of first() operator?
 /**
  * Observe provider$ changes  => Load/re-load protocol (TODO only if network id changes?)
  * */
-provider_1.provider$
+connection_2.provider$
     .pipe((0, rxjs_1.withLatestFrom)(appConfig_1.appConfig$))
     .subscribe(([provider, config]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     yieldProtocol_1.yieldProtocol$.next(yield (0, buildProtocol_1.buildProtocol)(provider, config.browserCaching));
@@ -49,8 +49,9 @@ const yieldObservables = {
     assetMapø: assetMap_1.assetMapø,
     vaultMapø: vaultMap_1.vaultMapø,
     strategyMapø: strategyMap_1.strategyMapø,
-    providerø: provider_1.providerø,
-    accountø: account_1.accountø,
+    providerø: connection_2.providerø,
+    accountø: connection_1.accountø,
+    accountProviderø: connection_2.accountProviderø,
     selectedø: selected_1.selectedø,
     transactionMapø: observables_1.transactionMapø,
     assetPairMapø: observables_1.assetPairMapø,
@@ -85,9 +86,9 @@ const viewFunctions = {
 exports.viewFunctions = viewFunctions;
 /* Expose any required functions */
 const yieldFunctions = {
-    updateProvider: provider_1.updateProvider,
+    updateProvider: connection_2.updateProvider,
     updateYieldConfig: appConfig_1.updateYieldConfig,
-    updateAccount: account_1.updateAccount,
+    updateAccount: connection_1.updateAccount,
     /* selector functions */
     selectIlk: selected_1.selectIlk,
     selectBase: selected_1.selectBase,

@@ -10,7 +10,7 @@ const buildVaultMap_1 = require("../initProtocol/buildVaultMap");
 const types_1 = require("../types");
 const constants_1 = require("../utils/constants");
 const appUtils_1 = require("../utils/appUtils");
-const account_1 = require("./account");
+const connection_1 = require("./connection");
 const yieldProtocol_1 = require("./yieldProtocol");
 const messages_1 = require("./messages");
 /** @internal */
@@ -20,7 +20,7 @@ exports.vaultMapø = exports.vaultMap$.pipe((0, rxjs_1.share)());
 const updateVaults = (vaultList) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const list = (vaultList === null || vaultList === void 0 ? void 0 : vaultList.length) ? vaultList : Array.from(exports.vaultMap$.value.values());
     list.map((_vault) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const vaultUpdate = yield _updateVault(_vault, account_1.account$.value, yieldProtocol_1.yieldProtocol$.value);
+        const vaultUpdate = yield _updateVault(_vault, connection_1.account$.value, yieldProtocol_1.yieldProtocol$.value);
         exports.vaultMap$.next(new Map(exports.vaultMap$.value.set(_vault.id, vaultUpdate))); // note: new Map to enforce ref update
     }));
 });
@@ -28,7 +28,7 @@ exports.updateVaults = updateVaults;
 /**
  *  Observe yieldProtocol$ and account$ changes TOGETHER >  Initiate or Empty VAULT Map
  * */
-(0, rxjs_1.combineLatest)([account_1.account$, yieldProtocol_1.yieldProtocol$])
+(0, rxjs_1.combineLatest)([connection_1.account$, yieldProtocol_1.yieldProtocol$])
     // .pipe( filter( (a, yp) => a !== undefined ))
     .subscribe(([_account, _protocol]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (_account !== undefined) {

@@ -3,14 +3,14 @@ import { first, filter, withLatestFrom } from 'rxjs';
 
 import { buildProtocol } from './initProtocol/buildProtocol';
 import { IYieldConfig, IYieldFunctions, IYieldObservables } from './types';
-import { accountø, updateAccount } from './observables/account';
+import { accountø, updateAccount } from './observables/connection';
 import { assetMapø } from './observables/assetMap';
 import { seriesMapø } from './observables/seriesMap';
 import { yieldProtocol$, yieldProtocolø } from './observables/yieldProtocol';
 import { strategyMapø } from './observables/strategyMap';
 import { vaultMapø } from './observables/vaultMap';
 import { appConfig$, updateYieldConfig } from './observables/appConfig';
-import { provider$, providerø, updateProvider } from './observables/provider';
+import { accountProviderø, provider$, providerø, updateProvider } from './observables/connection';
 import { selectBase, selectedø, selectIlk, selectSeries, selectStrategy, selectVault } from './observables/selected';
 
 import * as constants from './utils/constants';
@@ -73,6 +73,7 @@ const yieldObservables: IYieldObservables = {
   strategyMapø,
   providerø,
   accountø,
+  accountProviderø,
   selectedø,
   transactionMapø,
   assetPairMapø,

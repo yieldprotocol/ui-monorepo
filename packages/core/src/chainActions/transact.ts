@@ -1,11 +1,8 @@
 import { ethers, Contract, PayableOverrides, BigNumber, ContractTransaction } from 'ethers';
 import { Web3Provider } from '@ethersproject/providers';
 import { Ladle } from '../contracts';
-import { account$ } from '../observables/account';
-import { appConfig$ } from '../observables/appConfig';
-import { provider$ } from '../observables/provider';
-import { yieldProtocol$ } from '../observables/yieldProtocol';
-import { ICallData, IYieldProcess, LadleActions, ProcessStage, TxState } from '../types';
+import { account$, appConfig$, provider$, yieldProtocol$ } from '../observables/';
+import { ICallData, LadleActions, ProcessStage, TxState } from '../types';
 import { ZERO_BN } from '../utils/constants';
 import { resetProcess, transactionMap$, updateProcess } from '../observables/transactionMap';
 

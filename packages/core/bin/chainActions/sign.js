@@ -4,8 +4,7 @@ exports.sign = void 0;
 const tslib_1 = require("tslib");
 const eth_permit_1 = require("eth-permit");
 const contracts_1 = require("../contracts");
-const account_1 = require("../observables/account");
-const provider_1 = require("../observables/provider");
+const observables_1 = require("../observables");
 const userSettings_1 = require("../observables/userSettings");
 const types_1 = require("../types");
 const constants_1 = require("../utils/constants");
@@ -48,10 +47,10 @@ const sign = (requestedSignatures, processCode) => tslib_1.__awaiter(void 0, voi
         stage: types_1.ProcessStage.SIGNING_APPROVAL_REQUESTED,
     });
     /* Get the values from the observables/subjects */
-    const provider = provider_1.provider$.value;
+    const provider = observables_1.provider$.value;
     const { chainId } = yield provider.getNetwork();
     // const ladleAddress = yieldProtocol$.value.ladle.address;
-    const account = account_1.account$.value;
+    const account = observables_1.account$.value;
     const isContractWallet = (account && (yield provider.getCode(account)) !== '0x0') || '0x';
     console.log(isContractWallet);
     // const { diagnostics } = appConfig$.value;

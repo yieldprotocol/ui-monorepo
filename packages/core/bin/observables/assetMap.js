@@ -5,9 +5,8 @@ const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
 const ethers_1 = require("ethers");
 const types_1 = require("../types");
-const account_1 = require("./account");
+const connection_1 = require("./connection");
 const yieldProtocol_1 = require("./yieldProtocol");
-const provider_1 = require("./provider");
 const contracts = tslib_1.__importStar(require("../contracts"));
 const assets_1 = require("../config/assets");
 const constants_1 = require("../utils/constants");
@@ -39,7 +38,7 @@ exports.updateAssets = updateAssets;
  * 2. update asset list
  * */
 yieldProtocol_1.yieldProtocol$
-    .pipe((0, rxjs_1.filter)((protocol) => protocol.assetRootMap.size > 0), (0, rxjs_1.withLatestFrom)(provider_1.provider$))
+    .pipe((0, rxjs_1.filter)((protocol) => protocol.assetRootMap.size > 0), (0, rxjs_1.withLatestFrom)(connection_1.provider$))
     .subscribe(([_protocol, _provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* 'Charge' all the assets (using the current provider) */
     const chargedList = Array.from(_protocol.assetRootMap.values()).map((a) => _chargeAsset(a, _provider));
@@ -53,7 +52,7 @@ yieldProtocol_1.yieldProtocol$
  * 1. 'Charge asset' with latest provider info for each
  * 2. Set as new assetMap$
  * */
-provider_1.provider$
+connection_1.provider$
     .pipe((0, rxjs_1.withLatestFrom)(exports.assetMap$), 
 /* only proceed if a valid provider and map has elements */
 (0, rxjs_1.filter)(([prov, aMap]) => ethers_1.ethers.providers.BaseProvider.isProvider(prov) && aMap.size > 0))
@@ -66,7 +65,7 @@ provider_1.provider$
 /**
  * Observe Account$ changes ('update dynamic/User Data')
  * */
-account_1.account$
+connection_1.account$
     .pipe((0, rxjs_1.withLatestFrom)(exports.assetMap$), (0, rxjs_1.skip)(1)
 // filter( (acc) => acc !== undefined )
 )

@@ -8,7 +8,7 @@ import { buildVaultMap } from '../initProtocol/buildVaultMap';
 import { ISeries, IVault, IVaultRoot, IYieldProtocol, MessageType } from '../types';
 import { ZERO_BN } from '../utils/constants';
 import { truncateValue } from '../utils/appUtils';
-import { account$ } from './account';
+import { account$ } from './connection';
 import { yieldProtocol$ } from './yieldProtocol';
 import { sendMsg } from './messages';
 

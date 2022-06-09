@@ -2,9 +2,9 @@ import { BehaviorSubject, Observable, share, combineLatest, withLatestFrom, filt
 import { BigNumber, Contract, ethers } from 'ethers';
 
 import { IAsset, IAssetRoot, TokenType, IYieldProtocol } from '../types';
-import { account$ } from './account';
+import { account$, provider$ } from './connection';
 import { yieldProtocol$ } from './yieldProtocol';
-import { provider$ } from './provider';
+
 import * as contracts from '../contracts';
 import { ASSETS, ETH_BASED_ASSETS } from '../config/assets';
 import { ZERO_BN } from '../utils/constants';
