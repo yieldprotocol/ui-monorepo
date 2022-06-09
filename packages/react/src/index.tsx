@@ -68,7 +68,6 @@ const YieldProvider = ({ props, children }: any) => {
   const provider = useObservable(providerø) as unknown as string;
 
   const accountProvider = useObservable(accountProviderø) as unknown as string;
-
   const account = useObservable(accountø) as unknown as string;
   
   const messages = useObservable(messagesø) as unknown as string;

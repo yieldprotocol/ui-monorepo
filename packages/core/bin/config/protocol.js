@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.strategyAddresses = exports.moduleAddresses = exports.baseAddresses = exports.supportedChains = void 0;
 const constants_1 = require("../utils/constants");
 exports.supportedChains = new Map([
-    [constants_1.ETHEREUM, [1, 4, 5]],
+    [constants_1.ETHEREUM, [1, 5]],
     [constants_1.ARBITRUM, [42161]],
     // [ 'OPTIMISM', [] ],
 ]);

@@ -38,9 +38,8 @@ export const updatePair = async (baseId: string, ilkId: string): Promise<IAssetP
 
   const { cauldron, assetRootMap, oracleMap } = yieldProtocol$.value;
   
-  const chainId = chainId$.value;
   // const cauldron = contractMap.get('Cauldron');
-  const oracleName = ORACLES.get(chainId || 1)
+  const oracleName = ORACLES.get(chainId$.value || 1)
     ?.get(baseId)
     ?.get(ilkId);
 

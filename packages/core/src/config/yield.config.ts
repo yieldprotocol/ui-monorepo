@@ -3,9 +3,9 @@ import { defaultProvider, defaultAccountProvider } from './defaultprovider';
 
 export default {
   defaultProvider, // the initial provider, also used as a fallback if required.
-  defaultChainId: 5,
-
   defaultAccountProvider, // the default provider used for getting the account information and signing/transacting
+
+  defaultChainId: 1,
   
   autoConnectAccountProvider: true, // try to automatically connect to the injected provider.
   useAccountProviderAsProvider: false, // link the default provider to the account provider.

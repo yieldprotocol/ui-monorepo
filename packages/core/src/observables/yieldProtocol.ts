@@ -18,7 +18,6 @@ const _blankProtocol = {
   assetRootMap: new Map([])as Map<string, IAssetRoot>,
   seriesRootMap: new Map([])as Map<string, ISeriesRoot>,
   strategyRootMap: new Map([])as Map<string, IStrategyRoot>,
-
 }
 
 /** @internal */

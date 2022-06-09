@@ -5,9 +5,10 @@ const tslib_1 = require("tslib");
 const contracts = tslib_1.__importStar(require("../contracts"));
 const protocol_1 = require("../config/protocol");
 const appUtils_1 = require("../utils/appUtils");
-const buildStrategyMap = (provider, chainId, browserCaching) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    const _strategyAddresses = protocol_1.strategyAddresses.get(chainId);
-    const strategyList = (browserCaching && (0, appUtils_1.getBrowserCachedValue)(`${chainId}_strategies`)) || [];
+const observables_1 = require("../observables");
+const buildStrategyMap = (provider, browserCaching) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    const _strategyAddresses = protocol_1.strategyAddresses.get(observables_1.chainId$.value);
+    const strategyList = (browserCaching && (0, appUtils_1.getBrowserCachedValue)(`${observables_1.chainId$.value}_strategies`)) || [];
     try {
         yield Promise.all(_strategyAddresses.map((strategyAddr) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
             /* if the strategy is NOT already in the cache : */
@@ -38,13 +39,14 @@ const buildStrategyMap = (provider, chainId, browserCaching) => tslib_1.__awaite
         console.log('Error fetching strategy data: ', e);
     }
     // Log the new assets in the cache
-    (0, appUtils_1.setBrowserCachedValue)(`${chainId}_strategies`, strategyList);
+    (0, appUtils_1.setBrowserCachedValue)(`${observables_1.chainId$.value}_strategies`, strategyList);
     // Set the 'last checked' block
     const _blockNum = yield provider.getBlockNumber(); // TODO: maybe lose this
-    (0, appUtils_1.setBrowserCachedValue)(`${chainId}_lastStrategyUpdate`, _blockNum);
+    (0, appUtils_1.setBrowserCachedValue)(`${observables_1.chainId$.value}_lastStrategyUpdate`, _blockNum);
     /* create a map from the 'charged' asset list */
     const strategyRootMap = new Map(strategyList.map((s) => [s.id, s]));
     console.log(`Yield Protocol STRATEGY data updated [Block: ${_blockNum}]`);
+    console.log(strategyRootMap);
     return strategyRootMap;
 });
 exports.buildStrategyMap = buildStrategyMap;

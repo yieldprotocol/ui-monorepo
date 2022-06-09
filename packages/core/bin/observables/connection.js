@@ -1,12 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateChainId = exports.chainIdø = exports.chainId$ = exports.updateAccount = exports.accountø = exports.account$ = exports.updateAccountProvider = exports.accountProviderø = exports.accountProvider$ = exports.updateProvider = exports.providerø = exports.provider$ = void 0;
+exports.updateAccount = exports.accountø = exports.account$ = exports.updateAccountProvider = exports.accountProviderø = exports.accountProvider$ = exports.updateProvider = exports.providerø = exports.provider$ = exports.updateChainId = exports.chainIdø = exports.chainId$ = void 0;
 const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
 const defaultprovider_1 = require("../config/defaultprovider");
+const utils_1 = require("../utils");
 const appConfig_1 = require("./appConfig");
 /** @internal */
-exports.provider$ = new rxjs_1.BehaviorSubject(defaultprovider_1.defaultProvider);
+exports.chainId$ = new rxjs_1.BehaviorSubject((0, utils_1.getBrowserCachedValue)(`lastChainIdUsed`) || appConfig_1.appConfig$.value.defaultChainId);
+exports.chainIdø = exports.chainId$.pipe((0, rxjs_1.share)());
+const updateChainId = (chainId) => {
+    /* Cache the last chain used browser-side  */
+    (0, utils_1.setBrowserCachedValue)(`lastChainIdUsed`, chainId);
+    // chainId$.next( chainId ); // no need here
+    location.reload();
+};
+exports.updateChainId = updateChainId;
+/** @internal */
+exports.provider$ = new rxjs_1.BehaviorSubject((0, defaultprovider_1.getDefaultProvider)(exports.chainId$.value));
 // export const provider$: Subject<ethers.providers.BaseProvider> = new Subject();
 exports.providerø = exports.provider$.pipe((0, rxjs_1.share)());
 const updateProvider = (newProvider) => {
@@ -47,7 +58,7 @@ exports.accountProviderø.subscribe((accProvider) => tslib_1.__awaiter(void 0, v
     if (typeof window !== 'undefined' && !appConfig_1.appConfig$.value.supressInjectedListeners) {
         window.ethereum.on('accountsChanged', (addr) => exports.account$.next(addr[0]));
         /* Reload the page on every network change as per reccommendation */
-        window.ethereum.on('chainChanged', () => location.reload());
+        window.ethereum.on('chainChanged', (id) => (0, exports.updateChainId)(parseInt(id, 16)));
         /* Connect/Disconnect listeners */
         window.ethereum.on('connect', () => console.log('connected'));
         window.ethereum.on('disconnect', () => console.log('disconnected'));
@@ -60,12 +71,4 @@ const updateAccount = (newAccount) => {
     exports.account$.next(newAccount || undefined);
 };
 exports.updateAccount = updateAccount;
-/** @internal */
-exports.chainId$ = new rxjs_1.BehaviorSubject(appConfig_1.appConfig$.value.defaultChainId);
-exports.chainIdø = exports.chainId$.pipe((0, rxjs_1.share)());
-const updateChainId = (chainId) => {
-    const asNum = parseInt(chainId);
-    exports.chainId$.next(asNum);
-};
-exports.updateChainId = updateChainId;
 //# sourceMappingURL=connection.js.map

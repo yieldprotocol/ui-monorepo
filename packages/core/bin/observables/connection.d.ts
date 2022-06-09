@@ -2,6 +2,10 @@ import { Web3Provider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
 import { Observable, BehaviorSubject } from 'rxjs';
 /** @internal */
+export declare const chainId$: BehaviorSubject<any>;
+export declare const chainIdø: Observable<number>;
+export declare const updateChainId: (chainId: number) => void;
+/** @internal */
 export declare const provider$: BehaviorSubject<ethers.providers.BaseProvider>;
 export declare const providerø: Observable<ethers.providers.BaseProvider>;
 export declare const updateProvider: (newProvider: ethers.providers.BaseProvider) => void;
@@ -17,7 +21,3 @@ export declare const updateAccountProvider: (newProvider: ethers.providers.Web3P
 export declare const account$: BehaviorSubject<string | undefined>;
 export declare const accountø: Observable<string | undefined>;
 export declare const updateAccount: (newAccount?: string) => void;
-/** @internal */
-export declare const chainId$: BehaviorSubject<number>;
-export declare const chainIdø: Observable<number>;
-export declare const updateChainId: (chainId: number | string) => void;

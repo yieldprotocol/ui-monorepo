@@ -27,14 +27,15 @@ export const selectedø: Observable<ISelected> = selected$.pipe(share());
  * */
 seriesMapø
   .pipe( take(2) ) // take after the first series has been added. 
-  .subscribe(([sMap]) => sMap && selectSeries(appConfig$.value.defaultSeriesId || [...sMap][0]));
+  .subscribe(
+    ([sMap]) => sMap && selectSeries(appConfig$.value.defaultSeriesId || [...sMap][0])
+  );
 
 /**
  * 
  *  Functions to selecting elements
  * 
  */
-
 export const selectBase = (asset?: IAsset | string) => {
   const base = (asset as IAsset)?.id ? (asset as IAsset) : assetMap$.value.get(asset as string);
   /* only switch the base if the asset in question is a valid YIELD base */

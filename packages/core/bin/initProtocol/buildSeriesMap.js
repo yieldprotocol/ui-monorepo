@@ -6,11 +6,12 @@ const date_fns_1 = require("date-fns");
 const contracts = tslib_1.__importStar(require("../contracts"));
 const appUtils_1 = require("../utils/appUtils");
 const yieldUtils_1 = require("../utils/yieldUtils");
-const buildSeriesMap = (cauldron, ladle, assetRootMap, provider, chainId, browserCaching) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+const observables_1 = require("../observables");
+const buildSeriesMap = (cauldron, ladle, assetRootMap, provider, browserCaching) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Check for cached assets or start with empty array */
-    const seriesList = (browserCaching && (0, appUtils_1.getBrowserCachedValue)(`${chainId}_series`)) || [];
+    const seriesList = (browserCaching && (0, appUtils_1.getBrowserCachedValue)(`${observables_1.chainId$.value}_series`)) || [];
     /* Check the last time the assets were fetched */
-    const lastSeriesUpdate = (browserCaching && (0, appUtils_1.getBrowserCachedValue)(`${chainId}_lastSeriesUpdate`)) || 'earliest';
+    const lastSeriesUpdate = (browserCaching && (0, appUtils_1.getBrowserCachedValue)(`${observables_1.chainId$.value}_lastSeriesUpdate`)) || 'earliest';
     /* get poolAdded events and series events at the same time */
     const seriesAddedFilter = cauldron.filters.SeriesAdded();
     const poolAddedfilter = ladle.filters.PoolAdded();
@@ -81,12 +82,13 @@ const buildSeriesMap = (cauldron, ladle, assetRootMap, provider, chainId, browse
         console.log('Error fetching series data: ', e);
     }
     // Log the new assets in the cache
-    (0, appUtils_1.setBrowserCachedValue)(`${chainId}_series`, seriesList);
+    (0, appUtils_1.setBrowserCachedValue)(`${observables_1.chainId$.value}_series`, seriesList);
     // Set the 'last checked' block
     const _blockNum = yield provider.getBlockNumber(); // TODO: maybe lose this
-    (0, appUtils_1.setBrowserCachedValue)(`${chainId}_lastSeriesUpdate`, _blockNum);
+    (0, appUtils_1.setBrowserCachedValue)(`${observables_1.chainId$.value}_lastSeriesUpdate`, _blockNum);
     /* create a map from the asset list */
     const seriesRootMap = new Map(seriesList.map((s) => [s.id, s]));
+    console.log(seriesRootMap);
     console.log(`Yield Protocol SERIES data updated [Block: ${_blockNum}]`);
     return seriesRootMap;
 });

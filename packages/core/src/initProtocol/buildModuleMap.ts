@@ -4,9 +4,11 @@ import * as contracts from '../contracts';
 import { ARBITRUM, ETHEREUM } from '../utils/constants';
 import { moduleAddresses, supportedChains } from '../config/protocol';
 
-export const buildModuleMap = (provider: ethers.providers.BaseProvider, chainId: number) => {
+import { chainId$ } from '../observables';
+
+export const buildModuleMap = (provider: ethers.providers.BaseProvider) => {
   /** Get addresses of the module contracts */
-  const _moduleAddresses = moduleAddresses.get(chainId);
+  const _moduleAddresses = moduleAddresses.get(chainId$.value);
 
   /** Inititiate contracts (and distribution as a map) */
   const moduleMap = new Map<string, Contract>([]);
@@ -18,7 +20,7 @@ export const buildModuleMap = (provider: ethers.providers.BaseProvider, chainId:
   );
 
   /** Modules Contracts For Ethereum Chains */
-  if (supportedChains.get(ETHEREUM)!.includes(chainId)) {
+  if (supportedChains.get(ETHEREUM)!.includes(chainId$.value)) {
     // Modules
     moduleMap.set(
       'ConvexLadleModule',
@@ -27,7 +29,7 @@ export const buildModuleMap = (provider: ethers.providers.BaseProvider, chainId:
   }
 
   /** Modules For Arbitrum Chains */
-  if (supportedChains.get(ARBITRUM)!.includes(chainId)) {
+  if (supportedChains.get(ARBITRUM)!.includes(chainId$.value)) {
     // Modules
   }
 

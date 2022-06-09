@@ -13,7 +13,7 @@ interface YieldModuleAddresses {
 }
 
 export const supportedChains = new Map <string, number[]> ([
-  [ ETHEREUM, [ 1, 4, 5 ]  ],
+  [ ETHEREUM, [ 1, 5 ]  ],
   [ ARBITRUM, [ 42161 ] ],
   // [ 'OPTIMISM', [] ],
 ])

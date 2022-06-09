@@ -4,8 +4,9 @@ const types_1 = require("../types");
 const defaultprovider_1 = require("./defaultprovider");
 exports.default = {
     defaultProvider: defaultprovider_1.defaultProvider,
-    defaultChainId: 5,
-    defaultAccountProvider: defaultprovider_1.defaultAccountProvider,
+    defaultAccountProvider: // the initial provider, also used as a fallback if required.
+    defaultprovider_1.defaultAccountProvider,
+    defaultChainId: 1,
     autoConnectAccountProvider: true,
     useAccountProviderAsProvider: false,
     supressInjectedListeners: false,
