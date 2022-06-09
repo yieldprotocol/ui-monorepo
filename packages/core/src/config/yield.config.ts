@@ -6,8 +6,9 @@ export default {
   defaultChainId: 5,
 
   defaultAccountProvider, // the default provider used for getting the account information and signing/transacting
+  
+  autoConnectAccountProvider: true, // try to automatically connect to the injected provider.
   useAccountProviderAsProvider: false, // link the default provider to the account provider.
-  autoConnectAccountProvider: false, // try to automatically connect to the injected provider.
   supressInjectedListeners: false, // ignore the EIP1192 events emited by the injected provider.
   
   defaultSeriesId: undefined,
