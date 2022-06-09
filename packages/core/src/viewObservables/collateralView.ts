@@ -140,7 +140,7 @@ export const minCollateralizationRatioø = _selectedPairø.pipe(
   /* Only emit if assetPair exists */
   filter((assetPair) => !!assetPair),
   /* filtered: we can safelty assume assetPair is defined in here. */
-  map((assetPair): number => assetPair!.minRatio),
+  map((assetPair) => assetPair!.minRatio),
   share()
 );
 

@@ -3,7 +3,7 @@ import { IAsset, ISelected, ISeries, IStrategy, IVault } from '../types';
 import { appConfig$ } from './appConfig';
 import { assetMap$ } from './assetMap';
 import { sendMsg } from './messages';
-import { seriesMap$, seriesMapø, _updateSeries } from './seriesMap';
+import { seriesMap$, seriesMapø } from './seriesMap';
 import { strategyMap$ } from './strategyMap';
 import { vaultMap$ } from './vaultMap';
 

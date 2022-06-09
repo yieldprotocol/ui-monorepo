@@ -16,7 +16,6 @@ export {
 	seriesMap$,
 	seriesMapø,
 	updateSeries,
-	_updateSeries
 } from "./seriesMap";
 export { strategyMap$, strategyMapø, updateStrategies } from "./strategyMap";
 export {

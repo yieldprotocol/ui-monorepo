@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports._updateSeries = exports.updateSeries = exports.seriesMapø = exports.seriesMap$ = void 0;
+exports.updateSeries = exports.seriesMapø = exports.seriesMap$ = void 0;
 const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
 const ethers_1 = require("ethers");
@@ -19,7 +19,7 @@ exports.seriesMapø = exports.seriesMap$.pipe((0, rxjs_1.share)());
 const updateSeries = (seriesList, account) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const list = (seriesList === null || seriesList === void 0 ? void 0 : seriesList.length) ? seriesList : Array.from(exports.seriesMap$.value.values());
     list.map((series) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const seriesUpdate = yield (0, exports._updateSeries)(series, account);
+        const seriesUpdate = yield _updateSeries(series, account);
         exports.seriesMap$.next(new Map(exports.seriesMap$.value.set(series.id, seriesUpdate))); // note: new Map to enforce ref update
     }));
 });
@@ -59,6 +59,7 @@ const _chargeSeries = (series, provider) => {
 };
 /**
  * Dynamic asset info not related to a user
+ *
  * */
 const _updateSeries = (series, account) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Get all the data simultanenously in a promise.all */
@@ -87,5 +88,4 @@ const _updateSeries = (series, account) => tslib_1.__awaiter(void 0, void 0, voi
         fyTokenRealReserves,
         totalSupply, totalSupply_: ethers_1.ethers.utils.formatUnits(totalSupply, series.decimals), apr: `${Number(apr).toFixed(2)}` }), accountData);
 });
-exports._updateSeries = _updateSeries;
 //# sourceMappingURL=seriesMap.js.map

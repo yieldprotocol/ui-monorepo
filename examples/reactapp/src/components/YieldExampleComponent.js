@@ -7,7 +7,6 @@ import { ethers } from "ethers";
 
 const YieldExampleComponent = () => {
 
-
   const {
     yieldProtocol,
     assetMap,
@@ -37,10 +36,8 @@ const YieldExampleComponent = () => {
   const isBorrowPossible = useObservable(viewObservables.isBorrowPossibleø);
 
   // const maxBorrow = useObservable(viewObservables.maxBorrowø);
-
   const collateralizationPercent = useObservable(viewObservables.collateralizationPercentø);
   const collateralizationRatio = useObservable(viewObservables.collateralizationRatioø);
-
 
   const [_selectIlk, setSelectIlk] = React.useState();
 

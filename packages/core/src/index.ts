@@ -46,7 +46,6 @@ appConfig$
   .pipe(
     /* if config file has a default provider and * other checks if required: */
     // filter((conf: IYieldConfig) => conf.defaultProvider !== undefined),
-
     /* only Once at the beginning if the above is true (ie. not on every config change): */
     first()
   )

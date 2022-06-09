@@ -124,7 +124,15 @@ exports.isUndercollateralizedø = (0, rxjs_1.combineLatest)([
  * Check if the collateraillization level of a vault is consdired 'unhealthy'
  * @category Borrow | Collateral
  * */
-exports.isUnhealthyCollateralizationø = (0, rxjs_1.combineLatest)([]).pipe((0, rxjs_1.share)());
+exports.isUnhealthyCollateralizationø = (0, rxjs_1.combineLatest)([
+    exports.collateralizationRatioø,
+    observables_1.selectedø,
+    exports.minCollateralizationRatioø,
+]).pipe((0, rxjs_1.filter)(([, { vault }]) => !!vault), (0, rxjs_1.map)(([ratio, { vault }, minRatio]) => {
+    if (vault === null || vault === void 0 ? void 0 : vault.accruedArt.lte(utils_1.ZERO_BN))
+        return false;
+    return ratio < minRatio + 0.2;
+}), (0, rxjs_1.share)());
 /**
  * The minimum collateral required to meet the minimum protocol-allowed levels
  * @category Borrow | Collateral

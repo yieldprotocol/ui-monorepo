@@ -78,8 +78,9 @@ const _chargeSeries = (series: any, provider: ethers.providers.BaseProvider): IS
 
 /**
  * Dynamic asset info not related to a user
+ * 
  * */
-export const _updateSeries = async (series: ISeries, account?: string | undefined): Promise<ISeries> => {
+const _updateSeries = async (series: ISeries, account?: string | undefined): Promise<ISeries> => {
   /* Get all the data simultanenously in a promise.all */
   const [baseReserves, fyTokenReserves, totalSupply, fyTokenRealReserves] = await Promise.all([
     series.poolContract.getBaseBalance(),
