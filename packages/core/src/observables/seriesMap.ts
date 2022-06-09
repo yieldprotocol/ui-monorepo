@@ -44,10 +44,10 @@ yieldProtocol$
 //   console.log('Series map updated' ) // [provider, seriesMap]);
 // });
 
-/* Observe Account$ changes ('update dynamic/User Data') */
-account$.pipe(withLatestFrom(seriesMap$)).subscribe(([account]) => {
-  console.log('account changed:', account);
-});
+// /* Observe Account$ changes ('update dynamic/User Data') */
+// account$.pipe(withLatestFrom(seriesMap$)).subscribe(([account]) => {
+//   console.log('account changed:', account);
+// });
 
 /**
  * Internal Functions

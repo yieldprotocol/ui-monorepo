@@ -48,12 +48,12 @@ yieldProtocol$
 //   console.log( [provider, seriesMap] )
 // })
 
-/* Observe Account$ changes ('update dynamic/User Data') */
-account$
-.pipe(withLatestFrom(strategyMap$))
-.subscribe( ([account ]) => {
-  console.log( 'account changed:', account )
-})
+// /* Observe Account$ changes ('update dynamic/User Data') */
+// account$
+// .pipe(withLatestFrom(strategyMap$))
+// .subscribe( ([account ]) => {
+//   console.log( 'account changed:', account )
+// })
 
 /* Add on extra/calculated Strategy info, contract instances and methods (no async calls) */
 const _chargeStrategy = (strategy: any, provider: ethers.providers.BaseProvider) : IStrategy => {

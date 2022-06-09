@@ -19,6 +19,7 @@ exports.updateProvider = updateProvider;
  **/
 /** @internal */
 exports.accountProvider$ = new rxjs_1.BehaviorSubject(defaultprovider_1.defaultAccountProvider);
+// export const provider$: Subject<ethers.providers.BaseProvider> = new Subject();
 exports.accountProviderø = exports.accountProvider$.pipe((0, rxjs_1.share)());
 const updateAccountProvider = (newProvider) => {
     // TODO: wrap the EIP provider into a ethers.web3Provider if required.
@@ -28,16 +29,14 @@ exports.updateAccountProvider = updateAccountProvider;
 /* handle any events on the accountProvider ( web3Provider ) */
 exports.accountProviderø.subscribe((accProvider) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     console.log('NEW CHAIN ID', (yield accProvider.getNetwork()).chainId);
-    // MetaMask requires requesting permission to connect users accounts
-    yield accProvider.send("eth_requestAccounts", []);
-    /* Attach listeners for EIP1193 events */
-    window.ethereum.on('accountsChanged', (addr) => exports.account$.next(addr));
-    window.ethereum.on('chainChanged', (x) => console.log(x));
     // console.log('NEW ADDRESSS', await accProvider.getSigner().getAddress() );
-    // account$.next(await accProvider.getSigner().getAddress());
+    //  account$.next(await accProvider.getSigner().getAddress());
 }));
 /** @internal */
 exports.account$ = new rxjs_1.BehaviorSubject(undefined); // TODO weird typing here ??
+/**
+ * The current user account address.
+ * */
 exports.accountø = exports.account$.pipe((0, rxjs_1.share)());
 /**
  * @param newAccount
@@ -46,4 +45,4 @@ const updateAccount = (newAccount) => {
     exports.account$.next(newAccount || undefined);
 };
 exports.updateAccount = updateAccount;
-//# sourceMappingURL=connection.js.map
+//# sourceMappingURL=connected.js.map

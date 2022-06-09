@@ -72,7 +72,9 @@ const YieldExampleComponent = () => {
       
       <hr />
       <div>
-        <h2>ChainId: {chainId}</h2>
+        <h3>ChainId: {chainId}</h3>
+
+        <h3> Account: { account } </h3>
         <button
           // onClick={async () => {
           //   const accs = await window.ethereum.request({

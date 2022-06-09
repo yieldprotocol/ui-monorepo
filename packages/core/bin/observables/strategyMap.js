@@ -41,12 +41,12 @@ yieldProtocol_1.yieldProtocol$
 // .subscribe(([provider, seriesMap] ) => {
 //   console.log( [provider, seriesMap] )
 // })
-/* Observe Account$ changes ('update dynamic/User Data') */
-connection_1.account$
-    .pipe((0, rxjs_1.withLatestFrom)(exports.strategyMap$))
-    .subscribe(([account]) => {
-    console.log('account changed:', account);
-});
+// /* Observe Account$ changes ('update dynamic/User Data') */
+// account$
+// .pipe(withLatestFrom(strategyMap$))
+// .subscribe( ([account ]) => {
+//   console.log( 'account changed:', account )
+// })
 /* Add on extra/calculated Strategy info, contract instances and methods (no async calls) */
 const _chargeStrategy = (strategy, provider) => {
     const _strategy = contracts.Strategy__factory.connect(strategy.address, provider);

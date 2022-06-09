@@ -1,4 +1,3 @@
-import { Web3Provider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
 import { Observable, BehaviorSubject } from 'rxjs';
 /** @internal */
@@ -10,11 +9,14 @@ export declare const updateProvider: (newProvider: ethers.providers.BaseProvider
  * It also adds a number of listeners to monitor account changes etc.
  **/
 /** @internal */
-export declare const accountProvider$: BehaviorSubject<Web3Provider>;
+export declare const accountProvider$: BehaviorSubject<ethers.providers.Web3Provider>;
 export declare const accountProviderø: Observable<ethers.providers.Web3Provider>;
 export declare const updateAccountProvider: (newProvider: ethers.providers.Web3Provider) => void;
 /** @internal */
 export declare const account$: BehaviorSubject<string | undefined>;
+/**
+ * The current user account address.
+ * */
 export declare const accountø: Observable<string | undefined>;
 /**
  * @param newAccount
