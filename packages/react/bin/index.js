@@ -44,7 +44,6 @@ var YieldProvider = function (_a) {
     var selected = useObservable(selectedø);
     // const transactionMap = useObservable(transactionMapø) as unknown as string;
     useEffect(function () {
-        console.log(props === null || props === void 0 ? void 0 : props.provider);
         (props === null || props === void 0 ? void 0 : props.provider) && yieldFunctions.updateProvider(props === null || props === void 0 ? void 0 : props.provider);
     }, [props === null || props === void 0 ? void 0 : props.provider]);
     return (_jsx(YieldContext.Provider, __assign({ value: {

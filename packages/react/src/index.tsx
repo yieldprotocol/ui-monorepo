@@ -75,7 +75,6 @@ const YieldProvider = ({ props, children }: any) => {
   // const transactionMap = useObservable(transactionMapø) as unknown as string;
 
   useEffect(() => {
-    console.log(props?.provider);
     props?.provider && yieldFunctions.updateProvider(props?.provider);
   }, [props?.provider]);
 

@@ -29,8 +29,6 @@ export const buildAssetMap = async (
     cauldron.queryFilter(assetAddedFilter, lastAssetUpdate, 'latest'),
     ladle.queryFilter(joinAddedfilter, lastAssetUpdate, 'latest'),
   ]);
-
-  console.log( cauldron.address )
   
   /* Create a map from the joinAdded event data or hardcoded join data if available */
   const joinMap = new Map( joinAddedEvents.map((e: JoinAddedEvent) => e.args ) ); // event values);

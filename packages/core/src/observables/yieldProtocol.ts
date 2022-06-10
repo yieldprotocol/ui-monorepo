@@ -1,6 +1,6 @@
-import { BehaviorSubject, Observable, share } from "rxjs";
-import { Contract } from "ethers";
-import { IAssetRoot, ISeriesRoot, IStrategyRoot, IYieldProtocol } from "../types";
+import { BehaviorSubject, Observable, share, withLatestFrom } from "rxjs";
+import { Contract, ethers } from "ethers";
+import { IAssetRoot, ISeriesRoot, IStrategyRoot, IYieldConfig, IYieldProtocol } from "../types";
 import * as contracts from '../contracts';
 import { appConfig$ } from "./appConfig";
 

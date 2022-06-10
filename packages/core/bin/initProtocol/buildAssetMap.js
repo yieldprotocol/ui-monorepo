@@ -19,7 +19,6 @@ const buildAssetMap = (cauldron, ladle, provider, browserCaching) => tslib_1.__a
         cauldron.queryFilter(assetAddedFilter, lastAssetUpdate, 'latest'),
         ladle.queryFilter(joinAddedfilter, lastAssetUpdate, 'latest'),
     ]);
-    console.log(cauldron.address);
     /* Create a map from the joinAdded event data or hardcoded join data if available */
     const joinMap = new Map(joinAddedEvents.map((e) => e.args)); // event values);
     /* Create a array from the assetAdded event data or hardcoded asset data if available */

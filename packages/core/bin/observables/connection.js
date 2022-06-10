@@ -6,8 +6,22 @@ const rxjs_1 = require("rxjs");
 const defaultprovider_1 = require("../config/defaultprovider");
 const utils_1 = require("../utils");
 const appConfig_1 = require("./appConfig");
+// const getDefaultChainId = async () : Promise<number> => {
+//   /* if in a browser environment */
+//   if (typeof window !== 'undefined') {
+//     if ((window as any).ethereum) {
+//       // first try from the injected provider
+//       const injectedId = await (window as any).ethereum.request({ method: 'eth_chainId' });
+//       return parseInt(injectedId, 16);
+//     }
+//     const fromCache = getBrowserCachedValue(`lastChainIdUsed`);
+//     return fromCache; // second, from the last id used in the cache
+//   }
+//   /* in a non-browser environment */
+//   return appConfig$.value.defaultChainId; // defaults to the defaultChainId in the settings
+// };
 /** @internal */
-exports.chainId$ = new rxjs_1.BehaviorSubject((0, utils_1.getBrowserCachedValue)(`lastChainIdUsed`) || appConfig_1.appConfig$.value.defaultChainId);
+exports.chainId$ = new rxjs_1.BehaviorSubject(1);
 exports.chainIdø = exports.chainId$.pipe((0, rxjs_1.share)());
 const updateChainId = (chainId) => {
     /* Cache the last chain used browser-side  */
@@ -16,9 +30,25 @@ const updateChainId = (chainId) => {
     location.reload();
 };
 exports.updateChainId = updateChainId;
+/**
+ * FIRST LOAD > Handle initial setup protocol with DEFAULTS on FIRST LOAD
+ */
+//  (async () => {
+//   /* if in a browser environment */
+//   if (typeof window !== 'undefined') {
+//     if ((window as any).ethereum) { // first try from the injected provider
+//       const injectedId = await (window as any).ethereum.request({ method: 'eth_chainId' });
+//       console.log('InjectedID', injectedId );
+//       chainId$.next( parseInt(injectedId, 16) )
+//     }
+//     const fromCache = getBrowserCachedValue(`lastChainIdUsed`)
+//     chainId$.next( fromCache ); // second, from the last id used in the cache
+//   }
+//   /* in a non-browser environment */
+//   chainId$.next(appConfig$.value.defaultChainId); // defaults to the defaultChainId in the settings
+// })()
 /** @internal */
-exports.provider$ = new rxjs_1.BehaviorSubject((0, defaultprovider_1.getDefaultProvider)(exports.chainId$.value));
-// export const provider$: Subject<ethers.providers.BaseProvider> = new Subject();
+exports.provider$ = new rxjs_1.BehaviorSubject((0, defaultprovider_1.getDefaultProvider)(1));
 exports.providerø = exports.provider$.pipe((0, rxjs_1.share)());
 const updateProvider = (newProvider) => {
     exports.provider$.next(newProvider); // update to whole new protocol
@@ -46,14 +76,14 @@ exports.accountProviderø.subscribe((accProvider) => tslib_1.__awaiter(void 0, v
      * */
     try {
         appConfig_1.appConfig$.value.autoConnectAccountProvider &&
-            exports.account$.next((yield accProvider.send("eth_requestAccounts", []))[0]);
+            exports.account$.next((yield accProvider.send('eth_requestAccounts', []))[0]);
     }
     catch (e) {
         console.log(e);
     }
     /**
      * Attach listeners for EIP1193 events
-     * ( Unless supressed, or not in a browser environment )
+     * (Unless supressed, or not in a browser environment )
      * */
     if (typeof window !== 'undefined' && !appConfig_1.appConfig$.value.supressInjectedListeners) {
         window.ethereum.on('accountsChanged', (addr) => exports.account$.next(addr[0]));

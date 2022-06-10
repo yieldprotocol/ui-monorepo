@@ -8,6 +8,7 @@ export const defaultProvider: ethers.providers.BaseProvider = new ethers.provide
 export const defaultAccountProvider = new ethers.providers.Web3Provider(window.ethereum);
 
 export const getDefaultProvider = (chainId: number) => {
+  console.log( chainId );
   if (chainId === 1)
     return new ethers.providers.WebSocketProvider(
       `wss://mainnet.infura.io/ws/v3/de43fd0c912d4bdc94712ab4b37613ea`

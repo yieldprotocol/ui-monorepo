@@ -5,6 +5,7 @@ const ethers_1 = require("ethers");
 exports.defaultProvider = new ethers_1.ethers.providers.WebSocketProvider(`wss://mainnet.infura.io/ws/v3/de43fd0c912d4bdc94712ab4b37613ea`);
 exports.defaultAccountProvider = new ethers_1.ethers.providers.Web3Provider(window.ethereum);
 const getDefaultProvider = (chainId) => {
+    console.log(chainId);
     if (chainId === 1)
         return new ethers_1.ethers.providers.WebSocketProvider(`wss://mainnet.infura.io/ws/v3/de43fd0c912d4bdc94712ab4b37613ea`);
     if (chainId === 5)
