@@ -69,7 +69,6 @@ export const sign = async (requestedSignatures: ISignData[], processCode: string
   const isContractWallet = (account && (await provider.getCode(account)) !== '0x0') || '0x';
   console.log(isContractWallet);
 
-  // const { diagnostics } = appConfig$.value;
   const { maxApproval, approvalMethod } = userSettings$.value;
 
   const signer = account

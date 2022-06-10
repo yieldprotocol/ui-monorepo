@@ -9,7 +9,7 @@ import { seriesMapø } from './observables/seriesMap';
 import { yieldProtocol$, yieldProtocolø } from './observables/yieldProtocol';
 import { strategyMapø } from './observables/strategyMap';
 import { vaultMapø } from './observables/vaultMap';
-import { appConfig$, appConfigø, updateYieldConfig } from './observables/appConfig';
+import { appConfigø, updateYieldConfig } from './observables/appConfig';
 import { accountProviderø, provider$, providerø, updateProvider } from './observables/connection';
 import { selectBase, selectedø, selectIlk, selectSeries, selectStrategy, selectVault } from './observables/selected';
 
@@ -65,7 +65,6 @@ appConfigø.subscribe()
 //  .subscribe(async ([provider, config]: [ethers.providers.BaseProvider, IYieldConfig]) => {
 //    yieldProtocol$.next(await buildProtocol(provider, config.browserCaching));
 //  });
-
 
 /* Expose the observables */
 const yieldObservables: IYieldObservables = {

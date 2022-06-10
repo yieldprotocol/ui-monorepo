@@ -28,9 +28,7 @@ seriesMap_1.seriesMapø
     .pipe((0, rxjs_1.take)(2)) // take after the first series has been added. 
     .subscribe(([sMap]) => sMap && (0, exports.selectSeries)(appConfig_1.appConfig$.value.defaultSeriesId || [...sMap][0]));
 /**
- *
  *  Functions to selecting elements
- *
  */
 const selectBase = (asset) => {
     const base = (asset === null || asset === void 0 ? void 0 : asset.id) ? asset : assetMap_1.assetMap$.value.get(asset);

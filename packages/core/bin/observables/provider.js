@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateAccountProvider = exports.accountProviderø = exports.accountProvider$ = exports.updateProvider = exports.providerø = exports.provider$ = void 0;
+exports.updateAccount = exports.accountø = exports.account$ = exports.updateAccountProvider = exports.accountProviderø = exports.accountProvider$ = exports.updateProvider = exports.providerø = exports.provider$ = void 0;
 const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
 const defaultprovider_1 = require("../config/defaultprovider");
@@ -22,12 +22,27 @@ exports.accountProvider$ = new rxjs_1.BehaviorSubject(defaultprovider_1.defaultA
 // export const provider$: Subject<ethers.providers.BaseProvider> = new Subject();
 exports.accountProviderø = exports.accountProvider$.pipe((0, rxjs_1.share)());
 const updateAccountProvider = (newProvider) => {
+    // TODO: wrap the EIP provider into a ethers.web3Provider if required 
     exports.accountProvider$.next(newProvider); // update to whole new protocol
 };
 exports.updateAccountProvider = updateAccountProvider;
+/* handle any events on the accountProvider ( web3Provider ) */
 exports.accountProviderø.subscribe((accProvider) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    console.log('NEW CHAIN ID', (yield accProvider.getNetwork()).chainId);
-    console.log('NEW ADDRESSS', yield accProvider.getSigner().getAddress());
-    //   account$.next(await accProvider.getSigner().getAddress());
+    // console.log('NEW CHAIN ID', (await accProvider.getNetwork()).chainId);
+    // console.log('NEW ADDRESSS', await accProvider.getSigner().getAddress() );
+    exports.account$.next(yield accProvider.getSigner().getAddress());
 }));
+/** @internal */
+exports.account$ = new rxjs_1.BehaviorSubject(undefined); // TODO weird typing here ??
+/**
+ * The current user account address.
+ * */
+exports.accountø = exports.account$.pipe((0, rxjs_1.share)());
+/**
+ * @param newAccount
+ */
+const updateAccount = (newAccount) => {
+    exports.account$.next(newAccount || undefined);
+};
+exports.updateAccount = updateAccount;
 //# sourceMappingURL=provider.js.map

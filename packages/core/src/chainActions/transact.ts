@@ -2,9 +2,10 @@ import { ethers, Contract, PayableOverrides, BigNumber, ContractTransaction } fr
 import { Web3Provider } from '@ethersproject/providers';
 import { Ladle } from '../contracts';
 import { account$, appConfig$, provider$, yieldProtocol$ } from '../observables/';
-import { ICallData, LadleActions, ProcessStage, TxState } from '../types';
+import { ICallData, IYieldProcess, LadleActions, ProcessStage, TxState } from '../types';
 import { ZERO_BN } from '../utils/constants';
 import { resetProcess, transactionMap$, updateProcess } from '../observables/transactionMap';
+import { combineLatest } from 'rxjs';
 
 /* Encode the calls: */ // TODO: this could probably be refactored to look better
 const _encodeCalls = (calls: ICallData[], ladle: Ladle) =>
@@ -35,9 +36,6 @@ const _totalBatchValue = (calls: ICallData[]) =>
 /* Handle the transaction error */ 
 const _handleTxError = () => {
 
-
-
-
 };
 
 /* handle case when user or wallet rejects the tx (before submission) */
@@ -58,9 +56,10 @@ const _handleTxRejection = (err: any, processCode: string) => {
 };
 
 export const transact = async (calls: ICallData[], processCode: string) => {
-  updateProcess({ processCode, stage: ProcessStage.TRANSACTION_REQUESTED });
 
   /* Bring in observables */
+  updateProcess({ processCode, stage: ProcessStage.TRANSACTION_REQUESTED });
+
   const { ladle } = yieldProtocol$.value;
   const account = account$.value;
   const provider = provider$.value as Web3Provider;

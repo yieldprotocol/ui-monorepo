@@ -32,9 +32,7 @@ seriesMapø
   );
 
 /**
- * 
  *  Functions to selecting elements
- * 
  */
 export const selectBase = (asset?: IAsset | string) => {
   const base = (asset as IAsset)?.id ? (asset as IAsset) : assetMap$.value.get(asset as string);

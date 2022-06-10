@@ -7,9 +7,6 @@ import { ZERO_BN } from '../utils';
 import { getAssetPairId } from '../utils/yieldUtils';
 import { borrowInputø, repayInputø } from './input';
 
-import { appConfig$ } from '../observables/appConfig';
-const diagnostics = appConfig$.value.diagnostics;
-
 /** 
  * Maximum amount of debt allowed by the protocol for a particular [[IAssetPair | Asset Pair]]
  * @category Borrow

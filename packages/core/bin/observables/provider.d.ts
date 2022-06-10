@@ -12,3 +12,13 @@ export declare const updateProvider: (newProvider: ethers.providers.BaseProvider
 export declare const accountProvider$: BehaviorSubject<ethers.providers.Web3Provider>;
 export declare const accountProviderø: Observable<ethers.providers.Web3Provider>;
 export declare const updateAccountProvider: (newProvider: ethers.providers.Web3Provider) => void;
+/** @internal */
+export declare const account$: BehaviorSubject<string | undefined>;
+/**
+ * The current user account address.
+ * */
+export declare const accountø: Observable<string | undefined>;
+/**
+ * @param newAccount
+ */
+export declare const updateAccount: (newAccount?: string) => void;

@@ -8,8 +8,6 @@ const messages_1 = require("../observables/messages");
 const utils_1 = require("../utils");
 const yieldUtils_1 = require("../utils/yieldUtils");
 const input_1 = require("./input");
-const appConfig_1 = require("../observables/appConfig");
-const diagnostics = appConfig_1.appConfig$.value.diagnostics;
 /**
  * Maximum amount of debt allowed by the protocol for a particular [[IAssetPair | Asset Pair]]
  * @category Borrow

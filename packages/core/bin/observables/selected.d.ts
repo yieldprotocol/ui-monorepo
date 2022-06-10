@@ -4,9 +4,7 @@ import { IAsset, ISelected, ISeries, IStrategy, IVault } from '../types';
 export declare const selected$: BehaviorSubject<ISelected>;
 export declare const selectedø: Observable<ISelected>;
 /**
- *
  *  Functions to selecting elements
- *
  */
 export declare const selectBase: (asset?: IAsset | string) => void;
 export declare const selectIlk: (asset?: IAsset | string) => void;

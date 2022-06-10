@@ -49,8 +49,8 @@ const _handleTxRejection = (err, processCode) => {
     }
 };
 const transact = (calls, processCode) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    (0, transactionMap_1.updateProcess)({ processCode, stage: types_1.ProcessStage.TRANSACTION_REQUESTED });
     /* Bring in observables */
+    (0, transactionMap_1.updateProcess)({ processCode, stage: types_1.ProcessStage.TRANSACTION_REQUESTED });
     const { ladle } = observables_1.yieldProtocol$.value;
     const account = observables_1.account$.value;
     const provider = observables_1.provider$.value;

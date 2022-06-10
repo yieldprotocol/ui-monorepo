@@ -53,7 +53,6 @@ const sign = (requestedSignatures, processCode) => tslib_1.__awaiter(void 0, voi
     const account = observables_1.account$.value;
     const isContractWallet = (account && (yield provider.getCode(account)) !== '0x0') || '0x';
     console.log(isContractWallet);
-    // const { diagnostics } = appConfig$.value;
     const { maxApproval, approvalMethod } = userSettings_1.userSettings$.value;
     const signer = account
         ? provider.getSigner(account)
