@@ -38,18 +38,12 @@ import {
 import { collateralizationPercentø, collateralizationRatioø } from './viewObservables/collateralView';
 
 /** 
- * On app start, appConfig gathers all the required information from env etc.
+ * On app start (and on provider$, chainId$ or appConfig$ observed changes ), 
+ * appConfig gathers all the required information from env etc.
  * sets things up, and then the stream finishes indicating that everything is ready to go.
  */
-combineLatest( [appConfigø, chainIdø ] )
-.subscribe( ([chainId, appConfig ]) => console.log( 'All good to go!: ', chainId, appConfig ))
-
-/**
- * Observe provider$ changes  => Load/re-load protocol (TODO only if network id changes?)
- * */
  combineLatest([ providerø, appConfigø, chainIdø ])
  .subscribe(async ([provider, config, chainId]) => {
-  console.log('herer',  provider )
    yieldProtocol$.next(await buildProtocol(provider, chainId, config.browserCaching));
  });
 

@@ -16,9 +16,6 @@ import { getBrowserCachedValue, setBrowserCachedValue } from '../utils';
 import { appConfigø } from './appConfig';
 declare const window: any;
 
-/**
- * FIRST LOAD > Handle initial setup protocol with a selected chainID
- */
 /** @internal */
 export const chainIdø: Observable<number> = appConfigø.pipe(
   mergeMap(async (config) => {

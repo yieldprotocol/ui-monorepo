@@ -1,9 +1,6 @@
 import { Web3Provider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
 import { Observable, BehaviorSubject, Subject } from 'rxjs';
-/**
- * FIRST LOAD > Handle initial setup protocol with a selected chainID
- */
 /** @internal */
 export declare const chainIdø: Observable<number>;
 /**

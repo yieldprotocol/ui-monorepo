@@ -7,9 +7,6 @@ const rxjs_1 = require("rxjs");
 const defaultprovider_1 = require("../config/defaultprovider");
 const utils_1 = require("../utils");
 const appConfig_1 = require("./appConfig");
-/**
- * FIRST LOAD > Handle initial setup protocol with a selected chainID
- */
 /** @internal */
 exports.chainIdø = appConfig_1.appConfigø.pipe((0, rxjs_1.mergeMap)((config) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* if in a browser environment */

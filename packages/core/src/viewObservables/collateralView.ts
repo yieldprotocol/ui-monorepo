@@ -6,7 +6,7 @@ import {
   calcLiquidationPrice,
 } from '@yield-protocol/ui-math';
 import { BigNumber } from 'ethers';
-import { combineLatest, filter, map, Observable, share } from 'rxjs';
+import { combineLatest, filter, map, Observable, share, withLatestFrom } from 'rxjs';
 import { selectedø } from '../observables';
 import { ONE_BN, ZERO_BN } from '../utils';
 import { getAssetPairId, ratioToPercent } from '../utils/yieldUtils';
@@ -40,7 +40,8 @@ const _selectedPairø = combineLatest([selectedø, assetPairMapø]).pipe(
  */
 const _totalDebtWithInputø: Observable<BigNumber[]> = combineLatest([borrowInputø, selectedø]).pipe(
   // filter(([, selected]) => !!selected.series),
-  map(([debtInput, selected]) => {
+  withLatestFrom(appConfigø ), 
+  map(([[debtInput, selected], config]) => {
     const { vault, series } = selected; // we can safetly assume 'series' is defined - not vault.
     const existingDebt_ = vault?.accruedArt || ZERO_BN;
     /* NB NOTE: this whole function ONLY deals with decimal18, existing values are converted to decimal18 */
@@ -59,7 +60,7 @@ const _totalDebtWithInputø: Observable<BigNumber[]> = combineLatest([borrowInpu
     const newDebtAsWei = decimalNToDecimal18(newDebt, series!.decimals);
     const totalDebt = existingDebtAsWei.add(newDebtAsWei);
 
-    appConfigø.subscribe( ({diagnostics}) => diagnostics && console.log('Total Debt (d18): ', totalDebt.toString()))
+    config.diagnostics && console.log('Total Debt (d18): ', totalDebt.toString());
 
     return [totalDebt, existingDebtAsWei]; // as decimal18
   }),
@@ -77,7 +78,8 @@ const _totalDebtWithInputø: Observable<BigNumber[]> = combineLatest([borrowInpu
  * RETURNS [ totalCollateral, exisitingCollateral] in decimals18 for comparative calcs
  */
 const _totalCollateralWithInputø: Observable<BigNumber[]> = combineLatest([collateralInputø, selectedø]).pipe(
-  map(([collInput, selected]) => {
+  withLatestFrom(appConfigø),
+  map(([[collInput, selected], config]) => {
     const { vault, ilk } = selected;
     if (ilk) {
       const existingCollateral_ = vault?.ink || ZERO_BN; // if no vault simply return zero.
@@ -86,14 +88,10 @@ const _totalCollateralWithInputø: Observable<BigNumber[]> = combineLatest([coll
       /* TODO: there is a weird bug if inputting before selecting ilk. */
       const newCollateralAsWei = decimalNToDecimal18(collInput, ilk.decimals);
       const totalCollateral = existingCollateralAsWei.add(newCollateralAsWei);
-
       appConfigø.subscribe( ({diagnostics}) => diagnostics && console.log('Total Collateral (d18): ', totalCollateral.toString()))
-
       return [totalCollateral, existingCollateralAsWei]; // as decimal18
     }
-
-    appConfigø.subscribe( ({diagnostics}) => diagnostics && console.warn('Hey fren. Make sure an Ilk is selected!'))
-
+    config.diagnostics && console.warn('Hey fren. Make sure an Ilk is selected!')
     return [];
   }),
   share()
@@ -108,7 +106,8 @@ export const collateralizationRatioø: Observable<number | undefined> = combineL
   _totalCollateralWithInputø,
   _selectedPairø,
 ]).pipe(
-  map(([totalDebt, totalCollat, assetPair]) => {
+  withLatestFrom(appConfigø),
+  map(([[totalDebt, totalCollat, assetPair], config]) => {
     if (
       /* if all the elements exist and are greater than 0 */
       totalCollat[0]?.gt(ZERO_BN) &&
@@ -118,7 +117,7 @@ export const collateralizationRatioø: Observable<number | undefined> = combineL
       /* NOTE: this function ONLY deals with decimal18, existing values are converted to decimal18 */
       const pairPriceInWei = decimalNToDecimal18(assetPair.pairPrice, assetPair.baseDecimals);
       const ratio = calculateCollateralizationRatio(totalCollat[0], pairPriceInWei, totalDebt[0], false);
-      appConfigø.subscribe( ({diagnostics}) => diagnostics && console.log('Collateralisation ratio:', ratio))
+      config.diagnostics && console.log('Collateralisation ratio:', ratio);
       return ratio;
     }
     return undefined;

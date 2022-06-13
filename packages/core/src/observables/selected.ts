@@ -27,6 +27,7 @@ export const selectedø: Observable<ISelected> = selected$.pipe(share());
  * */
 seriesMapø
   .pipe( 
+    take(2), // hmm, take 2 because it will be the first update with a value.
     withLatestFrom(appConfigø)
   )
   .subscribe(
