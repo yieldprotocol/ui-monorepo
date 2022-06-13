@@ -6,6 +6,22 @@ import defaultConfig from '../config/yield.config';
 import { getBrowserCachedValue } from '../utils';
 import { chainId$ } from './connection';
 
+
+const getDefaultChainId = async () : Promise<number> => {
+  /* if in a browser environment */
+  if (typeof window !== 'undefined') {
+    if ((window as any).ethereum) {
+      // first try from the injected provider
+      const injectedId = await (window as any).ethereum.request({ method: 'eth_chainId' });
+      return parseInt(injectedId, 16);
+    }
+    const fromCache = getBrowserCachedValue(`lastChainIdUsed`);
+    return fromCache; // second, from the last id used in the cache
+  }
+  /* in a non-browser environment */
+  return appConfig$.value.defaultChainId; // defaults to the defaultChainId in the settings
+};
+
 /** @internal */
 export const appConfig$: BehaviorSubject<IYieldConfig> = new BehaviorSubject(defaultConfig);
 /**
@@ -15,8 +31,10 @@ export const appConfig$: BehaviorSubject<IYieldConfig> = new BehaviorSubject(def
 export const appConfigø: Observable<IYieldConfig> = appConfig$
 .pipe(
   // take(1), // Only do this once on app load.
+  delay(5000),
   map((config) => {
     // await ( new Promise(resolve => setTimeout(resolve, 5000)) ) ;
+    console.log(' herer' )
     return config;
     // /* if in a browser environment */
     // if (typeof window !== 'undefined') {
@@ -35,7 +53,6 @@ export const appConfigø: Observable<IYieldConfig> = appConfig$
     // setTimeout(() => config , 5000)
     // return config;
   }),
-  delay(5000),
   // takeUntil(appConfig$),
   finalize(() => console.log('App Environment Configured.'))
 )

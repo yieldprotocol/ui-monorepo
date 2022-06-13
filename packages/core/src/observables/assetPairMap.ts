@@ -8,7 +8,7 @@ import { WAD_BN } from '../utils';
 import { yieldProtocol$ } from './yieldProtocol';
 import { selectedø } from './selected';
 import { getAssetPairId } from '../utils/yieldUtils';
-import { chainId$ } from './connection';
+import { chainId, provider$ } from './connection';
 
 /** @internal */
 export const assetPairMap$: BehaviorSubject<Map<string, IAssetPair>> = new BehaviorSubject(new Map([]));
@@ -37,9 +37,7 @@ selectedø
 export const updatePair = async (baseId: string, ilkId: string): Promise<IAssetPair | null> => {
 
   const { cauldron, assetRootMap, oracleMap } = yieldProtocol$.value;
-  
-  // const cauldron = contractMap.get('Cauldron');
-  const oracleName = ORACLES.get(chainId$.value || 1)
+  const oracleName = ORACLES.get(await chainId)
     ?.get(baseId)
     ?.get(ilkId);
 

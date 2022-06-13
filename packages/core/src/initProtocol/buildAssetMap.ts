@@ -8,18 +8,22 @@ import { AssetAddedEvent } from '../contracts/Cauldron';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils/appUtils';
 
 import { chainId$ } from '../observables';
+import { combineLatestInit } from 'rxjs/internal/observable/combineLatest';
 
 export const buildAssetMap = async (
   cauldron: contracts.Cauldron,
   ladle: contracts.Ladle,
   provider: ethers.providers.BaseProvider,
+  chainId: number,
   browserCaching: boolean
 ): Promise<Map<string, IAssetRoot>> => {
 
+
+
   /* Check for cached assets or start with empty array */
-  const assetList: any[] = (browserCaching && getBrowserCachedValue(`${chainId$.value}_assets`)) || [];
+  const assetList: any[] = (browserCaching && getBrowserCachedValue(`${chainId}_assets`)) || [];
   /* Check the last time the assets were fetched */
-  const lastAssetUpdate = (browserCaching && getBrowserCachedValue(`${chainId$.value}_lastAssetUpdate`)) || 'earliest';
+  const lastAssetUpdate = (browserCaching && getBrowserCachedValue(`${chainId}_lastAssetUpdate`)) || 'earliest';
 
   /* Get all the assetAdded, oracleAdded and joinAdded events and series events at the same time */
   const assetAddedFilter = cauldron.filters.AssetAdded();
@@ -76,9 +80,9 @@ export const buildAssetMap = async (
         }
 
         /* Check if an unwrapping handler is provided, if so, the token is considered to be a wrapped token */
-        const isWrappedToken = assetInfo.unwrapHandlerAddresses?.has(chainId$.value);
+        const isWrappedToken = assetInfo.unwrapHandlerAddresses?.has(chainId);
         /* Check if a wrapping handler is provided, if so, wrapping is required */
-        const wrappingRequired = assetInfo.wrapHandlerAddresses?.has(chainId$.value);
+        const wrappingRequired = assetInfo.wrapHandlerAddresses?.has(chainId);
 
         const newAsset = {
           ...assetInfo,
@@ -117,10 +121,10 @@ export const buildAssetMap = async (
   }
 
   // Log the new assets in the cache
-  setBrowserCachedValue(`${chainId$.value}_assets`, assetList);
+  setBrowserCachedValue(`${chainId}_assets`, assetList);
   // Set the 'last checked' block
   const _blockNum = await provider.getBlockNumber(); // TODO: maybe lose this
-  setBrowserCachedValue(`${chainId$.value}_lastAssetUpdate`, _blockNum );
+  setBrowserCachedValue(`${chainId}_lastAssetUpdate`, _blockNum );
 
   /* create a map from the 'charged' asset list */
   // const assetRootMap: Map<string, IAssetRoot> = new Map(assetList.map((a: any) => [a.id, _chargeAsset(a, provider)]));

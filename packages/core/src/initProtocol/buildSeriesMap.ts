@@ -16,13 +16,14 @@ export const buildSeriesMap = async (
   ladle: contracts.Ladle,
   assetRootMap: Map<string, IAssetRoot>,
   provider: ethers.providers.BaseProvider,
+  chainId: number,
   browserCaching: boolean
 ): Promise<Map<string, ISeriesRoot>> => {
 
   /* Check for cached assets or start with empty array */
-  const seriesList: any[] = (browserCaching && getBrowserCachedValue(`${chainId$.value}_series`)) || [];
+  const seriesList: any[] = (browserCaching && getBrowserCachedValue(`${chainId}_series`)) || [];
   /* Check the last time the assets were fetched */
-  const lastSeriesUpdate = (browserCaching && getBrowserCachedValue(`${chainId$.value}_lastSeriesUpdate`)) || 'earliest';
+  const lastSeriesUpdate = (browserCaching && getBrowserCachedValue(`${chainId}_lastSeriesUpdate`)) || 'earliest';
 
   /* get poolAdded events and series events at the same time */
   const seriesAddedFilter = cauldron.filters.SeriesAdded();
@@ -102,10 +103,10 @@ export const buildSeriesMap = async (
   }
 
   // Log the new assets in the cache
-  setBrowserCachedValue(`${chainId$.value}_series`, seriesList);
+  setBrowserCachedValue(`${chainId}_series`, seriesList);
   // Set the 'last checked' block
   const _blockNum = await provider.getBlockNumber(); // TODO: maybe lose this
-  setBrowserCachedValue(`${chainId$.value}_lastSeriesUpdate`, _blockNum);
+  setBrowserCachedValue(`${chainId}_lastSeriesUpdate`, _blockNum);
 
   /* create a map from the asset list */
   const seriesRootMap: Map<string, ISeriesRoot> = new Map(seriesList.map((s: any) => [s.id, s]));

@@ -11,4 +11,4 @@ import { ISignData, ICallData } from '../types';
  *
  * @returns { Promise<ICallData[]> }
  */
-export declare const sign: (requestedSignatures: ISignData[], processCode: string) => Promise<ICallData[]>;
+export declare const sign: (requestedSignatures: ISignData[], processCode: string, chainId: number) => Promise<ICallData[]>;

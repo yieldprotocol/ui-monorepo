@@ -31,24 +31,23 @@ export var useObservable = function (observable, showError) {
 /* Build up the Provider state */
 var YieldProvider = function (_a) {
     var props = _a.props, children = _a.children;
-    var yieldProtocolø = yieldObservables.yieldProtocolø, assetMapø = yieldObservables.assetMapø, seriesMapø = yieldObservables.seriesMapø, strategyMapø = yieldObservables.strategyMapø, vaultMapø = yieldObservables.vaultMapø, accountø = yieldObservables.accountø, providerø = yieldObservables.providerø, accountProviderø = yieldObservables.accountProviderø, messagesø = yieldObservables.messagesø, transactionMapø = yieldObservables.transactionMapø, selectedø = yieldObservables.selectedø;
+    var yieldProtocolø = yieldObservables.yieldProtocolø, assetMapø = yieldObservables.assetMapø, seriesMapø = yieldObservables.seriesMapø, strategyMapø = yieldObservables.strategyMapø, vaultMapø = yieldObservables.vaultMapø, accountø = yieldObservables.accountø, messagesø = yieldObservables.messagesø, transactionMapø = yieldObservables.transactionMapø, selectedø = yieldObservables.selectedø;
     var yieldProtocol = useObservable(yieldProtocolø);
     var assetMap = useObservable(assetMapø);
     var seriesMap = useObservable(seriesMapø);
     var strategyMap = useObservable(strategyMapø);
     var vaultMap = useObservable(vaultMapø);
-    var provider = useObservable(providerø);
-    var accountProvider = useObservable(accountProviderø);
+    // const provider = useObservable(providerø) as unknown as string;
+    // const accountProvider = useObservable(accountProviderø) as unknown as string;
     var account = useObservable(accountø);
     var messages = useObservable(messagesø);
     var selected = useObservable(selectedø);
     // const transactionMap = useObservable(transactionMapø) as unknown as string;
-    useEffect(function () {
-        (props === null || props === void 0 ? void 0 : props.provider) && yieldFunctions.updateProvider(props === null || props === void 0 ? void 0 : props.provider);
-    }, [props === null || props === void 0 ? void 0 : props.provider]);
+    // useEffect(() => {
+    //   // props?.provider && yieldFunctions.updateProvider(props?.provider);
+    // }, [props?.provider]);
     return (_jsx(YieldContext.Provider, __assign({ value: {
             messages: messages,
-            provider: provider,
             yieldProtocol: yieldProtocol,
             assetMap: assetMap,
             seriesMap: seriesMap,

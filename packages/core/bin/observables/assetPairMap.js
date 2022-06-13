@@ -34,8 +34,7 @@ selected_1.selectedø
 const updatePair = (baseId, ilkId) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     const { cauldron, assetRootMap, oracleMap } = yieldProtocol_1.yieldProtocol$.value;
-    // const cauldron = contractMap.get('Cauldron');
-    const oracleName = (_b = (_a = oracles_1.ORACLES.get(connection_1.chainId$.value || 1)) === null || _a === void 0 ? void 0 : _a.get(baseId)) === null || _b === void 0 ? void 0 : _b.get(ilkId);
+    const oracleName = (_b = (_a = oracles_1.ORACLES.get(yield connection_1.chainId)) === null || _a === void 0 ? void 0 : _a.get(baseId)) === null || _b === void 0 ? void 0 : _b.get(ilkId);
     const PriceOracle = oracleMap.get(oracleName);
     const base = assetRootMap.get(baseId);
     const ilk = assetRootMap.get(ilkId);

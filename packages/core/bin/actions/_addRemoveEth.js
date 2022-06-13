@@ -9,7 +9,7 @@ const constants_1 = require("../utils/constants");
  * @internal
  * */
 const addEth = (value, to = undefined, alternateEthAssetId = undefined) => {
-    const { moduleMap } = observables_1.yieldProtocol$.value;
+    const { moduleMap } = observables_1.yieldProtocol$.value; // TODO: consider removing this value -> by means of a subscription.
     const WrapEtherModuleContract = moduleMap.get('WrapEtherModule');
     const account = observables_1.account$.value;
     /* if there is a destination 'to' then use the ladle module (wrapEtherModule) */

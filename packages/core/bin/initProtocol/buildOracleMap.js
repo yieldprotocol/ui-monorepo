@@ -6,14 +6,13 @@ const contracts = tslib_1.__importStar(require("../contracts"));
 const constants_1 = require("../utils/constants");
 const protocol_1 = require("../config/protocol");
 const oracles_1 = require("../config/oracles");
-const observables_1 = require("../observables");
-const buildOracleMap = (provider) => {
+const buildOracleMap = (provider, chainId) => {
     /** Get addresses of the oracle contracts */
-    const _oracleAddresses = oracles_1.oracleAddresses.get(observables_1.chainId$.value);
+    const _oracleAddresses = oracles_1.oracleAddresses.get(chainId);
     /** Inititiate contracts (and distribution as a map) */
     const oracleMap = new Map([]);
     /** Oracle Contracts For Ethereum Chains */
-    if (protocol_1.supportedChains.get(constants_1.ETHEREUM).includes(observables_1.chainId$.value)) {
+    if (protocol_1.supportedChains.get(constants_1.ETHEREUM).includes(chainId)) {
         // Oracles
         oracleMap.set('ChainlinkMultiOracle', contracts.ChainlinkMultiOracle__factory.connect(_oracleAddresses.ChainlinkMultiOracle, provider));
         oracleMap.set('CompositeMultiOracle', contracts.CompositeMultiOracle__factory.connect(_oracleAddresses.CompositeMultiOracle, provider));
@@ -23,7 +22,7 @@ const buildOracleMap = (provider) => {
         oracleMap.set('RateOracle', contracts.CompoundMultiOracle__factory.connect(_oracleAddresses.CompoundMultiOracle, provider));
     }
     /** Oracles For Arbitrum Chains */
-    if (protocol_1.supportedChains.get(constants_1.ARBITRUM).includes(observables_1.chainId$.value)) {
+    if (protocol_1.supportedChains.get(constants_1.ARBITRUM).includes(chainId)) {
         // Oracles
         const AccumulatorOracle = contracts.AccumulatorOracle__factory.connect(_oracleAddresses.AccumulatorOracle, provider);
         oracleMap.set('AccumulatorOracle', AccumulatorOracle);

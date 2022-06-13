@@ -1,28 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateAccount = exports.accountø = exports.account$ = exports.updateAccountProvider = exports.accountProviderø = exports.accountProvider$ = exports.updateProvider = exports.providerø = exports.provider$ = exports.updateChainId = exports.chainIdø = exports.chainId$ = void 0;
+exports.updateAccount = exports.accountø = exports.account$ = exports.updateAccountProvider = exports.accountProviderø = exports.accountProvider$ = exports.updateProvider = exports.providerø = exports.provider$ = exports.chainId = exports.updateChainId = exports.chainIdø = exports.chainId$ = void 0;
 const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
 const defaultprovider_1 = require("../config/defaultprovider");
 const utils_1 = require("../utils");
 const appConfig_1 = require("./appConfig");
-// const getDefaultChainId = async () : Promise<number> => {
-//   /* if in a browser environment */
-//   if (typeof window !== 'undefined') {
-//     if ((window as any).ethereum) {
-//       // first try from the injected provider
-//       const injectedId = await (window as any).ethereum.request({ method: 'eth_chainId' });
-//       return parseInt(injectedId, 16);
-//     }
-//     const fromCache = getBrowserCachedValue(`lastChainIdUsed`);
-//     return fromCache; // second, from the last id used in the cache
-//   }
-//   /* in a non-browser environment */
-//   return appConfig$.value.defaultChainId; // defaults to the defaultChainId in the settings
-// };
 /** @internal */
-exports.chainId$ = new rxjs_1.BehaviorSubject(1);
-exports.chainIdø = exports.chainId$.pipe((0, rxjs_1.share)());
+exports.chainId$ = new rxjs_1.Subject();
+exports.chainIdø = exports.chainId$.pipe((0, rxjs_1.shareReplay)());
 const updateChainId = (chainId) => {
     /* Cache the last chain used browser-side  */
     (0, utils_1.setBrowserCachedValue)(`lastChainIdUsed`, chainId);
@@ -33,35 +19,34 @@ exports.updateChainId = updateChainId;
 /**
  * FIRST LOAD > Handle initial setup protocol with DEFAULTS on FIRST LOAD
  */
-//  (async () => {
-//   /* if in a browser environment */
-//   if (typeof window !== 'undefined') {
-//     if ((window as any).ethereum) { // first try from the injected provider
-//       const injectedId = await (window as any).ethereum.request({ method: 'eth_chainId' });
-//       console.log('InjectedID', injectedId );
-//       chainId$.next( parseInt(injectedId, 16) )
-//     }
-//     const fromCache = getBrowserCachedValue(`lastChainIdUsed`)
-//     chainId$.next( fromCache ); // second, from the last id used in the cache
-//   }
-//   /* in a non-browser environment */
-//   chainId$.next(appConfig$.value.defaultChainId); // defaults to the defaultChainId in the settings
-// })()
+exports.chainId = (() => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    /* if in a browser environment */
+    if (typeof window !== 'undefined') {
+        if (window.ethereum) { // first try from the injected provider
+            const injectedId = yield window.ethereum.request({ method: 'eth_chainId' });
+            console.log('InjectedID', injectedId);
+            return parseInt(injectedId, 16);
+        }
+        const fromCache = (0, utils_1.getBrowserCachedValue)(`lastChainIdUsed`);
+        return fromCache; // second, from the last id used in the cache
+    }
+    /* in a non-browser environment */
+    return appConfig_1.appConfig$.value.defaultChainId; // defaults to the defaultChainId in the settings
+}))();
 /** @internal */
-exports.provider$ = new rxjs_1.BehaviorSubject((0, defaultprovider_1.getDefaultProvider)(1));
-exports.providerø = exports.provider$.pipe((0, rxjs_1.share)());
+exports.provider$ = new rxjs_1.Subject();
+exports.providerø = exports.provider$.pipe((0, rxjs_1.shareReplay)());
 const updateProvider = (newProvider) => {
     exports.provider$.next(newProvider); // update to whole new protocol
 };
 exports.updateProvider = updateProvider;
-// providerø.subscribe(async (provider) => console.log('NEW CHAIN ID', (await provider.getNetwork()).chainId));
 /**
  * The accountProvider is the sign provider (web3Provider) that handles the user account, signing and transacting.
  * It also adds a number of listeners to monitor account changes etc.
  **/
 /** @internal */
 exports.accountProvider$ = new rxjs_1.BehaviorSubject(defaultprovider_1.defaultAccountProvider);
-exports.accountProviderø = exports.accountProvider$.pipe((0, rxjs_1.share)());
+exports.accountProviderø = exports.accountProvider$.pipe((0, rxjs_1.shareReplay)());
 const updateAccountProvider = (newProvider) => {
     // TODO: wrap the EIP provider into a ethers.web3Provider if required.
     exports.accountProvider$.next(newProvider); // update to whole new protocol

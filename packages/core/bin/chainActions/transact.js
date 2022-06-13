@@ -7,6 +7,8 @@ const observables_1 = require("../observables/");
 const types_1 = require("../types");
 const constants_1 = require("../utils/constants");
 const transactionMap_1 = require("../observables/transactionMap");
+const rxjs_1 = require("rxjs");
+const appConfig_1 = require("../observables/appConfig");
 /* Encode the calls: */ // TODO: this could probably be refactored to look better
 const _encodeCalls = (calls, ladle) => calls.map((call) => {
     /* 'pre-encode' routed/module calls if required */
@@ -29,8 +31,7 @@ const _totalBatchValue = (calls) => calls.reduce((sum, call) => {
     return sum.add(((_a = call.overrides) === null || _a === void 0 ? void 0 : _a.value) ? ethers_1.BigNumber.from((_b = call === null || call === void 0 ? void 0 : call.overrides) === null || _b === void 0 ? void 0 : _b.value) : constants_1.ZERO_BN);
 }, constants_1.ZERO_BN);
 /* Handle the transaction error */
-const _handleTxError = () => {
-};
+const _handleTxError = () => { };
 /* handle case when user or wallet rejects the tx (before submission) */
 const _handleTxRejection = (err, processCode) => {
     (0, transactionMap_1.resetProcess)(processCode);
@@ -49,66 +50,66 @@ const _handleTxRejection = (err, processCode) => {
     }
 };
 const transact = (calls, processCode) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    /* Bring in observables */
-    (0, transactionMap_1.updateProcess)({ processCode, stage: types_1.ProcessStage.TRANSACTION_REQUESTED });
-    const { ladle } = observables_1.yieldProtocol$.value;
-    const account = observables_1.account$.value;
-    const provider = observables_1.provider$.value;
-    const { forceTransactions } = observables_1.appConfig$.value;
-    /* Get the signer */
-    const signer = account ? provider.getSigner(account) : provider.getSigner(0);
-    /* Set the connected contract instance, ladle by default */
-    const ladleContract = ladle.connect(signer);
-    const encodedCalls = _encodeCalls(calls, ladleContract);
-    const batchValue = _totalBatchValue(calls);
-    let gasEst;
-    // let gasEst: boolean = false;
-    try {
-        gasEst = yield ladleContract.estimateGas.batch(encodedCalls, { value: batchValue });
-        console.log('Auto Gas estimate: ', gasEst.mul(120).div(100).toString());
-    }
-    catch (e) {
-        /* handle if the tx if going to fail and transactions aren't forced */
-        gasEst = ethers_1.BigNumber.from(1000000);
-        if (!forceTransactions)
-            console.log('transaction will fail'); // handleTxWillFail(e.error, processCode, e.transaction);
-    }
-    let tx;
-    let res;
-    try {
-        /* first try the transaction with connected wallet and catch any 'pre-chain'/'pre-tx' errors */
+    /* Subscribe to observables */
+    (0, rxjs_1.combineLatest)([observables_1.yieldProtocolø, observables_1.accountø, observables_1.accountProviderø, appConfig_1.appConfigø])
+        .pipe((0, rxjs_1.take)(1)) // take one and then unsubscribe
+        .subscribe(([{ ladle }, account, provider, { forceTransactions }]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+        (0, transactionMap_1.updateProcess)({ processCode, stage: types_1.ProcessStage.TRANSACTION_REQUESTED });
+        /* Get the signer */
+        const signer = account ? provider.getSigner(account) : provider.getSigner(0);
+        /* Set the connected contract instance, ladle by default */
+        const ladleContract = ladle.connect(signer);
+        const encodedCalls = _encodeCalls(calls, ladleContract);
+        const batchValue = _totalBatchValue(calls);
+        let gasEst;
+        // let gasEst: boolean = false;
         try {
-            tx = yield ladleContract.batch(encodedCalls, {
-                value: batchValue,
-                gasLimit: gasEst.mul(120).div(100),
-            });
-            /* update process list > Tx Pending */
+            gasEst = yield ladleContract.estimateGas.batch(encodedCalls, { value: batchValue });
+            console.log('Auto Gas estimate: ', gasEst.mul(120).div(100).toString());
+        }
+        catch (e) {
+            /* handle if the tx if going to fail and transactions aren't forced */
+            gasEst = ethers_1.BigNumber.from(1000000);
+            if (!forceTransactions)
+                console.log('transaction will fail'); // handleTxWillFail(e.error, processCode, e.transaction);
+        }
+        let tx;
+        let res;
+        try {
+            /* first try the transaction with connected wallet and catch any 'pre-chain'/'pre-tx' errors */
+            try {
+                tx = yield ladleContract.batch(encodedCalls, {
+                    value: batchValue,
+                    gasLimit: gasEst.mul(120).div(100),
+                });
+                /* update process list > Tx Pending */
+                (0, transactionMap_1.updateProcess)({
+                    processCode,
+                    stage: types_1.ProcessStage.TRANSACTION_PENDING,
+                    tx: Object.assign(Object.assign({}, tx), { receipt: null, status: types_1.TxState.PENDING }),
+                });
+            }
+            catch (e) {
+                /* this case is when user rejects tx OR wallet rejects tx */
+                _handleTxRejection(e, processCode);
+            }
+            /* wait for the tx to complete */
+            res = yield tx.wait();
+            /* check the tx status ( failed/success ) */
+            const txSuccess = res.status === 1 || false;
+            /* update process list > Tx Complete + status */
             (0, transactionMap_1.updateProcess)({
                 processCode,
-                stage: types_1.ProcessStage.TRANSACTION_PENDING,
-                tx: Object.assign(Object.assign({}, tx), { receipt: null, status: types_1.TxState.PENDING }),
+                stage: types_1.ProcessStage.PROCESS_COMPLETE,
+                tx: Object.assign(Object.assign({}, tx), { receipt: res, status: txSuccess ? types_1.TxState.SUCCESSFUL : types_1.TxState.FAILED }),
             });
         }
         catch (e) {
-            /* this case is when user rejects tx OR wallet rejects tx */
-            _handleTxRejection(e, processCode);
+            /* catch tx errors */
+            //  _handleTxError('Transaction failed', e.transaction, processCode);
+            console.log(' Error', e.transaction, processCode);
         }
-        /* wait for the tx to complete */
-        res = yield tx.wait();
-        /* check the tx status ( failed/success ) */
-        const txSuccess = res.status === 1 || false;
-        /* update process list > Tx Complete + status */
-        (0, transactionMap_1.updateProcess)({
-            processCode,
-            stage: types_1.ProcessStage.PROCESS_COMPLETE,
-            tx: Object.assign(Object.assign({}, tx), { receipt: res, status: txSuccess ? types_1.TxState.SUCCESSFUL : types_1.TxState.FAILED }),
-        });
-    }
-    catch (e) {
-        /* catch tx errors */
-        //  _handleTxError('Transaction failed', e.transaction, processCode);
-        console.log(' Error', e.transaction, processCode);
-    }
+    }));
 });
 exports.transact = transact;
 //# sourceMappingURL=transact.js.map

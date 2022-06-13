@@ -8,9 +8,7 @@ exports.updateRemoveLiqInput = exports.removeLiquidityInputø = exports.removeLi
 const rxjs_1 = require("rxjs");
 const observables_1 = require("../observables");
 const utils_1 = require("../utils");
-const appConfig_1 = require("../observables/appConfig");
 const yieldUtils_1 = require("../utils/yieldUtils");
-const diagnostics = appConfig_1.appConfig$.value.diagnostics;
 const _getValueFromInputEvent = (event) => {
     return event.pipe((0, rxjs_1.tap)((event) => console.log('event.target', event.target)), (0, rxjs_1.map)((event) => event.target.value));
 };
@@ -20,10 +18,10 @@ exports.borrowInput$ = new rxjs_1.BehaviorSubject('0');
  * Borrow input
  * @category Input
  * */
-exports.borrowInputø = exports.borrowInput$.pipe((0, rxjs_1.map)((inp) => {
+exports.borrowInputø = (0, rxjs_1.combineLatest)([exports.borrowInput$, observables_1.selectedø]).pipe((0, rxjs_1.map)(([inp, sel]) => {
     var _a;
     if (inp)
-        return (0, yieldUtils_1.inputToTokenValue)(inp, (_a = observables_1.selected$.value.base) === null || _a === void 0 ? void 0 : _a.decimals);
+        return (0, yieldUtils_1.inputToTokenValue)(inp, (_a = sel.base) === null || _a === void 0 ? void 0 : _a.decimals);
     return utils_1.ZERO_BN;
 }), (0, rxjs_1.share)());
 /* Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
@@ -35,10 +33,10 @@ exports.collateralInput$ = new rxjs_1.BehaviorSubject('0');
  * Collateral input
  * @category Input
  * */
-exports.collateralInputø = exports.collateralInput$.pipe((0, rxjs_1.map)((inp) => {
+exports.collateralInputø = (0, rxjs_1.combineLatest)([exports.collateralInput$, observables_1.selectedø]).pipe((0, rxjs_1.map)(([inp, sel]) => {
     var _a;
     if (inp)
-        return (0, yieldUtils_1.inputToTokenValue)(inp, (_a = observables_1.selected$.value.ilk) === null || _a === void 0 ? void 0 : _a.decimals);
+        return (0, yieldUtils_1.inputToTokenValue)(inp, (_a = sel.ilk) === null || _a === void 0 ? void 0 : _a.decimals);
     return utils_1.ZERO_BN;
 }), (0, rxjs_1.share)());
 /* Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
@@ -50,10 +48,10 @@ exports.repayInput$ = new rxjs_1.Subject();
  * Repayment input
  * @category Input
  * */
-exports.repayInputø = exports.repayInput$.pipe((0, rxjs_1.map)((inp) => {
+exports.repayInputø = (0, rxjs_1.combineLatest)([exports.repayInput$, observables_1.selectedø]).pipe((0, rxjs_1.map)(([inp, sel]) => {
     var _a;
     if (inp)
-        return (0, yieldUtils_1.inputToTokenValue)(inp, (_a = observables_1.selected$.value.base) === null || _a === void 0 ? void 0 : _a.decimals);
+        return (0, yieldUtils_1.inputToTokenValue)(inp, (_a = sel.base) === null || _a === void 0 ? void 0 : _a.decimals);
     return utils_1.ZERO_BN;
 }));
 /* Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
@@ -65,10 +63,10 @@ exports.lendInput$ = new rxjs_1.BehaviorSubject('');
  * Lending input
  * @category Input
 */
-exports.lendInputø = exports.lendInput$.pipe((0, rxjs_1.map)((inp) => {
+exports.lendInputø = (0, rxjs_1.combineLatest)([exports.lendInput$, observables_1.selectedø]).pipe((0, rxjs_1.map)(([inp, sel]) => {
     var _a;
     if (inp)
-        return (0, yieldUtils_1.inputToTokenValue)(inp, (_a = observables_1.selected$.value.base) === null || _a === void 0 ? void 0 : _a.decimals);
+        return (0, yieldUtils_1.inputToTokenValue)(inp, (_a = sel.base) === null || _a === void 0 ? void 0 : _a.decimals);
     return utils_1.ZERO_BN;
 }));
 /* Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
@@ -80,10 +78,10 @@ exports.closeInput$ = new rxjs_1.BehaviorSubject('');
  * Close Position input
  * @category Input
 */
-exports.closeInputø = exports.closeInput$.pipe((0, rxjs_1.map)((inp) => {
+exports.closeInputø = (0, rxjs_1.combineLatest)([exports.closeInput$, observables_1.selectedø]).pipe((0, rxjs_1.map)(([inp, sel]) => {
     var _a;
     if (inp)
-        return (0, yieldUtils_1.inputToTokenValue)(inp, (_a = observables_1.selected$.value.base) === null || _a === void 0 ? void 0 : _a.decimals);
+        return (0, yieldUtils_1.inputToTokenValue)(inp, (_a = sel.base) === null || _a === void 0 ? void 0 : _a.decimals);
     return utils_1.ZERO_BN;
 }));
 /* Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
@@ -95,10 +93,10 @@ exports.addLiquidityInput$ = new rxjs_1.BehaviorSubject('');
  * Add liquidity input
  * @category Input
  *  */
-exports.addLiquidityInputø = exports.addLiquidityInput$.pipe((0, rxjs_1.map)((inp) => {
+exports.addLiquidityInputø = (0, rxjs_1.combineLatest)([exports.addLiquidityInput$, observables_1.selectedø]).pipe((0, rxjs_1.map)(([inp, sel]) => {
     var _a;
     if (inp)
-        return (0, yieldUtils_1.inputToTokenValue)(inp, (_a = observables_1.selected$.value.strategy) === null || _a === void 0 ? void 0 : _a.decimals);
+        return (0, yieldUtils_1.inputToTokenValue)(inp, (_a = sel.strategy) === null || _a === void 0 ? void 0 : _a.decimals);
     return utils_1.ZERO_BN;
 }));
 /** Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
@@ -110,10 +108,10 @@ exports.removeLiquidityInput$ = new rxjs_1.BehaviorSubject('');
  * Remove liquidity input
  * @category Input
  * */
-exports.removeLiquidityInputø = exports.removeLiquidityInput$.pipe((0, rxjs_1.map)((inp) => {
+exports.removeLiquidityInputø = (0, rxjs_1.combineLatest)([exports.removeLiquidityInput$, observables_1.selectedø]).pipe((0, rxjs_1.map)(([inp, sel]) => {
     var _a;
     if (inp)
-        return (0, yieldUtils_1.inputToTokenValue)(inp, (_a = observables_1.selected$.value.strategy) === null || _a === void 0 ? void 0 : _a.decimals);
+        return (0, yieldUtils_1.inputToTokenValue)(inp, (_a = sel.strategy) === null || _a === void 0 ? void 0 : _a.decimals);
     return utils_1.ZERO_BN;
 }));
 /** Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */

@@ -1,5 +1,6 @@
 import { BigNumber } from 'ethers';
-import { account$, yieldProtocol$  } from '../observables';
+import { combineLatest, take } from 'rxjs';
+import { account$, accountø, assetMapø, chainIdø, selectedø, seriesMapø, userSettingsø, vaultMapø, yieldProtocol$, yieldProtocolø  } from '../observables';
 import { ICallData, LadleActions } from '../types';
 import { ModuleActions } from '../types/operations';
 import { ZERO_BN } from '../utils/constants';
@@ -12,7 +13,8 @@ export const addEth = (
   to: string | undefined = undefined,
   alternateEthAssetId: string | undefined = undefined
 ): ICallData[] => {
-  const { moduleMap } = yieldProtocol$.value;
+          
+  const { moduleMap } = yieldProtocol$.value; // TODO: consider removing this value -> by means of a subscription.
   const WrapEtherModuleContract = moduleMap.get('WrapEtherModule');
   const account = account$.value;
 

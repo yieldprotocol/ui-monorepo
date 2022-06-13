@@ -5,6 +5,21 @@ const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
 /* Handle configuration */
 const yield_config_1 = tslib_1.__importDefault(require("../config/yield.config"));
+const utils_1 = require("../utils");
+const getDefaultChainId = () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    /* if in a browser environment */
+    if (typeof window !== 'undefined') {
+        if (window.ethereum) {
+            // first try from the injected provider
+            const injectedId = yield window.ethereum.request({ method: 'eth_chainId' });
+            return parseInt(injectedId, 16);
+        }
+        const fromCache = (0, utils_1.getBrowserCachedValue)(`lastChainIdUsed`);
+        return fromCache; // second, from the last id used in the cache
+    }
+    /* in a non-browser environment */
+    return exports.appConfig$.value.defaultChainId; // defaults to the defaultChainId in the settings
+});
 /** @internal */
 exports.appConfig$ = new rxjs_1.BehaviorSubject(yield_config_1.default);
 /**
@@ -14,8 +29,9 @@ exports.appConfig$ = new rxjs_1.BehaviorSubject(yield_config_1.default);
 exports.appConfigø = exports.appConfig$
     .pipe(
 // take(1), // Only do this once on app load.
-(0, rxjs_1.map)((config) => {
+(0, rxjs_1.delay)(5000), (0, rxjs_1.map)((config) => {
     // await ( new Promise(resolve => setTimeout(resolve, 5000)) ) ;
+    console.log(' herer');
     return config;
     // /* if in a browser environment */
     // if (typeof window !== 'undefined') {
@@ -33,7 +49,7 @@ exports.appConfigø = exports.appConfig$
     // // chainId$.next(appConfig$.value.defaultChainId); // defaults to the defaultChainId in the settings
     // setTimeout(() => config , 5000)
     // return config;
-}), (0, rxjs_1.delay)(5000), 
+}), 
 // takeUntil(appConfig$),
 (0, rxjs_1.finalize)(() => console.log('App Environment Configured.')));
 const updateYieldConfig = (appConfig) => {

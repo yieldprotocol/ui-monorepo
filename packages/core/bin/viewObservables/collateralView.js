@@ -9,7 +9,6 @@ const yieldUtils_1 = require("../utils/yieldUtils");
 const assetPairMap_1 = require("../observables/assetPairMap");
 const input_1 = require("./input");
 const appConfig_1 = require("../observables/appConfig");
-const diagnostics = appConfig_1.appConfig$.value.diagnostics;
 /**
  * INTERNAL:
  * Keeps the track of the current selectedPair
@@ -41,7 +40,7 @@ const _totalDebtWithInputø = (0, rxjs_1.combineLatest)([input_1.borrowInputø, 
         : utils_1.ZERO_BN;
     const newDebtAsWei = (0, ui_math_1.decimalNToDecimal18)(newDebt, series.decimals);
     const totalDebt = existingDebtAsWei.add(newDebtAsWei);
-    diagnostics && console.log('Total Debt (d18): ', totalDebt.toString());
+    appConfig_1.appConfigø.subscribe(({ diagnostics }) => diagnostics && console.log('Total Debt (d18): ', totalDebt.toString()));
     return [totalDebt, existingDebtAsWei]; // as decimal18
 }), (0, rxjs_1.share)());
 /**
@@ -62,10 +61,10 @@ const _totalCollateralWithInputø = (0, rxjs_1.combineLatest)([input_1.collatera
         /* TODO: there is a weird bug if inputting before selecting ilk. */
         const newCollateralAsWei = (0, ui_math_1.decimalNToDecimal18)(collInput, ilk.decimals);
         const totalCollateral = existingCollateralAsWei.add(newCollateralAsWei);
-        diagnostics && console.log('Total Collateral (d18): ', totalCollateral.toString());
+        appConfig_1.appConfigø.subscribe(({ diagnostics }) => diagnostics && console.log('Total Collateral (d18): ', totalCollateral.toString()));
         return [totalCollateral, existingCollateralAsWei]; // as decimal18
     }
-    diagnostics && console.warn('Hey fren. Make sure an Ilk is selected!');
+    appConfig_1.appConfigø.subscribe(({ diagnostics }) => diagnostics && console.warn('Hey fren. Make sure an Ilk is selected!'));
     return [];
 }), (0, rxjs_1.share)());
 /**
@@ -86,7 +85,7 @@ exports.collateralizationRatioø = (0, rxjs_1.combineLatest)([
         /* NOTE: this function ONLY deals with decimal18, existing values are converted to decimal18 */
         const pairPriceInWei = (0, ui_math_1.decimalNToDecimal18)(assetPair.pairPrice, assetPair.baseDecimals);
         const ratio = (0, ui_math_1.calculateCollateralizationRatio)(totalCollat[0], pairPriceInWei, totalDebt[0], false);
-        diagnostics && console.log('Collateralisation ratio:', ratio);
+        appConfig_1.appConfigø.subscribe(({ diagnostics }) => diagnostics && console.log('Collateralisation ratio:', ratio));
         return ratio;
     }
     return undefined;

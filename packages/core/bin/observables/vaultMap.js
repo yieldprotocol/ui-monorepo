@@ -33,13 +33,13 @@ exports.updateVaults = updateVaults;
 /**
  *  Observe yieldProtocol$ and account$ changes TOGETHER >  Initiate or Empty VAULT Map
  * */
-(0, rxjs_1.combineLatest)([connection_1.account$, yieldProtocol_1.yieldProtocol$])
+(0, rxjs_1.combineLatest)([connection_1.accountø, yieldProtocol_1.yieldProtocolø, connection_1.chainIdø])
     // only emit if account is defined and yp.cauldron adress exists - indicating protocol has mostly loaded
     .pipe((0, rxjs_1.filter)(([a, yp]) => a !== undefined && yp.cauldron.address !== ''))
-    .subscribe(([_account, _protocol]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    .subscribe(([_account, _protocol, _chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (_account !== undefined) {
         console.log('Getting vaults for: ', _account);
-        const vaultMap = yield (0, buildVaultMap_1.buildVaultMap)(_protocol, _account);
+        const vaultMap = yield (0, buildVaultMap_1.buildVaultMap)(_protocol, _account, _chainId);
         console.log('vaults: ', Array.from(vaultMap.values()));
         yield (0, exports.updateVaults)(Array.from(vaultMap.values()));
         (0, messages_1.sendMsg)({ message: 'Vaults Loaded', type: types_1.MessageType.INTERNAL });
