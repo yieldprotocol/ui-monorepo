@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateAccountProvider = exports.accountProviderø = exports.accountProvider$ = exports.updateAccount = exports.accountø = exports.account$ = exports.updateProvider = exports.providerø = exports.provider$ = exports.updateChainId = exports.chainIdø = exports.chainId$ = exports.chainId = void 0;
+exports.updateAccountProvider = exports.accountProviderø = exports.accountProvider$ = exports.updateAccount = exports.accountø = exports.account$ = exports.updateProvider = exports.providerø = exports.provider$ = exports.updateChainId = exports.chainIdø = void 0;
 const tslib_1 = require("tslib");
 const ethers_1 = require("ethers");
 const rxjs_1 = require("rxjs");
@@ -8,12 +8,14 @@ const defaultprovider_1 = require("../config/defaultprovider");
 const utils_1 = require("../utils");
 const appConfig_1 = require("./appConfig");
 /**
- * FIRST LOAD > Handle initial setup protocol with DEFAULTS on FIRST LOAD
+ * FIRST LOAD > Handle initial setup protocol with a selected chainID
  */
-exports.chainId = (() => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+/** @internal */
+exports.chainIdø = appConfig_1.appConfigø.pipe((0, rxjs_1.mergeMap)((config) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* if in a browser environment */
     if (typeof window !== 'undefined') {
-        if (window.ethereum) { // first try from the injected provider
+        if (window.ethereum) {
+            // first try from the injected provider
             const injectedId = yield window.ethereum.request({ method: 'eth_chainId' });
             console.log('Injected chainId:', injectedId);
             return parseInt(injectedId, 16);
@@ -23,29 +25,47 @@ exports.chainId = (() => tslib_1.__awaiter(void 0, void 0, void 0, function* () 
         return fromCache; // second, from the last id used in the cache
     }
     /* in a non-browser environment : return 1 */
-    // console.log('ChainId from default:', appConfig$.value.defaultChainId);
-    return 1; // defaults to the defaultChainId in the settings
-}))();
-// /** @internal */
-exports.chainId$ = new rxjs_1.Subject();
-exports.chainIdø = exports.chainId$.pipe((0, rxjs_1.shareReplay)());
-/* When the chainId changes, we refresh the browser */
+    console.log('ChainId from default:', config.defaultChainId);
+    return config.defaultChainId; // defaults to the defaultChainId in the settings
+    // console.log( config)
+    // return chainId
+})), (0, rxjs_1.shareReplay)(1));
+/**
+ * When the chainId changes, we cache the previous value, and then refresh the browser
+ * */
 const updateChainId = (chainId) => {
     /* Cache the last chain used browser-side  */
     (0, utils_1.setBrowserCachedValue)(`lastChainIdUsed`, chainId);
     location.reload();
 };
 exports.updateChainId = updateChainId;
+// export const chainId = (async () => {
+//   /* if in a browser environment */
+//   if (typeof window !== 'undefined') {
+//     if ((window as any).ethereum) {
+//       // first try from the injected provider
+//       const injectedId = await (window as any).ethereum.request({ method: 'eth_chainId' });
+//       console.log('Injected chainId:', injectedId);
+//       return parseInt(injectedId, 16);
+//     }
+//     const fromCache = getBrowserCachedValue(`lastChainIdUsed`);
+//     console.log('ChainId from cache:', fromCache);
+//     return fromCache; // second, from the last id used in the cache
+//   }
+//   /* in a non-browser environment : return 1 */
+//   // console.log('ChainId from default:', appConfig$.value.defaultChainId);
+//   return 1; // defaults to the defaultChainId in the settings
+// })();
 /** @internal */
 exports.provider$ = new rxjs_1.Subject();
-exports.providerø = exports.provider$.pipe((0, rxjs_1.shareReplay)());
+exports.providerø = exports.provider$.pipe((0, rxjs_1.shareReplay)(1));
 const updateProvider = (newProvider) => {
     exports.provider$.next(newProvider); // update to whole new protocol
 };
 exports.updateProvider = updateProvider;
 /** @internal */
 exports.account$ = new rxjs_1.BehaviorSubject(undefined);
-exports.accountø = exports.account$.pipe((0, rxjs_1.share)());
+exports.accountø = exports.account$.pipe((0, rxjs_1.shareReplay)(1));
 const updateAccount = (newAccount) => {
     /* Check if account is a vaild address before assigning */
     const isValidAcc = ethers_1.ethers.utils.isAddress(newAccount);
@@ -58,23 +78,25 @@ exports.updateAccount = updateAccount;
  **/
 /** @internal */
 exports.accountProvider$ = new rxjs_1.BehaviorSubject(defaultprovider_1.defaultAccountProvider);
-exports.accountProviderø = exports.accountProvider$.pipe((0, rxjs_1.shareReplay)());
+exports.accountProviderø = exports.accountProvider$.pipe((0, rxjs_1.shareReplay)(1));
 const updateAccountProvider = (newProvider) => {
     // TODO: wrap the EIP provider into a ethers.web3Provider if required.
     exports.accountProvider$.next(newProvider); // update to whole new protocol
 };
 exports.updateAccountProvider = updateAccountProvider;
-/* handle any events on the accountProvider ( web3Provider ) */
+/**
+ * Handle any events on the accountProvider ( web3Provider )
+ * */
 exports.accountProviderø
     .pipe((0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø))
     .subscribe(([accProvider, appConfig]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    console.log('HERE finally!! asdasdsdsda');
     /**
      * MetaMask requires requesting permission to connect users accounts >
      * however, we can attempt to skip this if the user already has a connected account
      * */
     try {
-        appConfig.autoConnectAccountProvider &&
-            exports.account$.next((yield accProvider.send('eth_requestAccounts', []))[0]);
+        appConfig.autoConnectAccountProvider && exports.account$.next((yield accProvider.send('eth_requestAccounts', []))[0]);
     }
     catch (e) {
         console.log(e);

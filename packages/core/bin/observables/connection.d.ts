@@ -2,11 +2,13 @@ import { Web3Provider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
 import { Observable, BehaviorSubject, Subject } from 'rxjs';
 /**
- * FIRST LOAD > Handle initial setup protocol with DEFAULTS on FIRST LOAD
+ * FIRST LOAD > Handle initial setup protocol with a selected chainID
  */
-export declare const chainId: Promise<any>;
-export declare const chainId$: Subject<number>;
+/** @internal */
 export declare const chainIdø: Observable<number>;
+/**
+ * When the chainId changes, we cache the previous value, and then refresh the browser
+ * */
 export declare const updateChainId: (chainId: number) => void;
 /** @internal */
 export declare const provider$: Subject<ethers.providers.BaseProvider>;

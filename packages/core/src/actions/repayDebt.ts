@@ -16,7 +16,6 @@ import {
   accountø,
   assetMapø,
   chainIdø,
-  provider$,
   providerø,
   seriesMapø,
   userSettingsø,

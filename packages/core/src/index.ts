@@ -1,9 +1,7 @@
-import { ethers } from 'ethers';
-import { first, filter, withLatestFrom, combineLatest } from 'rxjs';
-
+import { combineLatest } from 'rxjs';
 import { buildProtocol } from './initProtocol/buildProtocol';
-import { IYieldConfig, IYieldFunctions, IYieldObservables } from './types';
-import { accountø, chainIdø, updateAccount, updateChainId } from './observables/connection';
+import { IYieldFunctions, IYieldObservables } from './types';
+import { accountø, chainIdø, updateAccount} from './observables/connection';
 import { assetMapø } from './observables/assetMap';
 import { seriesMapø } from './observables/seriesMap';
 import { yieldProtocol$, yieldProtocolø } from './observables/yieldProtocol';
@@ -48,11 +46,11 @@ appConfigø.subscribe()
 /**
  * Observe provider$ changes  => Load/re-load protocol (TODO only if network id changes?)
  * */
-//  combineLatest([ provider$, chainIdø ])
-//  .pipe(withLatestFrom(appConfigø))
-//  .subscribe(async ([[provider, chainId], config ]) => {
-//    yieldProtocol$.next(await buildProtocol(provider, chainId, config.browserCaching));
-//  });
+ combineLatest([ providerø, appConfigø, chainIdø ])
+ .subscribe(async ([provider, config, chainId]) => {
+  console.log('herer',  provider )
+   yieldProtocol$.next(await buildProtocol(provider, chainId, config.browserCaching));
+ });
 
 /* Expose the observables */
 const yieldObservables: IYieldObservables = {

@@ -2,7 +2,6 @@ import { IVaultRoot, IYieldProtocol } from '../types';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils/appUtils';
 import { VaultBuiltEvent, VaultGivenEvent } from '../contracts/Cauldron';
 import { generateVaultName } from '../utils/yieldUtils';
-import { chainId$ } from '../observables';
 
 /**
  *

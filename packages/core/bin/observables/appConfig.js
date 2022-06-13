@@ -20,7 +20,7 @@ exports.appConfigø = exports.appConfig$
     return config;
 }), 
 // takeUntil(appConfig$),
-(0, rxjs_1.finalize)(() => console.log('App Environment configured.')), (0, rxjs_1.share)());
+(0, rxjs_1.finalize)(() => console.log('App Environment configured.')), (0, rxjs_1.shareReplay)(1));
 const updateYieldConfig = (appConfig) => {
     exports.appConfig$.next(Object.assign(Object.assign({}, yield_config_1.default), appConfig));
 };

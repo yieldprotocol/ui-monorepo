@@ -1,4 +1,4 @@
-import { BehaviorSubject, concatMap, delay, distinct, distinctUntilChanged, finalize, from, map, mergeMap, Observable, of, share, Subject, switchMap, take, takeUntil, timeout, timer } from 'rxjs';
+import { BehaviorSubject, concatMap, delay, distinct, distinctUntilChanged, finalize, from, map, mergeMap, Observable, of, share, shareReplay, Subject, switchMap, take, takeUntil, timeout, timer } from 'rxjs';
 import { IYieldConfig } from '../types';
 
 /* Handle configuration */
@@ -21,7 +21,7 @@ export const appConfigø: Observable<IYieldConfig> = appConfig$
   }),
   // takeUntil(appConfig$),
   finalize(() => console.log('App Environment configured.')),
-  share(),
+  shareReplay(1),
 )
 
 export const updateYieldConfig = (appConfig: IYieldConfig) => {

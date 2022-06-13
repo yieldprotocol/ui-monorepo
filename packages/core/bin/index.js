@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.viewFunctions = exports.viewObservables = exports.yieldConstants = exports.yieldFunctions = exports.yieldObservables = void 0;
 const tslib_1 = require("tslib");
+const rxjs_1 = require("rxjs");
+const buildProtocol_1 = require("./initProtocol/buildProtocol");
 const connection_1 = require("./observables/connection");
 const assetMap_1 = require("./observables/assetMap");
 const seriesMap_1 = require("./observables/seriesMap");
@@ -26,11 +28,11 @@ appConfig_1.appConfigø.subscribe();
 /**
  * Observe provider$ changes  => Load/re-load protocol (TODO only if network id changes?)
  * */
-//  combineLatest([ provider$, chainIdø ])
-//  .pipe(withLatestFrom(appConfigø))
-//  .subscribe(async ([[provider, chainId], config ]) => {
-//    yieldProtocol$.next(await buildProtocol(provider, chainId, config.browserCaching));
-//  });
+(0, rxjs_1.combineLatest)([connection_2.provider$, appConfig_1.appConfigø, connection_1.chainIdø])
+    .subscribe(([provider, config, chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    console.log('herer', provider);
+    yieldProtocol_1.yieldProtocol$.next(yield (0, buildProtocol_1.buildProtocol)(provider, chainId, config.browserCaching));
+}));
 /* Expose the observables */
 const yieldObservables = {
     yieldProtocolø: yieldProtocol_1.yieldProtocolø,

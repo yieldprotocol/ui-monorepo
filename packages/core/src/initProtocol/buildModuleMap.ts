@@ -4,8 +4,6 @@ import * as contracts from '../contracts';
 import { ARBITRUM, ETHEREUM } from '../utils/constants';
 import { moduleAddresses, supportedChains } from '../config/protocol';
 
-import { chainId$ } from '../observables';
-
 export const buildModuleMap = (provider: ethers.providers.BaseProvider, chainId: number) => {
   /** Get addresses of the module contracts */
   const _moduleAddresses = moduleAddresses.get(chainId);

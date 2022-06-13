@@ -1,7 +1,7 @@
 import { signDaiPermit, signERC2612Permit } from 'eth-permit';
 import { ethers } from 'ethers';
 import { ERC20Permit__factory, ERC1155__factory } from '../contracts';
-import { account$, accountProvider$, accountProviderø, accountø, chainIdø, provider$, providerø  } from '../observables';
+import { account$, accountProvider$ } from '../observables';
 import { userSettings$, userSettingsø } from '../observables/userSettings';
 import {
   ISignData,
@@ -14,9 +14,8 @@ import {
   IYieldSig,
 } from '../types';
 import { IGNORED_CALLDATA, MAX_256 } from '../utils/constants';
-import { resetProcess, updateProcess, transactionMap$ } from '../observables/transactionMap';
+import { resetProcess, updateProcess} from '../observables/transactionMap';
 import { getSignId } from '../utils/yieldUtils';
-import { combineLatest, take } from 'rxjs';
 
 // const _handleSignSuccess = (reqSig: ISignData, processCode:string ) => {
 //     /* update the processMap to indicate the signing was successfull */

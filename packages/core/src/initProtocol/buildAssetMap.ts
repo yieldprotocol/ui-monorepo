@@ -7,9 +7,6 @@ import { JoinAddedEvent } from '../contracts/Ladle';
 import { AssetAddedEvent } from '../contracts/Cauldron';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils/appUtils';
 
-import { chainId$ } from '../observables';
-import { combineLatestInit } from 'rxjs/internal/observable/combineLatest';
-
 export const buildAssetMap = async (
   cauldron: contracts.Cauldron,
   ladle: contracts.Ladle,

@@ -9,7 +9,6 @@ import { SeriesAddedEvent } from '../contracts/Cauldron';
 
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils/appUtils';
 import { nameFromMaturity } from '../utils/yieldUtils';
-import { chainId$ } from '../observables';
 
 export const buildSeriesMap = async (
   cauldron: contracts.Cauldron,

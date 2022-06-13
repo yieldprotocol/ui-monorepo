@@ -1,8 +1,4 @@
-import { ethers } from 'ethers';
 import { IYieldFunctions, IYieldObservables } from './types';
-/**
- * Observe provider$ changes  => Load/re-load protocol (TODO only if network id changes?)
- * */
 declare const yieldObservables: IYieldObservables;
 declare const viewObservables: any;
 declare const viewFunctions: any;
@@ -34,11 +30,11 @@ declare const yieldConstants: {
     ASSETS: Map<string, import("./types").IAssetInfo>;
     MAX_256: "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
     MAX_128: "0xffffffffffffffffffffffffffffffff";
-    ZERO_BN: ethers.BigNumber;
-    ONE_BN: ethers.BigNumber;
-    MINUS_ONE_BN: ethers.BigNumber;
-    WAD_RAY_BN: ethers.BigNumber;
-    WAD_BN: ethers.BigNumber;
+    ZERO_BN: import("ethers").BigNumber;
+    ONE_BN: import("ethers").BigNumber;
+    MINUS_ONE_BN: import("ethers").BigNumber;
+    WAD_RAY_BN: import("ethers").BigNumber;
+    WAD_BN: import("ethers").BigNumber;
     SECONDS_PER_YEAR: number;
     ETH_BYTES: string;
     CHAI_BYTES: string;

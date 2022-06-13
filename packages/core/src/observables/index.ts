@@ -12,9 +12,9 @@ export {
   
   account$,
   accountø,
+
   updateAccount,
 
-  chainId$,
   chainIdø,
   updateChainId,
 } from './connection';

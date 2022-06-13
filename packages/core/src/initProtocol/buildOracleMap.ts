@@ -6,8 +6,6 @@ import { ARBITRUM, ETHEREUM } from '../utils/constants';
 import { supportedChains } from '../config/protocol';
 import { oracleAddresses } from '../config/oracles';
 
-import { chainId$ } from '../observables';
-
 export const buildOracleMap = (provider: ethers.providers.BaseProvider, chainId:number) => {
   /** Get addresses of the oracle contracts */
   const _oracleAddresses = oracleAddresses.get(chainId);

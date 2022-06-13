@@ -11,7 +11,6 @@ import { buildModuleMap } from './buildModuleMap';
 import { buildAssetMap } from './buildAssetMap';
 import { buildSeriesMap } from './buildSeriesMap';
 import { buildStrategyMap } from './buildStrategyMap';
-import { chainId$ } from '../observables/connection';
 
 export const buildProtocol = async (
   provider: ethers.providers.BaseProvider,

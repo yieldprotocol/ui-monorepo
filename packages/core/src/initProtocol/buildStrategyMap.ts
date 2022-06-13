@@ -5,8 +5,6 @@ import * as contracts from '../contracts';
 
 import { strategyAddresses } from '../config/protocol';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils/appUtils';
-import { chainId$ } from '../observables';
-
 
 export const buildStrategyMap = async (
   provider: ethers.providers.BaseProvider,
