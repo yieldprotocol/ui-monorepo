@@ -4,13 +4,12 @@
  */
 
 import { BigNumber, ethers } from 'ethers';
-import { BehaviorSubject, fromEvent, map, Observable, share, Subject, tap } from 'rxjs';
-import { selected$ } from '../observables';
+import { BehaviorSubject, combineLatest, distinctUntilChanged, fromEvent, map, Observable, share, Subject, tap } from 'rxjs';
+import { selectedø } from '../observables';
 import { ZERO_BN } from '../utils';
 
-import { appConfig$ } from '../observables/appConfig';
 import { inputToTokenValue } from '../utils/yieldUtils';
-const diagnostics = appConfig$.value.diagnostics;
+import { ISelected } from '../types';
 
 const _getValueFromInputEvent = (event: Observable<InputEvent>): Observable<string> => {
   return event.pipe(
@@ -25,9 +24,10 @@ export const borrowInput$: BehaviorSubject<string> = new BehaviorSubject('0');
  * Borrow input 
  * @category Input 
  * */
-export const borrowInputø: Observable<BigNumber> = borrowInput$.pipe(
-  map((inp: string | undefined) => {
-    if (inp) return inputToTokenValue(inp, selected$.value.base?.decimals!);
+export const borrowInputø: Observable<BigNumber> = combineLatest([borrowInput$, selectedø]).pipe(
+  distinctUntilChanged(),
+  map(( [inp, sel] : [string, ISelected] ) => {
+    if (inp) return inputToTokenValue(inp, sel.base?.decimals!);
     return ZERO_BN;
   }),
   share()
@@ -42,9 +42,9 @@ export const collateralInput$: BehaviorSubject<string> = new BehaviorSubject('0'
  * Collateral input 
  * @category Input
  * */
-export const collateralInputø: Observable<BigNumber> = collateralInput$.pipe(
-  map((inp: string | undefined) => {
-    if (inp) return inputToTokenValue(inp, selected$.value.ilk?.decimals!);
+export const collateralInputø: Observable<BigNumber> = combineLatest([collateralInput$, selectedø]).pipe(
+  map(( [inp, sel] : [string, ISelected] ) => {
+    if (inp) return inputToTokenValue(inp, sel.ilk?.decimals!);
     return ZERO_BN;
   }),
   share()
@@ -60,9 +60,9 @@ export const repayInput$: Subject<string> = new Subject();
  * Repayment input 
  * @category Input
  * */
-export const repayInputø: Observable<BigNumber> = repayInput$.pipe(
-  map((inp: string | undefined) => {
-    if (inp) return inputToTokenValue(inp, selected$.value.base?.decimals!);
+export const repayInputø: Observable<BigNumber> = combineLatest([repayInput$, selectedø]).pipe(
+  map(( [inp, sel] : [string, ISelected] )  => {
+    if (inp) return inputToTokenValue(inp, sel.base?.decimals!);
     return ZERO_BN;
   })
 );
@@ -76,9 +76,9 @@ export const updateRepayInput = (input: string) => repayInput$.next(input);
   * Lending input 
   * @category Input
  */
- export const lendInputø: Observable<BigNumber> = lendInput$.pipe(
-   map((inp: string | undefined) => {
-     if (inp) return inputToTokenValue(inp, selected$.value.base?.decimals!);
+ export const lendInputø: Observable<BigNumber> = combineLatest([lendInput$, selectedø]).pipe(
+   map(( [inp, sel] : [string, ISelected] )  => {
+     if (inp) return inputToTokenValue(inp, sel.base?.decimals!);
      return ZERO_BN;
    })
  );
@@ -92,9 +92,9 @@ export const updateRepayInput = (input: string) => repayInput$.next(input);
     * Close Position input 
     * @category Input
    */
-  export const closeInputø: Observable<BigNumber> = closeInput$.pipe(
-    map((inp: string | undefined) => {
-      if (inp) return inputToTokenValue(inp, selected$.value.base?.decimals!);
+  export const closeInputø: Observable<BigNumber> = combineLatest([closeInput$, selectedø]).pipe(
+    map(( [inp, sel] : [string, ISelected] )  => {
+      if (inp) return inputToTokenValue(inp, sel.base?.decimals!);
       return ZERO_BN;
     })
   );
@@ -108,9 +108,9 @@ export const addLiquidityInput$: BehaviorSubject<string> = new BehaviorSubject('
   * Add liquidity input
   * @category Input
   *  */
-export const addLiquidityInputø: Observable<BigNumber> =addLiquidityInput$.pipe(
-  map((inp: string | undefined) => {
-    if (inp) return inputToTokenValue(inp, selected$.value.strategy?.decimals!);
+export const addLiquidityInputø: Observable<BigNumber> = combineLatest([addLiquidityInput$, selectedø]).pipe(
+  map(( [inp, sel] : [string, ISelected] )  => {
+    if (inp) return inputToTokenValue(inp, sel.strategy?.decimals!);
     return ZERO_BN;
   })
 );
@@ -123,9 +123,9 @@ export const updateAddLiqInput = (input: string) => addLiquidityInput$.next(inpu
  * Remove liquidity input 
  * @category Input
  * */
- export const removeLiquidityInputø: Observable<BigNumber> = removeLiquidityInput$.pipe(
-   map((inp: string | undefined) => {
-     if (inp) return inputToTokenValue(inp, selected$.value.strategy?.decimals!);
+ export const removeLiquidityInputø: Observable<BigNumber> = combineLatest([removeLiquidityInput$, selectedø]).pipe(
+   map(( [inp, sel] : [string, ISelected] )  => {
+     if (inp) return inputToTokenValue(inp, sel.strategy?.decimals!);
      return ZERO_BN;
    })
  );

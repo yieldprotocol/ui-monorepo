@@ -1,6 +1,6 @@
-import { Observable, BehaviorSubject, share, map, tap, takeWhile, takeUntil, distinctUntilChanged, takeLast, take } from 'rxjs';
+import { Observable, BehaviorSubject, share, map, tap, takeWhile, takeUntil, distinctUntilChanged, takeLast, take, withLatestFrom } from 'rxjs';
 import { IAsset, ISelected, ISeries, IStrategy, IVault } from '../types';
-import { appConfig$ } from './appConfig';
+import { appConfigø } from './appConfig';
 import { assetMap$ } from './assetMap';
 import { sendMsg } from './messages';
 import { seriesMap$, seriesMapø } from './seriesMap';
@@ -26,9 +26,12 @@ export const selectedø: Observable<ISelected> = selected$.pipe(share());
  *  TODO: consider handling this better. 
  * */
 seriesMapø
-  .pipe( take(2) ) // take after the first series has been added. 
+  .pipe( 
+    take(2), // hmm, take 2 because it will be the first update with a value.
+    withLatestFrom(appConfigø)
+  )
   .subscribe(
-    ([sMap]) => sMap && selectSeries(appConfig$.value.defaultSeriesId || [...sMap][0])
+    ([[sMap], appConfig]) => sMap && selectSeries(appConfig.defaultSeriesId || [...sMap][0])
   );
 
 /**
@@ -60,7 +63,7 @@ export const selectIlk = (asset?: IAsset | string) => {
   console.log(ilk ? `Selected Ilk: ${ilk.id}` : 'Ilks unselected');
 };
 
-export const selectSeries = (series?: ISeries | string, futureSeries: boolean = false) => {
+export const selectSeries = (series: ISeries | string, futureSeries: boolean = false) => {
   /* Try to get the series if argument is a string */
   const _series = (series as ISeries)?.id ? (series as ISeries) : seriesMap$.value.get(series as string);
   /* Update the selected$  (either series or futureSeries) */

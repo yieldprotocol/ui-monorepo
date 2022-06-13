@@ -5,16 +5,15 @@ import * as contracts from '../contracts';
 
 import { strategyAddresses } from '../config/protocol';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils/appUtils';
-import { chainId$ } from '../observables';
-
 
 export const buildStrategyMap = async (
   provider: ethers.providers.BaseProvider,
+  chainId: number,
   browserCaching: boolean
 ): Promise<Map<string, IStrategyRoot>> => {
 
-  const _strategyAddresses = strategyAddresses.get(chainId$.value);
-  const strategyList: any[] = (browserCaching && getBrowserCachedValue(`${chainId$.value}_strategies`)) || [];
+  const _strategyAddresses = strategyAddresses.get(chainId);
+  const strategyList: any[] = (browserCaching && getBrowserCachedValue(`${chainId}_strategies`)) || [];
 
   try {
     await Promise.all(
@@ -49,10 +48,10 @@ export const buildStrategyMap = async (
   }
 
   // Log the new assets in the cache
-  setBrowserCachedValue(`${chainId$.value}_strategies`, strategyList);
+  setBrowserCachedValue(`${chainId}_strategies`, strategyList);
   // Set the 'last checked' block
   const _blockNum = await provider.getBlockNumber(); // TODO: maybe lose this
-  setBrowserCachedValue(`${chainId$.value}_lastStrategyUpdate`, _blockNum );
+  setBrowserCachedValue(`${chainId}_lastStrategyUpdate`, _blockNum );
 
   /* create a map from the 'charged' asset list */
   const strategyRootMap: Map<string, IStrategyRoot> = new Map(

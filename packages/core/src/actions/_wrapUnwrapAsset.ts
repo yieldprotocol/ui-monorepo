@@ -1,5 +1,5 @@
 import { BigNumber, Contract } from 'ethers';
-import {assetMap$, chainId$, provider$ , userSettings$, yieldProtocol$  } from '../observables';
+import {assetMap$, userSettings$ } from '../observables';
 import { IAsset, ICallData, LadleActions, RoutedActions } from '../types';
 import { ZERO_BN } from '../utils/constants';
 
@@ -12,11 +12,11 @@ export const wrapAsset = async (
   value: BigNumber,
   asset: IAsset,
   processCode: string,
+  chainId: number,
   to?: string | undefined // optional send destination : DEFAULT is assetJoin address
 ): Promise<ICallData[]> => {
 
   console.log( processCode) // TODO maybe remove this 
-  const chainId = chainId$.value;
 
   // const ladleAddress = yieldProtocol$.value.ladle.address;
   const assetMap = assetMap$.value;
@@ -74,9 +74,7 @@ export const wrapAsset = async (
 /**
  * @internal
  * */
-export const unwrapAsset = async (asset: IAsset, receiver: string): Promise<ICallData[]> => {
-
-  const chainId = chainId$.value;
+export const unwrapAsset = async (asset: IAsset, receiver: string, chainId: number): Promise<ICallData[]> => {
 
   const unwrapHandlerAddress = asset.unwrapHandlerAddresses?.has(chainId)
     ? asset.unwrapHandlerAddresses.get(chainId)

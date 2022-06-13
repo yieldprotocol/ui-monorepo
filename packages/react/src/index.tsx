@@ -44,8 +44,6 @@ const YieldProvider = ({ props, children }: any) => {
     strategyMapø,
     vaultMapø,
     accountø,
-    providerø,
-    accountProviderø,
     messagesø,
     transactionMapø,
     selectedø,
@@ -65,24 +63,23 @@ const YieldProvider = ({ props, children }: any) => {
     IStrategy
   >;
   const vaultMap = useObservable(vaultMapø) as unknown as Map<string, IVault>;
-  const provider = useObservable(providerø) as unknown as string;
-
-  const accountProvider = useObservable(accountProviderø) as unknown as string;
+  // const provider = useObservable(providerø) as unknown as string;
+  // const accountProvider = useObservable(accountProviderø) as unknown as string;
   const account = useObservable(accountø) as unknown as string;
   
   const messages = useObservable(messagesø) as unknown as string;
   const selected = useObservable(selectedø) as unknown as string;
   // const transactionMap = useObservable(transactionMapø) as unknown as string;
 
-  useEffect(() => {
-    props?.provider && yieldFunctions.updateProvider(props?.provider);
-  }, [props?.provider]);
+  // useEffect(() => {
+  //   // props?.provider && yieldFunctions.updateProvider(props?.provider);
+  // }, [props?.provider]);
 
   return (
     <YieldContext.Provider
       value={{
         messages,
-        provider,
+
         yieldProtocol,
         assetMap,
         seriesMap,

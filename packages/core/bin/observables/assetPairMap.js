@@ -21,21 +21,22 @@ exports.assetPairMapø = exports.assetPairMap$.pipe((0, rxjs_1.share)());
  *
  * */
 selected_1.selectedø
-    .pipe(
+    .pipe((0, rxjs_1.withLatestFrom)(connection_1.chainIdø), 
 /* Only handle events that have both a selected base and ilk, and are NOT already in the assetPairMap */
-(0, rxjs_1.filter)((s) => {
-    const bothBaseAndIlkSelected = !!s.base && !!s.ilk;
-    const mapHasPair = s.base && s.ilk && exports.assetPairMap$.value.has((0, yieldUtils_1.getAssetPairId)(s.base.id, s.ilk.id));
+(0, rxjs_1.filter)(([sel]) => {
+    const bothBaseAndIlkSelected = !!sel.base && !!sel.ilk;
+    const mapHasPair = sel.base && sel.ilk && exports.assetPairMap$.value.has((0, yieldUtils_1.getAssetPairId)(sel.base.id, sel.ilk.id));
     // mapHasPair && console.log ( 'Selected base and asset already in map');
-    return (bothBaseAndIlkSelected === true && mapHasPair === false);
-}), (0, rxjs_1.map)(({ base, ilk }) => [base, ilk]))
-    .subscribe(([base, ilk]) => (0, exports.updatePair)(base === null || base === void 0 ? void 0 : base.id, ilk === null || ilk === void 0 ? void 0 : ilk.id));
+    return bothBaseAndIlkSelected === true && mapHasPair === false;
+}), (0, rxjs_1.map)(([selected, chainId]) => {
+    return { base: selected.base, ilk: selected.ilk, chainId };
+}))
+    .subscribe(({ base, ilk, chainId }) => (0, exports.updatePair)(base === null || base === void 0 ? void 0 : base.id, ilk === null || ilk === void 0 ? void 0 : ilk.id, chainId));
 /* Update Assets function */
-const updatePair = (baseId, ilkId) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+const updatePair = (baseId, ilkId, chainId) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     const { cauldron, assetRootMap, oracleMap } = yieldProtocol_1.yieldProtocol$.value;
-    // const cauldron = contractMap.get('Cauldron');
-    const oracleName = (_b = (_a = oracles_1.ORACLES.get(connection_1.chainId$.value || 1)) === null || _a === void 0 ? void 0 : _a.get(baseId)) === null || _b === void 0 ? void 0 : _b.get(ilkId);
+    const oracleName = (_b = (_a = oracles_1.ORACLES.get(chainId)) === null || _a === void 0 ? void 0 : _a.get(baseId)) === null || _b === void 0 ? void 0 : _b.get(ilkId);
     const PriceOracle = oracleMap.get(oracleName);
     const base = assetRootMap.get(baseId);
     const ilk = assetRootMap.get(ilkId);

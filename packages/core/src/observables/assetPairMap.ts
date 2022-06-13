@@ -1,6 +1,6 @@
 import { bytesToBytes32, decimal18ToDecimalN } from '@yield-protocol/ui-math';
 import { BigNumber, ethers } from 'ethers';
-import { BehaviorSubject, filter, map, Observable, share } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable, share, withLatestFrom } from 'rxjs';
 
 import { ORACLES } from '../config/oracles';
 import { IAssetPair, ISelected } from '../types';
@@ -8,7 +8,7 @@ import { WAD_BN } from '../utils';
 import { yieldProtocol$ } from './yieldProtocol';
 import { selectedø } from './selected';
 import { getAssetPairId } from '../utils/yieldUtils';
-import { chainId$ } from './connection';
+import { chainIdø } from './connection';
 
 /** @internal */
 export const assetPairMap$: BehaviorSubject<Map<string, IAssetPair>> = new BehaviorSubject(new Map([]));
@@ -22,26 +22,24 @@ export const assetPairMapø: Observable<Map<string, IAssetPair>> = assetPairMap$
  * */
 selectedø
   .pipe(
+    withLatestFrom(chainIdø),
     /* Only handle events that have both a selected base and ilk, and are NOT already in the assetPairMap */
-    filter((s: ISelected) => {
-      const bothBaseAndIlkSelected = !!s.base && !!s.ilk;
-      const mapHasPair = s.base && s.ilk && assetPairMap$.value.has( getAssetPairId(s.base.id, s.ilk!.id) );
+    filter(([sel]) => {
+      const bothBaseAndIlkSelected = !!sel.base && !!sel.ilk;
+      const mapHasPair = sel.base && sel.ilk && assetPairMap$.value.has(getAssetPairId(sel.base.id, sel.ilk!.id));
       // mapHasPair && console.log ( 'Selected base and asset already in map');
-      return (bothBaseAndIlkSelected === true && mapHasPair === false);
+      return bothBaseAndIlkSelected === true && mapHasPair === false;
     }),
-    map(({ base, ilk }: ISelected) => [base, ilk])
+    map(([selected, chainId]) => {
+      return { base: selected.base, ilk: selected.ilk, chainId };
+    })
   )
-  .subscribe(([base, ilk]) => updatePair(base?.id!, ilk?.id!));
+  .subscribe(({ base, ilk, chainId }) => updatePair(base?.id!, ilk?.id!, chainId));
 
 /* Update Assets function */
-export const updatePair = async (baseId: string, ilkId: string): Promise<IAssetPair | null> => {
-
+export const updatePair = async (baseId: string, ilkId: string, chainId: number): Promise<IAssetPair | null> => {
   const { cauldron, assetRootMap, oracleMap } = yieldProtocol$.value;
-  
-  // const cauldron = contractMap.get('Cauldron');
-  const oracleName = ORACLES.get(chainId$.value || 1)
-    ?.get(baseId)
-    ?.get(ilkId);
+  const oracleName = ORACLES.get(chainId)?.get(baseId)?.get(ilkId);
 
   const PriceOracle = oracleMap.get(oracleName!);
   const base = assetRootMap.get(baseId);
@@ -89,7 +87,7 @@ export const updatePair = async (baseId: string, ilkId: string): Promise<IAssetP
     };
 
     /* update the assetPairMap */
-    assetPairMap$.next( assetPairMap$.value.set( pairId, newPair) )
+    assetPairMap$.next(assetPairMap$.value.set(pairId, newPair));
     console.log('New Asset Pair Info: ', newPair);
 
     /* return the new pair so we don't have to go looking for it again after assetpairMap has been updated */
@@ -98,5 +96,4 @@ export const updatePair = async (baseId: string, ilkId: string): Promise<IAssetP
 
   /* if no cauldron, base or ilk, or priceOracle return null */
   return null;
-
 };

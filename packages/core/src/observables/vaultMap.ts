@@ -1,14 +1,14 @@
 import { format } from 'date-fns';
 import { ethers, BigNumber } from 'ethers';
 import { bytesToBytes32, calcAccruedDebt } from '@yield-protocol/ui-math';
-import { BehaviorSubject, Observable, share, combineLatest, filter } from 'rxjs';
+import { BehaviorSubject, Observable, share, combineLatest, filter, take } from 'rxjs';
 
 import { buildVaultMap } from '../initProtocol/buildVaultMap';
 import { ISeries, IVault, IVaultRoot, IYieldProtocol, MessageType } from '../types';
 import { ZERO_BN } from '../utils/constants';
 import { truncateValue } from '../utils/appUtils';
-import { account$ } from './connection';
-import { yieldProtocol$ } from './yieldProtocol';
+import { account$, accountø, chainIdø } from './connection';
+import { yieldProtocol$, yieldProtocolø } from './yieldProtocol';
 import { sendMsg } from './messages';
 
 /** @internal */
@@ -32,13 +32,13 @@ export const updateVaults = async (vaultList?: IVault[] | IVaultRoot[]) => {
 /**
  *  Observe yieldProtocol$ and account$ changes TOGETHER >  Initiate or Empty VAULT Map
  * */
-combineLatest([account$, yieldProtocol$])
+combineLatest([accountø, yieldProtocolø, chainIdø])
   // only emit if account is defined and yp.cauldron adress exists - indicating protocol has mostly loaded
   .pipe( filter( ([a,yp]) => a !== undefined && yp.cauldron.address !== ''))
-  .subscribe(async ([_account, _protocol]) => {
+  .subscribe(async ([_account, _protocol, _chainId]) => {
     if (_account !== undefined ) {
       console.log('Getting vaults for: ', _account);
-      const vaultMap = await buildVaultMap(_protocol, _account);
+      const vaultMap = await buildVaultMap(_protocol, _account, _chainId);
       console.log('vaults: ', Array.from(vaultMap.values()));
       await updateVaults(Array.from(vaultMap.values()));
       sendMsg({ message: 'Vaults Loaded', type: MessageType.INTERNAL });

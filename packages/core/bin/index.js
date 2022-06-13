@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.viewFunctions = exports.viewObservables = exports.yieldConstants = exports.yieldFunctions = exports.yieldObservables = void 0;
 const tslib_1 = require("tslib");
+const rxjs_1 = require("rxjs");
+const buildProtocol_1 = require("./initProtocol/buildProtocol");
 const connection_1 = require("./observables/connection");
 const assetMap_1 = require("./observables/assetMap");
 const seriesMap_1 = require("./observables/seriesMap");
@@ -19,29 +21,14 @@ const messages_1 = require("./observables/messages");
 const borrowView_1 = require("./viewObservables/borrowView");
 const collateralView_1 = require("./viewObservables/collateralView");
 /**
- * On app start, appConfig gathers all the required information from env etc.
+ * On app start (and on provider$, chainId$ or appConfig$ observed changes ),
+ * appConfig gathers all the required information from env etc.
  * sets things up, and then the stream finishes indicating that everything is ready to go.
  */
-appConfig_1.appConfigø.subscribe();
-// appConfig$
-//   .pipe(
-//     /* if config file has a default provider and * other checks if required: */
-//     // filter((conf: IYieldConfig) => conf.defaultProvider !== undefined),
-//     /* only Once at the beginning if the above is true (ie. not on every config change): */
-//     first()
-//   )
-//   .subscribe(async (config: IYieldConfig) => {
-//     // console.log(config.diagnostics);
-//     provider$.next(config.defaultProvider);
-//   });
-// /**
-//  * Observe provider$ changes  => Load/re-load protocol (TODO only if network id changes?)
-//  * */
-//  provider$
-//  .pipe(withLatestFrom(appConfig$))
-//  .subscribe(async ([provider, config]: [ethers.providers.BaseProvider, IYieldConfig]) => {
-//    yieldProtocol$.next(await buildProtocol(provider, config.browserCaching));
-//  });
+(0, rxjs_1.combineLatest)([connection_2.providerø, appConfig_1.appConfigø, connection_1.chainIdø])
+    .subscribe(([provider, config, chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    yieldProtocol_1.yieldProtocol$.next(yield (0, buildProtocol_1.buildProtocol)(provider, chainId, config.browserCaching));
+}));
 /* Expose the observables */
 const yieldObservables = {
     yieldProtocolø: yieldProtocol_1.yieldProtocolø,

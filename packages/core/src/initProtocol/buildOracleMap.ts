@@ -6,17 +6,15 @@ import { ARBITRUM, ETHEREUM } from '../utils/constants';
 import { supportedChains } from '../config/protocol';
 import { oracleAddresses } from '../config/oracles';
 
-import { chainId$ } from '../observables';
-
-export const buildOracleMap = (provider: ethers.providers.BaseProvider) => {
+export const buildOracleMap = (provider: ethers.providers.BaseProvider, chainId:number) => {
   /** Get addresses of the oracle contracts */
-  const _oracleAddresses = oracleAddresses.get(chainId$.value);
+  const _oracleAddresses = oracleAddresses.get(chainId);
 
   /** Inititiate contracts (and distribution as a map) */
   const oracleMap = new Map<string, Contract>([]);
 
   /** Oracle Contracts For Ethereum Chains */
-  if (supportedChains.get(ETHEREUM)!.includes(chainId$.value)) {
+  if (supportedChains.get(ETHEREUM)!.includes(chainId)) {
     // Oracles
     oracleMap.set(
       'ChainlinkMultiOracle',
@@ -42,7 +40,7 @@ export const buildOracleMap = (provider: ethers.providers.BaseProvider) => {
   }
 
   /** Oracles For Arbitrum Chains */
-  if (supportedChains.get(ARBITRUM)!.includes(chainId$.value)) {
+  if (supportedChains.get(ARBITRUM)!.includes(chainId)) {
     // Oracles
     const AccumulatorOracle: contracts.AccumulatorOracle = contracts.AccumulatorOracle__factory.connect(
       _oracleAddresses!.AccumulatorOracle as string,

@@ -6,12 +6,11 @@ const types_1 = require("../types");
 const contracts = tslib_1.__importStar(require("../contracts"));
 const assets_1 = require("../config/assets");
 const appUtils_1 = require("../utils/appUtils");
-const observables_1 = require("../observables");
-const buildAssetMap = (cauldron, ladle, provider, browserCaching) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+const buildAssetMap = (cauldron, ladle, provider, chainId, browserCaching) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Check for cached assets or start with empty array */
-    const assetList = (browserCaching && (0, appUtils_1.getBrowserCachedValue)(`${observables_1.chainId$.value}_assets`)) || [];
+    const assetList = (browserCaching && (0, appUtils_1.getBrowserCachedValue)(`${chainId}_assets`)) || [];
     /* Check the last time the assets were fetched */
-    const lastAssetUpdate = (browserCaching && (0, appUtils_1.getBrowserCachedValue)(`${observables_1.chainId$.value}_lastAssetUpdate`)) || 'earliest';
+    const lastAssetUpdate = (browserCaching && (0, appUtils_1.getBrowserCachedValue)(`${chainId}_lastAssetUpdate`)) || 'earliest';
     /* Get all the assetAdded, oracleAdded and joinAdded events and series events at the same time */
     const assetAddedFilter = cauldron.filters.AssetAdded();
     const joinAddedfilter = ladle.filters.JoinAdded();
@@ -53,9 +52,9 @@ const buildAssetMap = (cauldron, ladle, provider, browserCaching) => tslib_1.__a
                 }
             }
             /* Check if an unwrapping handler is provided, if so, the token is considered to be a wrapped token */
-            const isWrappedToken = (_a = assetInfo.unwrapHandlerAddresses) === null || _a === void 0 ? void 0 : _a.has(observables_1.chainId$.value);
+            const isWrappedToken = (_a = assetInfo.unwrapHandlerAddresses) === null || _a === void 0 ? void 0 : _a.has(chainId);
             /* Check if a wrapping handler is provided, if so, wrapping is required */
-            const wrappingRequired = (_b = assetInfo.wrapHandlerAddresses) === null || _b === void 0 ? void 0 : _b.has(observables_1.chainId$.value);
+            const wrappingRequired = (_b = assetInfo.wrapHandlerAddresses) === null || _b === void 0 ? void 0 : _b.has(chainId);
             const newAsset = Object.assign(Object.assign({}, assetInfo), { id,
                 address,
                 name,
@@ -79,10 +78,10 @@ const buildAssetMap = (cauldron, ladle, provider, browserCaching) => tslib_1.__a
         console.log('Error fetching Asset data: ', e);
     }
     // Log the new assets in the cache
-    (0, appUtils_1.setBrowserCachedValue)(`${observables_1.chainId$.value}_assets`, assetList);
+    (0, appUtils_1.setBrowserCachedValue)(`${chainId}_assets`, assetList);
     // Set the 'last checked' block
     const _blockNum = yield provider.getBlockNumber(); // TODO: maybe lose this
-    (0, appUtils_1.setBrowserCachedValue)(`${observables_1.chainId$.value}_lastAssetUpdate`, _blockNum);
+    (0, appUtils_1.setBrowserCachedValue)(`${chainId}_lastAssetUpdate`, _blockNum);
     /* create a map from the 'charged' asset list */
     // const assetRootMap: Map<string, IAssetRoot> = new Map(assetList.map((a: any) => [a.id, _chargeAsset(a, provider)]));
     const assetRootMap = new Map(assetList.map((a) => [a.id, a]));

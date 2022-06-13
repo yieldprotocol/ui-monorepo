@@ -35,7 +35,11 @@ const _handleSignError = (err, processCode) => {
  *
  * @returns { Promise<ICallData[]> }
  */
-const sign = (requestedSignatures, processCode) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+const sign = (requestedSignatures, processCode, chainId) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    /* Get the values from the SUBJECTS $$ */
+    const account = observables_1.account$.value;
+    const accountProvider = observables_1.accountProvider$.value;
+    const { maxApproval, approvalMethod } = userSettings_1.userSettings$.value;
     /* First, filter out any ignored calls */
     const _requestedSigs = requestedSignatures.filter((_rs) => !_rs.ignoreIf);
     /* Build out the signMap for this process */
@@ -46,17 +50,11 @@ const sign = (requestedSignatures, processCode) => tslib_1.__awaiter(void 0, voi
         signMap: new Map(_signMap),
         stage: types_1.ProcessStage.SIGNING_APPROVAL_REQUESTED,
     });
-    /* Get the values from the observables/subjects */
-    const provider = observables_1.provider$.value;
-    const { chainId } = yield provider.getNetwork();
-    // const ladleAddress = yieldProtocol$.value.ladle.address;
-    const account = observables_1.account$.value;
-    const isContractWallet = (account && (yield provider.getCode(account)) !== '0x0') || '0x';
+    const isContractWallet = (account && (yield accountProvider.getCode(account)) !== '0x0') || '0x';
     console.log(isContractWallet);
-    const { maxApproval, approvalMethod } = userSettings_1.userSettings$.value;
     const signer = account
-        ? provider.getSigner(account)
-        : provider.getSigner(0); // TODO: signer is WRONG here.
+        ? accountProvider.getSigner(account)
+        : accountProvider.getSigner(0); // TODO: signer is WRONG here.
     const _processedSigs = _requestedSigs.map((reqSig) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         var _a;
         /**
@@ -67,7 +65,7 @@ const sign = (requestedSignatures, processCode) => tslib_1.__awaiter(void 0, voi
             reqSig.target.tokenType === types_1.TokenType.ERC20_Permit) {
             /* get the  ERC2612 signed data */
             const _amount = maxApproval ? constants_1.MAX_256 : (_a = reqSig.amount) === null || _a === void 0 ? void 0 : _a.toString();
-            const { v, r, s, value, deadline } = yield (0, eth_permit_1.signERC2612Permit)(provider, 
+            const { v, r, s, value, deadline } = yield (0, eth_permit_1.signERC2612Permit)(accountProvider, 
             /* build domain */
             reqSig.domain || {
                 // uses custom domain if provided, else use created Domain
@@ -98,7 +96,7 @@ const sign = (requestedSignatures, processCode) => tslib_1.__awaiter(void 0, voi
             approvalMethod === types_1.ApprovalMethod.SIG &&
             reqSig.target.tokenType === types_1.TokenType.ERC20_DaiPermit) {
             /* Get the sign data */
-            const { v, r, s, nonce, expiry, allowed } = yield (0, eth_permit_1.signDaiPermit)(provider, 
+            const { v, r, s, nonce, expiry, allowed } = yield (0, eth_permit_1.signDaiPermit)(accountProvider, 
             /* build domain */
             {
                 name: reqSig.target.name,

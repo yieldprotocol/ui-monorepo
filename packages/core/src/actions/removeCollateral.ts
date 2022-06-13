@@ -1,20 +1,9 @@
 import { ethers } from 'ethers';
 import { transact } from '../chainActions';
 import { ETH_BASED_ASSETS, CONVEX_BASED_ASSETS } from '../config/assets';
-import { combineLatest } from 'rxjs';
+import { combineLatest, take } from 'rxjs';
 import { ConvexJoin__factory } from '../contracts';
-import {
-  yieldProtocol$,
-  assetMap$,
-  account$,
-  provider$,
-  chainId$,
-  yieldProtocolø,
-  accountø,
-  assetMapø,
-  chainIdø,
-  providerø,
-} from '../observables';
+import { yieldProtocolø, accountø, assetMapø, chainIdø, providerø } from '../observables';
 import { IVault, ActionCodes, ICallData, LadleActions, RoutedActions } from '../types';
 import { getProcessCode, ONE_BN, ZERO_BN } from '../utils';
 import { inputToTokenValue } from '../utils/yieldUtils';
@@ -22,12 +11,10 @@ import { removeEth } from './_addRemoveEth';
 import { unwrapAsset } from './_wrapUnwrapAsset';
 
 export const removeCollateral = async (amount: string, vault: IVault, unwrapOnRemove: boolean = true) => {
-  
   /* Subscribe to and get the values from the observables:  */
   combineLatest([yieldProtocolø, chainIdø, assetMapø, accountø, providerø])
-
+    .pipe(take(1)) // only take one and then finish.
     .subscribe(async ([{ ladle }, chainId, assetMap, account, provider]) => {
-      
       /* generate the txCode for tx tracking and tracing */
       const txCode = getProcessCode(ActionCodes.REMOVE_COLLATERAL, vault.id);
 
@@ -44,7 +31,7 @@ export const removeCollateral = async (amount: string, vault: IVault, unwrapOnRe
       const _amount = inputToTokenValue(amount, ilk.decimals);
 
       /* handle wrapped tokens:  */
-      const unwrapCallData: ICallData[] = unwrapOnRemove ? await unwrapAsset(ilk, account!) : [];
+      const unwrapCallData: ICallData[] = unwrapOnRemove ? await unwrapAsset(ilk, account!, chainId) : [];
       const removeEthCallData: ICallData[] = isEthCollateral ? removeEth(ONE_BN) : []; // (exit_ether sweeps all the eth out the ladle, so exact amount is not importnat -> just greater than zero)
 
       /* is convex-type collateral */
@@ -83,6 +70,5 @@ export const removeCollateral = async (amount: string, vault: IVault, unwrapOnRe
       ];
 
       transact(calls, txCode);
-    })
-    .unsubscribe();
+    });
 };

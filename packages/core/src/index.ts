@@ -1,16 +1,14 @@
-import { ethers } from 'ethers';
-import { first, filter, withLatestFrom } from 'rxjs';
-
+import { combineLatest } from 'rxjs';
 import { buildProtocol } from './initProtocol/buildProtocol';
-import { IYieldConfig, IYieldFunctions, IYieldObservables } from './types';
-import { accountø, chainId$, updateAccount, updateChainId } from './observables/connection';
+import { IYieldFunctions, IYieldObservables } from './types';
+import { accountø, chainIdø, updateAccount} from './observables/connection';
 import { assetMapø } from './observables/assetMap';
 import { seriesMapø } from './observables/seriesMap';
 import { yieldProtocol$, yieldProtocolø } from './observables/yieldProtocol';
 import { strategyMapø } from './observables/strategyMap';
 import { vaultMapø } from './observables/vaultMap';
 import { appConfigø, updateYieldConfig } from './observables/appConfig';
-import { accountProviderø, provider$, providerø, updateProvider } from './observables/connection';
+import { accountProviderø, providerø, updateProvider } from './observables/connection';
 import { selectBase, selectedø, selectIlk, selectSeries, selectStrategy, selectVault } from './observables/selected';
 
 import * as constants from './utils/constants';
@@ -40,31 +38,14 @@ import {
 import { collateralizationPercentø, collateralizationRatioø } from './viewObservables/collateralView';
 
 /** 
- * On app start, appConfig gathers all the required information from env etc.
+ * On app start (and on provider$, chainId$ or appConfig$ observed changes ), 
+ * appConfig gathers all the required information from env etc.
  * sets things up, and then the stream finishes indicating that everything is ready to go.
  */
-appConfigø.subscribe()
-
-// appConfig$
-//   .pipe(
-//     /* if config file has a default provider and * other checks if required: */
-//     // filter((conf: IYieldConfig) => conf.defaultProvider !== undefined),
-//     /* only Once at the beginning if the above is true (ie. not on every config change): */
-//     first()
-//   )
-//   .subscribe(async (config: IYieldConfig) => {
-//     // console.log(config.diagnostics);
-//     provider$.next(config.defaultProvider);
-//   });
-
-// /**
-//  * Observe provider$ changes  => Load/re-load protocol (TODO only if network id changes?)
-//  * */
-//  provider$
-//  .pipe(withLatestFrom(appConfig$))
-//  .subscribe(async ([provider, config]: [ethers.providers.BaseProvider, IYieldConfig]) => {
-//    yieldProtocol$.next(await buildProtocol(provider, config.browserCaching));
-//  });
+ combineLatest([ providerø, appConfigø, chainIdø ])
+ .subscribe(async ([provider, config, chainId]) => {
+   yieldProtocol$.next(await buildProtocol(provider, chainId, config.browserCaching));
+ });
 
 /* Expose the observables */
 const yieldObservables: IYieldObservables = {

@@ -1,4 +1,4 @@
-import { IVault } from "../types";
+import { IVault } from '../types';
 /**
  * REPAY FN
  * @param vault

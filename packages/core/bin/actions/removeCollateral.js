@@ -15,6 +15,7 @@ const _wrapUnwrapAsset_1 = require("./_wrapUnwrapAsset");
 const removeCollateral = (amount, vault, unwrapOnRemove = true) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Subscribe to and get the values from the observables:  */
     (0, rxjs_1.combineLatest)([observables_1.yieldProtocolø, observables_1.chainIdø, observables_1.assetMapø, observables_1.accountø, observables_1.providerø])
+        .pipe((0, rxjs_1.take)(1)) // only take one and then finish.
         .subscribe(([{ ladle }, chainId, assetMap, account, provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         var _a;
         /* generate the txCode for tx tracking and tracing */
@@ -29,7 +30,7 @@ const removeCollateral = (amount, vault, unwrapOnRemove = true) => tslib_1.__awa
         /* parse inputs to BigNumber in Wei */
         const _amount = (0, yieldUtils_1.inputToTokenValue)(amount, ilk.decimals);
         /* handle wrapped tokens:  */
-        const unwrapCallData = unwrapOnRemove ? yield (0, _wrapUnwrapAsset_1.unwrapAsset)(ilk, account) : [];
+        const unwrapCallData = unwrapOnRemove ? yield (0, _wrapUnwrapAsset_1.unwrapAsset)(ilk, account, chainId) : [];
         const removeEthCallData = isEthCollateral ? (0, _addRemoveEth_1.removeEth)(utils_1.ONE_BN) : []; // (exit_ether sweeps all the eth out the ladle, so exact amount is not importnat -> just greater than zero)
         /* is convex-type collateral */
         const isConvexCollateral = assets_1.CONVEX_BASED_ASSETS.includes(ilk.proxyId);
@@ -66,8 +67,7 @@ const removeCollateral = (amount, vault, unwrapOnRemove = true) => tslib_1.__awa
             ...unwrapCallData,
         ];
         (0, chainActions_1.transact)(calls, txCode);
-    }))
-        .unsubscribe();
+    }));
 });
 exports.removeCollateral = removeCollateral;
 //# sourceMappingURL=removeCollateral.js.map

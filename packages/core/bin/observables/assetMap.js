@@ -46,7 +46,6 @@ yieldProtocol_1.yieldProtocol$
     yield (0, exports.updateAssets)(chargedList);
     (0, messages_1.sendMsg)({ message: 'Strategies Loaded', type: messages_1.MessageType.INTERNAL });
 }));
-// .unsubscribe() ??
 /**
  * Observe provider$ changes, and update map accordingly ('charge assets/series' with live contracts & listeners )
  * 1. 'Charge asset' with latest provider info for each

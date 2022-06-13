@@ -8,9 +8,9 @@ import { appConfig$ } from "./appConfig";
 const _blankProtocol = {
   protocolVersion: '0.0.0',
 
-  cauldron: contracts.Cauldron__factory.connect('', appConfig$.value.defaultProvider) as contracts.Cauldron,
-  ladle: contracts.Ladle__factory.connect('', appConfig$.value.defaultProvider) as contracts.Ladle,
-  witch: contracts.Witch__factory.connect('', appConfig$.value.defaultProvider) as contracts.Witch,
+  cauldron: contracts.Cauldron__factory.connect('', new ethers.providers.JsonRpcProvider) as contracts.Cauldron,
+  ladle: contracts.Ladle__factory.connect('', new ethers.providers.JsonRpcProvider) as contracts.Ladle,
+  witch: contracts.Witch__factory.connect('', new ethers.providers.JsonRpcProvider) as contracts.Witch,
 
   oracleMap: new Map([]) as Map<string, Contract>,
   moduleMap: new Map([]) as Map<string, Contract>,
