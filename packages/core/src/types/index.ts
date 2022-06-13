@@ -39,7 +39,7 @@ export interface IUserSettings {
 }
 
 export interface IYieldConfig {
-  defaultProvider: ethers.providers.BaseProvider;
+  defaultProviderMap: Map< number, ethers.providers.BaseProvider >;
   defaultChainId: number;
 
   defaultAccountProvider: ethers.providers.Web3Provider, // the default provider used for getting the account information and signing/transacting

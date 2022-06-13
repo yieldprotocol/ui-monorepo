@@ -8,7 +8,7 @@ import { yieldProtocol$, yieldProtocolø } from './observables/yieldProtocol';
 import { strategyMapø } from './observables/strategyMap';
 import { vaultMapø } from './observables/vaultMap';
 import { appConfigø, updateYieldConfig } from './observables/appConfig';
-import { accountProviderø, provider$, providerø, updateProvider } from './observables/connection';
+import { accountProviderø, providerø, updateProvider } from './observables/connection';
 import { selectBase, selectedø, selectIlk, selectSeries, selectStrategy, selectVault } from './observables/selected';
 
 import * as constants from './utils/constants';
@@ -41,7 +41,8 @@ import { collateralizationPercentø, collateralizationRatioø } from './viewObse
  * On app start, appConfig gathers all the required information from env etc.
  * sets things up, and then the stream finishes indicating that everything is ready to go.
  */
-appConfigø.subscribe()
+combineLatest( [appConfigø, chainIdø ] )
+.subscribe( ([chainId, appConfig ]) => console.log( 'All good to go!: ', chainId, appConfig ))
 
 /**
  * Observe provider$ changes  => Load/re-load protocol (TODO only if network id changes?)

@@ -8,8 +8,10 @@ import {
   shareReplay,
   withLatestFrom,
   mergeMap,
+  combineLatest,
+  take,
 } from 'rxjs';
-import { defaultAccountProvider } from '../config/defaultprovider';
+import { defaultAccountProvider, defaultProviderMap } from '../config/defaultprovider';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils';
 import { appConfigø } from './appConfig';
 declare const window: any;
@@ -50,27 +52,6 @@ export const updateChainId = (chainId: number) => {
   location.reload();
 };
 
-
-// export const chainId = (async () => {
-//   /* if in a browser environment */
-//   if (typeof window !== 'undefined') {
-//     if ((window as any).ethereum) {
-//       // first try from the injected provider
-//       const injectedId = await (window as any).ethereum.request({ method: 'eth_chainId' });
-//       console.log('Injected chainId:', injectedId);
-//       return parseInt(injectedId, 16);
-//     }
-//     const fromCache = getBrowserCachedValue(`lastChainIdUsed`);
-//     console.log('ChainId from cache:', fromCache);
-//     return fromCache; // second, from the last id used in the cache
-//   }
-
-//   /* in a non-browser environment : return 1 */
-//   // console.log('ChainId from default:', appConfig$.value.defaultChainId);
-//   return 1; // defaults to the defaultChainId in the settings
-// })();
-
-
 /** @internal */
 export const provider$: Subject<ethers.providers.BaseProvider> = new Subject();
 export const providerø: Observable<ethers.providers.BaseProvider> = provider$.pipe(shareReplay(1));
@@ -78,7 +59,18 @@ export const updateProvider = (newProvider: ethers.providers.BaseProvider) => {
   provider$.next(newProvider); // update to whole new protocol
 };
 
-
+/**
+ * update the provider on start ( when there is a chainId and appConfig)
+ * */
+combineLatest([chainIdø, appConfigø])
+.pipe(take(1)) // once on start
+.subscribe(([chainId, appConfig]) => {
+  console.log(chainId, appConfig);
+  const defaultProvider =  defaultProviderMap.get(chainId);
+  defaultProvider && console.log(' default PRovider', defaultProvider  );
+  provider$.next( defaultProvider as ethers.providers.BaseProvider )
+  // console.log( 'All good to go!: ', chainId, appConfig )
+});
 
 /** @internal */
 export const account$ = new BehaviorSubject(undefined as string | undefined);
@@ -102,13 +94,10 @@ export const updateAccountProvider = (newProvider: ethers.providers.Web3Provider
 };
 
 /**
- * Handle any events on the accountProvider ( web3Provider ) 
+ * Handle any events on the accountProvider ( web3Provider )
  * */
-accountProviderø
-.pipe(withLatestFrom(appConfigø))
-.subscribe(async ([accProvider, appConfig]) => {
-
-  console.log( 'HERE finally!! asdasdsdsda')
+accountProviderø.pipe(withLatestFrom(appConfigø)).subscribe(async ([accProvider, appConfig]) => {
+  console.log('HERE finally!! asdasdsdsda');
 
   /**
    * MetaMask requires requesting permission to connect users accounts >

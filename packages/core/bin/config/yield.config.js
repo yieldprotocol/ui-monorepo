@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const types_1 = require("../types");
 const defaultprovider_1 = require("./defaultprovider");
 exports.default = {
-    defaultProvider: defaultprovider_1.defaultProvider,
+    defaultProviderMap: defaultprovider_1.defaultProviderMap,
     defaultAccountProvider: // the initial provider, also used as a fallback if required.
     defaultprovider_1.defaultAccountProvider,
     defaultChainId: 1,

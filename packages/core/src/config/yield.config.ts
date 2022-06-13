@@ -1,10 +1,9 @@
 import { ApprovalMethod, IYieldConfig } from '../types';
-import { defaultProvider, defaultAccountProvider } from './defaultprovider';
+import { defaultAccountProvider, defaultProviderMap } from './defaultprovider';
 
 export default {
-  defaultProvider, // the initial provider, also used as a fallback if required.
+  defaultProviderMap, // the initial provider, also used as a fallback if required.
   defaultAccountProvider, // the default provider used for getting the account information and signing/transacting
-
   defaultChainId: 1,
   
   autoConnectAccountProvider: true, // try to automatically connect to the injected provider.

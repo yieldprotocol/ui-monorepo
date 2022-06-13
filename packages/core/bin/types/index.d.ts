@@ -30,7 +30,7 @@ export interface IUserSettings {
     unwrapTokens: boolean;
 }
 export interface IYieldConfig {
-    defaultProvider: ethers.providers.BaseProvider;
+    defaultProviderMap: Map<number, ethers.providers.BaseProvider>;
     defaultChainId: number;
     defaultAccountProvider: ethers.providers.Web3Provider;
     useAccountProviderAsProvider: boolean;

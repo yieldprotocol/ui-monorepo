@@ -24,11 +24,12 @@ const collateralView_1 = require("./viewObservables/collateralView");
  * On app start, appConfig gathers all the required information from env etc.
  * sets things up, and then the stream finishes indicating that everything is ready to go.
  */
-appConfig_1.appConfigø.subscribe();
+(0, rxjs_1.combineLatest)([appConfig_1.appConfigø, connection_1.chainIdø])
+    .subscribe(([chainId, appConfig]) => console.log('All good to go!: ', chainId, appConfig));
 /**
  * Observe provider$ changes  => Load/re-load protocol (TODO only if network id changes?)
  * */
-(0, rxjs_1.combineLatest)([connection_2.provider$, appConfig_1.appConfigø, connection_1.chainIdø])
+(0, rxjs_1.combineLatest)([connection_2.providerø, appConfig_1.appConfigø, connection_1.chainIdø])
     .subscribe(([provider, config, chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     console.log('herer', provider);
     yieldProtocol_1.yieldProtocol$.next(yield (0, buildProtocol_1.buildProtocol)(provider, chainId, config.browserCaching));

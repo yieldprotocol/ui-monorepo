@@ -39,23 +39,6 @@ const updateChainId = (chainId) => {
     location.reload();
 };
 exports.updateChainId = updateChainId;
-// export const chainId = (async () => {
-//   /* if in a browser environment */
-//   if (typeof window !== 'undefined') {
-//     if ((window as any).ethereum) {
-//       // first try from the injected provider
-//       const injectedId = await (window as any).ethereum.request({ method: 'eth_chainId' });
-//       console.log('Injected chainId:', injectedId);
-//       return parseInt(injectedId, 16);
-//     }
-//     const fromCache = getBrowserCachedValue(`lastChainIdUsed`);
-//     console.log('ChainId from cache:', fromCache);
-//     return fromCache; // second, from the last id used in the cache
-//   }
-//   /* in a non-browser environment : return 1 */
-//   // console.log('ChainId from default:', appConfig$.value.defaultChainId);
-//   return 1; // defaults to the defaultChainId in the settings
-// })();
 /** @internal */
 exports.provider$ = new rxjs_1.Subject();
 exports.providerø = exports.provider$.pipe((0, rxjs_1.shareReplay)(1));
@@ -63,6 +46,18 @@ const updateProvider = (newProvider) => {
     exports.provider$.next(newProvider); // update to whole new protocol
 };
 exports.updateProvider = updateProvider;
+/**
+ * update the provider on start ( when there is a chainId and appConfig)
+ * */
+(0, rxjs_1.combineLatest)([exports.chainIdø, appConfig_1.appConfigø])
+    .pipe((0, rxjs_1.take)(1)) // once on start
+    .subscribe(([chainId, appConfig]) => {
+    console.log(chainId, appConfig);
+    const defaultProvider = defaultprovider_1.defaultProviderMap.get(chainId);
+    defaultProvider && console.log(' default PRovider', defaultProvider);
+    exports.provider$.next(defaultProvider);
+    // console.log( 'All good to go!: ', chainId, appConfig )
+});
 /** @internal */
 exports.account$ = new rxjs_1.BehaviorSubject(undefined);
 exports.accountø = exports.account$.pipe((0, rxjs_1.shareReplay)(1));
@@ -87,9 +82,7 @@ exports.updateAccountProvider = updateAccountProvider;
 /**
  * Handle any events on the accountProvider ( web3Provider )
  * */
-exports.accountProviderø
-    .pipe((0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø))
-    .subscribe(([accProvider, appConfig]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+exports.accountProviderø.pipe((0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø)).subscribe(([accProvider, appConfig]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     console.log('HERE finally!! asdasdsdsda');
     /**
      * MetaMask requires requesting permission to connect users accounts >

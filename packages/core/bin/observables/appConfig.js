@@ -16,7 +16,6 @@ exports.appConfigø = exports.appConfig$
 // delay(2000),
 (0, rxjs_1.map)((config) => {
     // await ( new Promise(resolve => setTimeout(resolve, 5000)) ) ;
-    console.log(config);
     return config;
 }), 
 // takeUntil(appConfig$),

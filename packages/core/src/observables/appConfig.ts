@@ -16,7 +16,6 @@ export const appConfigø: Observable<IYieldConfig> = appConfig$
   // delay(2000),
   map((config) => {
     // await ( new Promise(resolve => setTimeout(resolve, 5000)) ) ;
-    console.log(config);
     return config;
   }),
   // takeUntil(appConfig$),
