@@ -74,7 +74,9 @@ exports.collateralizationRatioø = (0, rxjs_1.combineLatest)([
     _totalDebtWithInputø,
     _totalCollateralWithInputø,
     _selectedPairø,
-]).pipe((0, rxjs_1.distinctUntilChanged)(([a1, a2], [b1, b2]) => a1 === b1 && a2 === b2), (0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø), (0, rxjs_1.map)(([[totalDebt, totalCollat, assetPair], config]) => {
+]).pipe(
+// distinctUntilChanged( ([a1,a2],[b1, b2]) => a1===b1 && a2===b2 ),
+(0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø), (0, rxjs_1.map)(([[totalDebt, totalCollat, assetPair], config]) => {
     var _a, _b;
     if (
     /* if all the elements exist and are greater than 0 */

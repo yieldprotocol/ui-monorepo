@@ -18,6 +18,6 @@ exports.defaultAccountProvider = new ethers_1.ethers.providers.Web3Provider(wind
 exports.defaultProviderMap = new Map([
     [1, new ethers_1.ethers.providers.WebSocketProvider(`wss://mainnet.infura.io/ws/v3/de43fd0c912d4bdc94712ab4b37613ea`)],
     [5, new ethers_1.ethers.providers.WebSocketProvider(`wss://goerli.infura.io/ws/v3/de43fd0c912d4bdc94712ab4b37613ea`)],
-    [42161, new ethers_1.ethers.providers.WebSocketProvider(`wss://mainnet.infura.io/ws/v3/de43fd0c912d4bdc94712ab4b37613ea`)]
+    [42161, new ethers_1.ethers.providers.AlchemyProvider(42161, 'vtMM4_eLnOvkjkdckprVw3cIa64EVkDZ')]
 ]);
 //# sourceMappingURL=defaultprovider.js.map

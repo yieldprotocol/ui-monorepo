@@ -107,7 +107,7 @@ export const collateralizationRatioø: Observable<number | undefined> = combineL
   _totalCollateralWithInputø,
   _selectedPairø,
 ]).pipe(
-  distinctUntilChanged( ([a1,a2],[b1, b2]) => a1===b1 && a2===b2 ),
+  // distinctUntilChanged( ([a1,a2],[b1, b2]) => a1===b1 && a2===b2 ),
   withLatestFrom(appConfigø),
   map(([[totalDebt, totalCollat, assetPair], config]) => {
     if (
