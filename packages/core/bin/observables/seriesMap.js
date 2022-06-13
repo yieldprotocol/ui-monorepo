@@ -25,7 +25,7 @@ const updateSeries = (seriesList, account) => tslib_1.__awaiter(void 0, void 0, 
 exports.updateSeries = updateSeries;
 /* Observe YieldProtocolø changes, an update map accordingly */
 yieldProtocol_1.yieldProtocolø
-    .pipe((0, rxjs_1.filter)((protocol) => protocol.seriesRootMap.size > 0), (0, rxjs_1.withLatestFrom)(connection_1.provider$))
+    .pipe((0, rxjs_1.filter)((protocol) => protocol.seriesRootMap.size > 0), (0, rxjs_1.withLatestFrom)(connection_1.providerø))
     .subscribe(([_protocol, _provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* 'Charge' all the series (using the current provider) */
     const chargedList = Array.from(_protocol.seriesRootMap.values()).map((s) => _chargeSeries(s, _provider));
@@ -33,8 +33,8 @@ yieldProtocol_1.yieldProtocolø
     yield (0, exports.updateSeries)(chargedList);
     (0, messages_1.sendMsg)({ message: 'Series Loaded', type: types_1.MessageType.INTERNAL });
 }));
-/* Observe provider$ changes, and update map accordingly ('charge assets/series' with live contracts & listeners ) */
-// provider$.pipe(withLatestFrom(seriesMap$)).subscribe(([provider, seriesMap]) => {
+/* Observe providero changes, and update map accordingly ('charge assets/series' with live contracts & listeners ) */
+// providerø.pipe(withLatestFrom(seriesMap$)).subscribe(([provider, seriesMap]) => {
 //   console.log('Series map updated' ) // [provider, seriesMap]);
 // });
 // /* Observe Account$ changes ('update dynamic/User Data') */

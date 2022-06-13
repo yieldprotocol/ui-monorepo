@@ -38,7 +38,7 @@ import {
 import { collateralizationPercentø, collateralizationRatioø } from './viewObservables/collateralView';
 
 /** 
- * On app start (and on provider$, chainId$ or appConfig$ observed changes ), 
+ * On app start (and on providerø, chainId$ or appConfig$ observed changes ), 
  * appConfig gathers all the required information from env etc.
  * sets things up, and then the stream finishes indicating that everything is ready to go.
  */

@@ -2,7 +2,7 @@ import { BehaviorSubject, Observable, share, combineLatest, withLatestFrom, filt
 import { BigNumber, Contract, ethers } from 'ethers';
 
 import { IAsset, IAssetRoot, TokenType, IYieldProtocol } from '../types';
-import { provider$ } from './connection';
+import { providerø } from './connection';
 import { yieldProtocolø } from './yieldProtocol';
 
 import * as contracts from '../contracts';
@@ -42,7 +42,7 @@ export const updateAssets = async (assetList?: IAsset[], account?: string) => {
 yieldProtocolø
   .pipe(
     filter((protocol )=> protocol.assetRootMap.size > 0 ),
-    withLatestFrom(provider$)
+    withLatestFrom(providerø)
     )
   .subscribe(async ([_protocol, _provider]: [IYieldProtocol, ethers.providers.BaseProvider]) => {
     /* 'Charge' all the assets (using the current provider) */
@@ -53,11 +53,11 @@ yieldProtocolø
   });
 
 /**
- * Observe provider$ changes, and update map accordingly ('charge assets/series' with live contracts & listeners )
+ * Observe providerø changes, and update map accordingly ('charge assets/series' with live contracts & listeners )
  * 1. 'Charge asset' with latest provider info for each
  * 2. Set as new assetMap$
  * */
-provider$
+providerø
   .pipe(
     withLatestFrom(assetMap$),
     /* only proceed if a valid provider and map has elements */

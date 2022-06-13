@@ -38,7 +38,7 @@ exports.updateAssets = updateAssets;
  * 2. update asset list
  * */
 yieldProtocol_1.yieldProtocolø
-    .pipe((0, rxjs_1.filter)((protocol) => protocol.assetRootMap.size > 0), (0, rxjs_1.withLatestFrom)(connection_1.provider$))
+    .pipe((0, rxjs_1.filter)((protocol) => protocol.assetRootMap.size > 0), (0, rxjs_1.withLatestFrom)(connection_1.providerø))
     .subscribe(([_protocol, _provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* 'Charge' all the assets (using the current provider) */
     const chargedList = Array.from(_protocol.assetRootMap.values()).map((a) => _chargeAsset(a, _provider));
@@ -47,11 +47,11 @@ yieldProtocol_1.yieldProtocolø
     (0, messages_1.sendMsg)({ message: 'Strategies Loaded', type: messages_1.MessageType.INTERNAL });
 }));
 /**
- * Observe provider$ changes, and update map accordingly ('charge assets/series' with live contracts & listeners )
+ * Observe providerø changes, and update map accordingly ('charge assets/series' with live contracts & listeners )
  * 1. 'Charge asset' with latest provider info for each
  * 2. Set as new assetMap$
  * */
-connection_1.provider$
+connection_1.providerø
     .pipe((0, rxjs_1.withLatestFrom)(exports.assetMap$), 
 /* only proceed if a valid provider and map has elements */
 (0, rxjs_1.filter)(([prov, aMap]) => ethers_1.ethers.providers.BaseProvider.isProvider(prov) && aMap.size > 0))

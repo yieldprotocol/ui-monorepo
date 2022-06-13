@@ -5,7 +5,7 @@ import { sellFYToken, secondsToFrom, calculateAPR, floorDecimal, mulDecimal, div
 import * as contracts from '../contracts';
 
 import { ISeries, ISeriesRoot, IYieldProtocol, MessageType } from '../types';
-import { provider$ } from './connection';
+import { providerø } from './connection';
 import { yieldProtocolø } from './yieldProtocol';
 import { ETH_BASED_ASSETS } from '../config/assets';
 import { sendMsg } from './messages';
@@ -27,7 +27,7 @@ export const updateSeries = async (seriesList?: ISeries[], account?: string) => 
 yieldProtocolø
   .pipe(
     filter((protocol )=> protocol.seriesRootMap.size > 0 ),
-    withLatestFrom(provider$)
+    withLatestFrom(providerø)
     )
   .subscribe(async ([_protocol, _provider]: [IYieldProtocol, ethers.providers.BaseProvider]) => {
     /* 'Charge' all the series (using the current provider) */
@@ -39,8 +39,8 @@ yieldProtocolø
     sendMsg({message:'Series Loaded', type: MessageType.INTERNAL})
   });
 
-/* Observe provider$ changes, and update map accordingly ('charge assets/series' with live contracts & listeners ) */
-// provider$.pipe(withLatestFrom(seriesMap$)).subscribe(([provider, seriesMap]) => {
+/* Observe providero changes, and update map accordingly ('charge assets/series' with live contracts & listeners ) */
+// providerø.pipe(withLatestFrom(seriesMap$)).subscribe(([provider, seriesMap]) => {
 //   console.log('Series map updated' ) // [provider, seriesMap]);
 // });
 

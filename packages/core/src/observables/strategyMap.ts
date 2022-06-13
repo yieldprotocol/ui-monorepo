@@ -5,7 +5,7 @@ import { mulDecimal, divDecimal } from '@yield-protocol/ui-math';
 import * as contracts from '../contracts';
 import { ISeries, IStrategy, IStrategyRoot, IYieldProtocol, MessageType } from "../types";
 
-import { account$, provider$ } from './connection';
+import { account$, providerø } from './connection';
 import { yieldProtocolø } from "./yieldProtocol";
 import { seriesMap$ } from "./seriesMap";
 import { ZERO_BN } from "../utils/constants";
@@ -28,7 +28,7 @@ export const updateStrategies = async (strategyList?: IStrategy[]) => {
 yieldProtocolø
   .pipe(
     filter((protocol )=> protocol.strategyRootMap.size > 0 ),
-    withLatestFrom(provider$)
+    withLatestFrom(providerø)
     )
   .subscribe(async ([_protocol, _provider]: [IYieldProtocol, ethers.providers.BaseProvider]) => {
     /* 'Charge' all the assets (using the current provider) */
@@ -41,8 +41,8 @@ yieldProtocolø
     sendMsg({message: 'Protocol Ready...', type: MessageType.INTERNAL, id: 'protocolLoaded' })
   });
 
-/* Observe provider$ changes, and update map accordingly ('charge assets/series' with live contracts & listeners ) */
-// provider$
+/* Observe providerø changes, and update map accordingly ('charge assets/series' with live contracts & listeners ) */
+// providerø
 // .pipe(withLatestFrom(strategyMap$))
 // .subscribe(([provider, seriesMap] ) => {
 //   console.log( [provider, seriesMap] )

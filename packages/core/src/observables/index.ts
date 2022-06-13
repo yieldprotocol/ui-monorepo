@@ -5,16 +5,13 @@ export { assetPairMap$, assetPairMapø, updatePair } from './assetPairMap';
 export {
   provider$,
   providerø,
-  accountProviderø,
-  accountProvider$,
-  updateAccountProvider,
   updateProvider,
-  
+  accountProvider$,
+  accountProviderø,
+  updateAccountProvider,
   account$,
   accountø,
-
   updateAccount,
-
   chainIdø,
   updateChainId,
 } from './connection';

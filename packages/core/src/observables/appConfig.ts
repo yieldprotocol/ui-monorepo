@@ -6,6 +6,7 @@ import defaultConfig from '../config/yield.config';
 
 /** @internal */
 export const appConfig$: Subject<IYieldConfig> = new Subject();
+
 /**
  * ONLY ON FIRST LOAD >> This app config is not actually exposed, it closes after gathering env. Ie. it is simply used to handle setting up the environment.
  * Any appConfig changes AFTER init are handled exclussively by the appConfig$ subject - not via this observable.
