@@ -25,8 +25,8 @@ exports.selectedø = exports.selected$.pipe((0, rxjs_1.share)());
  *  TODO: consider handling this better.
  * */
 seriesMap_1.seriesMapø
-    .pipe((0, rxjs_1.take)(2)) // take after the first series has been added. 
-    .subscribe(([sMap]) => sMap && (0, exports.selectSeries)(appConfig_1.appConfig$.value.defaultSeriesId || [...sMap][0]));
+    .pipe((0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø))
+    .subscribe(([[sMap], appConfig]) => sMap && (0, exports.selectSeries)(appConfig.defaultSeriesId || [...sMap][0]));
 /**
  *  Functions to selecting elements
  */

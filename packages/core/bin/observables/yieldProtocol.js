@@ -3,14 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateYieldProtocol = exports.yieldProtocolø = exports.yieldProtocol$ = void 0;
 const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
+const ethers_1 = require("ethers");
 const contracts = tslib_1.__importStar(require("../contracts"));
-const appConfig_1 = require("./appConfig");
 // TODO: try to get rid of this init? 
 const _blankProtocol = {
     protocolVersion: '0.0.0',
-    cauldron: contracts.Cauldron__factory.connect('', appConfig_1.appConfig$.value.defaultProvider),
-    ladle: contracts.Ladle__factory.connect('', appConfig_1.appConfig$.value.defaultProvider),
-    witch: contracts.Witch__factory.connect('', appConfig_1.appConfig$.value.defaultProvider),
+    cauldron: contracts.Cauldron__factory.connect('', new ethers_1.ethers.providers.JsonRpcProvider),
+    ladle: contracts.Ladle__factory.connect('', new ethers_1.ethers.providers.JsonRpcProvider),
+    witch: contracts.Witch__factory.connect('', new ethers_1.ethers.providers.JsonRpcProvider),
     oracleMap: new Map([]),
     moduleMap: new Map([]),
     assetRootMap: new Map([]),

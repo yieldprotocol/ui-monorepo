@@ -51,7 +51,6 @@ yieldProtocol$
     await updateAssets(chargedList);
     sendMsg({message:'Strategies Loaded', type: MessageType.INTERNAL})
   });
-// .unsubscribe() ??
 
 /**
  * Observe provider$ changes, and update map accordingly ('charge assets/series' with live contracts & listeners )

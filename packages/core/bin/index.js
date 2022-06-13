@@ -23,24 +23,13 @@ const collateralView_1 = require("./viewObservables/collateralView");
  * sets things up, and then the stream finishes indicating that everything is ready to go.
  */
 appConfig_1.appConfigø.subscribe();
-// appConfig$
-//   .pipe(
-//     /* if config file has a default provider and * other checks if required: */
-//     // filter((conf: IYieldConfig) => conf.defaultProvider !== undefined),
-//     /* only Once at the beginning if the above is true (ie. not on every config change): */
-//     first()
-//   )
-//   .subscribe(async (config: IYieldConfig) => {
-//     // console.log(config.diagnostics);
-//     provider$.next(config.defaultProvider);
-//   });
-// /**
-//  * Observe provider$ changes  => Load/re-load protocol (TODO only if network id changes?)
-//  * */
-//  provider$
-//  .pipe(withLatestFrom(appConfig$))
-//  .subscribe(async ([provider, config]: [ethers.providers.BaseProvider, IYieldConfig]) => {
-//    yieldProtocol$.next(await buildProtocol(provider, config.browserCaching));
+/**
+ * Observe provider$ changes  => Load/re-load protocol (TODO only if network id changes?)
+ * */
+//  combineLatest([ provider$, chainIdø ])
+//  .pipe(withLatestFrom(appConfigø))
+//  .subscribe(async ([[provider, chainId], config ]) => {
+//    yieldProtocol$.next(await buildProtocol(provider, chainId, config.browserCaching));
 //  });
 /* Expose the observables */
 const yieldObservables = {

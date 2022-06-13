@@ -1,20 +1,10 @@
 import { Web3Provider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
-import { Observable, BehaviorSubject, share, Subject, from, ReplaySubject, concatMap, shareReplay } from 'rxjs';
+import { Observable, BehaviorSubject, share, Subject, from, ReplaySubject, concatMap, shareReplay, withLatestFrom } from 'rxjs';
 import { getDefaultProvider, defaultAccountProvider } from '../config/defaultprovider';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils';
-import { appConfig$ } from './appConfig';
+import { appConfigø } from './appConfig';
 declare const window: any;
-
-/** @internal */
-export const chainId$: Subject<number> = new Subject();
-export const chainIdø: Observable<number> = chainId$.pipe(shareReplay());
-export const updateChainId = (chainId: number) => {
-  /* Cache the last chain used browser-side  */
-  setBrowserCachedValue(`lastChainIdUsed`, chainId);
-  // chainId$.next( chainId ); // no need here
-  location.reload();
-};
 
 
 /**
@@ -25,17 +15,31 @@ export const updateChainId = (chainId: number) => {
   if (typeof window !== 'undefined') {
     if ((window as any).ethereum) { // first try from the injected provider
       const injectedId = await (window as any).ethereum.request({ method: 'eth_chainId' });
-
-      console.log('InjectedID', injectedId );
+      console.log('Injected chainId:', injectedId );
       return parseInt(injectedId, 16);
     }
     const fromCache = getBrowserCachedValue(`lastChainIdUsed`)
+    console.log('ChainId from cache:', fromCache );
     return fromCache; // second, from the last id used in the cache
   }
-  /* in a non-browser environment */
-  return appConfig$.value.defaultChainId; // defaults to the defaultChainId in the settings
-  
+
+  /* in a non-browser environment : return 1 */
+  // console.log('ChainId from default:', appConfig$.value.defaultChainId);
+  return 1; // defaults to the defaultChainId in the settings
+
 })();
+
+// /** @internal */
+export const chainId$: Subject<number> = new Subject();
+export const chainIdø: Observable<number> = chainId$.pipe(shareReplay());
+
+/* When the chainId changes, we refresh the browser */ 
+export const updateChainId = (chainId: number) => {
+  /* Cache the last chain used browser-side  */
+  setBrowserCachedValue(`lastChainIdUsed`, chainId);
+  location.reload();
+};
+
 
 /** @internal */
 export const provider$: Subject<ethers.providers.BaseProvider> = new Subject();
@@ -44,6 +48,15 @@ export const providerø: Observable<ethers.providers.BaseProvider> = provider$.p
 );
 export const updateProvider = (newProvider: ethers.providers.BaseProvider) => {
   provider$.next(newProvider); // update to whole new protocol
+};
+
+/** @internal */
+export const account$ = new BehaviorSubject(undefined as string | undefined);
+export const accountø: Observable<string | undefined> = account$.pipe(share());
+export const updateAccount = (newAccount: string) => {
+  /* Check if account is a vaild address before assigning */
+  const isValidAcc  = ethers.utils.isAddress(newAccount);
+  account$.next(isValidAcc ? newAccount : undefined );
 };
 
 /**
@@ -59,14 +72,15 @@ export const updateAccountProvider = (newProvider: ethers.providers.Web3Provider
 };
 
 /* handle any events on the accountProvider ( web3Provider ) */
-accountProviderø.subscribe(async (accProvider) => {
-  console.log('NEW CHAIN ID', (await accProvider.getNetwork()).chainId);
+accountProviderø
+.pipe(withLatestFrom(appConfigø))
+.subscribe(async ([accProvider, appConfig]) => {
   /**
    * MetaMask requires requesting permission to connect users accounts >
    * however, we can attempt to skip this if the user already has a connected account
    * */
   try {
-    appConfig$.value.autoConnectAccountProvider &&
+    appConfig.autoConnectAccountProvider &&
       account$.next((await accProvider.send('eth_requestAccounts', []))[0]);
   } catch (e) {
     console.log(e);
@@ -76,7 +90,7 @@ accountProviderø.subscribe(async (accProvider) => {
    * Attach listeners for EIP1193 events
    * (Unless supressed, or not in a browser environment )
    * */
-  if (typeof window !== 'undefined' && !appConfig$.value.supressInjectedListeners) {
+  if (typeof window !== 'undefined' && !appConfig.supressInjectedListeners) {
     window.ethereum.on('accountsChanged', (addr: string[]) => account$.next(addr[0]));
     /* Reload the page on every network change as per reccommendation */
     window.ethereum.on('chainChanged', (id: string) => updateChainId(parseInt(id, 16)));
@@ -85,10 +99,3 @@ accountProviderø.subscribe(async (accProvider) => {
     window.ethereum.on('disconnect', () => console.log('disconnected'));
   }
 });
-
-/** @internal */
-export const account$ = new BehaviorSubject(undefined as string | undefined);
-export const accountø: Observable<string | undefined> = account$.pipe(share());
-export const updateAccount = (newAccount?: string) => {
-  account$.next(newAccount || undefined);
-};

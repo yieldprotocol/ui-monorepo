@@ -49,8 +49,8 @@ export interface IYieldConfig {
 
   defaultUserSettings: IUserSettings;
 
-  defaultSeriesId: string | undefined;
-  defaultBaseId: string | undefined;
+  defaultSeriesId: string|undefined;
+  defaultBaseId: string|undefined;
 
   messageTimeout: number;
 

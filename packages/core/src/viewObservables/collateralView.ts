@@ -13,8 +13,7 @@ import { getAssetPairId, ratioToPercent } from '../utils/yieldUtils';
 import { assetPairMapø } from '../observables/assetPairMap';
 import { borrowInputø, collateralInputø } from './input';
 
-import { appConfig$, appConfigø } from '../observables/appConfig';
-import { IAssetPair } from '../types';
+import { appConfigø } from '../observables/appConfig';
 
 /**
  * INTERNAL:

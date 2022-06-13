@@ -5,10 +5,9 @@
 
 import { BigNumber, ethers } from 'ethers';
 import { BehaviorSubject, combineLatest, fromEvent, map, Observable, share, Subject, tap } from 'rxjs';
-import { selected$, selectedø } from '../observables';
+import { selectedø } from '../observables';
 import { ZERO_BN } from '../utils';
 
-import { appConfig$ } from '../observables/appConfig';
 import { inputToTokenValue } from '../utils/yieldUtils';
 import { ISelected } from '../types';
 

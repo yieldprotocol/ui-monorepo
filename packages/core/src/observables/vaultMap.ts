@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { ethers, BigNumber } from 'ethers';
 import { bytesToBytes32, calcAccruedDebt } from '@yield-protocol/ui-math';
-import { BehaviorSubject, Observable, share, combineLatest, filter } from 'rxjs';
+import { BehaviorSubject, Observable, share, combineLatest, filter, take } from 'rxjs';
 
 import { buildVaultMap } from '../initProtocol/buildVaultMap';
 import { ISeries, IVault, IVaultRoot, IYieldProtocol, MessageType } from '../types';

@@ -11,8 +11,8 @@ export default {
   useAccountProviderAsProvider: false, // link the default provider to the account provider.
   supressInjectedListeners: false, // ignore the EIP1192 events emited by the injected provider.
   
-  defaultSeriesId: undefined,
-  defaultBaseId: undefined,
+  defaultSeriesId: undefined, // if undefined, it gets set to the first on the list
+  defaultBaseId: undefined, // if undefined, it gets set to the first on the list
 
   defaultUserSettings: {
     slippageTolerance: 0.01,

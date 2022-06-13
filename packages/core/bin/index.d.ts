@@ -1,5 +1,8 @@
 import { ethers } from 'ethers';
 import { IYieldFunctions, IYieldObservables } from './types';
+/**
+ * Observe provider$ changes  => Load/re-load protocol (TODO only if network id changes?)
+ * */
 declare const yieldObservables: IYieldObservables;
 declare const viewObservables: any;
 declare const viewFunctions: any;
