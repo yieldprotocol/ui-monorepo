@@ -6,7 +6,7 @@ import * as contracts from '../contracts';
 import { ISeries, IStrategy, IStrategyRoot, IYieldProtocol, MessageType } from "../types";
 
 import { account$, provider$ } from './connection';
-import { yieldProtocol$ } from "./yieldProtocol";
+import { yieldProtocolø } from "./yieldProtocol";
 import { seriesMap$ } from "./seriesMap";
 import { ZERO_BN } from "../utils/constants";
 import { sendMsg } from "./messages";
@@ -24,8 +24,8 @@ export const updateStrategies = async (strategyList?: IStrategy[]) => {
   });
 };
 
-/* Observe YieldProtocol$ changes, and update map accordingly */
-yieldProtocol$
+/* Observe YieldProtocolø changes, and update map accordingly */
+yieldProtocolø
   .pipe(
     filter((protocol )=> protocol.strategyRootMap.size > 0 ),
     withLatestFrom(provider$)

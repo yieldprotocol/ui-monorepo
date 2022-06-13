@@ -2,8 +2,8 @@ import { BehaviorSubject, Observable, share, combineLatest, withLatestFrom, filt
 import { BigNumber, Contract, ethers } from 'ethers';
 
 import { IAsset, IAssetRoot, TokenType, IYieldProtocol } from '../types';
-import { account$, provider$ } from './connection';
-import { yieldProtocol$ } from './yieldProtocol';
+import { provider$ } from './connection';
+import { yieldProtocolø } from './yieldProtocol';
 
 import * as contracts from '../contracts';
 import { ASSETS, ETH_BASED_ASSETS } from '../config/assets';
@@ -35,11 +35,11 @@ export const updateAssets = async (assetList?: IAsset[], account?: string) => {
 };
 
 /**
- * Observe YieldProtocol$ changes, and update map accordingly
+ * Observe YieldProtocolø changes, and update map accordingly
  * 1. 'charge' asset list
  * 2. update asset list
  * */
-yieldProtocol$
+yieldProtocolø
   .pipe(
     filter((protocol )=> protocol.assetRootMap.size > 0 ),
     withLatestFrom(provider$)

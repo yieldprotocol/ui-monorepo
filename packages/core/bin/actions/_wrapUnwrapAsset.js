@@ -14,7 +14,6 @@ const wrapAsset = (value, asset, processCode, chainId, to // optional send desti
 ) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     var _a;
     console.log(processCode); // TODO maybe remove this 
-    // const ladleAddress = yieldProtocol$.value.ladle.address;
     const assetMap = observables_1.assetMap$.value;
     // const account = account$.value;
     /* get the signer from the provider */

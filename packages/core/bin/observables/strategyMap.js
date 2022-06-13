@@ -24,8 +24,8 @@ const updateStrategies = (strategyList) => tslib_1.__awaiter(void 0, void 0, voi
     }));
 });
 exports.updateStrategies = updateStrategies;
-/* Observe YieldProtocol$ changes, and update map accordingly */
-yieldProtocol_1.yieldProtocol$
+/* Observe YieldProtocolø changes, and update map accordingly */
+yieldProtocol_1.yieldProtocolø
     .pipe((0, rxjs_1.filter)((protocol) => protocol.strategyRootMap.size > 0), (0, rxjs_1.withLatestFrom)(connection_1.provider$))
     .subscribe(([_protocol, _provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* 'Charge' all the assets (using the current provider) */

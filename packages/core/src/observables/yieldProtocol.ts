@@ -2,7 +2,6 @@ import { BehaviorSubject, Observable, share, withLatestFrom } from "rxjs";
 import { Contract, ethers } from "ethers";
 import { IAssetRoot, ISeriesRoot, IStrategyRoot, IYieldConfig, IYieldProtocol } from "../types";
 import * as contracts from '../contracts';
-import { appConfig$ } from "./appConfig";
 
 // TODO: try to get rid of this init? 
 const _blankProtocol = {

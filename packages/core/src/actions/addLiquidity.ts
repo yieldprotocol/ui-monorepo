@@ -4,21 +4,13 @@ import { combineLatest, take } from 'rxjs';
 import { sign, transact } from '../chainActions';
 import { ETH_BASED_ASSETS } from '../config/assets';
 import {
-  account$,
   accountø,
-  assetMap$,
   assetMapø,
   chainIdø,
-  selected$,
-  selectedø,
-  seriesMap$,
   seriesMapø,
-  strategyMap$,
   strategyMapø,
-  userSettings$,
   userSettingsø,
   vaultMapø,
-  yieldProtocol$,
   yieldProtocolø,
 } from '../observables';
 import {

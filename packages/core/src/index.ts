@@ -4,7 +4,7 @@ import { IYieldFunctions, IYieldObservables } from './types';
 import { accountø, chainIdø, updateAccount} from './observables/connection';
 import { assetMapø } from './observables/assetMap';
 import { seriesMapø } from './observables/seriesMap';
-import { yieldProtocol$, yieldProtocolø } from './observables/yieldProtocol';
+import { updateYieldProtocol, yieldProtocolø } from './observables/yieldProtocol';
 import { strategyMapø } from './observables/strategyMap';
 import { vaultMapø } from './observables/vaultMap';
 import { appConfigø, updateYieldConfig } from './observables/appConfig';
@@ -44,8 +44,9 @@ import { collateralizationPercentø, collateralizationRatioø } from './viewObse
  */
  combineLatest([ providerø, appConfigø, chainIdø ])
  .subscribe(async ([provider, config, chainId]) => {
-   yieldProtocol$.next(await buildProtocol(provider, chainId, config.browserCaching));
+   updateYieldProtocol(await buildProtocol(provider, chainId, config.browserCaching));
  });
+
 
 /* Expose the observables */
 const yieldObservables: IYieldObservables = {

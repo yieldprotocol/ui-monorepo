@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 import { combineLatest, take } from 'rxjs';
 import { sign, transact } from '../chainActions';
 import { ETH_BASED_ASSETS } from '../config/assets';
-import { account$, accountø, assetMap$, assetMapø, chainIdø, selectedø, seriesMapø, userSettings$, userSettingsø, vaultMapø, yieldProtocol$, yieldProtocolø } from '../observables';
+import { accountø, assetMapø, chainIdø, userSettingsø, yieldProtocolø } from '../observables';
 import { ISeries, ActionCodes, ICallData, LadleActions, RoutedActions } from '../types';
 import { getProcessCode, ONE_BN } from '../utils';
 import { inputToTokenValue } from '../utils/yieldUtils';

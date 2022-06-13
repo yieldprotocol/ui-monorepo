@@ -18,7 +18,6 @@ export const wrapAsset = async (
 
   console.log( processCode) // TODO maybe remove this 
 
-  // const ladleAddress = yieldProtocol$.value.ladle.address;
   const assetMap = assetMap$.value;
   // const account = account$.value;
 

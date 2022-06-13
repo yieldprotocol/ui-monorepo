@@ -57,6 +57,7 @@ export interface IYieldConfig {
   mockUser: boolean;
   browserCaching: boolean;
   forceTransactions: boolean;
+  useFork: boolean;
 
   diagnostics: boolean;
 
@@ -77,7 +78,6 @@ export interface IYieldProtocol {
   assetRootMap: Map<string, IAssetRoot>;
   seriesRootMap: Map<string, ISeriesRoot>;
   strategyRootMap: Map<string, IStrategyRoot>;
-
 }
 
 export interface IYieldObservables {

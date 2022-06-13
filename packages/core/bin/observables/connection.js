@@ -4,7 +4,7 @@ exports.updateAccountProvider = exports.accountProviderø = exports.accountProvi
 const tslib_1 = require("tslib");
 const ethers_1 = require("ethers");
 const rxjs_1 = require("rxjs");
-const defaultprovider_1 = require("../config/defaultprovider");
+const defaultproviders_1 = require("../config/defaultproviders");
 const utils_1 = require("../utils");
 const appConfig_1 = require("./appConfig");
 /** @internal */
@@ -44,13 +44,13 @@ const updateProvider = (newProvider) => {
 };
 exports.updateProvider = updateProvider;
 /**
- * update the provider on start ( when there is a chainId and appConfig)
+ * Update the provider on start ( when there is a chainId and appConfig)
  * */
 (0, rxjs_1.combineLatest)([exports.chainIdø, appConfig_1.appConfigø])
-    .pipe((0, rxjs_1.take)(1)) // once on start
+    // .pipe(take(1)) // once on start
     .subscribe(([chainId, appConfig]) => {
-    console.log(chainId, appConfig);
-    const defaultProvider = defaultprovider_1.defaultProviderMap.get(chainId);
+    console.log(appConfig);
+    const defaultProvider = defaultproviders_1.defaultProviderMap.get(chainId);
     defaultProvider && console.log(' default PRovider', defaultProvider);
     exports.provider$.next(defaultProvider);
     // console.log( 'All good to go!: ', chainId, appConfig )
@@ -69,7 +69,7 @@ exports.updateAccount = updateAccount;
  * It also adds a number of listeners to monitor account changes etc.
  **/
 /** @internal */
-exports.accountProvider$ = new rxjs_1.BehaviorSubject(defaultprovider_1.defaultAccountProvider);
+exports.accountProvider$ = new rxjs_1.BehaviorSubject(defaultproviders_1.defaultAccountProvider);
 exports.accountProviderø = exports.accountProvider$.pipe((0, rxjs_1.shareReplay)(1));
 const updateAccountProvider = (newProvider) => {
     // TODO: wrap the EIP provider into a ethers.web3Provider if required.
@@ -79,8 +79,7 @@ exports.updateAccountProvider = updateAccountProvider;
 /**
  * Handle any events on the accountProvider ( web3Provider )
  * */
-exports.accountProviderø.pipe((0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø)).subscribe(([accProvider, appConfig]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    console.log('HERE finally!! asdasdsdsda');
+(0, rxjs_1.combineLatest)([exports.accountProviderø, appConfig_1.appConfigø]).subscribe(([accProvider, appConfig]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /**
      * MetaMask requires requesting permission to connect users accounts >
      * however, we can attempt to skip this if the user already has a connected account
@@ -103,5 +102,27 @@ exports.accountProviderø.pipe((0, rxjs_1.withLatestFrom)(appConfig_1.appConfig�
         window.ethereum.on('connect', () => console.log('connected'));
         window.ethereum.on('disconnect', () => console.log('disconnected'));
     }
+    /**
+     * if using the accountProvider as the base provider
+     * TODO: untested
+     *  */
+    if (appConfig.useAccountProviderAsProvider)
+        (0, exports.updateProvider)(accProvider);
 }));
+/**
+ * Using a forked Environment, first wait until all loaded and ready, then switch out to use a fork.
+ */
+// combineLatest([yieldProtocolø,chainIdø]).pipe(withLatestFrom(appConfigø)).subscribe(([ [ protocol, chainId ], config]) => {
+//   /* ...then, if using a forked environment, switch out the provider after all has loaded */
+//   try {
+//     if (protocol.cauldron && config.useFork && forkProviderMap.has(chainId)) {
+//       console.log('Switching to a forked environemnt:');
+//       const newProvider = forkProviderMap.get(chainId)!;
+//       updateProvider(newProvider);
+//       console.log('USING FORKED ENVIRONMENT: ', newProvider);
+//     }
+//   } catch (e) {
+//     console.log(e);
+//   }
+// });
 //# sourceMappingURL=connection.js.map

@@ -43,6 +43,7 @@ export interface IYieldConfig {
     mockUser: boolean;
     browserCaching: boolean;
     forceTransactions: boolean;
+    useFork: boolean;
     diagnostics: boolean;
     ignoreSeries: string[];
     ignoreStrategies: string[];

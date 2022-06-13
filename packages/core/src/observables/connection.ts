@@ -10,10 +10,12 @@ import {
   mergeMap,
   combineLatest,
   take,
+  pipe,
 } from 'rxjs';
-import { defaultAccountProvider, defaultProviderMap } from '../config/defaultprovider';
+import { defaultAccountProvider, defaultProviderMap, forkProviderMap } from '../config/defaultproviders';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils';
 import { appConfigø } from './appConfig';
+import { yieldProtocolø } from './yieldProtocol';
 declare const window: any;
 
 /** @internal */
@@ -57,17 +59,17 @@ export const updateProvider = (newProvider: ethers.providers.BaseProvider) => {
 };
 
 /**
- * update the provider on start ( when there is a chainId and appConfig)
+ * Update the provider on start ( when there is a chainId and appConfig)
  * */
 combineLatest([chainIdø, appConfigø])
-.pipe(take(1)) // once on start
-.subscribe(([chainId, appConfig]) => {
-  console.log(chainId, appConfig);
-  const defaultProvider =  defaultProviderMap.get(chainId);
-  defaultProvider && console.log(' default PRovider', defaultProvider  );
-  provider$.next( defaultProvider as ethers.providers.BaseProvider )
-  // console.log( 'All good to go!: ', chainId, appConfig )
-});
+  // .pipe(take(1)) // once on start
+  .subscribe(([chainId, appConfig]) => {
+    console.log(appConfig);
+    const defaultProvider = defaultProviderMap.get(chainId);
+    defaultProvider && console.log(' default PRovider', defaultProvider);
+    provider$.next(defaultProvider as ethers.providers.BaseProvider);
+    // console.log( 'All good to go!: ', chainId, appConfig )
+  });
 
 /** @internal */
 export const account$ = new BehaviorSubject(undefined as string | undefined);
@@ -93,9 +95,7 @@ export const updateAccountProvider = (newProvider: ethers.providers.Web3Provider
 /**
  * Handle any events on the accountProvider ( web3Provider )
  * */
-accountProviderø.pipe(withLatestFrom(appConfigø)).subscribe(async ([accProvider, appConfig]) => {
-  console.log('HERE finally!! asdasdsdsda');
-
+combineLatest([accountProviderø, appConfigø]).subscribe(async ([accProvider, appConfig]) => {
   /**
    * MetaMask requires requesting permission to connect users accounts >
    * however, we can attempt to skip this if the user already has a connected account
@@ -118,4 +118,27 @@ accountProviderø.pipe(withLatestFrom(appConfigø)).subscribe(async ([accProvide
     window.ethereum.on('connect', () => console.log('connected'));
     window.ethereum.on('disconnect', () => console.log('disconnected'));
   }
+
+  /**
+   * if using the accountProvider as the base provider
+   * TODO: untested
+   *  */
+  if (appConfig.useAccountProviderAsProvider) updateProvider(accProvider);
 });
+
+/**
+ * Using a forked Environment, first wait until all loaded and ready, then switch out to use a fork.
+ */
+// combineLatest([yieldProtocolø,chainIdø]).pipe(withLatestFrom(appConfigø)).subscribe(([ [ protocol, chainId ], config]) => {
+//   /* ...then, if using a forked environment, switch out the provider after all has loaded */
+//   try {
+//     if (protocol.cauldron && config.useFork && forkProviderMap.has(chainId)) {
+//       console.log('Switching to a forked environemnt:');
+//       const newProvider = forkProviderMap.get(chainId)!;
+//       updateProvider(newProvider);
+//       console.log('USING FORKED ENVIRONMENT: ', newProvider);
+//     }
+//   } catch (e) {
+//     console.log(e);
+//   }
+// });

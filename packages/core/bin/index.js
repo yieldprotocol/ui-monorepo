@@ -27,7 +27,7 @@ const collateralView_1 = require("./viewObservables/collateralView");
  */
 (0, rxjs_1.combineLatest)([connection_2.providerø, appConfig_1.appConfigø, connection_1.chainIdø])
     .subscribe(([provider, config, chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    yieldProtocol_1.yieldProtocol$.next(yield (0, buildProtocol_1.buildProtocol)(provider, chainId, config.browserCaching));
+    (0, yieldProtocol_1.updateYieldProtocol)(yield (0, buildProtocol_1.buildProtocol)(provider, chainId, config.browserCaching));
 }));
 /* Expose the observables */
 const yieldObservables = {

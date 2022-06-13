@@ -30,7 +30,7 @@ export const updateVaults = async (vaultList?: IVault[] | IVaultRoot[]) => {
 };
 
 /**
- *  Observe yieldProtocol$ and account$ changes TOGETHER >  Initiate or Empty VAULT Map
+ *  Observe yieldProtocolø and accountø changes TOGETHER >  Initiate or Empty VAULT Map
  * */
 combineLatest([accountø, yieldProtocolø, chainIdø])
   // only emit if account is defined and yp.cauldron adress exists - indicating protocol has mostly loaded

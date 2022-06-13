@@ -23,8 +23,8 @@ const updateSeries = (seriesList, account) => tslib_1.__awaiter(void 0, void 0, 
     }));
 });
 exports.updateSeries = updateSeries;
-/* Observe YieldProtocol$ changes, an update map accordingly */
-yieldProtocol_1.yieldProtocol$
+/* Observe YieldProtocolø changes, an update map accordingly */
+yieldProtocol_1.yieldProtocolø
     .pipe((0, rxjs_1.filter)((protocol) => protocol.seriesRootMap.size > 0), (0, rxjs_1.withLatestFrom)(connection_1.provider$))
     .subscribe(([_protocol, _provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* 'Charge' all the series (using the current provider) */

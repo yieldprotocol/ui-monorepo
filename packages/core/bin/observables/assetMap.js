@@ -33,11 +33,11 @@ const updateAssets = (assetList, account) => tslib_1.__awaiter(void 0, void 0, v
 });
 exports.updateAssets = updateAssets;
 /**
- * Observe YieldProtocol$ changes, and update map accordingly
+ * Observe YieldProtocolø changes, and update map accordingly
  * 1. 'charge' asset list
  * 2. update asset list
  * */
-yieldProtocol_1.yieldProtocol$
+yieldProtocol_1.yieldProtocolø
     .pipe((0, rxjs_1.filter)((protocol) => protocol.assetRootMap.size > 0), (0, rxjs_1.withLatestFrom)(connection_1.provider$))
     .subscribe(([_protocol, _provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* 'Charge' all the assets (using the current provider) */

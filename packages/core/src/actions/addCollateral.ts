@@ -4,19 +4,10 @@ import { sign, transact } from '../chainActions';
 import { ETH_BASED_ASSETS, CONVEX_BASED_ASSETS } from '../config/assets';
 import { ConvexLadleModule } from '../contracts';
 import {
-  yieldProtocol$,
-  assetMap$,
-  seriesMap$,
-  selected$,
-  account$,
-  userSettings$,
-  vaultMap$,
   accountø,
   assetMapø,
   chainIdø,
   selectedø,
-  seriesMapø,
-  userSettingsø,
   vaultMapø,
   yieldProtocolø,
 } from '../observables';
@@ -34,7 +25,7 @@ export const addCollateral = async (amount: string, vault?: IVault | string) => 
     .pipe(take(1)) // only take one and then finish.
     .subscribe(
       async ([
-        { ladle },
+        { ladle, moduleMap },
         chainId,
         assetMap,
         vaultMap,
@@ -43,7 +34,6 @@ export const addCollateral = async (amount: string, vault?: IVault | string) => 
       ]) => {
         /* Get the values from the observables/subjects */
         const ladleAddress = ladle.address;
-        const { moduleMap } = yieldProtocol$.value;
 
         /** Use the vault/vaultId provided else use blank vault TODO: Add a check for existing vault */
         const getValidatedVault = (v: IVault | string | undefined): IVault | undefined => {

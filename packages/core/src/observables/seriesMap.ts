@@ -5,8 +5,8 @@ import { sellFYToken, secondsToFrom, calculateAPR, floorDecimal, mulDecimal, div
 import * as contracts from '../contracts';
 
 import { ISeries, ISeriesRoot, IYieldProtocol, MessageType } from '../types';
-import { account$, provider$ } from './connection';
-import { yieldProtocol$ } from './yieldProtocol';
+import { provider$ } from './connection';
+import { yieldProtocolø } from './yieldProtocol';
 import { ETH_BASED_ASSETS } from '../config/assets';
 import { sendMsg } from './messages';
 
@@ -23,8 +23,8 @@ export const updateSeries = async (seriesList?: ISeries[], account?: string) => 
     });
 };
 
-/* Observe YieldProtocol$ changes, an update map accordingly */
-yieldProtocol$
+/* Observe YieldProtocolø changes, an update map accordingly */
+yieldProtocolø
   .pipe(
     filter((protocol )=> protocol.seriesRootMap.size > 0 ),
     withLatestFrom(provider$)

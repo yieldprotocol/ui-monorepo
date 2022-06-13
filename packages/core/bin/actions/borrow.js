@@ -20,11 +20,8 @@ const borrow = (amount, collateralAmount, vault, getValuesFromNetwork = true // 
     /* Subscribe to and get the values from the observables:  */
     (0, rxjs_1.combineLatest)([observables_1.yieldProtocolø, observables_1.chainIdø, observables_1.assetMapø, observables_1.seriesMapø, observables_1.vaultMapø, observables_1.accountø, observables_1.selectedø, observables_1.userSettingsø])
         .pipe((0, rxjs_1.take)(1)) // only take one and then finish.
-        .subscribe(([{ ladle }, chainId, assetMap, seriesMap, vaultMap, account, selected, { slippageTolerance },]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+        .subscribe(([{ ladle, moduleMap }, chainId, assetMap, seriesMap, vaultMap, account, selected, { slippageTolerance },]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         var _a;
-        /* Get the values from the observables/subjects */
-        // const ladleAddress = yieldProtocol$.value.ladle.address;
-        const { moduleMap } = observables_1.yieldProtocol$.value;
         /** Use the vault/vaultId provided else use blank vault TODO: Add a check for existing vault */
         const getValidatedVault = (v) => {
             if (v) {

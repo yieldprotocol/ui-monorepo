@@ -31,7 +31,7 @@ const updateVaults = (vaultList) => tslib_1.__awaiter(void 0, void 0, void 0, fu
 });
 exports.updateVaults = updateVaults;
 /**
- *  Observe yieldProtocol$ and account$ changes TOGETHER >  Initiate or Empty VAULT Map
+ *  Observe yieldProtocolø and accountø changes TOGETHER >  Initiate or Empty VAULT Map
  * */
 (0, rxjs_1.combineLatest)([connection_1.accountø, yieldProtocol_1.yieldProtocolø, connection_1.chainIdø])
     // only emit if account is defined and yp.cauldron adress exists - indicating protocol has mostly loaded

@@ -3,19 +3,10 @@ import { ethers } from 'ethers';
 import { combineLatest, take } from 'rxjs';
 import { sign, transact } from '../chainActions';
 import {
-  yieldProtocol$,
-  assetMap$,
-  seriesMap$,
-  selected$,
-  account$,
-  userSettings$,
   accountø,
   assetMapø,
   chainIdø,
-  selectedø,
-  seriesMapø,
   userSettingsø,
-  vaultMapø,
   yieldProtocolø,
 } from '../observables';
 import { ISeries, ActionCodes, IAsset, ICallData, LadleActions, RoutedActions } from '../types';

@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const types_1 = require("../types");
-const defaultprovider_1 = require("./defaultprovider");
+const defaultproviders_1 = require("./defaultproviders");
 exports.default = {
-    defaultProviderMap: defaultprovider_1.defaultProviderMap,
+    defaultProviderMap: defaultproviders_1.defaultProviderMap,
     defaultAccountProvider: // the initial provider, also used as a fallback if required.
-    defaultprovider_1.defaultAccountProvider,
+    defaultproviders_1.defaultAccountProvider,
     defaultChainId: 1,
     autoConnectAccountProvider: true,
     useAccountProviderAsProvider: false,
@@ -26,6 +26,7 @@ exports.default = {
     /* debugging, testing and develpoment */
     mockUser: false,
     diagnostics: true,
-    forceTransactions: false, // don't throw an error if the transaction is likely to fail.
+    forceTransactions: false,
+    useFork: false,
 };
 //# sourceMappingURL=yield.config.js.map

@@ -1,6 +1,6 @@
 import { BigNumber } from 'ethers';
 import { combineLatest, take } from 'rxjs';
-import { account$, accountø, assetMapø, chainIdø, selectedø, seriesMapø, userSettingsø, vaultMapø, yieldProtocol$, yieldProtocolø  } from '../observables';
+import { account$, yieldProtocol$, yieldProtocolø  } from '../observables';
 import { ICallData, LadleActions } from '../types';
 import { ModuleActions } from '../types/operations';
 import { ZERO_BN } from '../utils/constants';

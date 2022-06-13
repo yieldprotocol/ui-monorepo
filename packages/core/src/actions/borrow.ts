@@ -5,17 +5,11 @@ import { ETH_BASED_ASSETS, CONVEX_BASED_ASSETS } from '../config/assets';
 import { ConvexLadleModule } from '../contracts';
 
 import {
-  account$,
   assetMap$,
-  seriesMap$,
-  userSettings$,
-  yieldProtocol$,
   selected$,
-  vaultMap$,
   accountø,
   assetMapø,
   chainIdø,
-  providerø,
   yieldProtocolø,
   seriesMapø,
   vaultMapø,
@@ -46,7 +40,7 @@ export const borrow = async (
     .pipe(take(1)) // only take one and then finish.
     .subscribe(
       async ([
-        { ladle },
+        { ladle, moduleMap },
         chainId,
         assetMap,
         seriesMap,
@@ -55,9 +49,6 @@ export const borrow = async (
         selected,
         { slippageTolerance },
       ]) => {
-        /* Get the values from the observables/subjects */
-        // const ladleAddress = yieldProtocol$.value.ladle.address;
-        const { moduleMap } = yieldProtocol$.value;
 
         /** Use the vault/vaultId provided else use blank vault TODO: Add a check for existing vault */
         const getValidatedVault = (v: IVault | string | undefined): IVault | undefined => {
