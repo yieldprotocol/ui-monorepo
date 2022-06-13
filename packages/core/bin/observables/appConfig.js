@@ -12,14 +12,12 @@ exports.appConfig$ = new rxjs_1.Subject();
  * Any appConfig changes AFTER init are handled exclussively by the appConfig$ subject - not via this observable.
  */
 exports.appConfigø = exports.appConfig$
-    .pipe((0, rxjs_1.take)(1), // Only do this once on app load.
+    .pipe((0, rxjs_1.take)(1), // Only do this once on app load. also completes the subscription
 // delay(2000),
 (0, rxjs_1.map)((config) => {
     // await ( new Promise(resolve => setTimeout(resolve, 5000)) ) ;
     return config;
-}), 
-// takeUntil(appConfig$),
-(0, rxjs_1.finalize)(() => console.log('App Environment configured.')), (0, rxjs_1.shareReplay)(1));
+}), (0, rxjs_1.finalize)(() => console.log('App Environment configured.')), (0, rxjs_1.shareReplay)(1));
 const updateYieldConfig = (appConfig) => {
     exports.appConfig$.next(Object.assign(Object.assign({}, yield_config_1.default), appConfig));
 };

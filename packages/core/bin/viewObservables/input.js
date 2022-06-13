@@ -18,7 +18,7 @@ exports.borrowInput$ = new rxjs_1.BehaviorSubject('0');
  * Borrow input
  * @category Input
  * */
-exports.borrowInputø = (0, rxjs_1.combineLatest)([exports.borrowInput$, observables_1.selectedø]).pipe((0, rxjs_1.map)(([inp, sel]) => {
+exports.borrowInputø = (0, rxjs_1.combineLatest)([exports.borrowInput$, observables_1.selectedø]).pipe((0, rxjs_1.distinctUntilChanged)(), (0, rxjs_1.map)(([inp, sel]) => {
     var _a;
     if (inp)
         return (0, yieldUtils_1.inputToTokenValue)(inp, (_a = sel.base) === null || _a === void 0 ? void 0 : _a.decimals);

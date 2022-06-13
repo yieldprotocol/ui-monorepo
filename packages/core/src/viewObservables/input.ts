@@ -4,7 +4,7 @@
  */
 
 import { BigNumber, ethers } from 'ethers';
-import { BehaviorSubject, combineLatest, fromEvent, map, Observable, share, Subject, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, distinctUntilChanged, fromEvent, map, Observable, share, Subject, tap } from 'rxjs';
 import { selectedø } from '../observables';
 import { ZERO_BN } from '../utils';
 
@@ -25,6 +25,7 @@ export const borrowInput$: BehaviorSubject<string> = new BehaviorSubject('0');
  * @category Input 
  * */
 export const borrowInputø: Observable<BigNumber> = combineLatest([borrowInput$, selectedø]).pipe(
+  distinctUntilChanged(),
   map(( [inp, sel] : [string, ISelected] ) => {
     if (inp) return inputToTokenValue(inp, sel.base?.decimals!);
     return ZERO_BN;

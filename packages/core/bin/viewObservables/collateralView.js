@@ -28,8 +28,7 @@ const _selectedPairø = (0, rxjs_1.combineLatest)([observables_1.selectedø, ass
  *
  * RETURNS [ totalDebt, exisitingDebt ] in decimals18
  */
-const _totalDebtWithInputø = (0, rxjs_1.combineLatest)([input_1.borrowInputø, observables_1.selectedø]).pipe(
-// filter(([, selected]) => !!selected.series),
+const _totalDebtWithInputø = (0, rxjs_1.combineLatest)([input_1.borrowInputø, observables_1.selectedø]).pipe((0, rxjs_1.distinctUntilChanged)(([a], [b]) => a === b), // this is a check so that the observable isn't 'doubled up' with the same input value.
 (0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø), (0, rxjs_1.map)(([[debtInput, selected], config]) => {
     const { vault, series } = selected; // we can safetly assume 'series' is defined - not vault.
     const existingDebt_ = (vault === null || vault === void 0 ? void 0 : vault.accruedArt) || utils_1.ZERO_BN;
@@ -53,7 +52,7 @@ const _totalDebtWithInputø = (0, rxjs_1.combineLatest)([input_1.borrowInputø, 
  *
  * RETURNS [ totalCollateral, exisitingCollateral] in decimals18 for comparative calcs
  */
-const _totalCollateralWithInputø = (0, rxjs_1.combineLatest)([input_1.collateralInputø, observables_1.selectedø]).pipe((0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø), (0, rxjs_1.map)(([[collInput, selected], config]) => {
+const _totalCollateralWithInputø = (0, rxjs_1.combineLatest)([input_1.collateralInputø, observables_1.selectedø]).pipe((0, rxjs_1.distinctUntilChanged)(([a], [b]) => a === b), (0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø), (0, rxjs_1.map)(([[collInput, selected], config]) => {
     const { vault, ilk } = selected;
     if (ilk) {
         const existingCollateral_ = (vault === null || vault === void 0 ? void 0 : vault.ink) || utils_1.ZERO_BN; // if no vault simply return zero.
@@ -75,7 +74,7 @@ exports.collateralizationRatioø = (0, rxjs_1.combineLatest)([
     _totalDebtWithInputø,
     _totalCollateralWithInputø,
     _selectedPairø,
-]).pipe((0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø), (0, rxjs_1.map)(([[totalDebt, totalCollat, assetPair], config]) => {
+]).pipe((0, rxjs_1.distinctUntilChanged)(([a1, a2], [b1, b2]) => a1 === b1 && a2 === b2), (0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø), (0, rxjs_1.map)(([[totalDebt, totalCollat, assetPair], config]) => {
     var _a, _b;
     if (
     /* if all the elements exist and are greater than 0 */

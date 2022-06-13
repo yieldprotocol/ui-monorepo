@@ -6,7 +6,7 @@ import {
   calcLiquidationPrice,
 } from '@yield-protocol/ui-math';
 import { BigNumber } from 'ethers';
-import { combineLatest, filter, map, Observable, share, withLatestFrom } from 'rxjs';
+import { combineLatest, distinctUntilChanged, filter, map, Observable, share, withLatestFrom } from 'rxjs';
 import { selectedø } from '../observables';
 import { ONE_BN, ZERO_BN } from '../utils';
 import { getAssetPairId, ratioToPercent } from '../utils/yieldUtils';
@@ -39,8 +39,8 @@ const _selectedPairø = combineLatest([selectedø, assetPairMapø]).pipe(
  * RETURNS [ totalDebt, exisitingDebt ] in decimals18
  */
 const _totalDebtWithInputø: Observable<BigNumber[]> = combineLatest([borrowInputø, selectedø]).pipe(
-  // filter(([, selected]) => !!selected.series),
-  withLatestFrom(appConfigø ), 
+  distinctUntilChanged( ([a],[b]) => a===b ), // this is a check so that the observable isn't 'doubled up' with the same input value.
+  withLatestFrom(appConfigø ),
   map(([[debtInput, selected], config]) => {
     const { vault, series } = selected; // we can safetly assume 'series' is defined - not vault.
     const existingDebt_ = vault?.accruedArt || ZERO_BN;
@@ -78,6 +78,7 @@ const _totalDebtWithInputø: Observable<BigNumber[]> = combineLatest([borrowInpu
  * RETURNS [ totalCollateral, exisitingCollateral] in decimals18 for comparative calcs
  */
 const _totalCollateralWithInputø: Observable<BigNumber[]> = combineLatest([collateralInputø, selectedø]).pipe(
+  distinctUntilChanged( ([a],[b]) => a===b ),
   withLatestFrom(appConfigø),
   map(([[collInput, selected], config]) => {
     const { vault, ilk } = selected;
@@ -106,6 +107,7 @@ export const collateralizationRatioø: Observable<number | undefined> = combineL
   _totalCollateralWithInputø,
   _selectedPairø,
 ]).pipe(
+  distinctUntilChanged( ([a1,a2],[b1, b2]) => a1===b1 && a2===b2 ),
   withLatestFrom(appConfigø),
   map(([[totalDebt, totalCollat, assetPair], config]) => {
     if (
