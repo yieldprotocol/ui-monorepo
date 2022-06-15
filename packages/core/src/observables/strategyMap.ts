@@ -2,24 +2,20 @@ import {
   BehaviorSubject,
   Observable,
   share,
-  combineLatest,
   withLatestFrom,
   filter,
-  combineLatestAll,
-  take,
-  finalize,
 } from 'rxjs';
 import { BigNumber, ethers } from 'ethers';
 import { mulDecimal, divDecimal } from '@yield-protocol/ui-math';
 
 import * as contracts from '../contracts';
-import { ISeries, IStrategy, IStrategyRoot, IYieldProtocol, MessageType } from '../types';
+import { IStrategy, IStrategyRoot, MessageType } from '../types';
 
-import { account$, accountø, provider$, providerø } from './connection';
+import { accountø, providerø } from './connection';
 import { yieldProtocolø } from './yieldProtocol';
-import { seriesMapø } from './seriesMap';
 import { ZERO_BN } from '../utils/constants';
 import { sendMsg } from './messages';
+import { bnToW3Number } from '../utils/yieldUtils';
 
 /** @internal */
 export const strategyMap$: BehaviorSubject<Map<string, IStrategy>> = new BehaviorSubject(new Map([]));
@@ -118,18 +114,15 @@ const _updateInfo = async (
 
   return {
     ...strategy,
-    strategyTotalSupply,
-    strategyTotalSupply_: ethers.utils.formatUnits(strategyTotalSupply, strategy.decimals),
+    strategyTotalSupply: bnToW3Number(strategyTotalSupply, strategy.decimals),
     strategyPoolContract,
-    strategyPoolBalance,
-    strategyPoolBalance_: ethers.utils.formatUnits(strategyPoolBalance, strategy.decimals),
+    strategyPoolBalance: bnToW3Number(strategyPoolBalance, strategy.decimals),
     currentSeriesId,
     currentPoolAddr,
     nextSeriesId,
     initInvariant: initInvariant || BigNumber.from('0'),
     currentInvariant: currentInvariant || BigNumber.from('0'),
-    returnRate,
-    returnRate_: returnRate.toString(),
+    returnRate: bnToW3Number(returnRate, strategy.decimals),
     active: true,
   };
 };
@@ -145,12 +138,11 @@ const _updateAccountInfo = async (strategy: IStrategy, account: string): Promise
     strategy.strategyContract.balanceOf(account),
     strategy.strategyPoolContract?.balanceOf(account) || ZERO_BN,
   ]);
-  const accountStrategyPercent = mulDecimal(divDecimal(accountBalance, strategy.strategyTotalSupply || '0'), '100');
+  const accountStrategyPercent = mulDecimal(divDecimal(accountBalance, strategy.strategyTotalSupply?.bn || '0'), '100');
   return {
     ...strategy,
-    accountBalance,
-    accountBalance_: ethers.utils.formatUnits(accountBalance, strategy.decimals),
-    accountPoolBalance,
+    accountBalance: bnToW3Number(accountBalance, strategy.decimals),
+    accountPoolBalance: bnToW3Number(accountPoolBalance, strategy.decimals),
     accountStrategyPercent,
   };
 };

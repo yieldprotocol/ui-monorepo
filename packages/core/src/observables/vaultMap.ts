@@ -10,6 +10,7 @@ import { truncateValue } from '../utils/appUtils';
 import { account$, accountø, chainIdø } from './connection';
 import { yieldProtocol$, yieldProtocolø } from './yieldProtocol';
 import { sendMsg } from './messages';
+import { bnToW3Number } from '../utils/yieldUtils';
 
 /** @internal */
 export const vaultMap$: BehaviorSubject<Map<string, IVault>> = new BehaviorSubject(new Map([]));
@@ -109,21 +110,16 @@ const _updateVault = async (
     seriesId, // refreshed in case seriesId has been updated
     ilkId, // refreshed in case ilkId has been updated
 
-    ink,
-    art,
-    accruedArt,
-
-    ink_: ink_ || '0', // for display purposes only
-    art_: art_ || '0', // for display purposes only
-    accruedArt_: accruedArt_ || '0', // display purposes
+    ink: bnToW3Number( ink, vault.ilkDecimals ),
+    art: bnToW3Number( art, vault.baseDecimals),
+    accruedArt: bnToW3Number( accruedArt, vault.baseDecimals),
 
     underLiquidation: witch.address === owner, // check if witch is the owner (in liquidation process)
     hasBeenLiquidated: !!liquidationDate, // TODO redundant ??
     liquidationDate,
     liquidationDate_: liquidationDate ? format(new Date(liquidationDate * 1000), 'dd MMMM yyyy') : undefined,
 
-    rateAtMaturity,
-    rate,
-    rate_: truncateValue(ethers.utils.formatUnits(rate, 18), 2),
+    rateAtMaturity : bnToW3Number( rateAtMaturity, 18, 2),
+    rate : bnToW3Number( rate, 18, 2),
   };
 };
