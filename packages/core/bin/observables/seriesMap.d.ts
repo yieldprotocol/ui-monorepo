@@ -3,4 +3,4 @@ import { ISeries } from '../types';
 /** @internal */
 export declare const seriesMap$: BehaviorSubject<Map<string, ISeries>>;
 export declare const seriesMapø: Observable<Map<string, ISeries>>;
-export declare const updateSeries: (seriesList?: ISeries[], account?: string) => Promise<void>;
+export declare const updateSeries: (seriesList?: ISeries[], account?: string, accountDataOnly?: boolean) => Promise<void>;

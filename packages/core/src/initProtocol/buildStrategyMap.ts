@@ -1,5 +1,4 @@
 import { ethers } from 'ethers';
-
 import { IStrategyRoot } from '../types';
 import * as contracts from '../contracts';
 
@@ -53,13 +52,13 @@ export const buildStrategyMap = async (
   const _blockNum = await provider.getBlockNumber(); // TODO: maybe lose this
   setBrowserCachedValue(`${chainId}_lastStrategyUpdate`, _blockNum );
 
-  /* create a map from the 'charged' asset list */
+  /* create a map from the list */
   const strategyRootMap: Map<string, IStrategyRoot> = new Map(
     strategyList.map((s: any) => [s.id, s])
   );
 
   console.log(`Yield Protocol STRATEGY data updated [Block: ${_blockNum }]`);
+  console.log(strategyRootMap);
 
-    console.log(strategyRootMap);
   return strategyRootMap;
 };

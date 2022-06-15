@@ -8,8 +8,8 @@ import {
   sellFYToken,
   secondsToFrom,
 } from '@yield-protocol/ui-math';
-import { BigNumber, BigNumberish, ethers } from 'ethers';
-import { BehaviorSubject, combineLatest, filter, map, Observable, share, Subject } from 'rxjs';
+import { BigNumber, ethers } from 'ethers';
+import { combineLatest, filter, map, Observable } from 'rxjs';
 import { selectedø, userSettingsø, vaultMapø } from '../observables';
 import { IStrategy, IVault } from '../types';
 import { ZERO_BN } from '../utils';
@@ -44,9 +44,10 @@ export const isBuyAndPoolPossibleø: Observable<boolean> = combineLatest([
   userSettingsø,
 ]).pipe(
   /* don't emit if input is zero or there isn't a strategy selected */
-  filter(([input, selected]) => input.gt(ZERO_BN) && !!selected.strategy?.currentSeries),
-  map(([input, { strategy }, { slippageTolerance }]) => {
-    const strategySeries = strategy?.currentSeries!; // filtered, we can safetly assume current series defined.
+  filter(([input, selected]) => input.gt(ZERO_BN) && !!selected.series),
+  map(([input, { series }, { slippageTolerance }]) => {
+
+    const strategySeries = series!; // filtered, we can safetly assume current series defined.
 
     let _fyTokenToBuy = ZERO_BN;
     const _maxFyTokenOut = maxFyTokenOut(
@@ -117,14 +118,14 @@ export const borrowAndPoolVaultø: Observable<IVault | undefined> = combineLates
  * @category Pool | Remove Liquidity
  *
  * */
-export const partialRemoveReturnø: Observable<BigNumber[]> = combineLatest([
+export const removeLiquidityReturnø: Observable<BigNumber[]> = combineLatest([
   removeLiquidityInputø,
   selectedø,
   borrowAndPoolVaultø,
 ]).pipe(
-  filter(([input, selected]) => input.gt(ZERO_BN) && !!selected.strategy?.currentSeries),
-  map(([input, { strategy }, borrowAndPoolVault]) => {
-    const strategySeries = strategy?.currentSeries; // NOTE: filtered, we can safetly assume strategy currentSeries is defined.
+  filter(([input, selected]) => input.gt(ZERO_BN) && !!selected.series),
+  map(([input, { strategy, series }, borrowAndPoolVault]) => {
+    const strategySeries = series!; // NOTE: filtered, we can safetly assume strategy currentSeries is defined.
 
     if (!!borrowAndPoolVault) {
       /**
@@ -133,9 +134,9 @@ export const partialRemoveReturnø: Observable<BigNumber[]> = combineLatest([
       /* Check the amount of fyTokens potentially recieved */
       const lpReceived = burnFromStrategy(strategy?.strategyPoolBalance!, strategy?.strategyTotalSupply!, input);
       const [_baseReceived, _fyTokenReceived] = burn(
-        strategySeries?.baseReserves!,
-        strategySeries?.fyTokenRealReserves!,
-        strategySeries?.totalSupply!,
+        strategySeries.baseReserves!,
+        strategySeries.fyTokenRealReserves!,
+        strategySeries.totalSupply!,
         lpReceived
       );
       // diagnostics && console.log('burnt (base, fytokens)', _baseReceived.toString(), _fyTokenReceived.toString());
@@ -163,10 +164,9 @@ export const partialRemoveReturnø: Observable<BigNumber[]> = combineLatest([
 
         if (_extraFyTokenValue.gt(ZERO_BN)) {
           /**
-           * CASE> extra fyToken TRADE IS POSSIBLE :  USE REMOVE OPTION 2.1?
+           * CASE> extra fyToken TRADE IS POSSIBLE :  USE REMOVE OPTION 2.1
            * */
           const totalValue = _baseReceived.add(_extraFyTokenValue); // .add(_fyTokenReceived);
-          // diagnostics && console.log('USE REMOVE OPTION 2.1');
           return [totalValue, ZERO_BN];
         } else {
           /**
@@ -174,7 +174,6 @@ export const partialRemoveReturnø: Observable<BigNumber[]> = combineLatest([
            * */
           const _fyTokenVal = _fyTokenReceived.sub(borrowAndPoolVault.accruedArt);
           const _baseVal = _baseReceived; // .add(matchingVault.art);
-          // diagnostics && console.log('USE REMOVE OPTION 2.2');
           return [_baseVal, _fyTokenVal];
         }
       } else {
@@ -227,7 +226,7 @@ export const partialRemoveReturnø: Observable<BigNumber[]> = combineLatest([
  * Check if not all liquidity can be removed, and a partial removal is required.
  * @category Pool | Remove Liquidity
  */
-   export const isPartialRemoveRequiredø: Observable<boolean> = partialRemoveReturnø.pipe(
+   export const isPartialRemoveRequiredø: Observable<boolean> = removeLiquidityReturnø.pipe(
     map((removals) =>   {
       //diagnostics &&  console.log( 'partial removal is required')
       const areFyTokensReturned = removals[1].gt(ZERO_BN)

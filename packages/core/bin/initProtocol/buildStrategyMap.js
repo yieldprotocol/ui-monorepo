@@ -42,7 +42,7 @@ const buildStrategyMap = (provider, chainId, browserCaching) => tslib_1.__awaite
     // Set the 'last checked' block
     const _blockNum = yield provider.getBlockNumber(); // TODO: maybe lose this
     (0, appUtils_1.setBrowserCachedValue)(`${chainId}_lastStrategyUpdate`, _blockNum);
-    /* create a map from the 'charged' asset list */
+    /* create a map from the list */
     const strategyRootMap = new Map(strategyList.map((s) => [s.id, s]));
     console.log(`Yield Protocol STRATEGY data updated [Block: ${_blockNum}]`);
     console.log(strategyRootMap);

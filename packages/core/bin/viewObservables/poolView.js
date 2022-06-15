@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isPartialRemoveRequiredø = exports.partialRemoveReturnø = exports.borrowAndPoolVaultø = exports.maximumRemoveLiquidityø = exports.isBuyAndPoolPossibleø = exports.maximumAddLiquidityø = void 0;
+exports.isPartialRemoveRequiredø = exports.removeLiquidityReturnø = exports.borrowAndPoolVaultø = exports.maximumRemoveLiquidityø = exports.isBuyAndPoolPossibleø = exports.maximumAddLiquidityø = void 0;
 const ui_math_1 = require("@yield-protocol/ui-math");
 const ethers_1 = require("ethers");
 const rxjs_1 = require("rxjs");
@@ -30,8 +30,8 @@ exports.isBuyAndPoolPossibleø = (0, rxjs_1.combineLatest)([
     observables_1.userSettingsø,
 ]).pipe(
 /* don't emit if input is zero or there isn't a strategy selected */
-(0, rxjs_1.filter)(([input, selected]) => { var _a; return input.gt(utils_1.ZERO_BN) && !!((_a = selected.strategy) === null || _a === void 0 ? void 0 : _a.currentSeries); }), (0, rxjs_1.map)(([input, { strategy }, { slippageTolerance }]) => {
-    const strategySeries = strategy === null || strategy === void 0 ? void 0 : strategy.currentSeries; // filtered, we can safetly assume current series defined.
+(0, rxjs_1.filter)(([input, selected]) => input.gt(utils_1.ZERO_BN) && !!selected.series), (0, rxjs_1.map)(([input, { series }, { slippageTolerance }]) => {
+    const strategySeries = series; // filtered, we can safetly assume current series defined.
     let _fyTokenToBuy = utils_1.ZERO_BN;
     const _maxFyTokenOut = (0, ui_math_1.maxFyTokenOut)(strategySeries.baseReserves, strategySeries.fyTokenReserves, strategySeries.getTimeTillMaturity(), strategySeries.ts, strategySeries.g1, strategySeries.decimals);
     [_fyTokenToBuy] = (0, ui_math_1.fyTokenForMint)(strategySeries.baseReserves, strategySeries.fyTokenRealReserves, strategySeries.fyTokenReserves, (0, ui_math_1.calculateSlippage)(input, slippageTolerance.toString(), true), strategySeries.getTimeTillMaturity(), strategySeries.ts, strategySeries.g1, strategySeries.decimals, slippageTolerance);
@@ -71,19 +71,19 @@ exports.borrowAndPoolVaultø = (0, rxjs_1.combineLatest)([observables_1.selected
  * @category Pool | Remove Liquidity
  *
  * */
-exports.partialRemoveReturnø = (0, rxjs_1.combineLatest)([
+exports.removeLiquidityReturnø = (0, rxjs_1.combineLatest)([
     input_1.removeLiquidityInputø,
     observables_1.selectedø,
     exports.borrowAndPoolVaultø,
-]).pipe((0, rxjs_1.filter)(([input, selected]) => { var _a; return input.gt(utils_1.ZERO_BN) && !!((_a = selected.strategy) === null || _a === void 0 ? void 0 : _a.currentSeries); }), (0, rxjs_1.map)(([input, { strategy }, borrowAndPoolVault]) => {
-    const strategySeries = strategy === null || strategy === void 0 ? void 0 : strategy.currentSeries; // NOTE: filtered, we can safetly assume strategy currentSeries is defined.
+]).pipe((0, rxjs_1.filter)(([input, selected]) => input.gt(utils_1.ZERO_BN) && !!selected.series), (0, rxjs_1.map)(([input, { strategy, series }, borrowAndPoolVault]) => {
+    const strategySeries = series; // NOTE: filtered, we can safetly assume strategy currentSeries is defined.
     if (!!borrowAndPoolVault) {
         /**
          * CASE Matching vault (with debt) exists: USE 1 , 2.1 or 2.2
          * */
         /* Check the amount of fyTokens potentially recieved */
         const lpReceived = (0, ui_math_1.burnFromStrategy)(strategy === null || strategy === void 0 ? void 0 : strategy.strategyPoolBalance, strategy === null || strategy === void 0 ? void 0 : strategy.strategyTotalSupply, input);
-        const [_baseReceived, _fyTokenReceived] = (0, ui_math_1.burn)(strategySeries === null || strategySeries === void 0 ? void 0 : strategySeries.baseReserves, strategySeries === null || strategySeries === void 0 ? void 0 : strategySeries.fyTokenRealReserves, strategySeries === null || strategySeries === void 0 ? void 0 : strategySeries.totalSupply, lpReceived);
+        const [_baseReceived, _fyTokenReceived] = (0, ui_math_1.burn)(strategySeries.baseReserves, strategySeries.fyTokenRealReserves, strategySeries.totalSupply, lpReceived);
         // diagnostics && console.log('burnt (base, fytokens)', _baseReceived.toString(), _fyTokenReceived.toString());
         if (_fyTokenReceived.gt(borrowAndPoolVault === null || borrowAndPoolVault === void 0 ? void 0 : borrowAndPoolVault.accruedArt)) {
             /**
@@ -98,10 +98,9 @@ exports.partialRemoveReturnø = (0, rxjs_1.combineLatest)([
             const _extraFyTokenValue = (0, ui_math_1.sellFYToken)(strategySeries.baseReserves, strategySeries.fyTokenRealReserves, _extraFyTokensToSell, (0, ui_math_1.secondsToFrom)(strategySeries.maturity.toString()), strategySeries.ts, strategySeries.g2, strategySeries.decimals);
             if (_extraFyTokenValue.gt(utils_1.ZERO_BN)) {
                 /**
-                 * CASE> extra fyToken TRADE IS POSSIBLE :  USE REMOVE OPTION 2.1?
+                 * CASE> extra fyToken TRADE IS POSSIBLE :  USE REMOVE OPTION 2.1
                  * */
                 const totalValue = _baseReceived.add(_extraFyTokenValue); // .add(_fyTokenReceived);
-                // diagnostics && console.log('USE REMOVE OPTION 2.1');
                 return [totalValue, utils_1.ZERO_BN];
             }
             else {
@@ -110,7 +109,6 @@ exports.partialRemoveReturnø = (0, rxjs_1.combineLatest)([
                  * */
                 const _fyTokenVal = _fyTokenReceived.sub(borrowAndPoolVault.accruedArt);
                 const _baseVal = _baseReceived; // .add(matchingVault.art);
-                // diagnostics && console.log('USE REMOVE OPTION 2.2');
                 return [_baseVal, _fyTokenVal];
             }
         }
@@ -146,7 +144,7 @@ exports.partialRemoveReturnø = (0, rxjs_1.combineLatest)([
 * Check if not all liquidity can be removed, and a partial removal is required.
 * @category Pool | Remove Liquidity
 */
-exports.isPartialRemoveRequiredø = exports.partialRemoveReturnø.pipe((0, rxjs_1.map)((removals) => {
+exports.isPartialRemoveRequiredø = exports.removeLiquidityReturnø.pipe((0, rxjs_1.map)((removals) => {
     //diagnostics &&  console.log( 'partial removal is required')
     const areFyTokensReturned = removals[1].gt(utils_1.ZERO_BN);
     return areFyTokensReturned;

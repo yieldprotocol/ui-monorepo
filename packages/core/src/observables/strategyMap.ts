@@ -1,62 +1,84 @@
-import { BehaviorSubject, Observable, share, combineLatest, withLatestFrom, filter } from "rxjs";
+import {
+  BehaviorSubject,
+  Observable,
+  share,
+  combineLatest,
+  withLatestFrom,
+  filter,
+  combineLatestAll,
+  take,
+  finalize,
+} from 'rxjs';
 import { BigNumber, ethers } from 'ethers';
 import { mulDecimal, divDecimal } from '@yield-protocol/ui-math';
 
 import * as contracts from '../contracts';
-import { ISeries, IStrategy, IStrategyRoot, IYieldProtocol, MessageType } from "../types";
+import { ISeries, IStrategy, IStrategyRoot, IYieldProtocol, MessageType } from '../types';
 
-import { account$, providerø } from './connection';
-import { yieldProtocolø } from "./yieldProtocol";
-import { seriesMap$ } from "./seriesMap";
-import { ZERO_BN } from "../utils/constants";
-import { sendMsg } from "./messages";
+import { account$, accountø, provider$, providerø } from './connection';
+import { yieldProtocolø } from './yieldProtocol';
+import { seriesMapø } from './seriesMap';
+import { ZERO_BN } from '../utils/constants';
+import { sendMsg } from './messages';
 
 /** @internal */
 export const strategyMap$: BehaviorSubject<Map<string, IStrategy>> = new BehaviorSubject(new Map([]));
 export const strategyMapø: Observable<Map<string, IStrategy>> = strategyMap$.pipe(share());
 
 /* Update strategies function */
-export const updateStrategies = async (strategyList?: IStrategy[]) => {
-  const list = strategyList?.length ? strategyList : Array.from(strategyMap$.value.values()); 
-  list.map(async (_strategy: IStrategy) => {
-    const strategyUpdate = await _updateStrategy(_strategy, seriesMap$.value, account$.value);
-    strategyMap$.next(new Map(strategyMap$.value.set(_strategy.id, strategyUpdate))); // note: new Map to enforce ref update
-  });
+export const updateStrategies = async (
+  provider: ethers.providers.BaseProvider,
+  strategyList?: IStrategy[],
+  account?: string,
+  accountDataOnly: boolean = false
+) => {
+  /* If strategyList parameter is empty/undefined, update all the straetegies in the strategyMap */
+  const list = strategyList?.length ? strategyList : Array.from(strategyMap$.value.values());
+
+  await Promise.all(
+    list.map(async (strategy: IStrategy) => {
+      /* if account data only, just return the strategy */
+      const strategyUpdate = accountDataOnly ? strategy : await _updateInfo(strategy, provider);
+      /* if account provided, append account data */
+      const strategyUpdateAll = account ? await _updateAccountInfo(strategyUpdate, account) : strategyUpdate;
+      strategyMap$.next(new Map(strategyMap$.value.set(strategy.id, strategyUpdateAll))); // note: new Map to enforce ref update
+    })
+  );
 };
 
 /* Observe YieldProtocolø changes, and update map accordingly */
 yieldProtocolø
   .pipe(
-    filter((protocol )=> protocol.strategyRootMap.size > 0 ),
-    withLatestFrom(providerø)
-    )
-  .subscribe(async ([_protocol, _provider]: [IYieldProtocol, ethers.providers.BaseProvider]) => {
+    filter((protocol) => protocol.strategyRootMap.size > 0),
+    withLatestFrom(providerø, accountø),
+  )
+  .subscribe(async ([_protocol, _provider, _account]: [IYieldProtocol, ethers.providers.BaseProvider, string|undefined]) => {
     /* 'Charge' all the assets (using the current provider) */
     const chargedList = Array.from(_protocol.strategyRootMap.values()).map((st: IStrategyRoot) =>
       _chargeStrategy(st, _provider)
     );
     /* Update the assets with dynamic/user data */
-    await updateStrategies(chargedList);
-    sendMsg({message:'Strategies Loaded.', type: MessageType.INTERNAL})
-    sendMsg({message: 'Protocol Ready...', type: MessageType.INTERNAL, id: 'protocolLoaded' })
+    await updateStrategies(_provider, chargedList, _account);
+
+    console.log('Strategy loading complete.');
+
+    sendMsg({ message: 'Strategies Loaded.', type: MessageType.INTERNAL });
+    sendMsg({ message: 'Protocol Ready...', type: MessageType.INTERNAL, id: 'protocolLoaded' });
   });
 
-/* Observe providerø changes, and update map accordingly ('charge assets/series' with live contracts & listeners ) */
-// providerø
-// .pipe(withLatestFrom(strategyMap$))
-// .subscribe(([provider, seriesMap] ) => {
-//   console.log( [provider, seriesMap] )
-// })
 
-// /* Observe Account$ changes ('update dynamic/User Data') */
-// account$
-// .pipe(withLatestFrom(strategyMap$))
-// .subscribe( ([account ]) => {
-//   console.log( 'account changed:', account )
-// })
+/**
+ * Observe Account$ changes ('update dynamic/User Data')
+ * */
+ accountø.pipe(withLatestFrom(strategyMapø, providerø)).subscribe(async ([account, stratMap, provider ]) => {
+  if (account && stratMap.size) { 
+    await updateStrategies(provider, Array.from(stratMap.values()), account, true );
+    console.log('Strategies updated with new account info.');
+  };
+});
 
 /* Add on extra/calculated Strategy info, contract instances and methods (no async calls) */
-const _chargeStrategy = (strategy: any, provider: ethers.providers.BaseProvider) : IStrategy => {
+const _chargeStrategy = (strategy: any, provider: ethers.providers.BaseProvider): IStrategy => {
   const _strategy = contracts.Strategy__factory.connect(strategy.address, provider);
   return {
     ...strategy,
@@ -65,13 +87,13 @@ const _chargeStrategy = (strategy: any, provider: ethers.providers.BaseProvider)
   };
 };
 
-const _updateStrategy = async (
+const _updateInfo = async (
   strategy: IStrategy,
-  seriesMap: Map<string,ISeries>,
-  account?: string | undefined
+  provider: ethers.providers.BaseProvider // TODO: this provider is a pimple, but required :(
 ): Promise<IStrategy> => {
-  /* Dynamic strategy info ( not related to a user ) */
-
+  /**
+   * Dynamic strategy info ( not related to a user )
+   * */
   /* Get all the data simultanenously in a promise.all */
   const [strategyTotalSupply, currentSeriesId, currentPoolAddr, nextSeriesId] = await Promise.all([
     strategy.strategyContract.totalSupply(),
@@ -79,59 +101,57 @@ const _updateStrategy = async (
     strategy.strategyContract.pool(),
     strategy.strategyContract.nextSeriesId(),
   ]);
-  const currentSeries = seriesMap.get(currentSeriesId) as ISeries;
-  const nextSeries = seriesMap.get(nextSeriesId) as ISeries;
+
+  const strategyPoolContract = contracts.Pool__factory.connect(currentPoolAddr, provider);
 
   /* Init supplys and balances as zero unless htere is a currnet series */
   let [poolTotalSupply, strategyPoolBalance, currentInvariant, initInvariant] = [ZERO_BN, ZERO_BN, ZERO_BN, ZERO_BN];
-  if (currentSeries) {
-    [poolTotalSupply, strategyPoolBalance] = await Promise.all([
-      currentSeries.poolContract.totalSupply(),
-      currentSeries.poolContract.balanceOf(strategy.address),
-    ]);
-    [currentInvariant, initInvariant] = currentSeries.isMature() ? [ZERO_BN, ZERO_BN] : [ZERO_BN, ZERO_BN];
-    // strategyPoolPercent = mulDecimal(divDecimal(strategyPoolBalance, poolTotalSupply), '100');
-  }
-  const returnRate = currentInvariant && currentInvariant.sub(initInvariant)!;
 
-  /* User strategy info */
-  let accountData = {};
-  if (account) {
-    const [accountBalance, accountPoolBalance] = await Promise.all([
-      strategy.strategyContract.balanceOf(account),
-      currentSeries?.poolContract.balanceOf(account),
-    ]);
-    const accountStrategyPercent = mulDecimal(
-      divDecimal(accountBalance, strategyTotalSupply || '0'),
-      '100'
-    );
-    accountData = {
-      ...strategy,
-      accountBalance,
-      accountBalance_: ethers.utils.formatUnits(accountBalance, strategy.decimals),
-      accountPoolBalance,
-      accountStrategyPercent,
-    };
-  }
+  [poolTotalSupply, strategyPoolBalance] = await Promise.all([
+    strategyPoolContract.totalSupply(),
+    strategyPoolContract.balanceOf(strategy.address),
+  ]);
+
+  // [currentInvariant, initInvariant] = currentSeries.isMature() ? [ZERO_BN, ZERO_BN] : [ZERO_BN, ZERO_BN];
+  // strategyPoolPercent = mulDecimal(divDecimal(strategyPoolBalance, poolTotalSupply), '100');
+
+  const returnRate = currentInvariant && currentInvariant.sub(initInvariant)!;
 
   return {
     ...strategy,
     strategyTotalSupply,
     strategyTotalSupply_: ethers.utils.formatUnits(strategyTotalSupply, strategy.decimals),
-    poolTotalSupply,
-    poolTotalSupply_: ethers.utils.formatUnits(poolTotalSupply, strategy.decimals),
+    strategyPoolContract,
     strategyPoolBalance,
     strategyPoolBalance_: ethers.utils.formatUnits(strategyPoolBalance, strategy.decimals),
     currentSeriesId,
     currentPoolAddr,
     nextSeriesId,
-    currentSeries,
-    nextSeries,
     initInvariant: initInvariant || BigNumber.from('0'),
     currentInvariant: currentInvariant || BigNumber.from('0'),
     returnRate,
     returnRate_: returnRate.toString(),
     active: true,
-    ...accountData,
+  };
+};
+
+/**
+ *
+ * Dynamic strategy info with a user
+ *
+ * */
+const _updateAccountInfo = async (strategy: IStrategy, account: string): Promise<IStrategy> => {
+  /* Get all the data simultanenously in a promise.all */
+  const [accountBalance, accountPoolBalance] = await Promise.all([
+    strategy.strategyContract.balanceOf(account),
+    strategy.strategyPoolContract?.balanceOf(account) || ZERO_BN,
+  ]);
+  const accountStrategyPercent = mulDecimal(divDecimal(accountBalance, strategy.strategyTotalSupply || '0'), '100');
+  return {
+    ...strategy,
+    accountBalance,
+    accountBalance_: ethers.utils.formatUnits(accountBalance, strategy.decimals),
+    accountPoolBalance,
+    accountStrategyPercent,
   };
 };

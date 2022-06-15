@@ -30,7 +30,7 @@ export declare const borrowAndPoolVaultø: Observable<IVault | undefined>;
  * @category Pool | Remove Liquidity
  *
  * */
-export declare const partialRemoveReturnø: Observable<BigNumber[]>;
+export declare const removeLiquidityReturnø: Observable<BigNumber[]>;
 /**
 * Check if not all liquidity can be removed, and a partial removal is required.
 * @category Pool | Remove Liquidity

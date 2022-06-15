@@ -128,7 +128,6 @@ export const buildAssetMap = async (
   const assetRootMap: Map<string, IAssetRoot> = new Map(assetList.map((a: any) => [a.id, a]));
 
   console.log(`Yield Protocol ASSET data updated [Block: ${_blockNum }]`);
-
   console.log( assetRootMap); 
 
   return assetRootMap;

@@ -7,6 +7,7 @@ const rxjs_1 = require("rxjs");
 const defaultproviders_1 = require("../config/defaultproviders");
 const utils_1 = require("../utils");
 const appConfig_1 = require("./appConfig");
+const messages_1 = require("./messages");
 /** @internal */
 exports.chainIdø = appConfig_1.appConfigø.pipe((0, rxjs_1.mergeMap)((config) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* if in a browser environment */
@@ -105,24 +106,28 @@ exports.updateAccountProvider = updateAccountProvider;
     /**
      * if using the accountProvider as the base provider
      * TODO: untested
-     *  */
+     * */
     if (appConfig.useAccountProviderAsProvider)
         (0, exports.updateProvider)(accProvider);
 }));
 /**
- * Using a forked Environment, first wait until all loaded and ready, then switch out to use a fork.
+ * Using a forked Environment:
+ * First wait until all loaded and ready,
+ * then switch out to use a fork.
  */
-// combineLatest([yieldProtocolø,chainIdø]).pipe(withLatestFrom(appConfigø)).subscribe(([ [ protocol, chainId ], config]) => {
-//   /* ...then, if using a forked environment, switch out the provider after all has loaded */
-//   try {
-//     if (protocol.cauldron && config.useFork && forkProviderMap.has(chainId)) {
-//       console.log('Switching to a forked environemnt:');
-//       const newProvider = forkProviderMap.get(chainId)!;
-//       updateProvider(newProvider);
-//       console.log('USING FORKED ENVIRONMENT: ', newProvider);
-//     }
-//   } catch (e) {
-//     console.log(e);
-//   }
-// });
+(0, rxjs_1.combineLatest)([exports.chainIdø, messages_1.messagesø]).pipe((0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø)).subscribe(([[chainId, messages], config]) => {
+    /* ...then, if using a forked environment, switch out the provider after all has loaded */
+    try {
+        // console.log( protocol );
+        if ((messages === null || messages === void 0 ? void 0 : messages.id) === 'protocolLoaded' && config.useFork && defaultproviders_1.forkProviderMap.has(chainId)) {
+            console.log('Switching to a forked environemnt:');
+            // const newProvider = forkProviderMap.get(chainId)!;
+            // updateProvider(newProvider);
+            // console.log('USING FORKED ENVIRONMENT: ', newProvider);
+        }
+    }
+    catch (e) {
+        console.log(e);
+    }
+});
 //# sourceMappingURL=connection.js.map

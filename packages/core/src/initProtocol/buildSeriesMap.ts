@@ -111,7 +111,6 @@ export const buildSeriesMap = async (
   const seriesRootMap: Map<string, ISeriesRoot> = new Map(seriesList.map((s: any) => [s.id, s]));
 
   console.log( seriesRootMap); 
-  
   console.log(`Yield Protocol SERIES data updated [Block: ${_blockNum}]`);
 
   return seriesRootMap;

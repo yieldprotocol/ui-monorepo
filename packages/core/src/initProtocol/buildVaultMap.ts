@@ -79,7 +79,7 @@ export const buildVaultMap = async (
 
   /* create a map from the 'charged' asset list */
   const vaultRootMap: Map<string, IVaultRoot> = new Map(vaultList.map((v: any) => [v.id as string, v]));
-
+  
   console.log(`User VAULT data updated [Block: ${'somethign'}]`);
 
   return vaultRootMap;

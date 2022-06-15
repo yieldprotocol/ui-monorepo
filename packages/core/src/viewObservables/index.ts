@@ -49,5 +49,5 @@ export {
 	maximumRemoveLiquidityø,
 	borrowAndPoolVaultø,
 	isPartialRemoveRequiredø,
-	partialRemoveReturnø
+	removeLiquidityReturnø
 } from "./poolView";

@@ -3,18 +3,16 @@ import { ethers } from 'ethers';
 import {
   Observable,
   BehaviorSubject,
-  share,
   Subject,
   shareReplay,
-  withLatestFrom,
   mergeMap,
   combineLatest,
-  take,
-  pipe,
+  withLatestFrom,
 } from 'rxjs';
 import { defaultAccountProvider, defaultProviderMap, forkProviderMap } from '../config/defaultproviders';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils';
 import { appConfigø } from './appConfig';
+import { messagesø } from './messages';
 import { yieldProtocolø } from './yieldProtocol';
 declare const window: any;
 
@@ -55,7 +53,7 @@ export const updateChainId = (chainId: number) => {
 export const provider$: Subject<ethers.providers.BaseProvider> = new Subject();
 export const providerø: Observable<ethers.providers.BaseProvider> = provider$.pipe(shareReplay(1));
 export const updateProvider = (newProvider: ethers.providers.BaseProvider) => {
-  provider$.next(newProvider); // update to whole new protocol
+  provider$.next(newProvider as ethers.providers.BaseProvider ); // update to whole new protocol
 };
 
 /**
@@ -122,23 +120,27 @@ combineLatest([accountProviderø, appConfigø]).subscribe(async ([accProvider, a
   /**
    * if using the accountProvider as the base provider
    * TODO: untested
-   *  */
+   * */
   if (appConfig.useAccountProviderAsProvider) updateProvider(accProvider);
 });
 
 /**
- * Using a forked Environment, first wait until all loaded and ready, then switch out to use a fork.
+ * Using a forked Environment:
+ * First wait until all loaded and ready,
+ * then switch out to use a fork.
  */
-// combineLatest([yieldProtocolø,chainIdø]).pipe(withLatestFrom(appConfigø)).subscribe(([ [ protocol, chainId ], config]) => {
-//   /* ...then, if using a forked environment, switch out the provider after all has loaded */
-//   try {
-//     if (protocol.cauldron && config.useFork && forkProviderMap.has(chainId)) {
-//       console.log('Switching to a forked environemnt:');
-//       const newProvider = forkProviderMap.get(chainId)!;
-//       updateProvider(newProvider);
-//       console.log('USING FORKED ENVIRONMENT: ', newProvider);
-//     }
-//   } catch (e) {
-//     console.log(e);
-//   }
-// });
+combineLatest([chainIdø, messagesø]).pipe(withLatestFrom(appConfigø)).subscribe(([ [chainId, messages ], config]) => {
+  /* ...then, if using a forked environment, switch out the provider after all has loaded */
+  try {
+    // console.log( protocol );
+    if (messages?.id === 'protocolLoaded' && config.useFork && forkProviderMap.has(chainId)) {
+      console.log('Switching to a forked environemnt:');
+      // const newProvider = forkProviderMap.get(chainId)!;
+      // updateProvider(newProvider);
+      // console.log('USING FORKED ENVIRONMENT: ', newProvider);
+    }
+
+  } catch (e) {
+    console.log(e);
+  }
+});
