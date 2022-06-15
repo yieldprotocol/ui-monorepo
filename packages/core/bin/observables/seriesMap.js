@@ -13,8 +13,10 @@ const assets_1 = require("../config/assets");
 const messages_1 = require("./messages");
 /** @internal */
 exports.seriesMap$ = new rxjs_1.BehaviorSubject(new Map([]));
+/**
+ * SeriesMap observable and update function.
+ */
 exports.seriesMapø = exports.seriesMap$.pipe((0, rxjs_1.share)());
-/* Update series function */
 const updateSeries = (seriesList, account, accountDataOnly = false) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const list = (seriesList === null || seriesList === void 0 ? void 0 : seriesList.length) ? seriesList : Array.from(exports.seriesMap$.value.values());
     yield Promise.all(list.map((series) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
@@ -34,7 +36,7 @@ yieldProtocol_1.yieldProtocolø
     .subscribe(([_protocol, _provider, _account]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* 'Charge' all the series (using the current provider) */
     const chargedList = Array.from(_protocol.seriesRootMap.values()).map((s) => _chargeSeries(s, _provider));
-    /* Update the assets with dynamic/user data */
+    /* Update the series with dynamic/user data */
     yield (0, exports.updateSeries)(chargedList, _account);
     console.log('Series loading complete.');
     (0, messages_1.sendMsg)({ message: 'Series Loaded.', type: types_1.MessageType.INTERNAL, origin: 'seriesMap' });

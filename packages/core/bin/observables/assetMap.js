@@ -26,12 +26,10 @@ exports.assetMapø = exports.assetMap$.pipe((0, rxjs_1.share)());
 const updateAssets = (assetList, account) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* if passed an empty list, update ALL assets in the assetMap$ subject */
     const list = (assetList === null || assetList === void 0 ? void 0 : assetList.length) ? assetList : Array.from(exports.assetMap$.value.values());
-    list.map((asset) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        // account && console.log('here we have the acccount',  account );
-        // account && _addBalanceListeners(asset, account ); 
-        const assetUpdate = yield _updateAsset(asset, account);
+    yield Promise.all(list.map((asset) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+        const assetUpdate = account ? yield _updateAccountInfo(asset, account) : asset;
         exports.assetMap$.next(new Map(exports.assetMap$.value.set(asset.id, assetUpdate))); // note: new Map to enforce ref update
-    }));
+    })));
 });
 exports.updateAssets = updateAssets;
 /**
@@ -39,39 +37,27 @@ exports.updateAssets = updateAssets;
  * 1. 'charge' asset list
  * 2. update asset list
  * */
-(0, rxjs_1.combineLatest)([yieldProtocol_1.yieldProtocolø, connection_1.accountø])
-    .pipe((0, rxjs_1.filter)(([protocol]) => protocol.assetRootMap.size > 0), (0, rxjs_1.withLatestFrom)(connection_1.providerø))
-    .subscribe(([[_protocol, _account], _provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+yieldProtocol_1.yieldProtocolø
+    .pipe((0, rxjs_1.filter)((protocol) => protocol.assetRootMap.size > 0), (0, rxjs_1.withLatestFrom)(connection_1.accountø, connection_1.providerø))
+    .subscribe(([_protocol, _account, _provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* 'Charge' all the assets (using the current provider) */
     const chargedList = Array.from(_protocol.assetRootMap.values()).map((a) => _chargeAsset(a, _provider));
     /* Update the assets with dynamic/user data */
     yield (0, exports.updateAssets)(chargedList, _account);
-    (0, messages_1.sendMsg)({ message: 'Strategies Loaded', type: messages_1.MessageType.INTERNAL });
+    console.log('Asset loading complete.');
+    (0, messages_1.sendMsg)({ message: 'Assets Loaded.', type: messages_1.MessageType.INTERNAL, origin: 'assetMap' });
 }));
 /**
- * Observe providerø changes, and update map accordingly ('charge assets/series' with live contracts & listeners )
- * 1. 'Charge asset' with latest provider info for each
- * 2. Set as new assetMap$
+ * Observe Accountø changes ('update dynamic/User Data')
  * */
-connection_1.providerø
-    .pipe((0, rxjs_1.withLatestFrom)(exports.assetMap$), 
-/* only proceed if a valid provider and map has elements */
-(0, rxjs_1.filter)(([prov, aMap]) => ethers_1.ethers.providers.BaseProvider.isProvider(prov) && aMap.size > 0))
-    .subscribe(([provider, assetMap]) => {
-    assetMap.forEach((v, k, m) => {
-        m.set(k, _chargeAsset(v, provider));
-    });
-    exports.assetMap$.next(assetMap);
-});
-// /**
-//  * Observe Account$ changes ('update dynamic/User Data')
-//  * */
-// accountø
-//   // .pipe(filter( (acc) => acc !== undefined ) )
-//   .subscribe((account) => {
-//     console.log('account changed:', account)
-//     updateAssets([], account);
-//   });
+connection_1.accountø.pipe((0, rxjs_1.withLatestFrom)(exports.assetMapø)).subscribe(([account, assetMap]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    if (account && assetMap.size) {
+        yield (0, exports.updateAssets)(Array.from(assetMap.values()), account);
+        console.log('Assets updated with new account balances');
+        (0, messages_1.sendMsg)({ message: 'Asset account balances updated.', type: messages_1.MessageType.INTERNAL, origin: 'assetMap' });
+    }
+    ;
+}));
 /* Add on extra/calculated ASSET info, contract instances and methods (note: no async ) + add listners */
 const _chargeAsset = (asset, provider) => {
     /* add any asset listeners required */
@@ -113,30 +99,9 @@ const _chargeAsset = (asset, provider) => {
         getBalance,
         getAllowance });
 };
-const _updateAsset = (asset, account) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+const _updateAccountInfo = (asset, account) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Setup users asset info  */
     const balance = asset.name !== 'UNKNOWN' && account ? yield asset.getBalance(account) : constants_1.ZERO_BN;
     return Object.assign(Object.assign({}, asset), { balance, balance_: (0, utils_1.truncateValue)(ethers_1.ethers.utils.formatUnits(balance, asset.decimals), 2) });
 });
-const _addBalanceListeners = (asset, address) => {
-    console.log('here we should be adding listeners for :', asset.symbol, ':', address);
-    // const {assetContract} = asset;
-    // !address && assetContract.removeAllListeners();
-    // address && assetContract.on("Transfer", (from, to, value, event) => {
-    //   console.log("WOOHA : balance change!!");
-    //   console.log({
-    //       from: from,
-    //       to: to,
-    //       value: value.toNumber(),
-    //       data: event
-    //   });
-    // };
-    // address && assetContract.on("Transfer", async (from ) => {
-    //   if (from === address){
-    //     console.log("WOOHA : balance change!!") 
-    //       const bal_ = await assetContract.balanceOf(address);
-    //       // handle new balance    
-    //   }
-    // });
-};
 //# sourceMappingURL=assetMap.js.map

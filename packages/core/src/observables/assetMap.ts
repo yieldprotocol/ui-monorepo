@@ -14,7 +14,6 @@ import { MessageType, sendMsg } from './messages';
 /** @internal */
 export const assetMap$: BehaviorSubject<Map<string, IAsset>> = new BehaviorSubject(new Map([]));
 
-
 /**
  * Unsubscribed Assetmap observable
  */
@@ -26,17 +25,14 @@ export const assetMapø: Observable<Map<string, IAsset>> = assetMap$.pipe(share(
  * @param account optional: account in use
  */
 export const updateAssets = async (assetList?: IAsset[], account?: string) => {
-
   /* if passed an empty list, update ALL assets in the assetMap$ subject */
   const list = assetList?.length ? assetList : Array.from(assetMap$.value.values());
-  
-  list.map(async (asset: IAsset) => {
-    // account && console.log('here we have the acccount',  account );
-    // account && _addBalanceListeners(asset, account ); 
-    const assetUpdate = await _updateAsset(asset, account);
-    assetMap$.next(new Map(assetMap$.value.set(asset.id, assetUpdate))); // note: new Map to enforce ref update
-  });
-
+  await Promise.all(
+    list.map(async (asset: IAsset) => {
+      const assetUpdate = account ? await _updateAccountInfo(asset, account) : asset;
+      assetMap$.next(new Map(assetMap$.value.set(asset.id, assetUpdate))); // note: new Map to enforce ref update
+    })
+  );
 };
 
 /**
@@ -44,46 +40,35 @@ export const updateAssets = async (assetList?: IAsset[], account?: string) => {
  * 1. 'charge' asset list
  * 2. update asset list
  * */
-combineLatest( [yieldProtocolø, accountø])
+yieldProtocolø
   .pipe(
-    filter(([protocol ] )=> protocol.assetRootMap.size > 0 ),
-    withLatestFrom(providerø)
-    )
-  .subscribe(async ([ [_protocol, _account ], _provider]: [[IYieldProtocol, string|undefined], ethers.providers.BaseProvider]) => {
-    /* 'Charge' all the assets (using the current provider) */
-    const chargedList = Array.from(_protocol.assetRootMap.values()).map((a: IAssetRoot) => _chargeAsset(a, _provider));
-    /* Update the assets with dynamic/user data */
-    await updateAssets(chargedList, _account );
-    sendMsg({message:'Strategies Loaded', type: MessageType.INTERNAL})
-  });
+    filter((protocol) => protocol.assetRootMap.size > 0),
+    withLatestFrom(accountø, providerø)
+  )
+  .subscribe(
+    async ([_protocol, _account, _provider]) => {
+      /* 'Charge' all the assets (using the current provider) */
+      const chargedList = Array.from(_protocol.assetRootMap.values()).map((a: IAssetRoot) =>
+        _chargeAsset(a, _provider)
+      );
+      /* Update the assets with dynamic/user data */
+      await updateAssets(chargedList, _account);
+      console.log('Asset loading complete.');
+      sendMsg({ message: 'Assets Loaded.', type: MessageType.INTERNAL, origin: 'assetMap' });
+    }
+  );
 
 /**
- * Observe providerø changes, and update map accordingly ('charge assets/series' with live contracts & listeners )
- * 1. 'Charge asset' with latest provider info for each
- * 2. Set as new assetMap$
+ * Observe Accountø changes ('update dynamic/User Data')
  * */
-providerø
-  .pipe(
-    withLatestFrom(assetMap$),
-    /* only proceed if a valid provider and map has elements */
-    filter(([prov, aMap]) => ethers.providers.BaseProvider.isProvider(prov) && aMap.size > 0)
-  )
-  .subscribe(([provider, assetMap]) => {
-    assetMap.forEach((v: IAssetRoot, k: string, m: Map<string, IAssetRoot>) => {
-      m.set(k, _chargeAsset(v, provider));
-    });
-    assetMap$.next(assetMap);
-  });
+ accountø.pipe(withLatestFrom(assetMapø)).subscribe(async ([account, assetMap ]) => {
+  if (account && assetMap.size) { 
+    await updateAssets( Array.from(assetMap.values()), account);
+    console.log('Assets updated with new account balances');
+    sendMsg({message:'Asset account balances updated.', type: MessageType.INTERNAL, origin:'assetMap'})
+  };
+});
 
-// /**
-//  * Observe Account$ changes ('update dynamic/User Data')
-//  * */
-// accountø
-//   // .pipe(filter( (acc) => acc !== undefined ) )
-//   .subscribe((account) => {
-//     console.log('account changed:', account)
-//     updateAssets([], account);
-//   });
 
 /* Add on extra/calculated ASSET info, contract instances and methods (note: no async ) + add listners */
 const _chargeAsset = (asset: any, provider: ethers.providers.BaseProvider): IAsset => {
@@ -134,9 +119,9 @@ const _chargeAsset = (asset: any, provider: ethers.providers.BaseProvider): IAss
     getBalance,
     getAllowance,
   };
-}
+};
 
-const _updateAsset = async (asset: IAsset, account?: string | undefined): Promise<IAsset> => {
+const _updateAccountInfo = async (asset: IAsset, account: string | undefined): Promise<IAsset> => {
   /* Setup users asset info  */
   const balance = asset.name !== 'UNKNOWN' && account ? await asset.getBalance(account) : ZERO_BN;
   return {
@@ -144,27 +129,4 @@ const _updateAsset = async (asset: IAsset, account?: string | undefined): Promis
     balance,
     balance_: truncateValue(ethers.utils.formatUnits(balance, asset.decimals), 2), // for display purposes only
   };
-};
-
-const _addBalanceListeners = (asset: IAsset, address: string) => {
-  console.log('here we should be adding listeners for :', asset.symbol, ':' , address)
-  // const {assetContract} = asset;
-  // !address && assetContract.removeAllListeners();
-  // address && assetContract.on("Transfer", (from, to, value, event) => {
-  //   console.log("WOOHA : balance change!!");
-  //   console.log({
-  //       from: from,
-  //       to: to,
-  //       value: value.toNumber(),
-  //       data: event
-  //   });
-  // };
-
-  // address && assetContract.on("Transfer", async (from ) => {
-  //   if (from === address){
-  //     console.log("WOOHA : balance change!!") 
-  //       const bal_ = await assetContract.balanceOf(address);
-  //       // handle new balance    
-  //   }
-  // });
 };

@@ -52,7 +52,7 @@ yieldProtocolø
     filter((protocol) => protocol.strategyRootMap.size > 0),
     withLatestFrom(providerø, accountø),
   )
-  .subscribe(async ([_protocol, _provider, _account]: [IYieldProtocol, ethers.providers.BaseProvider, string|undefined]) => {
+  .subscribe(async ([_protocol, _provider, _account]) => {
     /* 'Charge' all the assets (using the current provider) */
     const chargedList = Array.from(_protocol.strategyRootMap.values()).map((st: IStrategyRoot) =>
       _chargeStrategy(st, _provider)

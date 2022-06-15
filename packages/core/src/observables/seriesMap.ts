@@ -13,8 +13,10 @@ import { sendMsg } from './messages';
 /** @internal */
 export const seriesMap$: BehaviorSubject<Map<string, ISeries>> = new BehaviorSubject(new Map([]));
 
+/**
+ * SeriesMap observable and update function.
+ */
 export const seriesMapø: Observable<Map<string, ISeries>> = seriesMap$.pipe(share());
-/* Update series function */
 export const updateSeries = async (seriesList?: ISeries[], account?: string, accountDataOnly: boolean = false) => {
   const list = seriesList?.length ? seriesList : Array.from(seriesMap$.value.values());
     await Promise.all( 
@@ -36,12 +38,12 @@ yieldProtocolø
     filter((protocol)=> protocol.seriesRootMap.size > 0 ),
     withLatestFrom(providerø, accountø),
   )
-  .subscribe( async ([_protocol, _provider, _account]: [IYieldProtocol, ethers.providers.BaseProvider, string|undefined]) => {
+  .subscribe( async ([_protocol, _provider, _account]) => {
     /* 'Charge' all the series (using the current provider) */
     const chargedList = Array.from(_protocol.seriesRootMap.values()).map((s: ISeriesRoot) =>
       _chargeSeries(s, _provider)
     );
-    /* Update the assets with dynamic/user data */
+    /* Update the series with dynamic/user data */
     await updateSeries(chargedList, _account);
     console.log('Series loading complete.');
     sendMsg({message:'Series Loaded.', type: MessageType.INTERNAL, origin:'seriesMap'})
