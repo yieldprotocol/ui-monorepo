@@ -449,7 +449,7 @@ export interface IMessage {
   origin?: any; // defaults to app 
   persistent?: boolean;
   timeoutOverride?: number;
-  id?: string|number; // for multi?
+  id?: string | number; // for multi?
 }
 
 export enum TxState {

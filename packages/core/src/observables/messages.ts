@@ -17,7 +17,7 @@ export const messagesø: Observable<IMessage|undefined> = messages$.pipe(
 
 export const sendMsg = (message: IMessage) => {
   /* push next message with default origin and type */
-  messages$.next({ origin: 'app', type: MessageType.INFO,  ...message});
+  messages$.next({ origin: 'app', type: MessageType.INFO, ...message});
 };
 
 /* export types for convenience */

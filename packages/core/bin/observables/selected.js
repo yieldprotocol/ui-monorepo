@@ -22,12 +22,23 @@ exports.selectedø = exports.selected$.pipe((0, rxjs_1.share)());
 /**
  * Set first of array as default series(base gets automatically selected based on the series choice,
  * this automatically selects the base)
- *  TODO: consider handling this better.
  * */
-seriesMap_1.seriesMapø
-    .pipe((0, rxjs_1.take)(2), // hmm, take 2 because it will be the first update with a value.
-(0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø))
-    .subscribe(([[sMap], appConfig]) => sMap && (0, exports.selectSeries)(appConfig.defaultSeriesId || [...sMap][0]));
+messages_1.messagesø.pipe((0, rxjs_1.filter)((msg) => (msg === null || msg === void 0 ? void 0 : msg.origin) === 'seriesMap' && (msg === null || msg === void 0 ? void 0 : msg.id) === 'seriesLoaded'), (0, rxjs_1.take)(1), // only tkae  one for first load
+(0, rxjs_1.withLatestFrom)(seriesMap_1.seriesMapø, appConfig_1.appConfigø)).subscribe(([, [sMap], appConfig]) => {
+    (0, exports.selectSeries)(appConfig.defaultSeriesId || [...sMap][0]);
+});
+// seriesMapø
+//   .pipe( 
+//     // skip(1),
+//     // take(1), // only take the first value then close subscription
+//     withLatestFrom(appConfigø)
+//   )
+//   .subscribe(
+//     ([[sMap], appConfig]) => { 
+//       console.log( [...sMap][0]  )
+//       selectSeries(appConfig.defaultSeriesId || [...sMap][0])   
+//       }
+//   );
 /**
  *  Functions to selecting elements
  */

@@ -1,8 +1,8 @@
-import { Observable, BehaviorSubject, share, map, tap, takeWhile, takeUntil, distinctUntilChanged, takeLast, take, withLatestFrom } from 'rxjs';
+import { Observable, BehaviorSubject, share, map, tap, takeWhile, takeUntil, distinctUntilChanged, takeLast, take, withLatestFrom, skip, filter } from 'rxjs';
 import { IAsset, ISelected, ISeries, IStrategy, IVault } from '../types';
 import { appConfigø } from './appConfig';
 import { assetMap$ } from './assetMap';
-import { sendMsg } from './messages';
+import { messagesø, sendMsg } from './messages';
 import { seriesMap$, seriesMapø } from './seriesMap';
 import { strategyMap$ } from './strategyMap';
 import { vaultMap$ } from './vaultMap';
@@ -23,16 +23,27 @@ export const selectedø: Observable<ISelected> = selected$.pipe(share());
 /**
  * Set first of array as default series(base gets automatically selected based on the series choice, 
  * this automatically selects the base)
- *  TODO: consider handling this better. 
  * */
-seriesMapø
-  .pipe( 
-    take(2), // hmm, take 2 because it will be the first update with a value.
-    withLatestFrom(appConfigø)
-  )
-  .subscribe(
-    ([[sMap], appConfig]) => sMap && selectSeries(appConfig.defaultSeriesId || [...sMap][0])
-  );
+messagesø.pipe(
+  filter( (msg) => msg?.origin === 'seriesMap' && msg?.id === 'seriesLoaded'), 
+  take(1), // only tkae  one for first load
+  withLatestFrom(seriesMapø, appConfigø)
+  ).subscribe(([, [sMap], appConfig]) => {
+    selectSeries(appConfig.defaultSeriesId || [...sMap][0])
+})
+
+// seriesMapø
+//   .pipe( 
+//     // skip(1),
+//     // take(1), // only take the first value then close subscription
+//     withLatestFrom(appConfigø)
+//   )
+//   .subscribe(
+//     ([[sMap], appConfig]) => { 
+//       console.log( [...sMap][0]  )
+//       selectSeries(appConfig.defaultSeriesId || [...sMap][0])   
+//       }
+//   );
 
 /**
  *  Functions to selecting elements
@@ -68,6 +79,7 @@ export const selectSeries = (series: ISeries | string, futureSeries: boolean = f
 
   /* Try to get the series if argument is a string */
   const _series = (series as ISeries)?.id ? (series as ISeries) : seriesMap$.value.get(series as string);
+
   /* Update the selected$  (either series or futureSeries) */
   futureSeries
     ? selected$.next({ ...selected$.value, futureSeries: _series || null })
@@ -80,7 +92,7 @@ export const selectSeries = (series: ISeries | string, futureSeries: boolean = f
   /* log to console */
   console.log(
     _series
-      ? `Selected ${futureSeries? '':'future '} Series: ${_series.id}`
+      ? `Selected ${futureSeries ? '':'future '} Series: ${_series.id}`
       : `${futureSeries? '': 'future '} Series unselected`
   );
 };

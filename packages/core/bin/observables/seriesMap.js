@@ -40,7 +40,7 @@ yieldProtocol_1.yieldProtocolø
     /* Update the series with dynamic/user data */
     yield (0, exports.updateSeries)(chargedList, _account);
     console.log('Series loading complete.');
-    (0, messages_1.sendMsg)({ message: 'Series Loaded.', type: types_1.MessageType.INTERNAL, origin: 'seriesMap' });
+    (0, messages_1.sendMsg)({ message: 'Series Loaded.', type: types_1.MessageType.INTERNAL, origin: 'seriesMap', id: 'seriesLoaded' });
 }));
 /**
  * Observe Accountø changes ('update dynamic/User Data')

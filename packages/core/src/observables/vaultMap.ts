@@ -21,19 +21,21 @@ export const updateVaults = async (vaultList?: IVault[] | IVaultRoot[]) => {
   const list = vaultList !== undefined ? vaultList : Array.from(vaultMap$.value.values());
   /* if there are some vaults: */
   if (list.length) {
-    // await Promise.all( // TODO: maybe get them together? 
+    await Promise.all(
+      // TODO: maybe get them together?
       list.map(async (_vault: IVault | IVaultRoot) => {
         const vaultUpdate = await _updateVault(_vault, account$.value as string, yieldProtocol$.value);
         vaultMap$.next(new Map(vaultMap$.value.set(_vault.id, vaultUpdate))); // note: new Map to enforce ref update
       })
-    // );
+    );
+  } else {
+    /* if the list is empty, return an empty vaultMap */
+    vaultMap$.next(new Map([]));
   }
-  /* if the list is empty, return an empty vaultMap */
-  vaultMap$.next(new Map([]));
 };
 
 /**
- *  Observe yieldProtocolø and accountø changes TOGETHER >  Initiate or Empty VAULT Map
+ *  Observe yieldProtocolø and accountø changes TOGETHER >  Initiate OR Empty VAULT Map
  * */
 combineLatest([accountø, yieldProtocolø])
   // only emit if account is defined and yp.cauldron adress exists - indicating protocol has mostly loaded
@@ -45,8 +47,8 @@ combineLatest([accountø, yieldProtocolø])
     if (_account !== undefined) {
       console.log('Getting vaults for: ', _account);
       const vaultMap = await buildVaultMap(_protocol, _account, _chainId);
-      console.log('vaults: ', Array.from(vaultMap.values()));
       await updateVaults(Array.from(vaultMap.values()));
+      console.log('Vaults loading complete.');
       sendMsg({ message: 'Vaults Loaded', type: MessageType.INTERNAL });
     } else {
       /* if account changes and is undefined > EMPTY the vaultMap */
@@ -110,16 +112,16 @@ const _updateVault = async (
     seriesId, // refreshed in case seriesId has been updated
     ilkId, // refreshed in case ilkId has been updated
 
-    ink: bnToW3Number( ink, vault.ilkDecimals ),
-    art: bnToW3Number( art, vault.baseDecimals),
-    accruedArt: bnToW3Number( accruedArt, vault.baseDecimals),
+    ink: bnToW3Number(ink, vault.ilkDecimals),
+    art: bnToW3Number(art, vault.baseDecimals),
+    accruedArt: bnToW3Number(accruedArt, vault.baseDecimals),
 
     underLiquidation: witch.address === owner, // check if witch is the owner (in liquidation process)
     hasBeenLiquidated: !!liquidationDate, // TODO redundant ??
     liquidationDate,
     liquidationDate_: liquidationDate ? format(new Date(liquidationDate * 1000), 'dd MMMM yyyy') : undefined,
 
-    rateAtMaturity : bnToW3Number( rateAtMaturity, 18, 2),
-    rate : bnToW3Number( rate, 18, 2),
+    rateAtMaturity: bnToW3Number(rateAtMaturity, 18, 2),
+    rate: bnToW3Number(rate, 18, 2),
   };
 };
