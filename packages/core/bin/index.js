@@ -15,6 +15,9 @@ const connection_2 = require("./observables/connection");
 const selected_1 = require("./observables/selected");
 const constants = tslib_1.__importStar(require("./utils/constants"));
 const assetConstants = tslib_1.__importStar(require("./config/assets"));
+// TODO: import all dynamically when things are up and running 
+// import * as yieldObservables from './observables';
+// import * as viewObservables from './viewObservables';
 const observables_1 = require("./observables");
 const input_1 = require("./viewObservables/input");
 const messages_1 = require("./observables/messages");
@@ -26,6 +29,12 @@ const collateralView_1 = require("./viewObservables/collateralView");
  * sets things up, and then the stream finishes indicating that everything is ready to go.
  */
 (0, rxjs_1.combineLatest)([connection_2.providerø, appConfig_1.appConfigø, connection_1.chainIdø])
+    //  .pipe( 
+    //    timeout( { 
+    //     first: 2500,
+    //     with: () => throwError( () => console.warn('Slow network connection.') )
+    //    }) 
+    //   )
     .subscribe(([provider, config, chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     (0, yieldProtocol_1.updateYieldProtocol)(yield (0, buildProtocol_1.buildProtocol)(provider, chainId, config.browserCaching));
 }));

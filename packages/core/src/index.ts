@@ -1,4 +1,4 @@
-import { combineLatest } from 'rxjs';
+import { combineLatest, ConnectableObservable, throwError, timeout } from 'rxjs';
 import { buildProtocol } from './initProtocol/buildProtocol';
 import { IYieldFunctions, IYieldObservables } from './types';
 import { accountø, chainIdø, updateAccount} from './observables/connection';
@@ -13,6 +13,10 @@ import { selectBase, selectedø, selectIlk, selectSeries, selectStrategy, select
 
 import * as constants from './utils/constants';
 import * as assetConstants from './config/assets';
+
+// TODO: import all dynamically when things are up and running 
+// import * as yieldObservables from './observables';
+// import * as viewObservables from './viewObservables';
 
 import { transactionMapø, assetPairMapø, userSettingsø } from './observables';
 import {
@@ -43,6 +47,12 @@ import { collateralizationPercentø, collateralizationRatioø } from './viewObse
  * sets things up, and then the stream finishes indicating that everything is ready to go.
  */
  combineLatest([ providerø, appConfigø, chainIdø ])
+//  .pipe( 
+//    timeout( { 
+//     first: 2500,
+//     with: () => throwError( () => console.warn('Slow network connection.') )
+//    }) 
+//   )
  .subscribe(async ([provider, config, chainId]) => {
    updateYieldProtocol(await buildProtocol(provider, chainId, config.browserCaching));
  });

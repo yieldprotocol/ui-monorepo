@@ -12,8 +12,8 @@ import { sendMsg } from './messages';
 
 /** @internal */
 export const seriesMap$: BehaviorSubject<Map<string, ISeries>> = new BehaviorSubject(new Map([]));
-export const seriesMapø: Observable<Map<string, ISeries>> = seriesMap$.pipe(share());
 
+export const seriesMapø: Observable<Map<string, ISeries>> = seriesMap$.pipe(share());
 /* Update series function */
 export const updateSeries = async (seriesList?: ISeries[], account?: string, accountDataOnly: boolean = false) => {
   const list = seriesList?.length ? seriesList : Array.from(seriesMap$.value.values());
@@ -48,7 +48,7 @@ yieldProtocolø
   });
 
 /**
- * Observe Account$ changes ('update dynamic/User Data')
+ * Observe Accountø changes ('update dynamic/User Data')
  * */
 accountø.pipe(withLatestFrom(seriesMapø)).subscribe(async ([account, seriesMap ]) => {
   if (account && seriesMap.size) { 
@@ -57,7 +57,6 @@ accountø.pipe(withLatestFrom(seriesMapø)).subscribe(async ([account, seriesMap
     sendMsg({message:'Series account info updated.', type: MessageType.INTERNAL, origin:'seriesMap'})
   };
 });
-
 
 /**
  * Internal Functions

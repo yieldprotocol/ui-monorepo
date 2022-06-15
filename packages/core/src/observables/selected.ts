@@ -38,11 +38,12 @@ seriesMapø
  *  Functions to selecting elements
  */
 export const selectBase = (asset?: IAsset | string) => {
+
   const base = (asset as IAsset)?.id ? (asset as IAsset) : assetMap$.value.get(asset as string);
   /* only switch the base if the asset in question is a valid YIELD base */
   if (!base?.isYieldBase) { sendMsg({message:'Not a Yield base asset'}) }
   else {
-      /* Update the selected$ */
+  /* Update the selected$ */
   selected$.next({ 
     ...selected$.value, 
     base: base || null,
@@ -64,6 +65,7 @@ export const selectIlk = (asset?: IAsset | string) => {
 };
 
 export const selectSeries = (series: ISeries | string, futureSeries: boolean = false) => {
+
   /* Try to get the series if argument is a string */
   const _series = (series as ISeries)?.id ? (series as ISeries) : seriesMap$.value.get(series as string);
   /* Update the selected$  (either series or futureSeries) */
