@@ -3,7 +3,7 @@ import { BigNumber, ethers } from "ethers";
 import { Config, adjectives, animals, uniqueNamesGenerator } from "unique-names-generator";
 
 // TODO: maybe remove type dependence in this file? 
-import { ActionCodes, IAssetRoot, ISignData} from "../types";
+import { ActionCodes, IAssetRoot, ISignData, W3Number} from "../types";
 
 export const generateVaultName = (id: string) => {
   const vaultNameConfig: Config = {
@@ -122,6 +122,21 @@ export const truncateValue = (input: string | undefined, decimals: number) => {
   }
   return '0.0';
 };
+
+/**
+ * Convert a bignumber to a W3Number 
+ * (which packages the bn together with a display value)
+ * @param bigNumber 
+ * @param tokenDecimals 
+ * @param digitFormat 
+ * @returns W3Number
+ */
+export const bnToW3Number = (bigNumber: BigNumber, tokenDecimals: number, digitFormat:number = 2): W3Number => {
+  const bn = bigNumber;
+  const hStr =  ethers.utils.formatUnits(bigNumber, tokenDecimals)
+  const dsp = truncateValue(hStr, digitFormat )
+  return { bn, hStr, dsp }
+}
 
 /**
  * Convert a human readbale string input to a BN (respecting the token decimals ) 

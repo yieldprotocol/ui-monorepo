@@ -5,6 +5,8 @@ export const MAX_256 = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffff
 export const MAX_128 = '0xffffffffffffffffffffffffffffffff';
 
 export const ZERO_BN = ethers.constants.Zero;
+export const ZERO_W3NUMBER = { bn: ethers.constants.Zero, hStr: '0', dsp: '0'};
+
 export const ONE_BN = ethers.constants.One;
 export const MINUS_ONE_BN = ethers.constants.One.mul(-1);
 

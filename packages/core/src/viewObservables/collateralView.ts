@@ -9,11 +9,13 @@ import { BigNumber } from 'ethers';
 import { combineLatest, distinctUntilChanged, filter, map, Observable, share, withLatestFrom } from 'rxjs';
 import { selectedø } from '../observables';
 import { ONE_BN, ZERO_BN } from '../utils';
-import { getAssetPairId, ratioToPercent } from '../utils/yieldUtils';
+import { bnToW3Number, getAssetPairId, ratioToPercent } from '../utils/yieldUtils';
 import { assetPairMapø } from '../observables/assetPairMap';
 import { borrowInputø, collateralInputø } from './input';
 
 import { appConfigø } from '../observables/appConfig';
+import { W3Number } from '../types';
+import { ZERO_W3NUMBER } from '../utils/constants';
 
 /**
  * INTERNAL:
@@ -43,14 +45,14 @@ const _totalDebtWithInputø: Observable<BigNumber[]> = combineLatest([borrowInpu
   withLatestFrom(appConfigø ),
   map(([[debtInput, selected], config]) => {
     const { vault, series } = selected; // we can safetly assume 'series' is defined - not vault.
-    const existingDebt_ = vault?.accruedArt || ZERO_BN;
+    const existingDebt_ = vault?.accruedArt.bn || ZERO_BN;
     /* NB NOTE: this whole function ONLY deals with decimal18, existing values are converted to decimal18 */
     const existingDebtAsWei = decimalNToDecimal18(existingDebt_, series!.decimals);
-    const newDebt = debtInput.gt(ZERO_BN)
+    const newDebt = debtInput.bn.gt(ZERO_BN)
       ? buyBase(
-          series!.baseReserves,
-          series!.fyTokenReserves,
-          debtInput,
+          series!.baseReserves.bn,
+          series!.fyTokenReserves.bn,
+          debtInput.bn,
           series!.getTimeTillMaturity(),
           series!.ts,
           series!.g2,
@@ -83,11 +85,11 @@ const _totalCollateralWithInputø: Observable<BigNumber[]> = combineLatest([coll
   map(([[collInput, selected], config]) => {
     const { vault, ilk } = selected;
     if (ilk) {
-      const existingCollateral_ = vault?.ink || ZERO_BN; // if no vault simply return zero.
+      const existingCollateral_ = vault?.ink.bn || ZERO_BN; // if no vault simply return zero.
       const existingCollateralAsWei = decimalNToDecimal18(existingCollateral_, ilk.decimals);
 
       /* TODO: there is a weird bug if inputting before selecting ilk. */
-      const newCollateralAsWei = decimalNToDecimal18(collInput, ilk.decimals);
+      const newCollateralAsWei = decimalNToDecimal18(collInput.bn, ilk.decimals);
       const totalCollateral = existingCollateralAsWei.add(newCollateralAsWei);
       appConfigø.subscribe( ({diagnostics}) => diagnostics && console.log('Total Collateral (d18): ', totalCollateral.toString()))
       return [totalCollateral, existingCollateralAsWei]; // as decimal18
@@ -117,7 +119,7 @@ export const collateralizationRatioø: Observable<number | undefined> = combineL
       !!assetPair
     ) {
       /* NOTE: this function ONLY deals with decimal18, existing values are converted to decimal18 */
-      const pairPriceInWei = decimalNToDecimal18(assetPair.pairPrice, assetPair.baseDecimals);
+      const pairPriceInWei = decimalNToDecimal18(assetPair.pairPrice.bn, assetPair.baseDecimals);
       const ratio = calculateCollateralizationRatio(totalCollat[0], pairPriceInWei, totalDebt[0], false);
       config.diagnostics && console.log('Collateralisation ratio:', ratio);
       return ratio;
@@ -182,7 +184,7 @@ export const isUnhealthyCollateralizationø: Observable<boolean> = combineLatest
 ]).pipe(
   filter(([, { vault }]) => !!vault),
   map(([ratio, { vault }, minRatio]) => {
-    if (vault?.accruedArt.lte(ZERO_BN)) return false;
+    if (vault?.accruedArt.bn.lte(ZERO_BN)) return false;
     return ratio! < minRatio + 0.2;
   }),
   share()
@@ -192,15 +194,16 @@ export const isUnhealthyCollateralizationø: Observable<boolean> = combineLatest
  * The minimum collateral required to meet the minimum protocol-allowed levels
  * @category Borrow | Collateral
  * */
-export const minCollateralRequiredø: Observable<BigNumber> = combineLatest([
+export const minCollateralRequiredø: Observable<W3Number> = combineLatest([
   _selectedPairø,
   minCollateralizationRatioø,
   _totalDebtWithInputø,
   _totalCollateralWithInputø,
 ]).pipe(
   map(([assetPair, minCollatRatio, totalDebt, totalCollat]) => {
-    const _pairPriceInWei = decimalNToDecimal18(assetPair!.pairPrice, assetPair!.baseDecimals);
-    return calculateMinCollateral(_pairPriceInWei, totalDebt[0], minCollatRatio!.toString(), totalCollat[1]);
+    const _pairPriceInWei = decimalNToDecimal18(assetPair!.pairPrice.bn, assetPair!.baseDecimals);
+    const _calcMin = calculateMinCollateral(_pairPriceInWei, totalDebt[0], minCollatRatio!.toString(), totalCollat[1])
+    return bnToW3Number(_calcMin, assetPair?.baseDecimals! );
   }),
   share()
 );
@@ -233,8 +236,8 @@ export const minimumSafePercentø: Observable<number> = minimumSafeRatioø.pipe(
  * Maximum collateral based selected Ilk and users balance
  * @category Borrow | Collateral
  */
-export const maxCollateralø: Observable<BigNumber | undefined> = selectedø.pipe(
-  map((selectedø) => (selectedø.ilk ? selectedø.ilk.balance : undefined)),
+export const maxCollateralø: Observable<W3Number> = selectedø.pipe(
+  map( (selectedø) =>  selectedø.ilk ? selectedø.ilk.balance : ZERO_W3NUMBER ),
   share()
 );
 
@@ -243,17 +246,17 @@ export const maxCollateralø: Observable<BigNumber | undefined> = selectedø.pip
  * without leaving the vault undercollateralised
  * @category Borrow | Collateral
  * */
-export const maxRemovableCollateralø: Observable<BigNumber | undefined> = combineLatest([
+export const maxRemovableCollateralø: Observable<W3Number> = combineLatest([
   selectedø,
   _totalCollateralWithInputø,
   minCollateralRequiredø,
 ]).pipe(
-  map(([selected, totalCollat, minReqd]) => {
-    const { vault } = selected;
+  map(([{vault}, totalCollat, minReqd]) => {
     if (vault) {
-      return vault.accruedArt.gt(minReqd) ? totalCollat[1].sub(ONE_BN) : totalCollat[1];
+      const tot_ = vault.accruedArt.bn.gt(minReqd.bn) ? totalCollat[1].sub(ONE_BN) : totalCollat[1];
+      return bnToW3Number( tot_, vault.baseDecimals )
     }
-    return undefined;
+    return ZERO_W3NUMBER;
   }),
   share()
 );
@@ -265,7 +268,7 @@ export const maxRemovableCollateralø: Observable<BigNumber | undefined> = combi
 export const vaultLiquidatePriceø: Observable<String> = combineLatest([selectedø, _selectedPairø]).pipe(
   filter(([selected, pairInfo]) => !!selected.vault && !!pairInfo),
   map(([selected, pairInfo]) =>
-    calcLiquidationPrice(selected.vault!.ink_, selected.vault!.accruedArt_, pairInfo!.minRatio)
+    calcLiquidationPrice(selected.vault!.ink.hStr, selected.vault!.accruedArt.hStr, pairInfo!.minRatio)
   ),
   share()
 );

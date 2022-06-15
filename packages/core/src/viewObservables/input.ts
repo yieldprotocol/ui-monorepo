@@ -3,13 +3,11 @@
  * Inputs
  */
 
-import { BigNumber, ethers } from 'ethers';
 import { BehaviorSubject, combineLatest, distinctUntilChanged, fromEvent, map, Observable, share, Subject, tap } from 'rxjs';
 import { selectedø } from '../observables';
-import { ZERO_BN } from '../utils';
-
-import { inputToTokenValue } from '../utils/yieldUtils';
-import { ISelected } from '../types';
+import { bnToW3Number, inputToTokenValue } from '../utils/yieldUtils';
+import { W3Number } from '../types';
+import { ZERO_W3NUMBER } from '../utils/constants';
 
 const _getValueFromInputEvent = (event: Observable<InputEvent>): Observable<string> => {
   return event.pipe(
@@ -24,11 +22,14 @@ export const borrowInput$: BehaviorSubject<string> = new BehaviorSubject('0');
  * Borrow input 
  * @category Input 
  * */
-export const borrowInputø: Observable<BigNumber> = combineLatest([borrowInput$, selectedø]).pipe(
+export const borrowInputø: Observable<W3Number> = combineLatest([borrowInput$, selectedø]).pipe(
   distinctUntilChanged(),
-  map(( [inp, sel] : [string, ISelected] ) => {
-    if (inp) return inputToTokenValue(inp, sel.base?.decimals!);
-    return ZERO_BN;
+  map(( [inp, {base}] ) => {
+    if (inp) { 
+      const tokenValue = inputToTokenValue(inp, base?.decimals!)
+      return bnToW3Number(tokenValue, base?.decimals!, base?.digitFormat )
+    };
+    return ZERO_W3NUMBER;
   }),
   share()
 );
@@ -42,10 +43,13 @@ export const collateralInput$: BehaviorSubject<string> = new BehaviorSubject('0'
  * Collateral input 
  * @category Input
  * */
-export const collateralInputø: Observable<BigNumber> = combineLatest([collateralInput$, selectedø]).pipe(
-  map(( [inp, sel] : [string, ISelected] ) => {
-    if (inp) return inputToTokenValue(inp, sel.ilk?.decimals!);
-    return ZERO_BN;
+export const collateralInputø: Observable<W3Number> = combineLatest([collateralInput$, selectedø]).pipe(
+  map(( [inp, {ilk}] ) => {
+    if (inp) { 
+      const tokenValue = inputToTokenValue(inp, ilk?.decimals!)
+      return bnToW3Number(tokenValue, ilk?.decimals!, ilk?.digitFormat )
+    };
+    return ZERO_W3NUMBER;
   }),
   share()
 ); 
@@ -60,11 +64,14 @@ export const repayInput$: Subject<string> = new Subject();
  * Repayment input 
  * @category Input
  * */
-export const repayInputø: Observable<BigNumber> = combineLatest([repayInput$, selectedø]).pipe(
-  map(( [inp, sel] : [string, ISelected] )  => {
-    if (inp) return inputToTokenValue(inp, sel.base?.decimals!);
-    return ZERO_BN;
-  })
+export const repayInputø: Observable<W3Number> = combineLatest([repayInput$, selectedø]).pipe(
+  map(( [inp, {base}] ) => {
+    if (inp) { 
+      const tokenValue = inputToTokenValue(inp, base?.decimals!)
+      return bnToW3Number(tokenValue, base?.decimals!, base?.digitFormat )
+    };
+    return ZERO_W3NUMBER;
+  }),
 );
 
 /* Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
@@ -76,11 +83,14 @@ export const updateRepayInput = (input: string) => repayInput$.next(input);
   * Lending input 
   * @category Input
  */
- export const lendInputø: Observable<BigNumber> = combineLatest([lendInput$, selectedø]).pipe(
-   map(( [inp, sel] : [string, ISelected] )  => {
-     if (inp) return inputToTokenValue(inp, sel.base?.decimals!);
-     return ZERO_BN;
-   })
+ export const lendInputø: Observable<W3Number> = combineLatest([lendInput$, selectedø]).pipe(
+  map(( [inp, {base}] ) => {
+    if (inp) { 
+      const tokenValue = inputToTokenValue(inp, base?.decimals!)
+      return bnToW3Number(tokenValue, base?.decimals!, base?.digitFormat )
+    };
+    return ZERO_W3NUMBER;
+  }),
  );
  /* Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
  export const updateLendInput = (input: string) => lendInput$.next(input);
@@ -92,11 +102,14 @@ export const updateRepayInput = (input: string) => repayInput$.next(input);
     * Close Position input 
     * @category Input
    */
-  export const closeInputø: Observable<BigNumber> = combineLatest([closeInput$, selectedø]).pipe(
-    map(( [inp, sel] : [string, ISelected] )  => {
-      if (inp) return inputToTokenValue(inp, sel.base?.decimals!);
-      return ZERO_BN;
-    })
+  export const closeInputø: Observable<W3Number> = combineLatest([closeInput$, selectedø]).pipe(
+    map(( [inp, {base}] ) => {
+      if (inp) { 
+        const tokenValue = inputToTokenValue(inp, base?.decimals!)
+        return bnToW3Number(tokenValue, base?.decimals!, base?.digitFormat )
+      };
+      return ZERO_W3NUMBER;
+    }),
   );
   /* Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
   export const updateCloseInput = (input: string) => closeInput$.next(input);
@@ -108,11 +121,14 @@ export const addLiquidityInput$: BehaviorSubject<string> = new BehaviorSubject('
   * Add liquidity input
   * @category Input
   *  */
-export const addLiquidityInputø: Observable<BigNumber> = combineLatest([addLiquidityInput$, selectedø]).pipe(
-  map(( [inp, sel] : [string, ISelected] )  => {
-    if (inp) return inputToTokenValue(inp, sel.strategy?.decimals!);
-    return ZERO_BN;
-  })
+export const addLiquidityInputø: Observable<W3Number> = combineLatest([addLiquidityInput$, selectedø]).pipe(
+  map(( [inp, {base}] ) => {
+    if (inp) { 
+      const tokenValue = inputToTokenValue(inp, base?.decimals!)
+      return bnToW3Number(tokenValue, base?.decimals!, base?.digitFormat )
+    };
+    return ZERO_W3NUMBER;
+  }),
 );
 /** Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
 export const updateAddLiqInput = (input: string) => addLiquidityInput$.next(input);
@@ -123,11 +139,14 @@ export const updateAddLiqInput = (input: string) => addLiquidityInput$.next(inpu
  * Remove liquidity input 
  * @category Input
  * */
- export const removeLiquidityInputø: Observable<BigNumber> = combineLatest([removeLiquidityInput$, selectedø]).pipe(
-   map(( [inp, sel] : [string, ISelected] )  => {
-     if (inp) return inputToTokenValue(inp, sel.strategy?.decimals!);
-     return ZERO_BN;
-   })
+ export const removeLiquidityInputø: Observable<W3Number> = combineLatest([removeLiquidityInput$, selectedø]).pipe(
+  map(( [inp, {base}] ) => {
+    if (inp) { 
+      const tokenValue = inputToTokenValue(inp, base?.decimals!)
+      return bnToW3Number(tokenValue, base?.decimals!, base?.digitFormat )
+    };
+    return ZERO_W3NUMBER;
+  }),
  );
 /** Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
 export const updateRemoveLiqInput = (input: string) => removeLiquidityInput$.next(input);

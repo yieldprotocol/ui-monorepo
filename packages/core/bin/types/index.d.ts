@@ -23,6 +23,11 @@ export interface IPriceContext {
     priceState: IPriceContextState;
     priceActions: IPriceContextActions;
 }
+export interface W3Number {
+    bn: BigNumber;
+    hStr: string;
+    dsp: string;
+}
 export interface IUserSettings {
     slippageTolerance: number;
     approvalMethod: ApprovalMethod;

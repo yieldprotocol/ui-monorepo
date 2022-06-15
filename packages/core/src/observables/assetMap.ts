@@ -10,6 +10,7 @@ import { ASSETS, ETH_BASED_ASSETS } from '../config/assets';
 import { ZERO_BN } from '../utils/constants';
 import { truncateValue } from '../utils';
 import { MessageType, sendMsg } from './messages';
+import { bnToW3Number } from '../utils/yieldUtils';
 
 /** @internal */
 export const assetMap$: BehaviorSubject<Map<string, IAsset>> = new BehaviorSubject(new Map([]));
@@ -123,10 +124,10 @@ const _chargeAsset = (asset: any, provider: ethers.providers.BaseProvider): IAss
 
 const _updateAccountInfo = async (asset: IAsset, account: string | undefined): Promise<IAsset> => {
   /* Setup users asset info  */
-  const balance = asset.name !== 'UNKNOWN' && account ? await asset.getBalance(account) : ZERO_BN;
+  const balance_ = asset.name !== 'UNKNOWN' && account ? await asset.getBalance(account) : ZERO_BN;
+  
   return {
     ...asset,
-    balance,
-    balance_: truncateValue(ethers.utils.formatUnits(balance, asset.decimals), 2), // for display purposes only
+    balance : bnToW3Number( balance_, asset.decimals, 2 ) // asset.digitFormat ) 
   };
 };

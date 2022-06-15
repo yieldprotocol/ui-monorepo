@@ -7,7 +7,7 @@ import { IAssetPair, ISelected } from '../types';
 import { WAD_BN } from '../utils';
 import { yieldProtocol$ } from './yieldProtocol';
 import { selectedø } from './selected';
-import { getAssetPairId } from '../utils/yieldUtils';
+import { bnToW3Number, getAssetPairId } from '../utils/yieldUtils';
 import { chainIdø } from './connection';
 
 /** @internal */
@@ -71,15 +71,18 @@ export const updatePair = async (baseId: string, ilkId: string, chainId: number)
       price = ethers.constants.Zero;
     }
 
+    const minDebtLimit_ = BigNumber.from(min).mul(BigNumber.from('10').pow(dec));
+    const maxDebtLimit_ = max.mul(BigNumber.from('10').pow(dec));
+
     const newPair: IAssetPair = {
       id: pairId,
       baseId,
       ilkId,
       limitDecimals: dec,
-      minDebtLimit: BigNumber.from(min).mul(BigNumber.from('10').pow(dec)), // NB use limit decimals here > might not be same as base/ilk decimals
-      maxDebtLimit: max.mul(BigNumber.from('10').pow(dec)), // NB use limit decimals here > might not be same as base/ilk decimals
-      pairTotalDebt: sum,
-      pairPrice: price, // value of 1 ilk (1x10**n) in terms of base.
+      minDebtLimit:  bnToW3Number(minDebtLimit_, base.decimals, base.digitFormat), // NB use limit decimals here > might not be same as base/ilk decimals
+      maxDebtLimit:  bnToW3Number(maxDebtLimit_, base.decimals, base.digitFormat), // NB use limit decimals here > might not be same as base/ilk decimals
+      pairTotalDebt: bnToW3Number( sum, base.decimals, base.digitFormat ) ,
+      pairPrice: bnToW3Number(price, base.decimals, base.digitFormat) , // value of 1 ilk (1x10**n) in terms of base.
       minRatio: parseFloat(ethers.utils.formatUnits(ratio, 6)), // pre-format ratio
       baseDecimals: base.decimals!,
       ilkDecimals: ilk.decimals!,
