@@ -11,6 +11,7 @@ const connection_1 = require("./connection");
 const yieldProtocol_1 = require("./yieldProtocol");
 const assets_1 = require("../config/assets");
 const messages_1 = require("./messages");
+const yieldUtils_1 = require("../utils/yieldUtils");
 /** @internal */
 exports.seriesMap$ = new rxjs_1.BehaviorSubject(new Map([]));
 /**
@@ -82,9 +83,7 @@ const _updateDynamicInfo = (series) => tslib_1.__awaiter(void 0, void 0, void 0,
     /* Calculates the base/fyToken unit selling price */
     const _sellRate = (0, ui_math_1.sellFYToken)(baseReserves, fyTokenReserves, rateCheckAmount, (0, ui_math_1.secondsToFrom)(series.maturity.toString()), series.ts, series.g2, series.decimals);
     const apr = (0, ui_math_1.calculateAPR)((0, ui_math_1.floorDecimal)(_sellRate), rateCheckAmount, series.maturity) || '0';
-    return Object.assign(Object.assign({}, series), { baseReserves, baseReserves_: ethers_1.ethers.utils.formatUnits(baseReserves, series.decimals), fyTokenReserves,
-        fyTokenRealReserves,
-        totalSupply, totalSupply_: ethers_1.ethers.utils.formatUnits(totalSupply, series.decimals), apr: `${Number(apr).toFixed(2)}` });
+    return Object.assign(Object.assign({}, series), { baseReserves: (0, yieldUtils_1.bnToW3Number)(baseReserves, series.decimals), fyTokenReserves: (0, yieldUtils_1.bnToW3Number)(fyTokenReserves, series.decimals), fyTokenRealReserves: (0, yieldUtils_1.bnToW3Number)(fyTokenRealReserves, series.decimals), totalSupply: (0, yieldUtils_1.bnToW3Number)(totalSupply, series.decimals), apr: `${Number(apr).toFixed(2)}` });
 });
 /**
  *
@@ -97,8 +96,7 @@ const _updateAccountInfo = (series, account) => tslib_1.__awaiter(void 0, void 0
         series.poolContract.balanceOf(account),
         series.fyTokenContract.balanceOf(account),
     ]);
-    const poolPercent = (0, ui_math_1.mulDecimal)((0, ui_math_1.divDecimal)(poolTokens, series.totalSupply), '100');
-    return Object.assign(Object.assign({}, series), { poolTokens,
-        fyTokenBalance, poolTokens_: ethers_1.ethers.utils.formatUnits(poolTokens, series.decimals), fyTokenBalance_: ethers_1.ethers.utils.formatUnits(fyTokenBalance, series.decimals), poolPercent });
+    const poolPercent = (0, ui_math_1.mulDecimal)((0, ui_math_1.divDecimal)(poolTokens, series.totalSupply.bn), '100');
+    return Object.assign(Object.assign({}, series), { poolTokens: (0, yieldUtils_1.bnToW3Number)(poolTokens, series.decimals), fyTokenBalance: (0, yieldUtils_1.bnToW3Number)(fyTokenBalance, series.decimals), poolPercent });
 });
 //# sourceMappingURL=seriesMap.js.map

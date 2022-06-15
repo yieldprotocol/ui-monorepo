@@ -11,6 +11,7 @@ const connection_1 = require("./connection");
 const yieldProtocol_1 = require("./yieldProtocol");
 const constants_1 = require("../utils/constants");
 const messages_1 = require("./messages");
+const yieldUtils_1 = require("../utils/yieldUtils");
 /** @internal */
 exports.strategyMap$ = new rxjs_1.BehaviorSubject(new Map([]));
 exports.strategyMapø = exports.strategyMap$.pipe((0, rxjs_1.share)());
@@ -75,10 +76,9 @@ const _updateInfo = (strategy, provider // TODO: this provider is a pimple, but 
     // [currentInvariant, initInvariant] = currentSeries.isMature() ? [ZERO_BN, ZERO_BN] : [ZERO_BN, ZERO_BN];
     // strategyPoolPercent = mulDecimal(divDecimal(strategyPoolBalance, poolTotalSupply), '100');
     const returnRate = currentInvariant && currentInvariant.sub(initInvariant);
-    return Object.assign(Object.assign({}, strategy), { strategyTotalSupply, strategyTotalSupply_: ethers_1.ethers.utils.formatUnits(strategyTotalSupply, strategy.decimals), strategyPoolContract,
-        strategyPoolBalance, strategyPoolBalance_: ethers_1.ethers.utils.formatUnits(strategyPoolBalance, strategy.decimals), currentSeriesId,
+    return Object.assign(Object.assign({}, strategy), { strategyTotalSupply: (0, yieldUtils_1.bnToW3Number)(strategyTotalSupply, strategy.decimals), strategyPoolContract, strategyPoolBalance: (0, yieldUtils_1.bnToW3Number)(strategyPoolBalance, strategy.decimals), currentSeriesId,
         currentPoolAddr,
-        nextSeriesId, initInvariant: initInvariant || ethers_1.BigNumber.from('0'), currentInvariant: currentInvariant || ethers_1.BigNumber.from('0'), returnRate, returnRate_: returnRate.toString(), active: true });
+        nextSeriesId, initInvariant: initInvariant || ethers_1.BigNumber.from('0'), currentInvariant: currentInvariant || ethers_1.BigNumber.from('0'), returnRate: (0, yieldUtils_1.bnToW3Number)(returnRate, strategy.decimals), active: true });
 });
 /**
  *
@@ -86,14 +86,13 @@ const _updateInfo = (strategy, provider // TODO: this provider is a pimple, but 
  *
  * */
 const _updateAccountInfo = (strategy, account) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _a, _b;
     /* Get all the data simultanenously in a promise.all */
     const [accountBalance, accountPoolBalance] = yield Promise.all([
         strategy.strategyContract.balanceOf(account),
         ((_a = strategy.strategyPoolContract) === null || _a === void 0 ? void 0 : _a.balanceOf(account)) || constants_1.ZERO_BN,
     ]);
-    const accountStrategyPercent = (0, ui_math_1.mulDecimal)((0, ui_math_1.divDecimal)(accountBalance, strategy.strategyTotalSupply || '0'), '100');
-    return Object.assign(Object.assign({}, strategy), { accountBalance, accountBalance_: ethers_1.ethers.utils.formatUnits(accountBalance, strategy.decimals), accountPoolBalance,
-        accountStrategyPercent });
+    const accountStrategyPercent = (0, ui_math_1.mulDecimal)((0, ui_math_1.divDecimal)(accountBalance, ((_b = strategy.strategyTotalSupply) === null || _b === void 0 ? void 0 : _b.bn) || '0'), '100');
+    return Object.assign(Object.assign({}, strategy), { accountBalance: (0, yieldUtils_1.bnToW3Number)(accountBalance, strategy.decimals), accountPoolBalance: (0, yieldUtils_1.bnToW3Number)(accountPoolBalance, strategy.decimals), accountStrategyPercent });
 });
 //# sourceMappingURL=strategyMap.js.map

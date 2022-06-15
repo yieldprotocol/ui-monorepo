@@ -36,8 +36,8 @@ export const closeLend = async (amount: string | undefined, series: ISeries) => 
         const _fyTokenValueOfInput = seriesIsMature
           ? _amount
           : buyBase(
-              series.baseReserves,
-              series.fyTokenReserves,
+              series.baseReserves.bn,
+              series.fyTokenReserves.bn,
               _amount,
               series.getTimeTillMaturity(),
               series.ts,

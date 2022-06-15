@@ -1,5 +1,5 @@
 import { BigNumber } from "ethers";
-import { ActionCodes, ISignData } from "../types";
+import { ActionCodes, ISignData, W3Number } from "../types";
 export declare const generateVaultName: (id: string) => string;
 export declare const getProcessCode: (txType: ActionCodes, vaultOrSeriesId: string | null) => string;
 export declare const getAssetPairId: (baseId: string, ilkId: string) => string;
@@ -31,6 +31,15 @@ export declare const ratioToPercent: (ratio: number, decimals?: number) => numbe
  * @returns
  */
 export declare const truncateValue: (input: string | undefined, decimals: number) => string;
+/**
+ * Convert a bignumber to a W3Number
+ * (which packages the bn together with a display value)
+ * @param bigNumber
+ * @param tokenDecimals
+ * @param digitFormat
+ * @returns W3Number
+ */
+export declare const bnToW3Number: (bigNumber: BigNumber, tokenDecimals: number, digitFormat?: number) => W3Number;
 /**
  * Convert a human readbale string input to a BN (respecting the token decimals )
  * @param input

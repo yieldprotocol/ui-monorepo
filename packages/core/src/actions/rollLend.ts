@@ -39,8 +39,8 @@ export const rollLend = async (amount: string | undefined, fromSeries: ISeries, 
         const _fyTokenValueOfInput = seriesIsMature
           ? _amount
           : buyBase(
-              fromSeries.baseReserves,
-              fromSeries.fyTokenReserves,
+              fromSeries.baseReserves.bn,
+              fromSeries.fyTokenReserves.bn,
               _amount,
               fromSeries.getTimeTillMaturity(),
               fromSeries.ts,

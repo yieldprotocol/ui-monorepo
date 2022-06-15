@@ -59,15 +59,17 @@ const updatePair = (baseId, ilkId, chainId) => tslib_1.__awaiter(void 0, void 0,
         catch (error) {
             price = ethers_1.ethers.constants.Zero;
         }
+        const minDebtLimit_ = ethers_1.BigNumber.from(min).mul(ethers_1.BigNumber.from('10').pow(dec));
+        const maxDebtLimit_ = max.mul(ethers_1.BigNumber.from('10').pow(dec));
         const newPair = {
             id: pairId,
             baseId,
             ilkId,
             limitDecimals: dec,
-            minDebtLimit: ethers_1.BigNumber.from(min).mul(ethers_1.BigNumber.from('10').pow(dec)),
-            maxDebtLimit: max.mul(ethers_1.BigNumber.from('10').pow(dec)),
-            pairTotalDebt: sum,
-            pairPrice: price,
+            minDebtLimit: (0, yieldUtils_1.bnToW3Number)(minDebtLimit_, base.decimals, base.digitFormat),
+            maxDebtLimit: (0, yieldUtils_1.bnToW3Number)(maxDebtLimit_, base.decimals, base.digitFormat),
+            pairTotalDebt: (0, yieldUtils_1.bnToW3Number)(sum, base.decimals, base.digitFormat),
+            pairPrice: (0, yieldUtils_1.bnToW3Number)(price, base.decimals, base.digitFormat),
             minRatio: parseFloat(ethers_1.ethers.utils.formatUnits(ratio, 6)),
             baseDecimals: base.decimals,
             ilkDecimals: ilk.decimals,

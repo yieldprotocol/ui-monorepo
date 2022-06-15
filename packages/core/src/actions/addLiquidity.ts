@@ -56,7 +56,7 @@ export const addLiquidity = async (
       const _amountLessSlippage = calculateSlippage(_amount, slippageTolerance.toString(), true);
 
       const [cachedBaseReserves, cachedFyTokenReserves] = await _series?.poolContract.getCache()!;
-      const cachedRealReserves = cachedFyTokenReserves.sub(_series?.totalSupply!.sub(ONE_BN));
+      const cachedRealReserves = cachedFyTokenReserves.sub(_series?.totalSupply.bn.sub(ONE_BN));
 
       const [_fyTokenToBeMinted] = fyTokenForMint(
         cachedBaseReserves,

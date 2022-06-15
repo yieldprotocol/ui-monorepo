@@ -1,5 +1,5 @@
-import { BigNumber } from 'ethers';
 import { Observable } from 'rxjs';
+import { W3Number } from '../types';
 /**
  * The PREDICTED collateralization ratio based on the current INPUT expressed as a ratio
  * @category Borrow | Collateral
@@ -36,7 +36,7 @@ export declare const isUnhealthyCollateralizationø: Observable<boolean>;
  * The minimum collateral required to meet the minimum protocol-allowed levels
  * @category Borrow | Collateral
  * */
-export declare const minCollateralRequiredø: Observable<BigNumber>;
+export declare const minCollateralRequiredø: Observable<W3Number>;
 /**
  *  Minimum Safe collatearalization level expressed asa ratio
  *  TODO: would this be better specified with the assetPair data? - possibly
@@ -52,13 +52,13 @@ export declare const minimumSafePercentø: Observable<number>;
  * Maximum collateral based selected Ilk and users balance
  * @category Borrow | Collateral
  */
-export declare const maxCollateralø: Observable<BigNumber | undefined>;
+export declare const maxCollateralø: Observable<W3Number>;
 /**
  * Calculate the maximum amount of collateral that can be removed
  * without leaving the vault undercollateralised
  * @category Borrow | Collateral
  * */
-export declare const maxRemovableCollateralø: Observable<BigNumber | undefined>;
+export declare const maxRemovableCollateralø: Observable<W3Number>;
 /**
  * Price at which the vault will get liquidated
  * @category Borrow | Collateral

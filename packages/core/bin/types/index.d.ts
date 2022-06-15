@@ -193,11 +193,11 @@ export interface IAssetPair {
     baseDecimals: number;
     ilkDecimals: number;
     minRatio: number;
-    minDebtLimit: BigNumber;
-    maxDebtLimit: BigNumber;
+    minDebtLimit: W3Number;
+    maxDebtLimit: W3Number;
     limitDecimals: number;
-    pairPrice: BigNumber;
-    pairTotalDebt: BigNumber;
+    pairPrice: W3Number;
+    pairTotalDebt: W3Number;
     pairUpdating?: boolean;
     lastUpdate?: number;
 }
@@ -219,22 +219,18 @@ export interface IVaultRoot {
 }
 export interface ISeries extends ISeriesRoot {
     apr: string;
-    baseReserves: BigNumber;
-    baseReserves_: string;
-    fyTokenReserves: BigNumber;
-    fyTokenRealReserves: BigNumber;
-    totalSupply: BigNumber;
-    totalSupply_: string;
+    baseReserves: W3Number;
+    fyTokenReserves: W3Number;
+    fyTokenRealReserves: W3Number;
+    totalSupply: W3Number;
     fyTokenContract: FYToken;
     poolContract: Pool;
     getTimeTillMaturity: () => string;
     isMature: () => boolean;
     getFyTokenAllowance: (acc: string, spender: string) => Promise<BigNumber>;
     getPoolAllowance: (acc: string, spender: string) => Promise<BigNumber>;
-    poolTokens?: BigNumber | undefined;
-    poolTokens_?: string | undefined;
-    fyTokenBalance?: BigNumber | undefined;
-    fyTokenBalance_?: string | undefined;
+    poolTokens?: W3Number | undefined;
+    fyTokenBalance?: W3Number | undefined;
     poolPercent?: string | undefined;
     color?: string;
     textColor?: string;
@@ -251,8 +247,7 @@ export interface IAsset extends IAssetRoot {
     getBalance: (account: string) => Promise<BigNumber>;
     getAllowance: (account: string, spender: string) => Promise<BigNumber>;
     setAllowance?: (spender: string) => Promise<BigNumber | void>;
-    balance: BigNumber;
-    balance_: string;
+    balance: W3Number;
 }
 export interface IDummyVault extends IVaultRoot {
 }
@@ -263,15 +258,11 @@ export interface IVault extends IVaultRoot {
     liquidationDate?: number;
     liquidationDate_?: string;
     isActive: boolean;
-    ink: BigNumber;
-    art: BigNumber;
-    accruedArt: BigNumber;
-    ink_: string;
-    art_: string;
-    rateAtMaturity: BigNumber;
-    rate: BigNumber;
-    rate_: string;
-    accruedArt_: string;
+    ink: W3Number;
+    art: W3Number;
+    accruedArt: W3Number;
+    rateAtMaturity: W3Number;
+    rate: W3Number;
 }
 export interface IStrategy extends IStrategyRoot {
     strategyContract: Strategy;
@@ -281,21 +272,15 @@ export interface IStrategy extends IStrategyRoot {
     active: boolean;
     initInvariant?: BigNumber;
     currentInvariant?: BigNumber;
-    returnRate?: BigNumber;
-    returnRate_?: string;
-    strategyTotalSupply?: BigNumber;
-    strategyTotalSupply_?: string;
-    accountBalance?: BigNumber;
-    accountBalance_?: string;
+    returnRate?: W3Number;
+    strategyTotalSupply?: W3Number;
+    accountBalance?: W3Number;
     accountStrategyPercent?: string | undefined;
     strategyPoolContract?: Pool;
-    poolTotalSupply?: BigNumber;
-    poolTotalSupply_?: string;
-    strategyPoolBalance?: BigNumber;
-    strategyPoolBalance_?: string;
+    poolTotalSupply?: W3Number;
+    strategyPoolBalance?: W3Number;
     strategyPoolPercent?: string;
-    accountPoolBalance?: BigNumber;
-    accountPoolBalance_?: string;
+    accountPoolBalance?: W3Number;
     accountPoolPercent?: string | undefined;
     getAllowance: (acc: string, spender: string) => Promise<BigNumber>;
 }

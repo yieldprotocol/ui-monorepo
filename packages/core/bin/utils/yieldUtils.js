@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.inputToTokenValue = exports.truncateValue = exports.ratioToPercent = exports.getStrategySymbol = exports.formatStrategyName = exports.getStrategyAddrFromReceipt = exports.getSeriesAfterRollPosition = exports.getVaultIdFromReceipt = exports.getPositionPath = exports.nameFromMaturity = exports.baseIdFromSeriesId = exports.getSignId = exports.getAssetPairId = exports.getProcessCode = exports.generateVaultName = void 0;
+exports.inputToTokenValue = exports.bnToW3Number = exports.truncateValue = exports.ratioToPercent = exports.getStrategySymbol = exports.formatStrategyName = exports.getStrategyAddrFromReceipt = exports.getSeriesAfterRollPosition = exports.getVaultIdFromReceipt = exports.getPositionPath = exports.nameFromMaturity = exports.baseIdFromSeriesId = exports.getSignId = exports.getAssetPairId = exports.getProcessCode = exports.generateVaultName = void 0;
 const date_fns_1 = require("date-fns");
 const ethers_1 = require("ethers");
 const unique_names_generator_1 = require("unique-names-generator");
@@ -127,6 +127,21 @@ const truncateValue = (input, decimals) => {
     return '0.0';
 };
 exports.truncateValue = truncateValue;
+/**
+ * Convert a bignumber to a W3Number
+ * (which packages the bn together with a display value)
+ * @param bigNumber
+ * @param tokenDecimals
+ * @param digitFormat
+ * @returns W3Number
+ */
+const bnToW3Number = (bigNumber, tokenDecimals, digitFormat = 2) => {
+    const bn = bigNumber;
+    const hStr = ethers_1.ethers.utils.formatUnits(bigNumber, tokenDecimals);
+    const dsp = (0, exports.truncateValue)(hStr, digitFormat);
+    return { bn, hStr, dsp };
+};
+exports.bnToW3Number = bnToW3Number;
 /**
  * Convert a human readbale string input to a BN (respecting the token decimals )
  * @param input

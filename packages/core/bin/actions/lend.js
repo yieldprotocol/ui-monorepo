@@ -21,7 +21,7 @@ const lend = (amount, series) => tslib_1.__awaiter(void 0, void 0, void 0, funct
         const ladleAddress = ladle.address;
         const base = assetMap.get(series.baseId);
         const _amount = (0, yieldUtils_1.inputToTokenValue)(amount, base === null || base === void 0 ? void 0 : base.decimals);
-        const _inputAsFyToken = (0, ui_math_1.sellBase)(series.baseReserves, series.fyTokenReserves, _amount, series.getTimeTillMaturity(), series.ts, series.g1, series.decimals);
+        const _inputAsFyToken = (0, ui_math_1.sellBase)(series.baseReserves.bn, series.fyTokenReserves.bn, _amount, series.getTimeTillMaturity(), series.ts, series.g1, series.decimals);
         const _inputAsFyTokenWithSlippage = (0, ui_math_1.calculateSlippage)(_inputAsFyToken, slippageTolerance.toString(), true);
         /* if approveMAx, check if signature is required */
         const alreadyApproved = (yield base.getAllowance(account, ladleAddress)).gte(_amount);

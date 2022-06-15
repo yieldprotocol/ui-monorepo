@@ -1,10 +1,9 @@
-import { BigNumber } from 'ethers';
 import { Observable } from 'rxjs';
-import { IVault } from '../types';
+import { IVault, W3Number } from '../types';
 /**
  * @category Pool | Add Liquidity
  */
-export declare const maximumAddLiquidityø: Observable<BigNumber>;
+export declare const maximumAddLiquidityø: Observable<W3Number>;
 /**
  * Check if it is possible to use BUY and POOL strategy is available for a particular INPUT and selected strategy.
  * @category Pool | Add Liquidity
@@ -16,7 +15,7 @@ export declare const isBuyAndPoolPossibleø: Observable<boolean>;
  *
  * @category Pool | Remove Liquidity
  */
-export declare const maximumRemoveLiquidityø: Observable<BigNumber>;
+export declare const maximumRemoveLiquidityø: Observable<W3Number>;
 /**
  * Get the vault ( if adding liquidity was done using the 'Borrow and Pool' method. )
  * @category Pool | Remove Liquidity
@@ -30,9 +29,9 @@ export declare const borrowAndPoolVaultø: Observable<IVault | undefined>;
  * @category Pool | Remove Liquidity
  *
  * */
-export declare const removeLiquidityReturnø: Observable<BigNumber[]>;
+export declare const removeLiquidityReturnø: Observable<W3Number[]>;
 /**
-* Check if not all liquidity can be removed, and a partial removal is required.
-* @category Pool | Remove Liquidity
-*/
+ * Check if not all liquidity can be removed, and a partial removal is required.
+ * @category Pool | Remove Liquidity
+ */
 export declare const isPartialRemoveRequiredø: Observable<boolean>;

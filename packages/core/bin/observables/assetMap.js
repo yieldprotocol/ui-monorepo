@@ -3,15 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateAssets = exports.assetMapø = exports.assetMap$ = void 0;
 const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
-const ethers_1 = require("ethers");
 const types_1 = require("../types");
 const connection_1 = require("./connection");
 const yieldProtocol_1 = require("./yieldProtocol");
 const contracts = tslib_1.__importStar(require("../contracts"));
 const assets_1 = require("../config/assets");
 const constants_1 = require("../utils/constants");
-const utils_1 = require("../utils");
 const messages_1 = require("./messages");
+const yieldUtils_1 = require("../utils/yieldUtils");
 /** @internal */
 exports.assetMap$ = new rxjs_1.BehaviorSubject(new Map([]));
 /**
@@ -101,7 +100,8 @@ const _chargeAsset = (asset, provider) => {
 };
 const _updateAccountInfo = (asset, account) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Setup users asset info  */
-    const balance = asset.name !== 'UNKNOWN' && account ? yield asset.getBalance(account) : constants_1.ZERO_BN;
-    return Object.assign(Object.assign({}, asset), { balance, balance_: (0, utils_1.truncateValue)(ethers_1.ethers.utils.formatUnits(balance, asset.decimals), 2) });
+    const balance_ = asset.name !== 'UNKNOWN' && account ? yield asset.getBalance(account) : constants_1.ZERO_BN;
+    return Object.assign(Object.assign({}, asset), { balance: (0, yieldUtils_1.bnToW3Number)(balance_, asset.decimals, 2) // asset.digitFormat ) 
+     });
 });
 //# sourceMappingURL=assetMap.js.map

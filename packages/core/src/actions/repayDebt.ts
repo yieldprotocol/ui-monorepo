@@ -54,8 +54,8 @@ export const repayDebt = async (amount: string | undefined, vault: IVault, recla
       const _amount = inputToTokenValue(amount, base.decimals);
 
       const _maxBaseIn = maxBaseIn(
-        series.baseReserves,
-        series.fyTokenReserves,
+        series.baseReserves.bn,
+        series.fyTokenReserves.bn,
         series.getTimeTillMaturity(),
         series.ts,
         series.g1,
@@ -68,8 +68,8 @@ export const repayDebt = async (amount: string | undefined, vault: IVault, recla
       const _amountAsFyToken = series.isMature()
         ? _amount
         : sellBase(
-            series.baseReserves,
-            series.fyTokenReserves,
+            series.baseReserves.bn,
+            series.fyTokenReserves.bn,
             _amount,
             secondsToFrom(series.maturity.toString()),
             series.ts,
@@ -83,14 +83,14 @@ export const repayDebt = async (amount: string | undefined, vault: IVault, recla
       );
 
       /* Check if amount is more than the debt */
-      const amountGreaterThanEqualDebt: boolean = ethers.BigNumber.from(_amountAsFyToken).gte(vault.accruedArt);
+      const amountGreaterThanEqualDebt: boolean = ethers.BigNumber.from(_amountAsFyToken).gte(vault.accruedArt.bn);
 
       /* If requested, and all debt will be repaid, automatically remove collateral */
       const _collateralToRemove =
-        reclaimCollateral && amountGreaterThanEqualDebt ? vault.ink.mul(-1) : ethers.constants.Zero;
+        reclaimCollateral && amountGreaterThanEqualDebt ? vault.ink.bn.mul(-1) : ethers.constants.Zero;
 
       /* Cap the amount to transfer: check that if amount is greater than debt, used after maturity only repay the max debt (or accrued debt) */
-      const _amountCappedAtArt = vault.art.gt(ZERO_BN) && vault.art.lte(_amount) ? vault.art : _amount;
+      const _amountCappedAtArt = vault.art.bn.gt(ZERO_BN) && vault.art.bn.lte(_amount) ? vault.art.bn : _amount;
 
       /* Set the amount to transfer ( + 0.1% after maturity ) */
       const amountToTransfer = series.isMature() ? _amount.mul(10001).div(10000) : _amount; // After maturity + 0.1% for increases during tx time

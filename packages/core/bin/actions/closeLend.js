@@ -25,7 +25,7 @@ const closeLend = (amount, series) => tslib_1.__awaiter(void 0, void 0, void 0, 
         /* buy fyToken value ( after maturity  fytoken === base value ) */
         const _fyTokenValueOfInput = seriesIsMature
             ? _amount
-            : (0, ui_math_1.buyBase)(series.baseReserves, series.fyTokenReserves, _amount, series.getTimeTillMaturity(), series.ts, series.g2, series.decimals);
+            : (0, ui_math_1.buyBase)(series.baseReserves.bn, series.fyTokenReserves.bn, _amount, series.getTimeTillMaturity(), series.ts, series.g2, series.decimals);
         /* calculate slippage on the base token expected to recieve ie. input */
         const _inputWithSlippage = (0, ui_math_1.calculateSlippage)(_amount, slippageTolerance.toString(), true);
         /* if ethBase */

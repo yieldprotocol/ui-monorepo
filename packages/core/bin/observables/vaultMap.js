@@ -13,6 +13,7 @@ const appUtils_1 = require("../utils/appUtils");
 const connection_1 = require("./connection");
 const yieldProtocol_1 = require("./yieldProtocol");
 const messages_1 = require("./messages");
+const yieldUtils_1 = require("../utils/yieldUtils");
 /** @internal */
 exports.vaultMap$ = new rxjs_1.BehaviorSubject(new Map([]));
 exports.vaultMapø = exports.vaultMap$.pipe((0, rxjs_1.share)());
@@ -86,11 +87,7 @@ const _updateVault = (vault, account, yieldProtocol) => tslib_1.__awaiter(void 0
     const accruedArt_ = base && (0, appUtils_1.truncateValue)(ethers_1.ethers.utils.formatUnits(accruedArt, vault.baseDecimals), base.digitFormat);
     return Object.assign(Object.assign({}, vault), { owner, isActive: owner === account, // refreshed in case owner has been updated
         seriesId,
-        ilkId,
-        ink,
-        art,
-        accruedArt, ink_: ink_ || '0', art_: art_ || '0', accruedArt_: accruedArt_ || '0', underLiquidation: witch.address === owner, hasBeenLiquidated: !!liquidationDate, // TODO redundant ??
-        liquidationDate, liquidationDate_: liquidationDate ? (0, date_fns_1.format)(new Date(liquidationDate * 1000), 'dd MMMM yyyy') : undefined, rateAtMaturity,
-        rate, rate_: (0, appUtils_1.truncateValue)(ethers_1.ethers.utils.formatUnits(rate, 18), 2) });
+        ilkId, ink: (0, yieldUtils_1.bnToW3Number)(ink, vault.ilkDecimals), art: (0, yieldUtils_1.bnToW3Number)(art, vault.baseDecimals), accruedArt: (0, yieldUtils_1.bnToW3Number)(accruedArt, vault.baseDecimals), underLiquidation: witch.address === owner, hasBeenLiquidated: !!liquidationDate, // TODO redundant ??
+        liquidationDate, liquidationDate_: liquidationDate ? (0, date_fns_1.format)(new Date(liquidationDate * 1000), 'dd MMMM yyyy') : undefined, rateAtMaturity: (0, yieldUtils_1.bnToW3Number)(rateAtMaturity, 18, 2), rate: (0, yieldUtils_1.bnToW3Number)(rate, 18, 2) });
 });
 //# sourceMappingURL=vaultMap.js.map
