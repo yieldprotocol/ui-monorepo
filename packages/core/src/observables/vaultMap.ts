@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { ethers, BigNumber } from 'ethers';
 import { bytesToBytes32, calcAccruedDebt } from '@yield-protocol/ui-math';
-import { BehaviorSubject, Observable, share, combineLatest, filter, take } from 'rxjs';
+import { BehaviorSubject, Observable, share, combineLatest, filter, take, withLatestFrom } from 'rxjs';
 
 import { buildVaultMap } from '../initProtocol/buildVaultMap';
 import { ISeries, IVault, IVaultRoot, IYieldProtocol, MessageType } from '../types';
@@ -20,10 +20,12 @@ export const updateVaults = async (vaultList?: IVault[] | IVaultRoot[]) => {
   const list = vaultList !== undefined ? vaultList : Array.from(vaultMap$.value.values());
   /* if there are some vaults: */
   if (list.length) {
-    list.map(async (_vault: IVault | IVaultRoot) => {
-      const vaultUpdate = await _updateVault(_vault, account$.value as string, yieldProtocol$.value);
-      vaultMap$.next(new Map(vaultMap$.value.set(_vault.id, vaultUpdate))); // note: new Map to enforce ref update
-    });
+    // await Promise.all( // TODO: maybe get them together? 
+      list.map(async (_vault: IVault | IVaultRoot) => {
+        const vaultUpdate = await _updateVault(_vault, account$.value as string, yieldProtocol$.value);
+        vaultMap$.next(new Map(vaultMap$.value.set(_vault.id, vaultUpdate))); // note: new Map to enforce ref update
+      })
+    // );
   }
   /* if the list is empty, return an empty vaultMap */
   vaultMap$.next(new Map([]));
@@ -32,11 +34,14 @@ export const updateVaults = async (vaultList?: IVault[] | IVaultRoot[]) => {
 /**
  *  Observe yieldProtocolø and accountø changes TOGETHER >  Initiate or Empty VAULT Map
  * */
-combineLatest([accountø, yieldProtocolø, chainIdø])
+combineLatest([accountø, yieldProtocolø])
   // only emit if account is defined and yp.cauldron adress exists - indicating protocol has mostly loaded
-  .pipe( filter( ([a,yp]) => a !== undefined && yp.cauldron.address !== ''))
-  .subscribe(async ([_account, _protocol, _chainId]) => {
-    if (_account !== undefined ) {
+  .pipe(
+    filter(([a, yp]) => a !== undefined && yp.cauldron.address !== ''),
+    withLatestFrom(chainIdø)
+  )
+  .subscribe(async ([[_account, _protocol], _chainId]) => {
+    if (_account !== undefined) {
       console.log('Getting vaults for: ', _account);
       const vaultMap = await buildVaultMap(_protocol, _account, _chainId);
       console.log('vaults: ', Array.from(vaultMap.values()));

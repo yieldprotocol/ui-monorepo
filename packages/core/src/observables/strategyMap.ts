@@ -50,7 +50,7 @@ export const updateStrategies = async (
 yieldProtocolø
   .pipe(
     filter((protocol) => protocol.strategyRootMap.size > 0),
-    withLatestFrom(providerø, accountø),
+    withLatestFrom(providerø, accountø)
   )
   .subscribe(async ([_protocol, _provider, _account]) => {
     /* 'Charge' all the assets (using the current provider) */
@@ -66,15 +66,14 @@ yieldProtocolø
     sendMsg({ message: 'Protocol Ready...', type: MessageType.INTERNAL, id: 'protocolLoaded' });
   });
 
-
 /**
  * Observe Account$ changes ('update dynamic/User Data')
  * */
- accountø.pipe(withLatestFrom(strategyMapø, providerø)).subscribe(async ([account, stratMap, provider ]) => {
-  if (account && stratMap.size) { 
-    await updateStrategies(provider, Array.from(stratMap.values()), account, true );
+accountø.pipe(withLatestFrom(strategyMapø, providerø)).subscribe(async ([account, stratMap, provider]) => {
+  if (account && stratMap.size) {
+    await updateStrategies(provider, Array.from(stratMap.values()), account, true);
     console.log('Strategies updated with new account info.');
-  };
+  }
 });
 
 /* Add on extra/calculated Strategy info, contract instances and methods (no async calls) */

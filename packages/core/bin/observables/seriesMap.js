@@ -50,7 +50,6 @@ connection_1.accountø.pipe((0, rxjs_1.withLatestFrom)(exports.seriesMapø)).sub
         console.log('Series updated with new account info.');
         (0, messages_1.sendMsg)({ message: 'Series account info updated.', type: types_1.MessageType.INTERNAL, origin: 'seriesMap' });
     }
-    ;
 }));
 /**
  * Internal Functions

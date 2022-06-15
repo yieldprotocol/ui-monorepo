@@ -47,7 +47,6 @@ connection_1.accountø.pipe((0, rxjs_1.withLatestFrom)(exports.strategyMapø, co
         yield (0, exports.updateStrategies)(provider, Array.from(stratMap.values()), account, true);
         console.log('Strategies updated with new account info.');
     }
-    ;
 }));
 /* Add on extra/calculated Strategy info, contract instances and methods (no async calls) */
 const _chargeStrategy = (strategy, provider) => {

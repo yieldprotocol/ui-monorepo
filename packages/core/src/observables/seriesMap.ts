@@ -1,6 +1,13 @@
 import { BehaviorSubject, filter, Observable, share, withLatestFrom } from 'rxjs';
 import { ethers } from 'ethers';
-import { sellFYToken, secondsToFrom, calculateAPR, floorDecimal, mulDecimal, divDecimal } from '@yield-protocol/ui-math';
+import {
+  sellFYToken,
+  secondsToFrom,
+  calculateAPR,
+  floorDecimal,
+  mulDecimal,
+  divDecimal,
+} from '@yield-protocol/ui-math';
 
 import * as contracts from '../contracts';
 
@@ -19,26 +26,26 @@ export const seriesMap$: BehaviorSubject<Map<string, ISeries>> = new BehaviorSub
 export const seriesMapø: Observable<Map<string, ISeries>> = seriesMap$.pipe(share());
 export const updateSeries = async (seriesList?: ISeries[], account?: string, accountDataOnly: boolean = false) => {
   const list = seriesList?.length ? seriesList : Array.from(seriesMap$.value.values());
-    await Promise.all( 
-      list.map( async (series: ISeries) => {
+  await Promise.all(
+    list.map(async (series: ISeries) => {
       /* if account data only, just return the series */
-      const seriesUpdate = accountDataOnly ? series:  await _updateDynamicInfo(series);
+      const seriesUpdate = accountDataOnly ? series : await _updateDynamicInfo(series);
       /* if account provided, append account data */
-      const seriesUpdateAll = account ? await  _updateAccountInfo( seriesUpdate, account) : seriesUpdate
+      const seriesUpdateAll = account ? await _updateAccountInfo(seriesUpdate, account) : seriesUpdate;
       seriesMap$.next(new Map(seriesMap$.value.set(series.id, seriesUpdateAll))); // note: new Map to enforce ref update
     })
-    );
+  );
 };
 
 /**
- * Observe YieldProtocolø changes, if protocol changes in any way, update series map accordingly 
+ * Observe YieldProtocolø changes, if protocol changes in any way, update series map accordingly
  * */
 yieldProtocolø
   .pipe(
-    filter((protocol)=> protocol.seriesRootMap.size > 0 ),
-    withLatestFrom(providerø, accountø),
+    filter((protocol) => protocol.seriesRootMap.size > 0),
+    withLatestFrom(providerø, accountø)
   )
-  .subscribe( async ([_protocol, _provider, _account]) => {
+  .subscribe(async ([_protocol, _provider, _account]) => {
     /* 'Charge' all the series (using the current provider) */
     const chargedList = Array.from(_protocol.seriesRootMap.values()).map((s: ISeriesRoot) =>
       _chargeSeries(s, _provider)
@@ -46,18 +53,18 @@ yieldProtocolø
     /* Update the series with dynamic/user data */
     await updateSeries(chargedList, _account);
     console.log('Series loading complete.');
-    sendMsg({message:'Series Loaded.', type: MessageType.INTERNAL, origin:'seriesMap'})
+    sendMsg({ message: 'Series Loaded.', type: MessageType.INTERNAL, origin: 'seriesMap' });
   });
 
 /**
  * Observe Accountø changes ('update dynamic/User Data')
  * */
-accountø.pipe(withLatestFrom(seriesMapø)).subscribe(async ([account, seriesMap ]) => {
-  if (account && seriesMap.size) { 
-    await updateSeries( Array.from(seriesMap.values()), account, true );
+accountø.pipe(withLatestFrom(seriesMapø)).subscribe(async ([account, seriesMap]) => {
+  if (account && seriesMap.size) {
+    await updateSeries(Array.from(seriesMap.values()), account, true);
     console.log('Series updated with new account info.');
-    sendMsg({message:'Series account info updated.', type: MessageType.INTERNAL, origin:'seriesMap'})
-  };
+    sendMsg({ message: 'Series account info updated.', type: MessageType.INTERNAL, origin: 'seriesMap' });
+  }
 });
 
 /**
@@ -84,9 +91,9 @@ const _chargeSeries = (series: any, provider: ethers.providers.BaseProvider): IS
 
 /**
  * Dynamic asset info not related to a user
- * 
+ *
  * */
-const _updateDynamicInfo = async ( series: ISeries ): Promise<ISeries> => {
+const _updateDynamicInfo = async (series: ISeries): Promise<ISeries> => {
   /* Get all the data simultanenously in a promise.all */
   const [baseReserves, fyTokenReserves, totalSupply, fyTokenRealReserves] = await Promise.all([
     series.poolContract.getBaseBalance(),
@@ -126,23 +133,23 @@ const _updateDynamicInfo = async ( series: ISeries ): Promise<ISeries> => {
 };
 
 /**
- * 
+ *
  * Dynamic series info with a user
- * 
+ *
  * */
- const _updateAccountInfo = async (series: ISeries, account: string ): Promise<ISeries> => {
+const _updateAccountInfo = async (series: ISeries, account: string): Promise<ISeries> => {
   /* Get all the data simultanenously in a promise.all */
-    const [poolTokens, fyTokenBalance] = await Promise.all([
-      series.poolContract.balanceOf(account),
-      series.fyTokenContract.balanceOf(account),
-    ]);
-    const poolPercent = mulDecimal(divDecimal(poolTokens, series.totalSupply), '100');
-    return {
-      ...series,
-      poolTokens,
-      fyTokenBalance,
-      poolTokens_: ethers.utils.formatUnits(poolTokens, series.decimals),
-      fyTokenBalance_: ethers.utils.formatUnits(fyTokenBalance, series.decimals),
-      poolPercent,
-    };
+  const [poolTokens, fyTokenBalance] = await Promise.all([
+    series.poolContract.balanceOf(account),
+    series.fyTokenContract.balanceOf(account),
+  ]);
+  const poolPercent = mulDecimal(divDecimal(poolTokens, series.totalSupply), '100');
+  return {
+    ...series,
+    poolTokens,
+    fyTokenBalance,
+    poolTokens_: ethers.utils.formatUnits(poolTokens, series.decimals),
+    fyTokenBalance_: ethers.utils.formatUnits(fyTokenBalance, series.decimals),
+    poolPercent,
+  };
 };

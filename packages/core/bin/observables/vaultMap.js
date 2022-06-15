@@ -21,10 +21,12 @@ const updateVaults = (vaultList) => tslib_1.__awaiter(void 0, void 0, void 0, fu
     const list = vaultList !== undefined ? vaultList : Array.from(exports.vaultMap$.value.values());
     /* if there are some vaults: */
     if (list.length) {
+        // await Promise.all( // TODO: maybe get them together? 
         list.map((_vault) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
             const vaultUpdate = yield _updateVault(_vault, connection_1.account$.value, yieldProtocol_1.yieldProtocol$.value);
             exports.vaultMap$.next(new Map(exports.vaultMap$.value.set(_vault.id, vaultUpdate))); // note: new Map to enforce ref update
         }));
+        // );
     }
     /* if the list is empty, return an empty vaultMap */
     exports.vaultMap$.next(new Map([]));
@@ -33,10 +35,10 @@ exports.updateVaults = updateVaults;
 /**
  *  Observe yieldProtocolø and accountø changes TOGETHER >  Initiate or Empty VAULT Map
  * */
-(0, rxjs_1.combineLatest)([connection_1.accountø, yieldProtocol_1.yieldProtocolø, connection_1.chainIdø])
+(0, rxjs_1.combineLatest)([connection_1.accountø, yieldProtocol_1.yieldProtocolø])
     // only emit if account is defined and yp.cauldron adress exists - indicating protocol has mostly loaded
-    .pipe((0, rxjs_1.filter)(([a, yp]) => a !== undefined && yp.cauldron.address !== ''))
-    .subscribe(([_account, _protocol, _chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    .pipe((0, rxjs_1.filter)(([a, yp]) => a !== undefined && yp.cauldron.address !== ''), (0, rxjs_1.withLatestFrom)(connection_1.chainIdø))
+    .subscribe(([[_account, _protocol], _chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (_account !== undefined) {
         console.log('Getting vaults for: ', _account);
         const vaultMap = yield (0, buildVaultMap_1.buildVaultMap)(_protocol, _account, _chainId);

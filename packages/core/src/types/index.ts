@@ -30,12 +30,17 @@ export interface IPriceContext {
   priceActions: IPriceContextActions;
 }
 
+export interface W3Number {
+  bn: BigNumber; // 'BigNumber' representation in wei (or equivalent) terms( eg. 1000000000000000023 Wei ). 
+  hStr: string; // 'Human String' understandable value ( eg. 1.000000000000000023 ETH ) - takes into account token specific decimals ( no precision loss )
+  dsp: string; // 'Display' String used only for display purposes ( eg. 1.00 DAI ) ( precision loss ); 
+}
+
 export interface IUserSettings {
   slippageTolerance: number;
   approvalMethod: ApprovalMethod;
   maxApproval: boolean;
   unwrapTokens: boolean;
-  // forceTransactions: boolean;
 }
 
 export interface IYieldConfig {

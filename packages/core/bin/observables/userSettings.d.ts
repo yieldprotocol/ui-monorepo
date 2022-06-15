@@ -1,5 +1,5 @@
-import { BehaviorSubject, Observable } from "rxjs";
-import { IUserSettings } from "../types";
+import { BehaviorSubject, Observable } from 'rxjs';
+import { IUserSettings } from '../types';
 /** @internal */
 export declare const userSettings$: BehaviorSubject<IUserSettings>;
 export declare const userSettingsø: Observable<IUserSettings>;

@@ -1,5 +1,5 @@
-import { BehaviorSubject, Observable, share } from "rxjs";
-import { IUserSettings } from "../types";
+import { BehaviorSubject, Observable, share } from 'rxjs';
+import { IUserSettings } from '../types';
 
 import defaultConfig from '../config/yield.config';
 
