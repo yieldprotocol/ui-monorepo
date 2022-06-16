@@ -9,6 +9,8 @@ import {
 } from "@yield-protocol/ui-core";
 import {
   IAsset,
+  IMessage,
+  ISelected,
   ISeries,
   IStrategy,
   IVault,
@@ -28,7 +30,9 @@ export const useObservable = (
   useEffect(() => {
     const subscription = observable.subscribe({
       next: setValue,
-      error: (e:Error)=>{ console.log(e), setError },
+      error: (e: Error) => {
+        console.log(e), setError;
+      },
     });
     return () => subscription.unsubscribe();
   }, [observable]);
@@ -66,9 +70,9 @@ const YieldProvider = ({ props, children }: any) => {
   // const provider = useObservable(providerø) as unknown as string;
   // const accountProvider = useObservable(accountProviderø) as unknown as string;
   const account = useObservable(accountø) as unknown as string;
-  
-  const messages = useObservable(messagesø) as unknown as string;
-  const selected = useObservable(selectedø) as unknown as string;
+
+  const messages = useObservable(messagesø) as unknown as Map<string, IMessage>;
+  const selected = useObservable(selectedø) as unknown as ISelected;
   // const transactionMap = useObservable(transactionMapø) as unknown as string;
 
   // useEffect(() => {
@@ -78,7 +82,7 @@ const YieldProvider = ({ props, children }: any) => {
   return (
     <YieldContext.Provider
       value={{
-        messages,
+        messages: Array.from(messages.values()),
 
         yieldProtocol,
         assetMap,
