@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.selectStrategy = exports.selectVault = exports.selectSeries = exports.selectIlk = exports.selectBase = exports.selectedø = exports.selected$ = void 0;
 const rxjs_1 = require("rxjs");
+const types_1 = require("../types");
 const appConfig_1 = require("./appConfig");
 const assetMap_1 = require("./assetMap");
 const messages_1 = require("./messages");
@@ -23,22 +24,10 @@ exports.selectedø = exports.selected$.pipe((0, rxjs_1.share)());
  * Set first of array as default series(base gets automatically selected based on the series choice,
  * this automatically selects the base)
  * */
-messages_1.messagesø.pipe((0, rxjs_1.filter)((msg) => (msg === null || msg === void 0 ? void 0 : msg.origin) === 'seriesMap' && (msg === null || msg === void 0 ? void 0 : msg.id) === 'seriesLoaded'), (0, rxjs_1.take)(1), // only tkae  one for first load
+messages_1.messagesø.pipe((0, rxjs_1.filter)((msg) => (msg === null || msg === void 0 ? void 0 : msg.type) === types_1.MessageType.INTERNAL && (msg === null || msg === void 0 ? void 0 : msg.id) === 'seriesLoaded'), (0, rxjs_1.take)(1), // only take one for first load
 (0, rxjs_1.withLatestFrom)(seriesMap_1.seriesMapø, appConfig_1.appConfigø)).subscribe(([, [sMap], appConfig]) => {
     (0, exports.selectSeries)(appConfig.defaultSeriesId || [...sMap][0]);
 });
-// seriesMapø
-//   .pipe( 
-//     // skip(1),
-//     // take(1), // only take the first value then close subscription
-//     withLatestFrom(appConfigø)
-//   )
-//   .subscribe(
-//     ([[sMap], appConfig]) => { 
-//       console.log( [...sMap][0]  )
-//       selectSeries(appConfig.defaultSeriesId || [...sMap][0])   
-//       }
-//   );
 /**
  *  Functions to selecting elements
  */

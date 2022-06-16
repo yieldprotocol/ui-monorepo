@@ -33,11 +33,9 @@ export const setBrowserCachedValue = (index: string, valueToStore: any) =>
  * @returns name of the function that called it 
  */
 export const getOrigin = () =>  {
-
   console.log( getOrigin.caller )
   // return getOrigin.caller
 }
-
 
 /**
  * Convert array to chunks of arrays with size n
@@ -53,7 +51,6 @@ export const logToConsole = (message: string, type: string = 'info') => {
   // eslint-disable-next-line no-console
   console.log(type, message);
 };
-
 
 // TODO make it change based on hemisphere ( ie swap winter and summer)
 export enum SeasonType {

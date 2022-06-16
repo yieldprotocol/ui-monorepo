@@ -37,8 +37,8 @@ yieldProtocol_1.yieldProtocolø
     /* Update the assets with dynamic/user data */
     yield (0, exports.updateStrategies)(_provider, chargedList, _account);
     console.log('Strategy loading complete.');
-    (0, messages_1.sendMsg)({ message: 'Strategies Loaded.', type: types_1.MessageType.INTERNAL });
-    (0, messages_1.sendMsg)({ message: 'Protocol Ready...', type: types_1.MessageType.INTERNAL, id: 'protocolLoaded' });
+    (0, messages_1.sendMsg)({ message: 'Strategies Loaded.', type: types_1.MessageType.INTERNAL, id: 'strategiesLoaded' });
+    (0, messages_1.sendMsg)({ message: 'Protocol Ready.', type: types_1.MessageType.INTERNAL, id: 'protocolLoaded' });
 }));
 /**
  * Observe Account$ changes ('update dynamic/User Data')

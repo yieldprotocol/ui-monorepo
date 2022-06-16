@@ -54,7 +54,7 @@ yieldProtocolø
     /* Update the series with dynamic/user data */
     await updateSeries(chargedList, _account);
     console.log('Series loading complete.');
-    sendMsg({ message: 'Series Loaded.', type: MessageType.INTERNAL, origin: 'seriesMap', id: 'seriesLoaded' });
+    sendMsg({ message: 'Series Loaded.', type: MessageType.INTERNAL, id: 'seriesLoaded' });
   });
 
 /**

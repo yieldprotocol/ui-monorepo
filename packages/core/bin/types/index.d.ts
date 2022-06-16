@@ -331,11 +331,11 @@ export declare enum MessageType {
 }
 export interface IMessage {
     message: string;
+    id?: string;
     type?: MessageType;
     origin?: any;
-    persistent?: boolean;
     timeoutOverride?: number;
-    id?: string | number;
+    expired?: boolean;
 }
 export declare enum TxState {
     PENDING = "PENDING",

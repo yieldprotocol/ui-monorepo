@@ -55,11 +55,9 @@ yieldProtocolø
     );
     /* Update the assets with dynamic/user data */
     await updateStrategies(_provider, chargedList, _account);
-
     console.log('Strategy loading complete.');
-
-    sendMsg({ message: 'Strategies Loaded.', type: MessageType.INTERNAL });
-    sendMsg({ message: 'Protocol Ready...', type: MessageType.INTERNAL, id: 'protocolLoaded' });
+    sendMsg({ message: 'Strategies Loaded.', type: MessageType.INTERNAL, id: 'strategiesLoaded' });
+    sendMsg({ message: 'Protocol Ready.', type: MessageType.INTERNAL, id: 'protocolLoaded' });
   });
 
 /**

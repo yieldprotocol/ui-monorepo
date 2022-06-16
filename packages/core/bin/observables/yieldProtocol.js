@@ -5,12 +5,13 @@ const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
 const ethers_1 = require("ethers");
 const contracts = tslib_1.__importStar(require("../contracts"));
-// TODO: try to get rid of this init? 
+const messages_1 = require("./messages");
+// TODO: try to get rid of this init?
 const _blankProtocol = {
     protocolVersion: '0.0.0',
-    cauldron: contracts.Cauldron__factory.connect('', new ethers_1.ethers.providers.JsonRpcProvider),
-    ladle: contracts.Ladle__factory.connect('', new ethers_1.ethers.providers.JsonRpcProvider),
-    witch: contracts.Witch__factory.connect('', new ethers_1.ethers.providers.JsonRpcProvider),
+    cauldron: contracts.Cauldron__factory.connect('', new ethers_1.ethers.providers.JsonRpcProvider()),
+    ladle: contracts.Ladle__factory.connect('', new ethers_1.ethers.providers.JsonRpcProvider()),
+    witch: contracts.Witch__factory.connect('', new ethers_1.ethers.providers.JsonRpcProvider()),
     oracleMap: new Map([]),
     moduleMap: new Map([]),
     assetRootMap: new Map([]),
@@ -24,4 +25,10 @@ const updateYieldProtocol = (newProtocol) => {
     exports.yieldProtocol$.next(newProtocol); // update to whole new protocol
 };
 exports.updateYieldProtocol = updateYieldProtocol;
+/**
+ * Send a message when the protocol is 'ready'
+ * */
+messages_1.internalMessagesø
+    .pipe((0, rxjs_1.tap)((msg) => console.log(msg)))
+    .subscribe();
 //# sourceMappingURL=yieldProtocol.js.map

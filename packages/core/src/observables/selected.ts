@@ -1,5 +1,5 @@
 import { Observable, BehaviorSubject, share, map, tap, takeWhile, takeUntil, distinctUntilChanged, takeLast, take, withLatestFrom, skip, filter } from 'rxjs';
-import { IAsset, ISelected, ISeries, IStrategy, IVault } from '../types';
+import { IAsset, ISelected, ISeries, IStrategy, IVault, MessageType } from '../types';
 import { appConfigø } from './appConfig';
 import { assetMap$ } from './assetMap';
 import { messagesø, sendMsg } from './messages';
@@ -25,25 +25,12 @@ export const selectedø: Observable<ISelected> = selected$.pipe(share());
  * this automatically selects the base)
  * */
 messagesø.pipe(
-  filter( (msg) => msg?.origin === 'seriesMap' && msg?.id === 'seriesLoaded'), 
-  take(1), // only tkae  one for first load
+  filter( (msg) => msg?.type === MessageType.INTERNAL && msg?.id === 'seriesLoaded'), 
+  take(1), // only take one for first load
   withLatestFrom(seriesMapø, appConfigø)
   ).subscribe(([, [sMap], appConfig]) => {
     selectSeries(appConfig.defaultSeriesId || [...sMap][0])
-})
-
-// seriesMapø
-//   .pipe( 
-//     // skip(1),
-//     // take(1), // only take the first value then close subscription
-//     withLatestFrom(appConfigø)
-//   )
-//   .subscribe(
-//     ([[sMap], appConfig]) => { 
-//       console.log( [...sMap][0]  )
-//       selectSeries(appConfig.defaultSeriesId || [...sMap][0])   
-//       }
-//   );
+});
 
 /**
  *  Functions to selecting elements

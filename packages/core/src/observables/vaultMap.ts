@@ -49,7 +49,8 @@ combineLatest([accountø, yieldProtocolø])
       const vaultMap = await buildVaultMap(_protocol, _account, _chainId);
       await updateVaults(Array.from(vaultMap.values()));
       console.log('Vaults loading complete.');
-      sendMsg({ message: 'Vaults Loaded', type: MessageType.INTERNAL });
+      sendMsg({ message: 'Vaults Loaded', type: MessageType.INTERNAL, id: 'vaultsLoaded'});
+      sendMsg({ message: 'Protocol Ready.' });
     } else {
       /* if account changes and is undefined > EMPTY the vaultMap */
       vaultMap$.next(new Map([]));

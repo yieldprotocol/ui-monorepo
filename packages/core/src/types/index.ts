@@ -445,11 +445,11 @@ export enum MessageType {
 
 export interface IMessage {
   message: string;
-  type? : MessageType;
-  origin?: any; // defaults to app 
-  persistent?: boolean;
-  timeoutOverride?: number;
-  id?: string | number; // for multi?
+  id?: string; // gets randomly generated if none provided 
+  type? : MessageType; // default: MessageType.INFO
+  origin?: any; // default: 'app' 
+  timeoutOverride?: number; // default: config.defaultTimeout
+  expired?: boolean; // expires at end of timeout period. default: false
 }
 
 export enum TxState {

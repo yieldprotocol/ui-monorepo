@@ -44,7 +44,7 @@ yieldProtocol_1.yieldProtocolø
     /* Update the assets with dynamic/user data */
     yield (0, exports.updateAssets)(chargedList, _account);
     console.log('Asset loading complete.');
-    (0, messages_1.sendMsg)({ message: 'Assets Loaded.', type: messages_1.MessageType.INTERNAL, origin: 'assetMap' });
+    (0, messages_1.sendMsg)({ message: 'Assets Loaded.', type: messages_1.MessageType.INTERNAL, id: 'assesLoaded' });
 }));
 /**
  * Observe Accountø changes ('update dynamic/User Data')
