@@ -10,14 +10,15 @@ const _handleTimeout = (message: IMessage) => {
 export const messages$: Subject<IMessage> = new Subject();
 export const messagesø: Observable<any> = messages$.pipe(
   filter((msg) => !!msg && msg.type !== MessageType.INTERNAL),
+  
   /* add in a timeout, that would fire after a period of time */
-  tap((msg) => _handleTimeout(msg)),
-  scan((acc: any, curr) => acc.set(curr.id, curr), new Map([])), // update the messsageMap
+  tap((msg) => !msg.expired && _handleTimeout(msg) ),
+  /* update and return new map */
+  scan((acc: any, curr) => acc.set(curr.id, curr), new Map([])),
   share()
 );
 
 export const sendMsg = (message: IMessage) => {
-  console.log( message);
   /* Push next message with default origin, type, and randomaise id if required. */
   messages$.next({
     origin: 'app',

@@ -12,10 +12,9 @@ const _handleTimeout = (message) => {
 exports.messages$ = new rxjs_1.Subject();
 exports.messagesø = exports.messages$.pipe((0, rxjs_1.filter)((msg) => !!msg && msg.type !== types_1.MessageType.INTERNAL), 
 /* add in a timeout, that would fire after a period of time */
-(0, rxjs_1.tap)((msg) => _handleTimeout(msg)), (0, rxjs_1.scan)((acc, curr) => acc.set(curr.id, curr), new Map([])), // update the messsageMap
+(0, rxjs_1.tap)((msg) => { console.log(msg); _handleTimeout(msg); }), (0, rxjs_1.scan)((acc, curr) => acc.set(curr.id, curr), new Map([])), // update the messsageMap
 (0, rxjs_1.share)());
 const sendMsg = (message) => {
-    console.log(message);
     /* Push next message with default origin, type, and randomaise id if required. */
     exports.messages$.next(Object.assign({ origin: 'app', type: types_1.MessageType.INFO, id: Math.random().toString(26).slice(2), expired: false }, message));
 };
