@@ -55,7 +55,7 @@ yieldProtocolø
       /* Update the assets with dynamic/user data */
       await updateAssets(chargedList, _account);
       console.log('Asset loading complete.');
-      sendMsg({ message: 'Assets Loaded.', type: MessageType.INTERNAL, id: 'assesLoaded' });
+      sendMsg({ message: 'Assets Loaded.', type: MessageType.INTERNAL, id: 'assetsLoaded' });
     }
   );
 

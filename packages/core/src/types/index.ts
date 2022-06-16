@@ -448,7 +448,7 @@ export interface IMessage {
   id?: string; // gets randomly generated if none provided 
   type? : MessageType; // default: MessageType.INFO
   origin?: any; // default: 'app' 
-  timeoutOverride?: number; // default: config.defaultTimeout
+  timeoutOverride?: number; // default: config.defaultTimeout  'inf' 
   expired?: boolean; // expires at end of timeout period. default: false
 }
 

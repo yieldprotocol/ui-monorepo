@@ -4,7 +4,6 @@ import { useObservable, YieldContext } from "@yield-protocol/ui-react";
 
 import config from "../yield.config";
 import { ethers } from "ethers";
-import { arrayify } from "ethers/lib/utils";
 
 const YieldExampleComponent = () => {
   const {
@@ -60,6 +59,12 @@ const YieldExampleComponent = () => {
     updateYieldConfig(config);
   }, []); // empty array to only do this once on load
 
+
+  // Example of using a yieldProtocol config file.
+  useEffect(() => {
+    messages && console.log(messages);
+  }, [messages]); // empty array to only do this once on load
+
   return (
     <div
       align="left"
@@ -72,7 +77,6 @@ const YieldExampleComponent = () => {
       }}
     >
       <div>YieldProtocol UI version: {protocolVersion}</div>
-
       <div>
         <input
           onChange={(e) => updateBorrowInput(e.target.value)}
@@ -272,7 +276,7 @@ const YieldExampleComponent = () => {
         <p> Selected Strategy: {selected?.strategy?.id}</p>
       </div>
 
-      {messages?.size && (
+      { messages && !Array.from(messages.values()).every(x => x.expired)  && (
         <div
           style={{
             backgroundColor: "lightblue",
@@ -285,10 +289,11 @@ const YieldExampleComponent = () => {
           {Array.from(messages.values())
             .filter((msg) => !msg.expired)
             .map((msg) => (
-              <>
+              <div key={msg.id}>
                 <h3> Message: </h3>
                 {msg.message}
-              </>
+                {messages.size}
+              </div>
             ))}
         </div>
       )}

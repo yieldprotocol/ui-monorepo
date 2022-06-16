@@ -57,7 +57,6 @@ yieldProtocolø
     await updateStrategies(_provider, chargedList, _account);
     console.log('Strategy loading complete.');
     sendMsg({ message: 'Strategies Loaded.', type: MessageType.INTERNAL, id: 'strategiesLoaded' });
-    sendMsg({ message: 'Protocol Ready (wait 5000ms).', id: 'protocolLoaded', timeoutOverride:5000 });
   });
 
 /**

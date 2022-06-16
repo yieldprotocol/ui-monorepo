@@ -4,10 +4,12 @@ exports.MessageType = exports.internalMessagesø = exports.sendMsg = exports.mes
 const rxjs_1 = require("rxjs");
 const types_1 = require("../types");
 Object.defineProperty(exports, "MessageType", { enumerable: true, get: function () { return types_1.MessageType; } });
-// TODO: implement this better, handle multiple messages here . also cusotm timer esetting?
+// TODO: implement this better, handle multiple messages here . also custom timer esetting?
 const _handleTimeout = (message) => {
     const waitMs = message.timeoutOverride || 2000;
-    setTimeout(() => exports.messages$.next(Object.assign(Object.assign({}, message), { expired: true })), waitMs);
+    /* If inifinty is passed in assume the message is persistent in the log, ie. don't bother cancelling */
+    if (waitMs !== Infinity)
+        setTimeout(() => exports.messages$.next(Object.assign(Object.assign({}, message), { expired: true })), waitMs);
 };
 /** @internal */
 exports.messages$ = new rxjs_1.Subject();

@@ -26,9 +26,15 @@ const updateYieldProtocol = (newProtocol) => {
 };
 exports.updateYieldProtocol = updateYieldProtocol;
 /**
+ *
  * Send a message when the protocol is 'ready'
+ * Check the currnet network situation and timeout
+ *
  * */
 messages_1.internalMessagesø
-    .pipe((0, rxjs_1.tap)((msg) => console.log(msg)))
+    .pipe((0, rxjs_1.takeWhile)((msg) => !(msg.has('assetsLoaded') && msg.has('seriesLoaded') && msg.has('strategiesLoaded') && msg.has('vaultsLoaded')), true), (0, rxjs_1.finalize)(() => {
+    (0, messages_1.sendMsg)({ message: 'Protocol Ready (default wait)', id: 'protocolLoaded', timeoutOverride: 3000 });
+    (0, messages_1.sendMsg)({ message: 'Protocol Ready (custom wait 5000ms)', timeoutOverride: 5000 });
+}))
     .subscribe();
 //# sourceMappingURL=yieldProtocol.js.map

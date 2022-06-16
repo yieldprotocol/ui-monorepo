@@ -1,13 +1,8 @@
-import {
-  BehaviorSubject,
-  Observable,
-  share,
-  tap,
-} from 'rxjs';
+import { BehaviorSubject, finalize, Observable, share, takeWhile, tap } from 'rxjs';
 import { Contract, ethers } from 'ethers';
 import { IAssetRoot, ISeriesRoot, IStrategyRoot, IYieldConfig, IYieldProtocol, MessageType } from '../types';
 import * as contracts from '../contracts';
-import { internalMessagesø } from './messages';
+import { internalMessagesø, sendMsg } from './messages';
 
 // TODO: try to get rid of this init?
 const _blankProtocol = {
@@ -33,13 +28,21 @@ export const updateYieldProtocol = (newProtocol: IYieldProtocol) => {
 };
 
 /**
+ *
  * Send a message when the protocol is 'ready'
+ * Check the currnet network situation and timeout
+ *
  * */
 internalMessagesø
   .pipe(
-    tap( (msg)=> console.log(msg) ),
-    // finalize( () => console.log( 'ENDED')), //  sendMsg({ message: 'Protocol Ready.', type: MessageType.INTERNAL, id: 'protocolLoaded' }) ),
-    // filter((msg) => msg?.type !== MessageType.INTERNAL),
-    // takeWhile((msg) => msg?.id !== 'vaultsLoaded' , true), 
+    takeWhile(
+      (msg) =>
+        !(msg.has('assetsLoaded') && msg.has('seriesLoaded') && msg.has('strategiesLoaded') && msg.has('vaultsLoaded')),
+      true
+    ),
+    finalize(() => {
+      sendMsg({ message: 'Protocol Ready (default wait)', id: 'protocolLoaded', timeoutOverride: 3000 });
+      sendMsg({ message: 'Protocol Ready (custom wait 5000ms)', timeoutOverride: 5000 });
+    })
   )
   .subscribe();
