@@ -50,7 +50,7 @@ combineLatest([accountø, yieldProtocolø])
       await updateVaults(Array.from(vaultMap.values()));
       console.log('Vaults loading complete.');
       sendMsg({ message: 'Vaults Loaded', type: MessageType.INTERNAL, id: 'vaultsLoaded'});
-      sendMsg({ message: 'Protocol Ready.' });
+      sendMsg({ message: 'Protocol Ready. (wait default 2000ms)' });
     } else {
       /* if account changes and is undefined > EMPTY the vaultMap */
       vaultMap$.next(new Map([]));

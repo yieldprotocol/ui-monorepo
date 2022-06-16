@@ -22,7 +22,9 @@ export var useObservable = function (observable, showError) {
     useEffect(function () {
         var subscription = observable.subscribe({
             next: setValue,
-            error: function (e) { console.log(e), setError; },
+            error: function (e) {
+                console.log(e), setError;
+            },
         });
         return function () { return subscription.unsubscribe(); };
     }, [observable]);

@@ -6,14 +6,16 @@ const types_1 = require("../types");
 Object.defineProperty(exports, "MessageType", { enumerable: true, get: function () { return types_1.MessageType; } });
 // TODO: implement this better, handle multiple messages here . also cusotm timer esetting?
 const _handleTimeout = (message) => {
-    setTimeout(() => exports.messages$.next(Object.assign(Object.assign({}, message), { expired: true })), 2000);
+    const waitMs = message.timeoutOverride || 2000;
+    setTimeout(() => exports.messages$.next(Object.assign(Object.assign({}, message), { expired: true })), waitMs);
 };
 /** @internal */
 exports.messages$ = new rxjs_1.Subject();
 exports.messagesø = exports.messages$.pipe((0, rxjs_1.filter)((msg) => !!msg && msg.type !== types_1.MessageType.INTERNAL), 
 /* add in a timeout, that would fire after a period of time */
-(0, rxjs_1.tap)((msg) => { console.log(msg); _handleTimeout(msg); }), (0, rxjs_1.scan)((acc, curr) => acc.set(curr.id, curr), new Map([])), // update the messsageMap
-(0, rxjs_1.share)());
+(0, rxjs_1.tap)((msg) => !msg.expired && _handleTimeout(msg)), 
+/* update and return new map */
+(0, rxjs_1.scan)((acc, curr) => new Map(acc.set(curr.id, curr)), new Map([])), (0, rxjs_1.share)());
 const sendMsg = (message) => {
     /* Push next message with default origin, type, and randomaise id if required. */
     exports.messages$.next(Object.assign({ origin: 'app', type: types_1.MessageType.INFO, id: Math.random().toString(26).slice(2), expired: false }, message));

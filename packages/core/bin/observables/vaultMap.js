@@ -48,7 +48,7 @@ exports.updateVaults = updateVaults;
         yield (0, exports.updateVaults)(Array.from(vaultMap.values()));
         console.log('Vaults loading complete.');
         (0, messages_1.sendMsg)({ message: 'Vaults Loaded', type: types_1.MessageType.INTERNAL, id: 'vaultsLoaded' });
-        (0, messages_1.sendMsg)({ message: 'Protocol Ready.' });
+        (0, messages_1.sendMsg)({ message: 'Protocol Ready. (wait default 2000ms)' });
     }
     else {
         /* if account changes and is undefined > EMPTY the vaultMap */

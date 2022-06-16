@@ -82,7 +82,7 @@ const YieldProvider = ({ props, children }: any) => {
   return (
     <YieldContext.Provider
       value={{
-        messages: Array.from(messages.values()),
+        messages,
 
         yieldProtocol,
         assetMap,

@@ -4,9 +4,9 @@ import { useObservable, YieldContext } from "@yield-protocol/ui-react";
 
 import config from "../yield.config";
 import { ethers } from "ethers";
+import { arrayify } from "ethers/lib/utils";
 
 const YieldExampleComponent = () => {
-
   const {
     yieldProtocol,
     assetMap,
@@ -28,7 +28,16 @@ const YieldExampleComponent = () => {
     ...yieldProtocol,
   }; // tricksy destructuring for error avoidance :)
 
-  const { updateProvider, updateAccount, updateYieldConfig, selectIlk, selectVault, selectBase, selectSeries, selectStrategy } = yieldFunctions;
+  const {
+    updateProvider,
+    updateAccount,
+    updateYieldConfig,
+    selectIlk,
+    selectVault,
+    selectBase,
+    selectSeries,
+    selectStrategy,
+  } = yieldFunctions;
 
   const { updateBorrowInput, updateCollateralInput } = viewFunctions;
 
@@ -36,8 +45,12 @@ const YieldExampleComponent = () => {
   const isBorrowPossible = useObservable(viewObservables.isBorrowPossibleø);
 
   // const maxBorrow = useObservable(viewObservables.maxBorrowø);
-  const collateralizationPercent = useObservable(viewObservables.collateralizationPercentø);
-  const collateralizationRatio = useObservable(viewObservables.collateralizationRatioø);
+  const collateralizationPercent = useObservable(
+    viewObservables.collateralizationPercentø
+  );
+  const collateralizationRatio = useObservable(
+    viewObservables.collateralizationRatioø
+  );
 
   const [_selectIlk, setSelectIlk] = React.useState();
 
@@ -61,20 +74,32 @@ const YieldExampleComponent = () => {
       <div>YieldProtocol UI version: {protocolVersion}</div>
 
       <div>
-      <input onChange={(e) => updateBorrowInput(e.target.value)} placeholder='Borrow Amount?' />
-      <p style={{ color: isBorrowPossible ? undefined: "red" }}> can borrow? { isBorrowPossible? "true" : "false"} </p>
+        <input
+          onChange={(e) => updateBorrowInput(e.target.value)}
+          placeholder="Borrow Amount?"
+        />
+        <p style={{ color: isBorrowPossible ? undefined : "red" }}>
+          {" "}
+          can borrow? {isBorrowPossible ? "true" : "false"}{" "}
+        </p>
       </div>
 
       <div>
-      <input onChange={(e) => updateCollateralInput(e.target.value) } placeholder='Collateral to add?' />
-       <p> { collateralizationPercent ? `${collateralizationPercent}%` : '' }  </p>
+        <input
+          onChange={(e) => updateCollateralInput(e.target.value)}
+          placeholder="Collateral to add?"
+        />
+        <p>
+          {" "}
+          {collateralizationPercent ? `${collateralizationPercent}%` : ""}{" "}
+        </p>
       </div>
-      
+
       <hr />
       <div>
         <h3>ChainId: {chainId}</h3>
 
-        <h3> Account: { account } </h3>
+        <h3> Account: {account} </h3>
         <button
           // onClick={async () => {
           //   const accs = await window.ethereum.request({
@@ -83,7 +108,9 @@ const YieldExampleComponent = () => {
           //   });
           //   updateAccount(accs[0]);
           // }}
-          onClick={async () => { updateProvider( new ethers.providers.Web3Provider( window.ethereum )) } }
+          onClick={async () => {
+            updateProvider(new ethers.providers.Web3Provider(window.ethereum));
+          }}
         >
           Set account as Metamask
         </button>
@@ -144,15 +171,23 @@ const YieldExampleComponent = () => {
 
       <div>
         <div>
-        <h3>Assets:</h3>
-        <input type="checkbox" id='SelectIlk' value={_selectIlk} onChange={() => setSelectIlk(!_selectIlk)} />
-        <label htmlFor = 'SelectIlk'> Select Ilk </ label>
+          <h3>Assets:</h3>
+          <input
+            type="checkbox"
+            id="SelectIlk"
+            value={_selectIlk}
+            onChange={() => setSelectIlk(!_selectIlk)}
+          />
+          <label htmlFor="SelectIlk"> Select Ilk </label>
         </div>
         {assetMap?.size ? (
           [...assetMap].map(([k, v]) => (
             <p
               key={k}
-              onClick={ () => { console.table(v, ["value"]);  _selectIlk ? selectIlk(v.id): selectBase(v.id) } }
+              onClick={() => {
+                console.table(v, ["value"]);
+                _selectIlk ? selectIlk(v.id) : selectBase(v.id);
+              }}
             >{`${k}: ${v.symbol} -->  ${v.displaySymbol}`}</p>
           ))
         ) : (
@@ -166,7 +201,10 @@ const YieldExampleComponent = () => {
           [...seriesMap].map(([k, v]) => (
             <p
               key={k}
-              onClick={ () => { console.table(v, ["value"]); selectSeries(v.id) } }
+              onClick={() => {
+                console.table(v, ["value"]);
+                selectSeries(v.id);
+              }}
             >{`${k}: ${v.maturity_}`}</p>
           ))
         ) : (
@@ -179,7 +217,10 @@ const YieldExampleComponent = () => {
         {strategyMap?.size ? (
           [...strategyMap].map(([k, v]) => (
             <p
-              onClick={ () => {console.table(v, ["value"]); selectStrategy(k) } }
+              onClick={() => {
+                console.table(v, ["value"]);
+                selectStrategy(k);
+              }}
               key={k}
             >{`${v.name} : ${k}`}</p>
           ))
@@ -202,7 +243,10 @@ const YieldExampleComponent = () => {
           [...vaultMap].map(([k, v]) => (
             <p
               key={k}
-              onClick={ () => { console.table(v, ["value"]); selectVault(v.id) } }
+              onClick={() => {
+                console.table(v, ["value"]);
+                selectVault(v.id);
+              }}
             >{`${v.displayName} : ${k}`}</p>
           ))
         ) : (
@@ -228,7 +272,7 @@ const YieldExampleComponent = () => {
         <p> Selected Strategy: {selected?.strategy?.id}</p>
       </div>
 
-      {messages && (
+      {messages?.size && (
         <div
           style={{
             backgroundColor: "lightblue",
@@ -238,8 +282,14 @@ const YieldExampleComponent = () => {
             padding: "10px",
           }}
         >
-          <h3>Yield Message:</h3>
-          {messages.message}
+          {Array.from(messages.values())
+            .filter((msg) => !msg.expired)
+            .map((msg) => (
+              <>
+                <h3> Message: </h3>
+                {msg.message}
+              </>
+            ))}
         </div>
       )}
     </div>
