@@ -50,10 +50,10 @@ exports.updateProvider = updateProvider;
 (0, rxjs_1.combineLatest)([exports.chainIdø, appConfig_1.appConfigø])
     // .pipe(take(1)) // once on start
     .subscribe(([chainId, appConfig]) => {
-    console.log('APP CONFIG: ', appConfig);
-    const defaultProvider = defaultproviders_1.defaultProviderMap.get(chainId);
-    defaultProvider && console.log(' default PRovider', defaultProvider);
+    /* Set the provider ( forked or not ) */
+    const defaultProvider = appConfig.useFork ? defaultproviders_1.forkProviderMap.get(chainId) : defaultproviders_1.defaultProviderMap.get(chainId);
     exports.provider$.next(defaultProvider);
+    appConfig.useFork && (0, messages_1.sendMsg)({ message: 'Using forked Environment', timeoutOverride: Infinity });
     // console.log( 'All good to go!: ', chainId, appConfig )
 });
 /** @internal */
@@ -119,6 +119,7 @@ exports.updateAccountProvider = updateAccountProvider;
     .pipe((0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø), (0, rxjs_1.filter)(([[chainId, messages], config]) => {
     const msgArray = Array.from(messages.values());
     const protocolLoaded = msgArray.findIndex((x) => x.id === 'protocolLoaded') >= 0;
+    /* bool check  */
     return protocolLoaded && config.useFork && defaultproviders_1.forkProviderMap.has(chainId);
 }), (0, rxjs_1.take)(1) // only do this once
 )

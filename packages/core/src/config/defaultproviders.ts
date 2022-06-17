@@ -11,7 +11,7 @@ export const defaultProviderMap: Map<number, ethers.providers.BaseProvider> = ne
 
 export const forkProviderMap: Map<number, ethers.providers.BaseProvider> = new Map([
   [1, new ethers.providers.JsonRpcProvider() ],
+  [1337, new ethers.providers.JsonRpcProvider() ],
 ]);
 
-
- // hardhat node> https://mainnet.infura.io/v3/2af222f674024a0f84b5f0aad0da72a2
+// hardhat node> https://mainnet.infura.io/v3/2af222f674024a0f84b5f0aad0da72a2

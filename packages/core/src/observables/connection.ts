@@ -15,7 +15,7 @@ import { defaultAccountProvider, defaultProviderMap, forkProviderMap } from '../
 import { IMessage } from '../types';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils';
 import { appConfigø } from './appConfig';
-import { messagesø } from './messages';
+import { messagesø, sendMsg } from './messages';
 import { yieldProtocolø } from './yieldProtocol';
 declare const window: any;
 
@@ -54,9 +54,9 @@ export const updateChainId = (chainId: number) => {
 
 /** @internal */
 export const provider$: Subject<ethers.providers.BaseProvider> = new Subject();
-export const providerø: Observable<ethers.providers.BaseProvider> = provider$.pipe(shareReplay(1));
+export const providerø = provider$.pipe(shareReplay(1));
 export const updateProvider = (newProvider: ethers.providers.BaseProvider) => {
-  provider$.next(newProvider as ethers.providers.BaseProvider); // update to whole new protocol
+  provider$.next(newProvider); // update to whole new protocol
 };
 
 /**
@@ -65,10 +65,11 @@ export const updateProvider = (newProvider: ethers.providers.BaseProvider) => {
 combineLatest([chainIdø, appConfigø])
   // .pipe(take(1)) // once on start
   .subscribe(([chainId, appConfig]) => {
-    console.log('APP CONFIG: ', appConfig);
-    const defaultProvider = defaultProviderMap.get(chainId);
-    defaultProvider && console.log(' default PRovider', defaultProvider);
+    /* Set the provider ( forked or not ) */
+    const defaultProvider = appConfig.useFork ? forkProviderMap.get(chainId) : defaultProviderMap.get(chainId);
     provider$.next(defaultProvider as ethers.providers.BaseProvider);
+
+    appConfig.useFork && sendMsg({ message: 'Using forked Environment', timeoutOverride:Infinity })
     // console.log( 'All good to go!: ', chainId, appConfig )
   });
 
@@ -138,6 +139,7 @@ combineLatest([chainIdø, messagesø])
     filter(([[chainId, messages], config]) => {
       const msgArray: IMessage[] = Array.from(messages.values());
       const protocolLoaded = msgArray.findIndex((x: IMessage) => x.id === 'protocolLoaded') >= 0;
+      /* bool check  */
       return protocolLoaded && config.useFork && forkProviderMap.has(chainId);
     }),
     take(1) // only do this once

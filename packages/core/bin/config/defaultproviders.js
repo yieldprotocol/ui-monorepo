@@ -10,6 +10,7 @@ exports.defaultProviderMap = new Map([
 ]);
 exports.forkProviderMap = new Map([
     [1, new ethers_1.ethers.providers.JsonRpcProvider()],
+    [1337, new ethers_1.ethers.providers.JsonRpcProvider()],
 ]);
 // hardhat node> https://mainnet.infura.io/v3/2af222f674024a0f84b5f0aad0da72a2
 //# sourceMappingURL=defaultproviders.js.map
