@@ -1,19 +1,10 @@
 import { Web3Provider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
-import {
-  Observable,
-  BehaviorSubject,
-  Subject,
-  shareReplay,
-  mergeMap,
-  combineLatest,
-} from 'rxjs';
+import { Observable, BehaviorSubject, Subject, shareReplay, mergeMap, combineLatest } from 'rxjs';
 import { defaultAccountProvider, defaultProviderMap, defaultForkMap } from '../config/defaultproviders';
-import { IMessage } from '../types';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils';
 import { appConfigø } from './appConfig';
-import { messagesø, sendMsg } from './messages';
-import { yieldProtocolø } from './yieldProtocol';
+import { MessageType, sendMsg } from './messages';
 declare const window: any;
 
 /** @internal */
@@ -63,11 +54,14 @@ combineLatest([chainIdø, appConfigø])
   // .pipe(take(1)) // once on start
   .subscribe(([chainId, appConfig]) => {
     /* Set the provider ( forked or not ) */
-    const defaultProvider = appConfig.useFork ? defaultForkMap.get(chainId) : defaultProviderMap.get(chainId);
-    provider$.next(defaultProvider as ethers.providers.BaseProvider);
-
-    appConfig.useFork && sendMsg({ message: 'Using forked Environment', timeoutOverride:Infinity })
-    // console.log( 'All good to go!: ', chainId, appConfig )
+    if (appConfig.useFork && defaultForkMap.has(chainId)) {
+      provider$.next(defaultForkMap.get(chainId) as ethers.providers.BaseProvider);
+      sendMsg({ message: 'Using forked Environment.', timeoutOverride: Infinity });
+    } else if (defaultProviderMap.has(chainId)) {
+      provider$.next(defaultProviderMap.get(chainId) as ethers.providers.BaseProvider);
+    } else {
+      sendMsg({ message: 'NETWORK NOT SUPPORTED', type: MessageType.WARNING, timeoutOverride: Infinity });
+    }
   });
 
 /** @internal */
@@ -124,26 +118,3 @@ combineLatest([accountProviderø, appConfigø]).subscribe(async ([accProvider, a
    * */
   if (appConfig.useAccountProviderAsProvider) updateProvider(accProvider);
 });
-
-/**
- * Using a forked Environment:
- * First wait until all loaded and ready,
- * then switch out to use a fork.
- */
-// combineLatest([chainIdø, messagesø])
-//   .pipe(
-//     withLatestFrom(appConfigø),
-//     filter(([[chainId, messages], config]) => {
-//       const msgArray: IMessage[] = Array.from(messages.values());
-//       const protocolLoaded = msgArray.findIndex((x: IMessage) => x.id === 'protocolLoaded') >= 0;
-//       /* bool check  */
-//       return protocolLoaded && config.useFork && defaultForkMap.has(chainId);
-//     }),
-//     take(1) // only do this once
-//   )
-//   .subscribe(([[chainId]]) => {
-//     /* ...then, if using a forked environment, switch out the provider after all has loaded */
-//     console.log('Switching to a forked environemnt:');
-//     const newProvider = defaultForkMap.get(chainId)!;
-//     updateProvider(newProvider);
-//   });

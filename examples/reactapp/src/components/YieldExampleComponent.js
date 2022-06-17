@@ -59,7 +59,6 @@ const YieldExampleComponent = () => {
     updateYieldConfig(config);
   }, []); // empty array to only do this once on load
 
-
   // Example of using a yieldProtocol config file.
   useEffect(() => {
     messages && console.log(messages);
@@ -276,7 +275,7 @@ const YieldExampleComponent = () => {
         <p> Selected Strategy: {selected?.strategy?.id}</p>
       </div>
 
-      { messages && !Array.from(messages.values()).every(x => x.expired)  && (
+      {messages && !Array.from(messages.values()).every((x) => x.expired) && (
         <div
           style={{
             backgroundColor: "lightblue",
@@ -289,10 +288,14 @@ const YieldExampleComponent = () => {
           {Array.from(messages.values())
             .filter((msg) => !msg.expired)
             .map((msg) => (
-              <div key={msg.id}>
-                <h3> Message: </h3>
+              <div
+                key={msg.id}
+                style={{
+                  backgroundColor: "lightgreen",
+                  padding: "10px",
+                }}
+              >
                 {msg.message}
-                {messages.size}
               </div>
             ))}
         </div>

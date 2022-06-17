@@ -23,8 +23,3 @@ export declare const updateAccount: (newAccount: string) => void;
 export declare const accountProvider$: BehaviorSubject<Web3Provider>;
 export declare const accountProviderø: Observable<ethers.providers.Web3Provider>;
 export declare const updateAccountProvider: (newProvider: ethers.providers.Web3Provider) => void;
-/**
- * Using a forked Environment:
- * First wait until all loaded and ready,
- * then switch out to use a fork.
- */

@@ -6,4 +6,7 @@ export default {
   defaultChainId: 5,
   ignoreSeries: [ '0x303230340000', '0x303130340000'],
   useFork: true,
+  defaultForkMap : new Map([
+    [1, new ethers.providers.JsonRpcProvider('https://rpc.tenderly.co/fork/53524bcd-8e01-46f1-8e54-b72b376cf179') ],
+  ])
 };

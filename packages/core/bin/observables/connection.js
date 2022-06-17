@@ -51,10 +51,16 @@ exports.updateProvider = updateProvider;
     // .pipe(take(1)) // once on start
     .subscribe(([chainId, appConfig]) => {
     /* Set the provider ( forked or not ) */
-    const defaultProvider = appConfig.useFork ? defaultproviders_1.defaultForkMap.get(chainId) : defaultproviders_1.defaultProviderMap.get(chainId);
-    exports.provider$.next(defaultProvider);
-    appConfig.useFork && (0, messages_1.sendMsg)({ message: 'Using forked Environment', timeoutOverride: Infinity });
-    // console.log( 'All good to go!: ', chainId, appConfig )
+    if (appConfig.useFork && defaultproviders_1.defaultForkMap.has(chainId)) {
+        exports.provider$.next(defaultproviders_1.defaultForkMap.get(chainId));
+        (0, messages_1.sendMsg)({ message: 'Using forked Environment.', timeoutOverride: Infinity });
+    }
+    else if (defaultproviders_1.defaultProviderMap.has(chainId)) {
+        exports.provider$.next(defaultproviders_1.defaultProviderMap.get(chainId));
+    }
+    else {
+        (0, messages_1.sendMsg)({ message: 'NETWORK NOT SUPPORTED', type: messages_1.MessageType.WARNING, timeoutOverride: Infinity });
+    }
 });
 /** @internal */
 exports.account$ = new rxjs_1.BehaviorSubject(undefined);
@@ -110,26 +116,4 @@ exports.updateAccountProvider = updateAccountProvider;
     if (appConfig.useAccountProviderAsProvider)
         (0, exports.updateProvider)(accProvider);
 }));
-/**
- * Using a forked Environment:
- * First wait until all loaded and ready,
- * then switch out to use a fork.
- */
-// combineLatest([chainIdø, messagesø])
-//   .pipe(
-//     withLatestFrom(appConfigø),
-//     filter(([[chainId, messages], config]) => {
-//       const msgArray: IMessage[] = Array.from(messages.values());
-//       const protocolLoaded = msgArray.findIndex((x: IMessage) => x.id === 'protocolLoaded') >= 0;
-//       /* bool check  */
-//       return protocolLoaded && config.useFork && defaultForkMap.has(chainId);
-//     }),
-//     take(1) // only do this once
-//   )
-//   .subscribe(([[chainId]]) => {
-//     /* ...then, if using a forked environment, switch out the provider after all has loaded */
-//     console.log('Switching to a forked environemnt:');
-//     const newProvider = defaultForkMap.get(chainId)!;
-//     updateProvider(newProvider);
-//   });
 //# sourceMappingURL=connection.js.map
