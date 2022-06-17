@@ -31,9 +31,9 @@ export interface IPriceContext {
 }
 
 export interface W3Number {
-  bn: BigNumber; // 'BigNumber' representation in wei (or equivalent) terms( eg. 1000000000000000023 Wei ). 
+  bn: BigNumber; // 'BigNumber' representation in wei (or equivalent) terms( eg. 1000000000000000023 Wei ).
   hStr: string; // 'Human String' understandable value ( eg. 1.000000000000000023 ETH ) - takes into account token specific decimals ( no precision loss )
-  dsp: string; // 'Display' String used only for display purposes ( eg. 1.00 DAI ) ( precision loss ); 
+  dsp: string; // 'Display' String used only for display purposes ( eg. 1.00 DAI ) ( precision loss );
 }
 
 export interface IUserSettings {
@@ -44,18 +44,21 @@ export interface IUserSettings {
 }
 
 export interface IYieldConfig {
-  defaultProviderMap: Map< number, ethers.providers.BaseProvider >;
+  defaultProviderMap: Map<number, ethers.providers.BaseProvider>;
   defaultChainId: number;
 
-  defaultAccountProvider: ethers.providers.Web3Provider, // the default provider used for getting the account information and signing/transacting
-  useAccountProviderAsProvider: boolean, // link the default provider to the account provider
-  autoConnectAccountProvider: boolean,
-  supressInjectedListeners: boolean,
+  defaultAccountProvider: ethers.providers.Web3Provider; // the default provider used for getting the account information and signing/transacting
+  useAccountProviderAsProvider: boolean; // link the default provider to the account provider
+  autoConnectAccountProvider: boolean;
+  supressInjectedListeners: boolean;
 
   defaultUserSettings: IUserSettings;
 
-  defaultSeriesId: string|undefined;
-  defaultBaseId: string|undefined;
+  defaultSeriesId: string | undefined;
+  defaultBaseId: string | undefined;
+
+  ignoreSeries: string[];
+  ignoreStrategies: string[];
 
   messageTimeout: number;
 
@@ -63,11 +66,9 @@ export interface IYieldConfig {
   browserCaching: boolean;
   forceTransactions: boolean;
   useFork: boolean;
+  defaultForkMap: Map<number, ethers.providers.BaseProvider>;
 
   diagnostics: boolean;
-
-  ignoreSeries: string[];
-  ignoreStrategies: string[];
 }
 
 export interface IYieldProtocol {
@@ -116,7 +117,7 @@ export interface IYieldFunctions {
   selectBase: (asset: string | IAsset) => void;
   selectVault: (vault: string | IVault) => void;
   selectSeries: (series: string | ISeries, futureSeries: boolean) => void;
-  selectStrategy:  (strategy: string | IStrategy) => void;
+  selectStrategy: (strategy: string | IStrategy) => void;
 }
 
 export interface ISelected {
@@ -180,7 +181,6 @@ export interface ISeriesRoot extends ISignable {
   poolVersion: string; // for signing
   poolSymbol: string; // for signing
 
-
   ts: BigNumber;
   g1: BigNumber;
   g2: BigNumber;
@@ -192,7 +192,6 @@ export interface ISeriesRoot extends ISignable {
   createdBlock: number;
   createdTxHash: string;
 }
-
 
 export enum TokenType {
   ERC20_,
@@ -250,7 +249,6 @@ export interface IAssetPair {
 
   baseDecimals: number;
   ilkDecimals: number;
-  
 
   minRatio: number;
 
@@ -373,7 +371,7 @@ export interface IStrategy extends IStrategyRoot {
   accountBalance?: W3Number;
   accountStrategyPercent?: string | undefined;
 
-  strategyPoolContract?: Pool,
+  strategyPoolContract?: Pool;
   poolTotalSupply?: W3Number;
 
   strategyPoolBalance?: W3Number;
@@ -440,15 +438,15 @@ export enum MessageType {
   INFO,
   WARNING,
   ERROR,
-  INTERNAL
+  INTERNAL,
 }
 
 export interface IMessage {
   message: string;
-  id?: string; // gets randomly generated if none provided 
-  type? : MessageType; // default: MessageType.INFO
-  origin?: any; // default: 'app' 
-  timeoutOverride?: number; // default: config.defaultTimeout  'inf' 
+  id?: string; // gets randomly generated if none provided
+  type?: MessageType; // default: MessageType.INFO
+  origin?: any; // default: 'app'
+  timeoutOverride?: number; // default: config.defaultTimeout  'inf'
   expired?: boolean; // expires at end of timeout period. default: false
 }
 

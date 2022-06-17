@@ -44,14 +44,15 @@ export interface IYieldConfig {
     defaultUserSettings: IUserSettings;
     defaultSeriesId: string | undefined;
     defaultBaseId: string | undefined;
+    ignoreSeries: string[];
+    ignoreStrategies: string[];
     messageTimeout: number;
     mockUser: boolean;
     browserCaching: boolean;
     forceTransactions: boolean;
     useFork: boolean;
+    defaultForkMap: Map<number, ethers.providers.BaseProvider>;
     diagnostics: boolean;
-    ignoreSeries: string[];
-    ignoreStrategies: string[];
 }
 export interface IYieldProtocol {
     protocolVersion: string;

@@ -28,5 +28,6 @@ exports.default = {
     diagnostics: true,
     forceTransactions: false,
     useFork: false,
+    defaultForkMap: defaultproviders_1.defaultForkMap,
 };
 //# sourceMappingURL=yield.config.js.map

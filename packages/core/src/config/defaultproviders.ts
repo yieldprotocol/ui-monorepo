@@ -9,7 +9,7 @@ export const defaultProviderMap: Map<number, ethers.providers.BaseProvider> = ne
   [42161, new ethers.providers.AlchemyProvider(42161, 'vtMM4_eLnOvkjkdckprVw3cIa64EVkDZ') as ethers.providers.BaseProvider ]
 ]);
 
-export const forkProviderMap: Map<number, ethers.providers.BaseProvider> = new Map([
+export const defaultForkMap: Map<number, ethers.providers.BaseProvider> = new Map([
   [1, new ethers.providers.JsonRpcProvider() ],
   [1337, new ethers.providers.JsonRpcProvider() ],
 ]);

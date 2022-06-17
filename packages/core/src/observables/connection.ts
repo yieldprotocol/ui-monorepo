@@ -7,11 +7,8 @@ import {
   shareReplay,
   mergeMap,
   combineLatest,
-  withLatestFrom,
-  filter,
-  take,
 } from 'rxjs';
-import { defaultAccountProvider, defaultProviderMap, forkProviderMap } from '../config/defaultproviders';
+import { defaultAccountProvider, defaultProviderMap, defaultForkMap } from '../config/defaultproviders';
 import { IMessage } from '../types';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils';
 import { appConfigø } from './appConfig';
@@ -66,7 +63,7 @@ combineLatest([chainIdø, appConfigø])
   // .pipe(take(1)) // once on start
   .subscribe(([chainId, appConfig]) => {
     /* Set the provider ( forked or not ) */
-    const defaultProvider = appConfig.useFork ? forkProviderMap.get(chainId) : defaultProviderMap.get(chainId);
+    const defaultProvider = appConfig.useFork ? defaultForkMap.get(chainId) : defaultProviderMap.get(chainId);
     provider$.next(defaultProvider as ethers.providers.BaseProvider);
 
     appConfig.useFork && sendMsg({ message: 'Using forked Environment', timeoutOverride:Infinity })
@@ -133,20 +130,20 @@ combineLatest([accountProviderø, appConfigø]).subscribe(async ([accProvider, a
  * First wait until all loaded and ready,
  * then switch out to use a fork.
  */
-combineLatest([chainIdø, messagesø])
-  .pipe(
-    withLatestFrom(appConfigø),
-    filter(([[chainId, messages], config]) => {
-      const msgArray: IMessage[] = Array.from(messages.values());
-      const protocolLoaded = msgArray.findIndex((x: IMessage) => x.id === 'protocolLoaded') >= 0;
-      /* bool check  */
-      return protocolLoaded && config.useFork && forkProviderMap.has(chainId);
-    }),
-    take(1) // only do this once
-  )
-  .subscribe(([[chainId]]) => {
-    /* ...then, if using a forked environment, switch out the provider after all has loaded */
-    console.log('Switching to a forked environemnt:');
-    const newProvider = forkProviderMap.get(chainId)!;
-    updateProvider(newProvider);
-  });
+// combineLatest([chainIdø, messagesø])
+//   .pipe(
+//     withLatestFrom(appConfigø),
+//     filter(([[chainId, messages], config]) => {
+//       const msgArray: IMessage[] = Array.from(messages.values());
+//       const protocolLoaded = msgArray.findIndex((x: IMessage) => x.id === 'protocolLoaded') >= 0;
+//       /* bool check  */
+//       return protocolLoaded && config.useFork && defaultForkMap.has(chainId);
+//     }),
+//     take(1) // only do this once
+//   )
+//   .subscribe(([[chainId]]) => {
+//     /* ...then, if using a forked environment, switch out the provider after all has loaded */
+//     console.log('Switching to a forked environemnt:');
+//     const newProvider = defaultForkMap.get(chainId)!;
+//     updateProvider(newProvider);
+//   });

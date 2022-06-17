@@ -1,5 +1,5 @@
 import { ApprovalMethod, IYieldConfig } from '../types';
-import { defaultAccountProvider, defaultProviderMap } from './defaultproviders';
+import { defaultAccountProvider, defaultProviderMap, defaultForkMap } from './defaultproviders';
 
 export default {
   defaultProviderMap, // the initial provider, also used as a fallback if required.
@@ -33,5 +33,6 @@ export default {
   diagnostics: true, // show app diagnostics in the console
   forceTransactions: false, // don't throw an error if the transaction is likely to fail.
   useFork: false,
-
+  defaultForkMap,
+  
 } as IYieldConfig;
