@@ -29,7 +29,7 @@ const _selectedPairø = (0, rxjs_1.combineLatest)([observables_1.selectedø, ass
  *
  * RETURNS [ totalDebt, exisitingDebt ] in decimals18
  */
-const _totalDebtWithInputø = (0, rxjs_1.combineLatest)([input_1.borrowInputø, observables_1.selectedø]).pipe((0, rxjs_1.distinctUntilChanged)(([a], [b]) => a === b), // this is a check so that the observable isn't 'doubled up' with the same input value.
+const _totalDebtWithInputø = (0, rxjs_1.combineLatest)([input_1.borrowInputø, observables_1.selectedø]).pipe((0, rxjs_1.filter)(([, { series }]) => !!series), (0, rxjs_1.distinctUntilChanged)(([a], [b]) => a === b), // this is a check so that the observable isn't 'doubled up' with the same input value.
 (0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø), (0, rxjs_1.map)(([[debtInput, selected], config]) => {
     const { vault, series } = selected; // we can safetly assume 'series' is defined - not vault.
     const existingDebt_ = (vault === null || vault === void 0 ? void 0 : vault.accruedArt.bn) || utils_1.ZERO_BN;
@@ -53,7 +53,7 @@ const _totalDebtWithInputø = (0, rxjs_1.combineLatest)([input_1.borrowInputø, 
  *
  * RETURNS [ totalCollateral, exisitingCollateral] in decimals18 for comparative calcs
  */
-const _totalCollateralWithInputø = (0, rxjs_1.combineLatest)([input_1.collateralInputø, observables_1.selectedø]).pipe((0, rxjs_1.distinctUntilChanged)(([a], [b]) => a === b), (0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø), (0, rxjs_1.map)(([[collInput, selected], config]) => {
+const _totalCollateralWithInputø = (0, rxjs_1.combineLatest)([input_1.collateralInputø, observables_1.selectedø]).pipe((0, rxjs_1.filter)(([, { ilk }]) => !!ilk), (0, rxjs_1.distinctUntilChanged)(([a], [b]) => a === b), (0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø), (0, rxjs_1.map)(([[collInput, selected], config]) => {
     const { vault, ilk } = selected;
     if (ilk) {
         const existingCollateral_ = (vault === null || vault === void 0 ? void 0 : vault.ink.bn) || utils_1.ZERO_BN; // if no vault simply return zero.

@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { IStrategyRoot } from '../types';
+import { IStrategyRoot, IYieldConfig } from '../types';
 import * as contracts from '../contracts';
 
 import { strategyAddresses } from '../config/protocol';
@@ -8,11 +8,10 @@ import { getBrowserCachedValue, setBrowserCachedValue } from '../utils/appUtils'
 export const buildStrategyMap = async (
   provider: ethers.providers.BaseProvider,
   chainId: number,
-  browserCaching: boolean
+  appConfig: IYieldConfig
 ): Promise<Map<string, IStrategyRoot>> => {
-
   const _strategyAddresses = strategyAddresses.get(chainId);
-  const strategyList: any[] = (browserCaching && getBrowserCachedValue(`${chainId}_strategies`)) || [];
+  const strategyList: any[] = (appConfig.browserCaching && getBrowserCachedValue(`${chainId}_strategies`)) || [];
 
   try {
     await Promise.all(
@@ -46,19 +45,19 @@ export const buildStrategyMap = async (
     console.log('Error fetching strategy data: ', e);
   }
 
-  // Log the new assets in the cache
-  setBrowserCachedValue(`${chainId}_strategies`, strategyList);
-  // Set the 'last checked' block
-  const _blockNum = await provider.getBlockNumber(); // TODO: maybe lose this
-  setBrowserCachedValue(`${chainId}_lastStrategyUpdate`, _blockNum );
-
   /* create a map from the list */
-  const strategyRootMap: Map<string, IStrategyRoot> = new Map(
-    strategyList.map((s: any) => [s.id, s])
-  );
+  const strategyRootMap: Map<string, IStrategyRoot> = new Map(strategyList.map((s: any) => [s.id, s]));
 
-  console.log(`Yield Protocol STRATEGY data updated [Block: ${_blockNum }]`);
-  console.log(strategyRootMap);
+  // Log the new assets in the cache
+  const _blockNum = await provider.getBlockNumber();
+  if (appConfig.browserCaching) {
+    setBrowserCachedValue(`${chainId}_strategies`, strategyList);
+    // Set the 'last checked' block
+    setBrowserCachedValue(`${chainId}_lastStrategyUpdate`, _blockNum);
+  }
+
+  console.log(`Yield Protocol STRATEGY data updated [Block: ${_blockNum}]`);
+  // console.log(strategyRootMap);
 
   return strategyRootMap;
 };

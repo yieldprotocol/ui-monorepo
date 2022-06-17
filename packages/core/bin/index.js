@@ -24,19 +24,13 @@ const messages_1 = require("./observables/messages");
 const borrowView_1 = require("./viewObservables/borrowView");
 const collateralView_1 = require("./viewObservables/collateralView");
 /**
- * On app start (and on providerø, chainId$ or appConfig$ observed changes ),
+ * On app start (or provider change ) (and on providerø, chainId$ or appConfig$ observed changes ),
  * appConfig gathers all the required information from env etc.
  * sets things up, and then the stream finishes indicating that everything is ready to go.
  */
 (0, rxjs_1.combineLatest)([connection_2.providerø, appConfig_1.appConfigø, connection_1.chainIdø])
-    //  .pipe( 
-    //    timeout( { 
-    //     first: 2500,
-    //     with: () => throwError( () => console.warn('Slow network connection.') )
-    //    }) 
-    //   )
     .subscribe(([provider, config, chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    (0, yieldProtocol_1.updateYieldProtocol)(yield (0, buildProtocol_1.buildProtocol)(provider, chainId, config.browserCaching));
+    (0, yieldProtocol_1.updateYieldProtocol)(yield (0, buildProtocol_1.buildProtocol)(provider, chainId, config));
 }));
 /* Expose the observables */
 const yieldObservables = {

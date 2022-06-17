@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { format } from 'date-fns';
 
-import { IAssetRoot, ISeriesRoot } from '../types';
+import { IAssetRoot, ISeriesRoot, IYieldConfig } from '../types';
 import * as contracts from '../contracts';
 
 import { PoolAddedEvent } from '../contracts/Ladle';
@@ -16,13 +16,13 @@ export const buildSeriesMap = async (
   assetRootMap: Map<string, IAssetRoot>,
   provider: ethers.providers.BaseProvider,
   chainId: number,
-  browserCaching: boolean
+  appConfig: IYieldConfig
 ): Promise<Map<string, ISeriesRoot>> => {
-
   /* Check for cached assets or start with empty array */
-  const seriesList: any[] = (browserCaching && getBrowserCachedValue(`${chainId}_series`)) || [];
+  const seriesList: any[] = (appConfig.browserCaching && getBrowserCachedValue(`${chainId}_series`)) || [];
   /* Check the last time the assets were fetched */
-  const lastSeriesUpdate = (browserCaching && getBrowserCachedValue(`${chainId}_lastSeriesUpdate`)) || 'earliest';
+  const lastSeriesUpdate =
+    (appConfig.browserCaching && getBrowserCachedValue(`${chainId}_lastSeriesUpdate`)) || 'earliest';
 
   /* get poolAdded events and series events at the same time */
   const seriesAddedFilter = cauldron.filters.SeriesAdded();
@@ -101,16 +101,18 @@ export const buildSeriesMap = async (
     console.log('Error fetching series data: ', e);
   }
 
-  // Log the new assets in the cache
-  setBrowserCachedValue(`${chainId}_series`, seriesList);
-  // Set the 'last checked' block
-  const _blockNum = await provider.getBlockNumber(); // TODO: maybe lose this
-  setBrowserCachedValue(`${chainId}_lastSeriesUpdate`, _blockNum);
-
   /* create a map from the asset list */
   const seriesRootMap: Map<string, ISeriesRoot> = new Map(seriesList.map((s: any) => [s.id, s]));
 
-  console.log( seriesRootMap); 
+  // Log the new assets in the cache
+  const _blockNum = await provider.getBlockNumber();
+  if (appConfig.browserCaching) {
+    setBrowserCachedValue(`${chainId}_series`, seriesList);
+    // Set the 'last checked' block
+    setBrowserCachedValue(`${chainId}_lastSeriesUpdate`, _blockNum);
+  }
+
+  // console.log(seriesRootMap);
   console.log(`Yield Protocol SERIES data updated [Block: ${_blockNum}]`);
 
   return seriesRootMap;

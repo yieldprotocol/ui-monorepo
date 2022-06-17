@@ -1,4 +1,4 @@
-import { combineLatest, ConnectableObservable, throwError, timeout } from 'rxjs';
+import { combineLatest, ConnectableObservable, throwError, timeout, withLatestFrom } from 'rxjs';
 import { buildProtocol } from './initProtocol/buildProtocol';
 import { IYieldFunctions, IYieldObservables } from './types';
 import { accountø, chainIdø, updateAccount} from './observables/connection';
@@ -42,19 +42,13 @@ import {
 import { collateralizationPercentø, collateralizationRatioø } from './viewObservables/collateralView';
 
 /** 
- * On app start (and on providerø, chainId$ or appConfig$ observed changes ), 
+ * On app start (or provider change ) (and on providerø, chainId$ or appConfig$ observed changes ), 
  * appConfig gathers all the required information from env etc.
  * sets things up, and then the stream finishes indicating that everything is ready to go.
  */
  combineLatest([ providerø, appConfigø, chainIdø ])
-//  .pipe( 
-//    timeout( { 
-//     first: 2500,
-//     with: () => throwError( () => console.warn('Slow network connection.') )
-//    }) 
-//   )
  .subscribe(async ([provider, config, chainId]) => {
-   updateYieldProtocol(await buildProtocol(provider, chainId, config.browserCaching));
+  updateYieldProtocol(await buildProtocol(provider, chainId, config));
  });
 
 

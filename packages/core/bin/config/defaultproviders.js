@@ -9,6 +9,7 @@ exports.defaultProviderMap = new Map([
     [42161, new ethers_1.ethers.providers.AlchemyProvider(42161, 'vtMM4_eLnOvkjkdckprVw3cIa64EVkDZ')]
 ]);
 exports.forkProviderMap = new Map([
-    [1, new ethers_1.ethers.providers.JsonRpcProvider(`https://rpc.tenderly.co/fork/935740ae-abd2-41c3-bda7-d03f8b102c29`)],
+    [1, new ethers_1.ethers.providers.JsonRpcProvider()],
 ]);
+// hardhat node> https://mainnet.infura.io/v3/2af222f674024a0f84b5f0aad0da72a2
 //# sourceMappingURL=defaultproviders.js.map

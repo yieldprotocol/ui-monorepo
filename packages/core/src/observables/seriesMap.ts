@@ -1,4 +1,4 @@
-import { BehaviorSubject, filter, Observable, share, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, Observable, share, withLatestFrom } from 'rxjs';
 import { ethers } from 'ethers';
 import {
   sellFYToken,
@@ -11,7 +11,7 @@ import {
 
 import * as contracts from '../contracts';
 
-import { ISeries, ISeriesRoot, IYieldProtocol, MessageType } from '../types';
+import { ISeries, ISeriesRoot, MessageType } from '../types';
 import { accountø, providerø } from './connection';
 import { yieldProtocolø } from './yieldProtocol';
 import { ETH_BASED_ASSETS } from '../config/assets';
@@ -41,12 +41,12 @@ export const updateSeries = async (seriesList?: ISeries[], account?: string, acc
 /**
  * Observe YieldProtocolø changes, if protocol changes in any way, update series map accordingly
  * */
-yieldProtocolø
+combineLatest([ yieldProtocolø, providerø ])
   .pipe(
-    filter((protocol) => protocol.seriesRootMap.size > 0),
-    withLatestFrom(providerø, accountø)
+    filter(([protocol]) => protocol.seriesRootMap.size > 0),
+    withLatestFrom( accountø)
   )
-  .subscribe(async ([_protocol, _provider, _account]) => {
+  .subscribe(async ([[_protocol, _provider], _account]) => {
     /* 'Charge' all the series (using the current provider) */
     const chargedList = Array.from(_protocol.seriesRootMap.values()).map((s: ISeriesRoot) =>
       _chargeSeries(s, _provider)

@@ -1,21 +1,21 @@
 import { ethers } from 'ethers';
-import { IAssetRoot, IYieldProtocol } from '../types';
+import { IAssetRoot, IYieldConfig, IYieldProtocol } from '../types';
 
 import * as contracts from '../contracts';
 
 import { baseAddresses } from '../config/protocol';
 
-import { buildOracleMap } from './buildOracleMap';
-import { buildModuleMap } from './buildModuleMap';
+import { buildOracleMap } from './buildOracles';
+import { buildModuleMap } from './buildModules';
 
-import { buildAssetMap } from './buildAssetMap';
-import { buildSeriesMap } from './buildSeriesMap';
-import { buildStrategyMap } from './buildStrategyMap';
+import { buildAssetMap } from './buildAssetsRoot';
+import { buildSeriesMap } from './buildSeriesRoot';
+import { buildStrategyMap } from './buildStrategiesRoot';
 
 export const buildProtocol = async (
   provider: ethers.providers.BaseProvider,
   chainId: number,
-  cacheProtocol: boolean = true
+  appConfig: IYieldConfig,
 ): Promise<IYieldProtocol> => {
 
   /* 1. build the base protocol components */
@@ -35,14 +35,14 @@ export const buildProtocol = async (
     ladle,
     provider,
     chainId,
-    cacheProtocol
+    appConfig
   );
 
   /* 5. Build the seriesRootMAp - note : async */
-  const seriesRootMap = await buildSeriesMap(cauldron, ladle, assetRootMap, provider, chainId, cacheProtocol);
+  const seriesRootMap = await buildSeriesMap(cauldron, ladle, assetRootMap, provider, chainId, appConfig);
 
   /* 6. Build the stategyRootMAp - note : async */
-  const strategyRootMap = await buildStrategyMap(provider, chainId, cacheProtocol); // TODO this could be loaded at same time as seriesMap
+  const strategyRootMap = await buildStrategyMap(provider, chainId, appConfig); // TODO this could be loaded at same time as seriesMap
 
   return {
     protocolVersion: process.env.YIELD_UI_VERSION || '0.0.0',

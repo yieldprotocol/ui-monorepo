@@ -41,6 +41,7 @@ const _selectedPairø = combineLatest([selectedø, assetPairMapø]).pipe(
  * RETURNS [ totalDebt, exisitingDebt ] in decimals18
  */
 const _totalDebtWithInputø: Observable<BigNumber[]> = combineLatest([borrowInputø, selectedø]).pipe(
+  filter( ([ ,{series}]) => !!series ),
   distinctUntilChanged( ([a],[b]) => a===b ), // this is a check so that the observable isn't 'doubled up' with the same input value.
   withLatestFrom(appConfigø ),
   map(([[debtInput, selected], config]) => {
@@ -80,6 +81,7 @@ const _totalDebtWithInputø: Observable<BigNumber[]> = combineLatest([borrowInpu
  * RETURNS [ totalCollateral, exisitingCollateral] in decimals18 for comparative calcs
  */
 const _totalCollateralWithInputø: Observable<BigNumber[]> = combineLatest([collateralInputø, selectedø]).pipe(
+  filter( ([ ,{ilk}]) => !!ilk ),
   distinctUntilChanged( ([a],[b]) => a===b ),
   withLatestFrom(appConfigø),
   map(([[collInput, selected], config]) => {

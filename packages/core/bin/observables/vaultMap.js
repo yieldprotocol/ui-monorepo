@@ -6,7 +6,7 @@ const date_fns_1 = require("date-fns");
 const ethers_1 = require("ethers");
 const ui_math_1 = require("@yield-protocol/ui-math");
 const rxjs_1 = require("rxjs");
-const buildVaultMap_1 = require("../initProtocol/buildVaultMap");
+const buildVaultsRoot_1 = require("../initProtocol/buildVaultsRoot");
 const types_1 = require("../types");
 const constants_1 = require("../utils/constants");
 const appUtils_1 = require("../utils/appUtils");
@@ -14,6 +14,7 @@ const connection_1 = require("./connection");
 const yieldProtocol_1 = require("./yieldProtocol");
 const messages_1 = require("./messages");
 const yieldUtils_1 = require("../utils/yieldUtils");
+const appConfig_1 = require("./appConfig");
 /** @internal */
 exports.vaultMap$ = new rxjs_1.BehaviorSubject(new Map([]));
 exports.vaultMapø = exports.vaultMap$.pipe((0, rxjs_1.share)());
@@ -40,11 +41,11 @@ exports.updateVaults = updateVaults;
  * */
 (0, rxjs_1.combineLatest)([connection_1.accountø, yieldProtocol_1.yieldProtocolø])
     // only emit if account is defined and yp.cauldron adress exists - indicating protocol has mostly loaded
-    .pipe((0, rxjs_1.filter)(([a, yp]) => a !== undefined && yp.cauldron.address !== ''), (0, rxjs_1.withLatestFrom)(connection_1.chainIdø))
-    .subscribe(([[_account, _protocol], _chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    if (_account !== undefined) {
-        console.log('Getting vaults for: ', _account);
-        const vaultMap = yield (0, buildVaultMap_1.buildVaultMap)(_protocol, _account, _chainId);
+    .pipe((0, rxjs_1.filter)(([a, yp]) => a !== undefined && yp.cauldron.address !== ''), (0, rxjs_1.withLatestFrom)(connection_1.chainIdø, appConfig_1.appConfigø, connection_1.providerø))
+    .subscribe(([[account, protocol], chainId, appConfig, provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    if (account !== undefined) {
+        console.log('Getting vaults for: ', account);
+        const vaultMap = yield (0, buildVaultsRoot_1.buildVaultMap)(protocol, provider, account, chainId, appConfig);
         yield (0, exports.updateVaults)(Array.from(vaultMap.values()));
         console.log('Vaults loading complete.');
         (0, messages_1.sendMsg)({ message: 'Vaults Loaded', type: types_1.MessageType.INTERNAL, id: 'vaultsLoaded' });

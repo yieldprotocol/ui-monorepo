@@ -50,7 +50,7 @@ exports.updateProvider = updateProvider;
 (0, rxjs_1.combineLatest)([exports.chainIdø, appConfig_1.appConfigø])
     // .pipe(take(1)) // once on start
     .subscribe(([chainId, appConfig]) => {
-    console.log(appConfig);
+    console.log('APP CONFIG: ', appConfig);
     const defaultProvider = defaultproviders_1.defaultProviderMap.get(chainId);
     defaultProvider && console.log(' default PRovider', defaultProvider);
     exports.provider$.next(defaultProvider);
@@ -115,19 +115,17 @@ exports.updateAccountProvider = updateAccountProvider;
  * First wait until all loaded and ready,
  * then switch out to use a fork.
  */
-(0, rxjs_1.combineLatest)([exports.chainIdø, messages_1.messagesø]).pipe((0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø)).subscribe(([[chainId, messages], config]) => {
+(0, rxjs_1.combineLatest)([exports.chainIdø, messages_1.messagesø])
+    .pipe((0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø), (0, rxjs_1.filter)(([[chainId, messages], config]) => {
+    const msgArray = Array.from(messages.values());
+    const protocolLoaded = msgArray.findIndex((x) => x.id === 'protocolLoaded') >= 0;
+    return protocolLoaded && config.useFork && defaultproviders_1.forkProviderMap.has(chainId);
+}), (0, rxjs_1.take)(1) // only do this once
+)
+    .subscribe(([[chainId]]) => {
     /* ...then, if using a forked environment, switch out the provider after all has loaded */
-    try {
-        // console.log( protocol );
-        if ((messages === null || messages === void 0 ? void 0 : messages.id) === 'protocolLoaded' && config.useFork && defaultproviders_1.forkProviderMap.has(chainId)) {
-            console.log('Switching to a forked environemnt:');
-            // const newProvider = forkProviderMap.get(chainId)!;
-            // updateProvider(newProvider);
-            // console.log('USING FORKED ENVIRONMENT: ', newProvider);
-        }
-    }
-    catch (e) {
-        console.log(e);
-    }
+    console.log('Switching to a forked environemnt:');
+    const newProvider = defaultproviders_1.forkProviderMap.get(chainId);
+    (0, exports.updateProvider)(newProvider);
 });
 //# sourceMappingURL=connection.js.map

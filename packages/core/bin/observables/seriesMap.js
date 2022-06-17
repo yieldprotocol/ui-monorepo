@@ -32,9 +32,9 @@ exports.updateSeries = updateSeries;
 /**
  * Observe YieldProtocolø changes, if protocol changes in any way, update series map accordingly
  * */
-yieldProtocol_1.yieldProtocolø
-    .pipe((0, rxjs_1.filter)((protocol) => protocol.seriesRootMap.size > 0), (0, rxjs_1.withLatestFrom)(connection_1.providerø, connection_1.accountø))
-    .subscribe(([_protocol, _provider, _account]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+(0, rxjs_1.combineLatest)([yieldProtocol_1.yieldProtocolø, connection_1.providerø])
+    .pipe((0, rxjs_1.filter)(([protocol]) => protocol.seriesRootMap.size > 0), (0, rxjs_1.withLatestFrom)(connection_1.accountø))
+    .subscribe(([[_protocol, _provider], _account]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* 'Charge' all the series (using the current provider) */
     const chargedList = Array.from(_protocol.seriesRootMap.values()).map((s) => _chargeSeries(s, _provider));
     /* Update the series with dynamic/user data */

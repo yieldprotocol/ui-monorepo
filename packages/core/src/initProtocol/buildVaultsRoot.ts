@@ -1,7 +1,8 @@
-import { IVaultRoot, IYieldProtocol } from '../types';
+import { IVaultRoot, IYieldConfig, IYieldProtocol } from '../types';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils/appUtils';
 import { VaultBuiltEvent, VaultGivenEvent } from '../contracts/Cauldron';
 import { generateVaultName } from '../utils/yieldUtils';
+import { ethers } from 'ethers';
 
 /**
  *
@@ -10,17 +11,18 @@ import { generateVaultName } from '../utils/yieldUtils';
  * */
 export const buildVaultMap = async (
   yieldProtocol: IYieldProtocol,
+  provider: ethers.providers.BaseProvider,
   account: string,
   chainId: number,
-  browserCaching: boolean = true
+  appConfig: IYieldConfig
 ): Promise<Map<string, IVaultRoot>> => {
-
   const { cauldron, seriesRootMap, assetRootMap } = yieldProtocol;
 
   /* Check for cached assets or start with empty array */
-  const cachedVaults: any[] = (browserCaching && getBrowserCachedValue(`${chainId}_vaults#${account}`)) || [];
+  const cachedVaults: any[] = (appConfig.browserCaching && getBrowserCachedValue(`${chainId}_vaults#${account}`)) || [];
   /* Check the last time the assets were fetched */
-  const lastVaultUpdate = (browserCaching && getBrowserCachedValue(`${chainId}_lastVaultUpdate#${account}`)) || 'earliest';
+  const lastVaultUpdate =
+    (appConfig.browserCaching && getBrowserCachedValue(`${chainId}_lastVaultUpdate#${account}`)) || 'earliest';
 
   /** vaults can either be 'built' or 'given by a third party, so both events neded to be checked */
   const vaultsBuiltFilter = cauldron.filters.VaultBuilt(null, account, null);
@@ -70,17 +72,17 @@ export const buildVaultMap = async (
   /* combine built and given vault lists  */
   const vaultList = [...cachedVaults, ...builtVaults, ...recievedVaults];
 
-  // Log the new assets in the cache
-  setBrowserCachedValue(`${chainId}_vaults#${account}`, vaultList);
-  // Set the 'last checked' block
-
-  // const _blockNum = await provider.getBlockNumber(); // TODO: maybe lose this
-  setBrowserCachedValue(`${chainId}_lastVaultUpdate#${account}`, 1);
-
   /* create a map from the 'charged' asset list */
   const vaultRootMap: Map<string, IVaultRoot> = new Map(vaultList.map((v: any) => [v.id as string, v]));
-  
-  console.log(`User VAULT data updated [Block: ${'somethign'}]`);
+
+  /* Log the new assets in the cache */
+  const _blockNum = await provider.getBlockNumber(); // TODO: maybe lose this
+  if (appConfig.browserCaching) {
+    setBrowserCachedValue(`${chainId}_vaults#${account}`, vaultList);
+    setBrowserCachedValue(`${chainId}_lastVaultUpdate#${account}`, _blockNum);
+  }
+
+  console.log(`User VAULT data updated [Block: ${_blockNum}]`);
 
   return vaultRootMap;
 };
