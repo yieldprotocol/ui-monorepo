@@ -9,7 +9,6 @@ const rxjs_1 = require("rxjs");
 const buildVaultsRoot_1 = require("../initProtocol/buildVaultsRoot");
 const types_1 = require("../types");
 const constants_1 = require("../utils/constants");
-const appUtils_1 = require("../utils/appUtils");
 const connection_1 = require("./connection");
 const yieldProtocol_1 = require("./yieldProtocol");
 const messages_1 = require("./messages");
@@ -56,7 +55,7 @@ exports.updateVaults = updateVaults;
     }
 }));
 const _updateVault = (vault, account, yieldProtocol) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    const { seriesRootMap, cauldron, witch, oracleMap, assetRootMap } = yieldProtocol;
+    const { seriesRootMap, cauldron, witch, oracleMap } = yieldProtocol;
     const RateOracle = oracleMap.get('RateOracle');
     /* Get dynamic vault data */
     const [{ ink, art }, { owner, seriesId, ilkId }, // update balance and series (series - because a vault can have been rolled to another series) */
@@ -70,14 +69,12 @@ const _updateVault = (vault, account, yieldProtocol) => tslib_1.__awaiter(void 0
     const liquidationDate = liquidations.length ? liquidations[0].args.start.toNumber() : undefined;
     /* check if the series is mature - Note: calc'd from yieldProtocol.seriesMap instead of relying on seriesMap$ observations */
     const series = seriesRootMap.get(seriesId);
-    const seriesIsMature = series.maturity - Math.round(new Date().getTime() / 1000) <= 0;
-    /* Note: get base and ilk roots from  yieldProtocol.rootMaps - instead of assetMap$ reliance */
-    const base = assetRootMap.get(vault.baseId);
-    const ilk = assetRootMap.get(ilkId);
+    /* Note: If the series is 'ignored' in the appConfig (or undefined) > the series maturity will be considered 'mature' */
+    const seriesIsMature = series ? series.maturity - Math.round(new Date().getTime() / 1000) <= 0 : true;
     let accruedArt = art;
     let rateAtMaturity = ethers_1.BigNumber.from('1');
     let rate = ethers_1.BigNumber.from('1');
-    if (seriesIsMature) {
+    if (series && seriesIsMature) {
         rateAtMaturity = yield cauldron.ratesAtMaturity(seriesId);
         [rate] = yield RateOracle.peek((0, ui_math_1.bytesToBytes32)(vault.baseId, 6), '0x5241544500000000000000000000000000000000000000000000000000000000', // bytes for 'RATE'
         '0');
@@ -85,9 +82,6 @@ const _updateVault = (vault, account, yieldProtocol) => tslib_1.__awaiter(void 0
             ? (0, ui_math_1.calcAccruedDebt)(rate, rateAtMaturity, art)
             : (0, ui_math_1.calcAccruedDebt)(rate, rate, art);
     }
-    const ink_ = ilk && (0, appUtils_1.truncateValue)(ethers_1.ethers.utils.formatUnits(ink, ilk.decimals), ilk.digitFormat);
-    const art_ = base && (0, appUtils_1.truncateValue)(ethers_1.ethers.utils.formatUnits(art, vault.baseDecimals), base.digitFormat);
-    const accruedArt_ = base && (0, appUtils_1.truncateValue)(ethers_1.ethers.utils.formatUnits(accruedArt, vault.baseDecimals), base.digitFormat);
     return Object.assign(Object.assign({}, vault), { owner, isActive: owner === account, // refreshed in case owner has been updated
         seriesId,
         ilkId, ink: (0, yieldUtils_1.bnToW3Number)(ink, vault.ilkDecimals), art: (0, yieldUtils_1.bnToW3Number)(art, vault.baseDecimals), accruedArt: (0, yieldUtils_1.bnToW3Number)(accruedArt, vault.baseDecimals), underLiquidation: witch.address === owner, hasBeenLiquidated: !!liquidationDate, // TODO redundant ??

@@ -42,7 +42,7 @@ export const buildSeriesMap = async (
   try {
     await Promise.all(
       seriesAdded
-        .filter((_evnt: any) => !['23'].includes(_evnt.args.seriesId)) // ignore if on the ignore list
+        .filter((_evnt: any) => !appConfig.ignoreSeries.includes(_evnt.args.seriesId)) // ignore if on the ignore list
         .map(async (_evnt: any): Promise<void> => {
           const { seriesId: id, baseId, fyToken } = _evnt.args;
           const { maturity } = await cauldron.series(id);
@@ -99,6 +99,8 @@ export const buildSeriesMap = async (
     );
   } catch (e) {
     console.log('Error fetching series data: ', e);
+
+    throw new Error();
   }
 
   /* create a map from the asset list */

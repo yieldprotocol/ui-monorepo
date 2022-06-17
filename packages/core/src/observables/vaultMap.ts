@@ -6,7 +6,6 @@ import { BehaviorSubject, Observable, share, combineLatest, filter, take, withLa
 import { buildVaultMap } from '../initProtocol/buildVaultsRoot';
 import { ISeries, IVault, IVaultRoot, IYieldProtocol, MessageType } from '../types';
 import { ZERO_BN } from '../utils/constants';
-import { truncateValue } from '../utils/appUtils';
 import { account$, accountø, chainIdø, providerø } from './connection';
 import { yieldProtocol$, yieldProtocolø } from './yieldProtocol';
 import { sendMsg } from './messages';
@@ -62,7 +61,7 @@ const _updateVault = async (
   account: string,
   yieldProtocol: IYieldProtocol
 ): Promise<IVault> => {
-  const { seriesRootMap, cauldron, witch, oracleMap, assetRootMap } = yieldProtocol;
+  const { seriesRootMap, cauldron, witch, oracleMap } = yieldProtocol;
   const RateOracle = oracleMap.get('RateOracle') as ethers.Contract;
 
   /* Get dynamic vault data */
@@ -81,16 +80,14 @@ const _updateVault = async (
 
   /* check if the series is mature - Note: calc'd from yieldProtocol.seriesMap instead of relying on seriesMap$ observations */
   const series = seriesRootMap.get(seriesId) as ISeries;
-  const seriesIsMature = series.maturity - Math.round(new Date().getTime() / 1000) <= 0;
-  /* Note: get base and ilk roots from  yieldProtocol.rootMaps - instead of assetMap$ reliance */
-  const base = assetRootMap.get(vault.baseId);
-  const ilk = assetRootMap.get(ilkId);
+  /* Note: If the series is 'ignored' in the appConfig (or undefined) > the series maturity will be considered 'mature' */
+  const seriesIsMature = series ? series.maturity - Math.round(new Date().getTime() / 1000) <= 0 : true;
 
   let accruedArt: BigNumber = art;
   let rateAtMaturity: BigNumber = BigNumber.from('1');
   let rate: BigNumber = BigNumber.from('1');
 
-  if (seriesIsMature) {
+  if (series && seriesIsMature) {
     rateAtMaturity = await cauldron.ratesAtMaturity(seriesId);
     [rate] = await RateOracle.peek(
       bytesToBytes32(vault.baseId, 6),
@@ -101,10 +98,6 @@ const _updateVault = async (
       ? calcAccruedDebt(rate, rateAtMaturity, art)
       : calcAccruedDebt(rate, rate, art);
   }
-
-  const ink_ = ilk && truncateValue(ethers.utils.formatUnits(ink, ilk.decimals), ilk.digitFormat);
-  const art_ = base && truncateValue(ethers.utils.formatUnits(art, vault.baseDecimals), base.digitFormat);
-  const accruedArt_ = base && truncateValue(ethers.utils.formatUnits(accruedArt, vault.baseDecimals), base.digitFormat);
 
   return {
     ...vault,

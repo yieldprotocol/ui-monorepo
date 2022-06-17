@@ -25,7 +25,7 @@ const buildSeriesMap = (cauldron, ladle, assetRootMap, provider, chainId, appCon
     /* Add in any extra static series */
     try {
         yield Promise.all(seriesAdded
-            .filter((_evnt) => !['23'].includes(_evnt.args.seriesId)) // ignore if on the ignore list
+            .filter((_evnt) => !appConfig.ignoreSeries.includes(_evnt.args.seriesId)) // ignore if on the ignore list
             .map((_evnt) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
             const { seriesId: id, baseId, fyToken } = _evnt.args;
             const { maturity } = yield cauldron.series(id);
@@ -79,6 +79,7 @@ const buildSeriesMap = (cauldron, ladle, assetRootMap, provider, chainId, appCon
     }
     catch (e) {
         console.log('Error fetching series data: ', e);
+        throw new Error();
     }
     /* create a map from the asset list */
     const seriesRootMap = new Map(seriesList.map((s) => [s.id, s]));
