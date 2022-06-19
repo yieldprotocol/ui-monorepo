@@ -16,7 +16,7 @@ exports.assetMap$ = new rxjs_1.BehaviorSubject(new Map([]));
 /**
  * Unsubscribed Assetmap observable
  */
-exports.assetMapø = exports.assetMap$.pipe((0, rxjs_1.share)());
+exports.assetMapø = exports.assetMap$.pipe((0, rxjs_1.shareReplay)(1));
 /**
  * Update Assets function
  * @param assetList  list of assets to update

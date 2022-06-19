@@ -1,10 +1,10 @@
 import { format } from 'date-fns';
 import { ethers, BigNumber } from 'ethers';
 import { bytesToBytes32, calcAccruedDebt } from '@yield-protocol/ui-math';
-import { BehaviorSubject, Observable, share, combineLatest, filter, take, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, Observable, share, combineLatest, filter, take, withLatestFrom, shareReplay } from 'rxjs';
 
 import { buildVaultMap } from '../initProtocol/buildVaultsRoot';
-import { ISeries, IVault, IVaultRoot, IYieldProtocol, MessageType } from '../types';
+import { ISeries, IVault, IVaultRoot, IYieldConfig, IYieldProtocol, MessageType } from '../types';
 import { ZERO_BN } from '../utils/constants';
 import { account$, accountø, chainIdø, providerø } from './connection';
 import { yieldProtocol$, yieldProtocolø } from './yieldProtocol';
@@ -14,17 +14,16 @@ import { appConfigø } from './appConfig';
 
 /** @internal */
 export const vaultMap$: BehaviorSubject<Map<string, IVault>> = new BehaviorSubject(new Map([]));
-export const vaultMapø: Observable<Map<string, IVault>> = vaultMap$.pipe(share());
+export const vaultMapø: Observable<Map<string, IVault>> = vaultMap$.pipe(shareReplay(1));
 
 /* Update vaults function */
-export const updateVaults = async (vaultList?: IVault[] | IVaultRoot[]) => {
+export const updateVaults = async (vaultList?: IVault[] | IVaultRoot[], suppressEventLogQueries:boolean = false) => {
   const list = vaultList !== undefined ? vaultList : Array.from(vaultMap$.value.values());
   /* if there are some vaults: */
   if (list.length) {
     await Promise.all(
-      // TODO: maybe get them together?
       list.map(async (_vault: IVault | IVaultRoot) => {
-        const vaultUpdate = await _updateVault(_vault, account$.value as string, yieldProtocol$.value);
+        const vaultUpdate = await _updateVault(_vault, account$.value as string, yieldProtocol$.value, suppressEventLogQueries);
         vaultMap$.next(new Map(vaultMap$.value.set(_vault.id, vaultUpdate))); // note: new Map to enforce ref update
       })
     );
@@ -47,7 +46,7 @@ combineLatest([accountø, yieldProtocolø])
     if (account !== undefined) {
       console.log('Getting vaults for: ', account);
       const vaultMap = await buildVaultMap(protocol, provider, account, chainId, appConfig );
-      await updateVaults(Array.from(vaultMap.values()));
+      await updateVaults(Array.from(vaultMap.values()), appConfig.suppressEventLogQueries);
       console.log('Vaults loading complete.');
       sendMsg({ message: 'Vaults Loaded', type: MessageType.INTERNAL, id: 'vaultsLoaded'});
     } else {
@@ -59,7 +58,8 @@ combineLatest([accountø, yieldProtocolø])
 const _updateVault = async (
   vault: IVault | IVaultRoot,
   account: string,
-  yieldProtocol: IYieldProtocol
+  yieldProtocol: IYieldProtocol,
+  suppressEventLogQueries: boolean,
 ): Promise<IVault> => {
   const { seriesRootMap, cauldron, witch, oracleMap } = yieldProtocol;
   const RateOracle = oracleMap.get('RateOracle') as ethers.Contract;
@@ -68,11 +68,11 @@ const _updateVault = async (
   const [
     { ink, art },
     { owner, seriesId, ilkId }, // update balance and series (series - because a vault can have been rolled to another series) */
-    liquidations, // get the list of liquidations on this vault
+    liquidations, // get the list of liquidations on this vault - unless supressed
   ] = await Promise.all([
     cauldron.balances(vault.id),
     cauldron.vaults(vault.id),
-    witch.queryFilter(witch.filters.Auctioned(bytesToBytes32(vault.id, 12), null), 'earliest', 'latest'),
+    suppressEventLogQueries ? [] : witch.queryFilter(witch.filters.Auctioned(bytesToBytes32(vault.id, 12), null), 'earliest', 'latest'),
   ]);
 
   /* Check for liquidation event date */

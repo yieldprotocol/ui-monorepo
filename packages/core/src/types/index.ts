@@ -50,6 +50,7 @@ export interface IYieldConfig {
   defaultAccountProvider: ethers.providers.Web3Provider; // the default provider used for getting the account information and signing/transacting
   useAccountProviderAsProvider: boolean; // link the default provider to the account provider
   autoConnectAccountProvider: boolean;
+
   supressInjectedListeners: boolean;
 
   defaultUserSettings: IUserSettings;
@@ -62,11 +63,12 @@ export interface IYieldConfig {
 
   messageTimeout: number;
 
-  mockUser: boolean;
   browserCaching: boolean;
+
   forceTransactions: boolean;
   useFork: boolean;
   defaultForkMap: Map<number, ethers.providers.BaseProvider>;
+  suppressEventLogQueries: boolean, // don't query historical data 
 
   diagnostics: boolean;
 }
@@ -105,10 +107,12 @@ export interface IYieldObservables {
   selectedø: Observable<ISelected>;
   userSettingsø: Observable<IUserSettings>;
 
-  messagesø: Observable<IMessage | undefined>;
+  messagesø: Observable<Map<string,IMessage>>;
 }
 
 export interface IYieldFunctions {
+
+
   updateProvider: (provider: ethers.providers.BaseProvider) => void;
   updateYieldConfig: (config: IYieldConfig) => void;
   updateAccount: (account: string) => void;
@@ -118,6 +122,10 @@ export interface IYieldFunctions {
   selectVault: (vault: string | IVault) => void;
   selectSeries: (series: string | ISeries, futureSeries: boolean) => void;
   selectStrategy: (strategy: string | IStrategy) => void;
+
+  /* actions */
+  borrow: ()=> void;
+
 }
 
 export interface ISelected {

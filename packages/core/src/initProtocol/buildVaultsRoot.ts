@@ -27,10 +27,14 @@ export const buildVaultMap = async (
   /** vaults can either be 'built' or 'given by a third party, so both events neded to be checked */
   const vaultsBuiltFilter = cauldron.filters.VaultBuilt(null, account, null);
   const vaultsReceivedfilter = cauldron.filters.VaultGiven(null, account);
-  const [vaultsBuilt, vaultsReceived] = await Promise.all([
-    cauldron.queryFilter(vaultsBuiltFilter, lastVaultUpdate, 'latest'),
-    cauldron.queryFilter(vaultsReceivedfilter, lastVaultUpdate, 'latest'),
-  ]);
+
+  /* Get the vaults built/recieved - unless fetching historical EventLogs is suppressed */
+  const [vaultsBuilt, vaultsReceived] = !appConfig.suppressEventLogQueries
+    ? await Promise.all([
+        cauldron.queryFilter(vaultsBuiltFilter, lastVaultUpdate, 'latest'),
+        cauldron.queryFilter(vaultsReceivedfilter, lastVaultUpdate, 'latest'),
+      ])
+    : [[], []]; // this is when eventlogQueries are suppressed
 
   const builtVaults = vaultsBuilt.map((_evnt: VaultBuiltEvent): IVaultRoot => {
     const { vaultId, ilkId, seriesId } = _evnt.args;

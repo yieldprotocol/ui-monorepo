@@ -14,7 +14,7 @@ const messages_1 = require("./messages");
 const yieldUtils_1 = require("../utils/yieldUtils");
 /** @internal */
 exports.strategyMap$ = new rxjs_1.BehaviorSubject(new Map([]));
-exports.strategyMapø = exports.strategyMap$.pipe((0, rxjs_1.share)());
+exports.strategyMapø = exports.strategyMap$.pipe((0, rxjs_1.shareReplay)(1));
 /* Update strategies function */
 const updateStrategies = (provider, strategyList, account, accountDataOnly = false) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* If strategyList parameter is empty/undefined, update all the straetegies in the strategyMap */

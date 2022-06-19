@@ -34,5 +34,6 @@ export default {
   forceTransactions: false, // don't throw an error if the transaction is likely to fail.
   useFork: false,
   defaultForkMap,
+  suppressEventLogQueries: false, // don't try to fetch 'historical' data from previous events
   
 } as IYieldConfig;

@@ -29,5 +29,6 @@ exports.default = {
     forceTransactions: false,
     useFork: false,
     defaultForkMap: defaultproviders_1.defaultForkMap,
+    suppressEventLogQueries: false, // don't try to fetch 'historical' data from previous events
 };
 //# sourceMappingURL=yield.config.js.map

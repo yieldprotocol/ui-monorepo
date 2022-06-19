@@ -14,10 +14,13 @@ const buildAssetMap = (cauldron, ladle, provider, chainId, appConfig) => tslib_1
     /* Get all the assetAdded, oracleAdded and joinAdded events and series events at the same time */
     const assetAddedFilter = cauldron.filters.AssetAdded();
     const joinAddedfilter = ladle.filters.JoinAdded();
-    const [assetAddedEvents, joinAddedEvents] = yield Promise.all([
-        cauldron.queryFilter(assetAddedFilter, lastAssetUpdate, 'latest'),
-        ladle.queryFilter(joinAddedfilter, lastAssetUpdate, 'latest'),
-    ]);
+    /* Get the asset from events - unless fetching historical EventLogs is suppressed */
+    const [assetAddedEvents, joinAddedEvents] = !appConfig.suppressEventLogQueries
+        ? yield Promise.all([
+            cauldron.queryFilter(assetAddedFilter, lastAssetUpdate, 'latest'),
+            ladle.queryFilter(joinAddedfilter, lastAssetUpdate, 'latest'),
+        ])
+        : [[], []];
     /* Create a map from the joinAdded event data or hardcoded join data if available */
     const joinMap = new Map(joinAddedEvents.map((e) => e.args)); // event values);
     /* Create a array from the assetAdded event data or hardcoded asset data if available */

@@ -1,4 +1,4 @@
-import { BehaviorSubject, combineLatest, filter, Observable, share, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, Observable, share, shareReplay, withLatestFrom } from 'rxjs';
 import { ethers } from 'ethers';
 import {
   sellFYToken,
@@ -24,7 +24,7 @@ export const seriesMap$: BehaviorSubject<Map<string, ISeries>> = new BehaviorSub
 /**
  * SeriesMap observable and update function.
  */
-export const seriesMapø: Observable<Map<string, ISeries>> = seriesMap$.pipe(share());
+export const seriesMapø: Observable<Map<string, ISeries>> = seriesMap$.pipe(shareReplay(1));
 export const updateSeries = async (seriesList?: ISeries[], account?: string, accountDataOnly: boolean = false) => {
   const list = seriesList?.length ? seriesList : Array.from(seriesMap$.value.values());
   await Promise.all(

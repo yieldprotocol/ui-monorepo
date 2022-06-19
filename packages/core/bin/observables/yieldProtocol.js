@@ -20,7 +20,7 @@ const _blankProtocol = {
 };
 /** @internal */
 exports.yieldProtocol$ = new rxjs_1.BehaviorSubject(_blankProtocol);
-exports.yieldProtocolø = exports.yieldProtocol$.pipe((0, rxjs_1.share)());
+exports.yieldProtocolø = exports.yieldProtocol$.pipe((0, rxjs_1.shareReplay)(1));
 const updateYieldProtocol = (newProtocol) => {
     exports.yieldProtocol$.next(newProtocol); // update to whole new protocol
 };

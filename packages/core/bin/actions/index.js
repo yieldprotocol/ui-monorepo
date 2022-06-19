@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.transferVault = exports.rollLend = exports.rollDebt = exports.repayDebt = exports.removeLiquidity = exports.removeCollateral = exports.lend = exports.closeLend = exports.borrow = exports.addCollateral = exports.unwrapAsset = exports.wrapAsset = exports.removeEth = exports.addEth = void 0;
+exports.transferVault = exports.rollLend = exports.rollDebt = exports.repayDebt = exports.removeLiquidity = exports.removeCollateral = exports.lend = exports.closeLend = exports.borrow = exports.addLiquidity = exports.addCollateral = exports.unwrapAsset = exports.wrapAsset = exports.removeEth = exports.addEth = void 0;
 var _addRemoveEth_1 = require("./_addRemoveEth");
 Object.defineProperty(exports, "addEth", { enumerable: true, get: function () { return _addRemoveEth_1.addEth; } });
 Object.defineProperty(exports, "removeEth", { enumerable: true, get: function () { return _addRemoveEth_1.removeEth; } });
@@ -9,6 +9,8 @@ Object.defineProperty(exports, "wrapAsset", { enumerable: true, get: function ()
 Object.defineProperty(exports, "unwrapAsset", { enumerable: true, get: function () { return _wrapUnwrapAsset_1.unwrapAsset; } });
 var addCollateral_1 = require("./addCollateral");
 Object.defineProperty(exports, "addCollateral", { enumerable: true, get: function () { return addCollateral_1.addCollateral; } });
+var addLiquidity_1 = require("./addLiquidity");
+Object.defineProperty(exports, "addLiquidity", { enumerable: true, get: function () { return addLiquidity_1.addLiquidity; } });
 var borrow_1 = require("./borrow");
 Object.defineProperty(exports, "borrow", { enumerable: true, get: function () { return borrow_1.borrow; } });
 var closeLend_1 = require("./closeLend");

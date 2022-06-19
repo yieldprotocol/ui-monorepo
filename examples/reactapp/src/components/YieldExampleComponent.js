@@ -36,6 +36,9 @@ const YieldExampleComponent = () => {
     selectBase,
     selectSeries,
     selectStrategy,
+
+    borrow,
+
   } = yieldFunctions;
 
   const { updateBorrowInput, updateCollateralInput } = viewFunctions;
@@ -93,9 +96,10 @@ const YieldExampleComponent = () => {
           placeholder="Collateral to add?"
         />
         <p>
-          {" "}
           {collateralizationPercent ? `${collateralizationPercent}%` : ""}{" "}
         </p>
+
+        <button onClick={() => borrow() }>borrow</button> 
       </div>
 
       <hr />

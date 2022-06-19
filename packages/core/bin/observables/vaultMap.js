@@ -16,16 +16,14 @@ const yieldUtils_1 = require("../utils/yieldUtils");
 const appConfig_1 = require("./appConfig");
 /** @internal */
 exports.vaultMap$ = new rxjs_1.BehaviorSubject(new Map([]));
-exports.vaultMapø = exports.vaultMap$.pipe((0, rxjs_1.share)());
+exports.vaultMapø = exports.vaultMap$.pipe((0, rxjs_1.shareReplay)(1));
 /* Update vaults function */
-const updateVaults = (vaultList) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+const updateVaults = (vaultList, suppressEventLogQueries = false) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const list = vaultList !== undefined ? vaultList : Array.from(exports.vaultMap$.value.values());
     /* if there are some vaults: */
     if (list.length) {
-        yield Promise.all(
-        // TODO: maybe get them together?
-        list.map((_vault) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-            const vaultUpdate = yield _updateVault(_vault, connection_1.account$.value, yieldProtocol_1.yieldProtocol$.value);
+        yield Promise.all(list.map((_vault) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+            const vaultUpdate = yield _updateVault(_vault, connection_1.account$.value, yieldProtocol_1.yieldProtocol$.value, suppressEventLogQueries);
             exports.vaultMap$.next(new Map(exports.vaultMap$.value.set(_vault.id, vaultUpdate))); // note: new Map to enforce ref update
         })));
     }
@@ -45,7 +43,7 @@ exports.updateVaults = updateVaults;
     if (account !== undefined) {
         console.log('Getting vaults for: ', account);
         const vaultMap = yield (0, buildVaultsRoot_1.buildVaultMap)(protocol, provider, account, chainId, appConfig);
-        yield (0, exports.updateVaults)(Array.from(vaultMap.values()));
+        yield (0, exports.updateVaults)(Array.from(vaultMap.values()), appConfig.suppressEventLogQueries);
         console.log('Vaults loading complete.');
         (0, messages_1.sendMsg)({ message: 'Vaults Loaded', type: types_1.MessageType.INTERNAL, id: 'vaultsLoaded' });
     }
@@ -54,16 +52,16 @@ exports.updateVaults = updateVaults;
         exports.vaultMap$.next(new Map([]));
     }
 }));
-const _updateVault = (vault, account, yieldProtocol) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+const _updateVault = (vault, account, yieldProtocol, suppressEventLogQueries) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const { seriesRootMap, cauldron, witch, oracleMap } = yieldProtocol;
     const RateOracle = oracleMap.get('RateOracle');
     /* Get dynamic vault data */
     const [{ ink, art }, { owner, seriesId, ilkId }, // update balance and series (series - because a vault can have been rolled to another series) */
-    liquidations, // get the list of liquidations on this vault
+    liquidations, // get the list of liquidations on this vault - unless supressed
     ] = yield Promise.all([
         cauldron.balances(vault.id),
         cauldron.vaults(vault.id),
-        witch.queryFilter(witch.filters.Auctioned((0, ui_math_1.bytesToBytes32)(vault.id, 12), null), 'earliest', 'latest'),
+        suppressEventLogQueries ? [] : witch.queryFilter(witch.filters.Auctioned((0, ui_math_1.bytesToBytes32)(vault.id, 12), null), 'earliest', 'latest'),
     ]);
     /* Check for liquidation event date */
     const liquidationDate = liquidations.length ? liquidations[0].args.start.toNumber() : undefined;

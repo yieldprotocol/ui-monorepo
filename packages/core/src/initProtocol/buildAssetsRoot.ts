@@ -24,10 +24,13 @@ export const buildAssetMap = async (
   const assetAddedFilter = cauldron.filters.AssetAdded();
   const joinAddedfilter = ladle.filters.JoinAdded();
 
-  const [assetAddedEvents, joinAddedEvents] = await Promise.all([
-    cauldron.queryFilter(assetAddedFilter, lastAssetUpdate, 'latest'),
-    ladle.queryFilter(joinAddedfilter, lastAssetUpdate, 'latest'),
-  ]);
+  /* Get the asset from events - unless fetching historical EventLogs is suppressed */
+  const [assetAddedEvents, joinAddedEvents] = !appConfig.suppressEventLogQueries
+    ? await Promise.all([
+        cauldron.queryFilter(assetAddedFilter, lastAssetUpdate, 'latest'),
+        ladle.queryFilter(joinAddedfilter, lastAssetUpdate, 'latest'),
+      ])
+    : [[], []];
 
   /* Create a map from the joinAdded event data or hardcoded join data if available */
   const joinMap = new Map(joinAddedEvents.map((e: JoinAddedEvent) => e.args)); // event values);

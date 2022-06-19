@@ -11,7 +11,7 @@ const _handleTimeout = (message: IMessage) => {
 /** @internal */
 export const messages$: Subject<IMessage> = new Subject();
 
-export const messagesø: Observable<any> = messages$.pipe(
+export const messagesø: Observable<Map<string,IMessage>> = messages$.pipe(
   filter((msg) => !!msg && msg.type !== MessageType.INTERNAL),
   /* add in a timeout, that would fire after a period of time */
   tap((msg) => !msg.expired && _handleTimeout(msg)),

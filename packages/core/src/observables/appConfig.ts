@@ -1,4 +1,4 @@
-import { BehaviorSubject, concatMap, delay, distinct, distinctUntilChanged, finalize, from, map, mergeMap, Observable, of, share, shareReplay, Subject, switchMap, take, takeUntil, timeout, timer } from 'rxjs';
+import {  finalize, map, Observable,shareReplay, Subject, take } from 'rxjs';
 import { IYieldConfig } from '../types';
 
 /* Handle configuration */

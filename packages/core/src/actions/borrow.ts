@@ -5,8 +5,6 @@ import { ETH_BASED_ASSETS, CONVEX_BASED_ASSETS } from '../config/assets';
 import { ConvexLadleModule } from '../contracts';
 
 import {
-  assetMap$,
-  selected$,
   accountø,
   assetMapø,
   chainIdø,
@@ -35,6 +33,10 @@ export const borrow = async (
   vault?: IVault | string,
   getValuesFromNetwork: boolean = true // Get market values by network call or offline calc (default: NETWORK)
 ) => {
+
+  combineLatest([yieldProtocolø, chainIdø, assetMapø, seriesMapø, vaultMapø, accountø, selectedø, userSettingsø])
+  .subscribe( ([yp, chainId]) => console.log( 'asdasdasd', chainId, yp))
+
   /* Subscribe to and get the values from the observables:  */
   combineLatest([yieldProtocolø, chainIdø, assetMapø, seriesMapø, vaultMapø, accountø, selectedø, userSettingsø])
     .pipe(take(1)) // only take one and then finish.
@@ -49,6 +51,8 @@ export const borrow = async (
         selected,
         { slippageTolerance },
       ]) => {
+
+        console.log( 'indeide')
 
         /** Use the vault/vaultId provided else use blank vault TODO: Add a check for existing vault */
         const getValidatedVault = (v: IVault | string | undefined): IVault | undefined => {
@@ -76,7 +80,7 @@ export const borrow = async (
 
         /* Set the series and ilk based on the vault that has been selected or if it's a new vault, get from the globally selected SeriesId */
         const series: ISeries = _vault ? seriesMap.get(_vault.seriesId)! : selected.series!;
-        const base: IAsset = assetMap$.value.get(series.baseId)!;
+        const base: IAsset = assetMap.get(series.baseId)!;
         const ilk: IAsset = _vault ? assetMap.get(_vault.ilkId)! : assetMap.get(selected.ilk!.proxyId)!; // NOTE: Here we use the 'wrapped version' of the selected Ilk, if required.
 
         /* bring in the Convex Mmdule where reqd. */
@@ -170,7 +174,7 @@ export const borrow = async (
           /* If vault is null, build a new vault, else ignore */
           {
             operation: LadleActions.Fn.BUILD,
-            args: [selected$.value.series?.id, ilk.id, '0'] as LadleActions.Args.BUILD,
+            args: [selected.series?.id, ilk.id, '0'] as LadleActions.Args.BUILD,
             ignoreIf: vaultId !== BLANK_VAULT,
           },
 

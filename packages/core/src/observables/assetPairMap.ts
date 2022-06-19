@@ -1,6 +1,6 @@
 import { bytesToBytes32, decimal18ToDecimalN } from '@yield-protocol/ui-math';
 import { BigNumber, ethers } from 'ethers';
-import { BehaviorSubject, filter, map, Observable, share, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable, share, shareReplay, withLatestFrom } from 'rxjs';
 
 import { ORACLES } from '../config/oracles';
 import { IAssetPair, ISelected } from '../types';
@@ -12,7 +12,7 @@ import { chainIdø } from './connection';
 
 /** @internal */
 export const assetPairMap$: BehaviorSubject<Map<string, IAssetPair>> = new BehaviorSubject(new Map([]));
-export const assetPairMapø: Observable<Map<string, IAssetPair>> = assetPairMap$.pipe(share());
+export const assetPairMapø: Observable<Map<string, IAssetPair>> = assetPairMap$.pipe(shareReplay(1));
 
 /**
  *

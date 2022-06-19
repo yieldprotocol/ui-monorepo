@@ -13,7 +13,7 @@ const yieldUtils_1 = require("../utils/yieldUtils");
 const connection_1 = require("./connection");
 /** @internal */
 exports.assetPairMap$ = new rxjs_1.BehaviorSubject(new Map([]));
-exports.assetPairMapø = exports.assetPairMap$.pipe((0, rxjs_1.share)());
+exports.assetPairMapø = exports.assetPairMap$.pipe((0, rxjs_1.shareReplay)(1));
 /**
  *
  * Watch selected elements, on every change if both a base and ilk are selected,

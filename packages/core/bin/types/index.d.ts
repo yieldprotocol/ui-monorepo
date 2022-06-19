@@ -47,11 +47,11 @@ export interface IYieldConfig {
     ignoreSeries: string[];
     ignoreStrategies: string[];
     messageTimeout: number;
-    mockUser: boolean;
     browserCaching: boolean;
     forceTransactions: boolean;
     useFork: boolean;
     defaultForkMap: Map<number, ethers.providers.BaseProvider>;
+    suppressEventLogQueries: boolean;
     diagnostics: boolean;
 }
 export interface IYieldProtocol {
@@ -78,7 +78,7 @@ export interface IYieldObservables {
     transactionMapø: Observable<Map<string, IYieldProcess>>;
     selectedø: Observable<ISelected>;
     userSettingsø: Observable<IUserSettings>;
-    messagesø: Observable<IMessage | undefined>;
+    messagesø: Observable<Map<string, IMessage>>;
 }
 export interface IYieldFunctions {
     updateProvider: (provider: ethers.providers.BaseProvider) => void;
@@ -89,6 +89,7 @@ export interface IYieldFunctions {
     selectVault: (vault: string | IVault) => void;
     selectSeries: (series: string | ISeries, futureSeries: boolean) => void;
     selectStrategy: (strategy: string | IStrategy) => void;
+    borrow: () => void;
 }
 export interface ISelected {
     base: IAsset | null;

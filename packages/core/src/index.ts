@@ -16,7 +16,8 @@ import * as assetConstants from './config/assets';
 
 // TODO: import all dynamically when things are up and running 
 // import * as yieldObservables from './observables';
-// import * as viewObservables from './viewObservables';
+
+import { borrow } from './actions';
 
 import { transactionMapø, assetPairMapø, userSettingsø } from './observables';
 import {
@@ -40,6 +41,7 @@ import {
   minimumRepayø,
 } from './viewObservables/borrowView';
 import { collateralizationPercentø, collateralizationRatioø } from './viewObservables/collateralView';
+ 
 
 /** 
  * On app start (or provider change ) (and on providerø, chainId$ or appConfig$ observed changes ), 
@@ -50,7 +52,6 @@ import { collateralizationPercentø, collateralizationRatioø } from './viewObse
  .subscribe(async ([provider, config, chainId]) => {
   updateYieldProtocol(await buildProtocol(provider, chainId, config));
  });
-
 
 /* Expose the observables */
 const yieldObservables: IYieldObservables = {
@@ -102,9 +103,13 @@ const viewFunctions: any = {
 
 /* Expose any required functions */
 const yieldFunctions: IYieldFunctions = {
+  /* actions */
+  borrow, 
+
   updateProvider,
   updateYieldConfig,
   updateAccount,
+  
   /* selector functions */
   selectIlk,
   selectBase,

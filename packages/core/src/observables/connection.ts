@@ -52,13 +52,19 @@ export const updateProvider = (newProvider: ethers.providers.BaseProvider) => {
  * */
 combineLatest([chainIdø, appConfigø])
   // .pipe(take(1)) // once on start
-  .subscribe(([chainId, appConfig]) => {
+  .subscribe(async ([chainId, appConfig]) => {
     /* Set the provider ( forked or not ) */
-    if (appConfig.useFork && defaultForkMap.has(chainId)) {
-      provider$.next(defaultForkMap.get(chainId) as ethers.providers.BaseProvider);
+    if (appConfig.useFork && appConfig.defaultForkMap.has(chainId)) {
+
+      const forkProvider = appConfig.defaultForkMap.get(chainId);
+      provider$.next(forkProvider!);
+      console.log('FORK BLOCK NUMBER > ' , (await forkProvider?.getBlockNumber())?.toString() ) ;
       sendMsg({ message: 'Using forked Environment.', timeoutOverride: Infinity });
-    } else if (defaultProviderMap.has(chainId)) {
-      provider$.next(defaultProviderMap.get(chainId) as ethers.providers.BaseProvider);
+
+    } else if (appConfig.defaultProviderMap.has(chainId)) {
+
+      provider$.next(appConfig.defaultProviderMap.get(chainId) as ethers.providers.BaseProvider);
+
     } else {
       sendMsg({ message: 'NETWORK NOT SUPPORTED', type: MessageType.WARNING, timeoutOverride: Infinity });
     }

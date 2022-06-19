@@ -4,6 +4,7 @@ import {
   share,
   withLatestFrom,
   filter,
+  shareReplay,
 } from 'rxjs';
 import { BigNumber, ethers } from 'ethers';
 import { mulDecimal, divDecimal } from '@yield-protocol/ui-math';
@@ -19,7 +20,7 @@ import { bnToW3Number } from '../utils/yieldUtils';
 
 /** @internal */
 export const strategyMap$: BehaviorSubject<Map<string, IStrategy>> = new BehaviorSubject(new Map([]));
-export const strategyMapø: Observable<Map<string, IStrategy>> = strategyMap$.pipe(share());
+export const strategyMapø: Observable<Map<string, IStrategy>> = strategyMap$.pipe(shareReplay(1));
 
 /* Update strategies function */
 export const updateStrategies = async (

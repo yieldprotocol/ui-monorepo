@@ -1,8 +1,8 @@
-import { Observable, BehaviorSubject, share, map, tap, takeWhile, takeUntil, distinctUntilChanged, takeLast, take, withLatestFrom, skip, filter } from 'rxjs';
+import { Observable, BehaviorSubject, share, map, tap, takeWhile, takeUntil, distinctUntilChanged, takeLast, take, withLatestFrom, skip, filter, shareReplay } from 'rxjs';
 import { IAsset, ISelected, ISeries, IStrategy, IVault, MessageType } from '../types';
 import { appConfigø } from './appConfig';
 import { assetMap$ } from './assetMap';
-import { messagesø, sendMsg } from './messages';
+import { internalMessagesø, messagesø, sendMsg } from './messages';
 import { seriesMap$, seriesMapø } from './seriesMap';
 import { strategyMap$ } from './strategyMap';
 import { vaultMap$ } from './vaultMap';
@@ -18,17 +18,18 @@ const initSelection: ISelected = {
 
 /** @internal */
 export const selected$: BehaviorSubject<ISelected> = new BehaviorSubject(initSelection);
-export const selectedø: Observable<ISelected> = selected$.pipe(share());
+export const selectedø: Observable<ISelected> = selected$.pipe(shareReplay(1));
 
 /**
  * Set first of array as default series(base gets automatically selected based on the series choice, 
  * this automatically selects the base)
  * */
-messagesø.pipe(
-  filter( (msg) => msg?.type === MessageType.INTERNAL && msg?.id === 'seriesLoaded'), 
+internalMessagesø.pipe(
+  filter( (messages) => messages.has('seriesLoaded')), 
   take(1), // only take one for first load
   withLatestFrom(seriesMapø, appConfigø)
   ).subscribe(([, [sMap], appConfig]) => {
+    console.log( 'herere')
     selectSeries(appConfig.defaultSeriesId || [...sMap][0])
 });
 

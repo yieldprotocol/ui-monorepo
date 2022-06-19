@@ -1,6 +1,7 @@
 export { addEth, removeEth } from "./_addRemoveEth";
 export { wrapAsset, unwrapAsset } from "./_wrapUnwrapAsset";
 export { addCollateral } from "./addCollateral";
+export { addLiquidity } from "./addLiquidity";
 export { borrow } from "./borrow";
 export { closeLend } from "./closeLend";
 export { lend } from "./lend";

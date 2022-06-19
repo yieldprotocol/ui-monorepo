@@ -5,8 +5,9 @@ export default {
   // defaultProvider: new ethers.providers.WebSocketProvider('wss://mainnet.infura.io/ws/v3/de43fd0c912d4bdc94712ab4b37613ea'),
   defaultChainId: 5,
   ignoreSeries: [ '0x303230340000', '0x303130340000'],
-  useFork: true,
+  // useFork: true,
   defaultForkMap : new Map([
-    [1, new ethers.providers.JsonRpcProvider('https://rpc.tenderly.co/fork/53524bcd-8e01-46f1-8e54-b72b376cf179') ],
-  ])
+    [1, new ethers.providers.JsonRpcProvider('https://rpc.tenderly.co/fork/f8730f17-bd41-41ff-bd59-2f1be4a144f1') ],
+  ]),
+  suppressEventLogQueries: true,
 };

@@ -49,19 +49,22 @@ exports.updateProvider = updateProvider;
  * */
 (0, rxjs_1.combineLatest)([exports.chainIdø, appConfig_1.appConfigø])
     // .pipe(take(1)) // once on start
-    .subscribe(([chainId, appConfig]) => {
+    .subscribe(([chainId, appConfig]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     /* Set the provider ( forked or not ) */
-    if (appConfig.useFork && defaultproviders_1.defaultForkMap.has(chainId)) {
-        exports.provider$.next(defaultproviders_1.defaultForkMap.get(chainId));
+    if (appConfig.useFork && appConfig.defaultForkMap.has(chainId)) {
+        const forkProvider = appConfig.defaultForkMap.get(chainId);
+        exports.provider$.next(forkProvider);
+        console.log('FORK BLOCK NUMBER > ', (_a = (yield (forkProvider === null || forkProvider === void 0 ? void 0 : forkProvider.getBlockNumber()))) === null || _a === void 0 ? void 0 : _a.toString());
         (0, messages_1.sendMsg)({ message: 'Using forked Environment.', timeoutOverride: Infinity });
     }
-    else if (defaultproviders_1.defaultProviderMap.has(chainId)) {
-        exports.provider$.next(defaultproviders_1.defaultProviderMap.get(chainId));
+    else if (appConfig.defaultProviderMap.has(chainId)) {
+        exports.provider$.next(appConfig.defaultProviderMap.get(chainId));
     }
     else {
         (0, messages_1.sendMsg)({ message: 'NETWORK NOT SUPPORTED', type: messages_1.MessageType.WARNING, timeoutOverride: Infinity });
     }
-});
+}));
 /** @internal */
 exports.account$ = new rxjs_1.BehaviorSubject(undefined);
 exports.accountø = exports.account$.pipe((0, rxjs_1.shareReplay)(1));

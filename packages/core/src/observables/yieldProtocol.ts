@@ -1,4 +1,4 @@
-import { BehaviorSubject, finalize, Observable, share, takeWhile, tap } from 'rxjs';
+import { BehaviorSubject, finalize, Observable, share, shareReplay, takeWhile, tap } from 'rxjs';
 import { Contract, ethers } from 'ethers';
 import { IAssetRoot, ISeriesRoot, IStrategyRoot, IYieldConfig, IYieldProtocol, MessageType } from '../types';
 import * as contracts from '../contracts';
@@ -22,7 +22,7 @@ const _blankProtocol = {
 
 /** @internal */
 export const yieldProtocol$: BehaviorSubject<IYieldProtocol> = new BehaviorSubject(_blankProtocol);
-export const yieldProtocolø: Observable<IYieldProtocol> = yieldProtocol$.pipe(share());
+export const yieldProtocolø: Observable<IYieldProtocol> = yieldProtocol$.pipe(shareReplay(1));
 export const updateYieldProtocol = (newProtocol: IYieldProtocol) => {
   yieldProtocol$.next(newProtocol); // update to whole new protocol
 };

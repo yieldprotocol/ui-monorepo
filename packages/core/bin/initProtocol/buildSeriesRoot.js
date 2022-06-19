@@ -14,10 +14,13 @@ const buildSeriesMap = (cauldron, ladle, assetRootMap, provider, chainId, appCon
     /* get poolAdded events and series events at the same time */
     const seriesAddedFilter = cauldron.filters.SeriesAdded();
     const poolAddedfilter = ladle.filters.PoolAdded();
-    const [seriesAddedEvents, poolAddedEvents] = yield Promise.all([
-        cauldron.queryFilter(seriesAddedFilter, lastSeriesUpdate, 'latest'),
-        ladle.queryFilter(poolAddedfilter, lastSeriesUpdate, 'latest'),
-    ]);
+    /* Get the series from events - unless fetching historical EventLogs is suppressed */
+    const [seriesAddedEvents, poolAddedEvents] = !appConfig.suppressEventLogQueries
+        ? yield Promise.all([
+            cauldron.queryFilter(seriesAddedFilter, lastSeriesUpdate, 'latest'),
+            ladle.queryFilter(poolAddedfilter, lastSeriesUpdate, 'latest'),
+        ])
+        : [[], []];
     /* Create a array from the seriesAdded event data or hardcoded series data if available */
     const seriesAdded = seriesAddedEvents.map((evnt) => evnt);
     /* Create a map from the poolAdded event data or hardcoded pool data if available */

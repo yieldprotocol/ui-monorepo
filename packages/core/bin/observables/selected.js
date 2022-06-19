@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.selectStrategy = exports.selectVault = exports.selectSeries = exports.selectIlk = exports.selectBase = exports.selectedø = exports.selected$ = void 0;
 const rxjs_1 = require("rxjs");
-const types_1 = require("../types");
 const appConfig_1 = require("./appConfig");
 const assetMap_1 = require("./assetMap");
 const messages_1 = require("./messages");
@@ -19,13 +18,14 @@ const initSelection = {
 };
 /** @internal */
 exports.selected$ = new rxjs_1.BehaviorSubject(initSelection);
-exports.selectedø = exports.selected$.pipe((0, rxjs_1.share)());
+exports.selectedø = exports.selected$.pipe((0, rxjs_1.shareReplay)(1));
 /**
  * Set first of array as default series(base gets automatically selected based on the series choice,
  * this automatically selects the base)
  * */
-messages_1.messagesø.pipe((0, rxjs_1.filter)((msg) => (msg === null || msg === void 0 ? void 0 : msg.type) === types_1.MessageType.INTERNAL && (msg === null || msg === void 0 ? void 0 : msg.id) === 'seriesLoaded'), (0, rxjs_1.take)(1), // only take one for first load
+messages_1.internalMessagesø.pipe((0, rxjs_1.filter)((messages) => messages.has('seriesLoaded')), (0, rxjs_1.take)(1), // only take one for first load
 (0, rxjs_1.withLatestFrom)(seriesMap_1.seriesMapø, appConfig_1.appConfigø)).subscribe(([, [sMap], appConfig]) => {
+    console.log('herere');
     (0, exports.selectSeries)(appConfig.defaultSeriesId || [...sMap][0]);
 });
 /**

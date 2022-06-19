@@ -17,7 +17,7 @@ const constants = tslib_1.__importStar(require("./utils/constants"));
 const assetConstants = tslib_1.__importStar(require("./config/assets"));
 // TODO: import all dynamically when things are up and running 
 // import * as yieldObservables from './observables';
-// import * as viewObservables from './viewObservables';
+const actions_1 = require("./actions");
 const observables_1 = require("./observables");
 const input_1 = require("./viewObservables/input");
 const messages_1 = require("./observables/messages");
@@ -76,6 +76,8 @@ const viewFunctions = {
 exports.viewFunctions = viewFunctions;
 /* Expose any required functions */
 const yieldFunctions = {
+    /* actions */
+    borrow: actions_1.borrow,
     updateProvider: connection_2.updateProvider,
     updateYieldConfig: appConfig_1.updateYieldConfig,
     updateAccount: connection_1.updateAccount,

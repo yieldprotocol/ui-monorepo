@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable, share, combineLatest, withLatestFrom, filter, skip } from 'rxjs';
+import { BehaviorSubject, Observable, share, combineLatest, withLatestFrom, filter, skip, shareReplay } from 'rxjs';
 import { BigNumber, Contract, ethers } from 'ethers';
 
 import { IAsset, IAssetRoot, TokenType, IYieldProtocol } from '../types';
@@ -18,7 +18,7 @@ export const assetMap$: BehaviorSubject<Map<string, IAsset>> = new BehaviorSubje
 /**
  * Unsubscribed Assetmap observable
  */
-export const assetMapø: Observable<Map<string, IAsset>> = assetMap$.pipe(share());
+export const assetMapø: Observable<Map<string, IAsset>> = assetMap$.pipe(shareReplay(1));
 
 /**
  * Update Assets function

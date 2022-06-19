@@ -17,7 +17,7 @@ exports.seriesMap$ = new rxjs_1.BehaviorSubject(new Map([]));
 /**
  * SeriesMap observable and update function.
  */
-exports.seriesMapø = exports.seriesMap$.pipe((0, rxjs_1.share)());
+exports.seriesMapø = exports.seriesMap$.pipe((0, rxjs_1.shareReplay)(1));
 const updateSeries = (seriesList, account, accountDataOnly = false) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const list = (seriesList === null || seriesList === void 0 ? void 0 : seriesList.length) ? seriesList : Array.from(exports.seriesMap$.value.values());
     yield Promise.all(list.map((series) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
