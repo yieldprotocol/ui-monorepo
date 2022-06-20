@@ -46,9 +46,9 @@ export const removeLiquidity = async (
   tradeFyToken: boolean = true
 ) => {
   /* Subscribe to and get the values from the observables:  */
-  combineLatest([yieldProtocolø, chainIdø, assetMapø, accountø, selectedø])
+  combineLatest([yieldProtocolø, assetMapø, accountø, selectedø])
     .pipe(take(1)) // only take one and then finish.
-    .subscribe(async ([{ ladle }, chainId, assetMap, account, selected]) => {
+    .subscribe(async ([{ ladle }, assetMap, account, selected]) => {
       /* generate the reproducible txCode for tx tracking and tracing */
       const txCode = getProcessCode(ActionCodes.REMOVE_LIQUIDITY, series.id);
 
@@ -167,8 +167,7 @@ export const removeLiquidity = async (
             ignoreIf: !!_strategy || alreadyApprovedPool === true,
           },
         ],
-        txCode,
-        chainId
+        txCode
       );
 
       // const unwrapping: ICallData[] = await unwrapAsset(_base, account)

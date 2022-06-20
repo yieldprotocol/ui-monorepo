@@ -37,9 +37,9 @@ const yieldUtils_1 = require("../utils/yieldUtils");
 const _addRemoveEth_1 = require("./_addRemoveEth");
 const removeLiquidity = (amount, series, matchingVault, tradeFyToken = true) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Subscribe to and get the values from the observables:  */
-    (0, rxjs_1.combineLatest)([observables_1.yieldProtocolø, observables_1.chainIdø, observables_1.assetMapø, observables_1.accountø, observables_1.selectedø])
+    (0, rxjs_1.combineLatest)([observables_1.yieldProtocolø, observables_1.assetMapø, observables_1.accountø, observables_1.selectedø])
         .pipe((0, rxjs_1.take)(1)) // only take one and then finish.
-        .subscribe(([{ ladle }, chainId, assetMap, account, selected]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+        .subscribe(([{ ladle }, assetMap, account, selected]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         /* generate the reproducible txCode for tx tracking and tracing */
         const txCode = (0, utils_1.getProcessCode)(types_1.ActionCodes.REMOVE_LIQUIDITY, series.id);
         /* Get the values from the observables/subjects */
@@ -109,7 +109,7 @@ const removeLiquidity = (amount, series, matchingVault, tradeFyToken = true) => 
                 amount: _amount,
                 ignoreIf: !!_strategy || alreadyApprovedPool === true,
             },
-        ], txCode, chainId);
+        ], txCode);
         // const unwrapping: ICallData[] = await unwrapAsset(_base, account)
         const calls = [
             ...permitCallData,

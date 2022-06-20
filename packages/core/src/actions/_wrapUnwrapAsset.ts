@@ -1,5 +1,6 @@
 import { BigNumber, Contract } from 'ethers';
-import {assetMap$, userSettings$ } from '../observables';
+import { first, lastValueFrom } from 'rxjs';
+import {accountProviderø, accountø, chainIdø, userSettingsø } from '../observables';
 import { IAsset, ICallData, LadleActions, RoutedActions } from '../types';
 import { ZERO_BN } from '../utils/constants';
 
@@ -11,18 +12,15 @@ const wrapHandlerAbi = ['function wrap(address to)', 'function unwrap(address to
 export const wrapAsset = async (
   value: BigNumber,
   asset: IAsset,
-  processCode: string,
-  chainId: number,
   to?: string | undefined // optional send destination : DEFAULT is assetJoin address
 ): Promise<ICallData[]> => {
 
-  console.log( processCode) // TODO maybe remove this 
+  const account = await lastValueFrom(accountø.pipe(first()));
+  const chainId = await lastValueFrom(chainIdø.pipe(first()));
+  const accountProvider = await lastValueFrom(accountProviderø.pipe(first())); //  await lastValueFrom(accountProviderø);
 
-  const assetMap = assetMap$.value;
-  // const account = account$.value;
-
-  /* get the signer from the provider */
-  // const signer = account ? provider?.getSigner(account) : provider?.getSigner(0);
+  // /* Get the signer from the accountProvider */
+  const signer = accountProvider.getSigner(account);
 
   /* SET the destination address DEFAULTs to the assetJoin Address */
   const toAddress = to || asset.joinAddress;
@@ -32,8 +30,8 @@ export const wrapAsset = async (
 
   /* NB! IF a wraphandler exists, we assume that it is Yield uses the wrapped version of the token */
   if (wrapHandlerAddress && value.gt(ZERO_BN)) {
-    const wrapHandlerContract: Contract = new Contract(wrapHandlerAddress, wrapHandlerAbi, ); // TODO: SIGNER here
-    const { assetContract } = assetMap.get(asset.id)!; // NOTE: -> this is NOT the proxyID
+    const wrapHandlerContract: Contract = new Contract(wrapHandlerAddress, wrapHandlerAbi, signer ); 
+    const { assetContract } = asset; // NOTE: -> this is NOT the proxyID
 
     console.log('Asset Contract to be signed for wrapping: ', assetContract.id);
 
@@ -73,13 +71,15 @@ export const wrapAsset = async (
 /**
  * @internal
  * */
-export const unwrapAsset = async (asset: IAsset, receiver: string, chainId: number): Promise<ICallData[]> => {
+export const unwrapAsset = async (asset: IAsset, receiver: string ): Promise<ICallData[]> => {
+
+  const userSettings = await lastValueFrom(userSettingsø.pipe(first()));
+  const chainId = await lastValueFrom(chainIdø.pipe(first()));
+  const { unwrapTokens } = userSettings;
 
   const unwrapHandlerAddress = asset.unwrapHandlerAddresses?.has(chainId)
     ? asset.unwrapHandlerAddresses.get(chainId)
     : undefined;
-
-  const { unwrapTokens } = userSettings$.value;
 
   /* if there is an unwrap handler we assume the token needs to be unwrapped  ( unless the 'unwrapTokens' setting is false) */
   if (unwrapTokens && unwrapHandlerAddress) {

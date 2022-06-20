@@ -13,6 +13,7 @@ import {
   vaultMapø,
   selectedø,
   userSettingsø,
+  accountProviderø,
 } from '../observables';
 import { sign, transact } from '../chainActions';
 
@@ -33,14 +34,20 @@ export const borrow = async (
   vault?: IVault | string,
   getValuesFromNetwork: boolean = true // Get market values by network call or offline calc (default: NETWORK)
 ) => {
-
   /* Subscribe to and get the values from the observables:  */
-  combineLatest([yieldProtocolø, chainIdø, assetMapø, seriesMapø, vaultMapø, accountø, selectedø, userSettingsø])
+  combineLatest([
+    yieldProtocolø,
+    assetMapø,
+    seriesMapø,
+    vaultMapø,
+    accountø,
+    selectedø,
+    userSettingsø,
+  ])
     .pipe(take(1)) // only take one and then finish.
     .subscribe(
       async ([
         { ladle, moduleMap },
-        chainId,
         assetMap,
         seriesMap,
         vaultMap,
@@ -48,7 +55,6 @@ export const borrow = async (
         selected,
         { slippageTolerance },
       ]) => {
-
         /** Use the vault/vaultId provided else use blank vault TODO: Add a check for existing vault */
         const getValidatedVault = (v: IVault | string | undefined): IVault | undefined => {
           if (v) {
@@ -95,8 +101,8 @@ export const borrow = async (
         /* FLAG: is convex-type collateral */
         const isConvexCollateral = CONVEX_BASED_ASSETS.includes(selected.ilk!.proxyId);
 
-        console.log( 'convex? ',  isConvexCollateral )
-        console.log( 'vault? ',  vaultId )
+        console.log('convex? ', isConvexCollateral);
+        console.log('vault? ', vaultId);
 
         /* Calculate expected debt (fytokens) from EITHER network or calculated : default = Network */
         const _expectedFyToken = getValuesFromNetwork
@@ -129,9 +135,9 @@ export const borrow = async (
         const addEthCallData: ICallData[] = addEth(isEthCollateral ? _collAmount : ZERO_BN);
         /* handle remove/unwrap WETH > if ETH is what is being borrowed */
         const removeEthCallData: ICallData[] = removeEth(isEthBase ? ONE_BN : ZERO_BN); // (exit_ether sweeps all the eth out the ladle, so exact amount is not importnat -> just greater than zero)
-        
+
         /* handle wrapping of collateral if required */
-        const wrapAssetCallData: ICallData[] = await wrapAsset(_collAmount, selected.ilk!, processCode, chainId); // note: selected ilk used here, not wrapped version
+        const wrapAssetCallData: ICallData[] = await wrapAsset(_collAmount, selected.ilk!, processCode ); // note: selected ilk used here, not wrapped version
 
         /**
          * Gather all the required signatures - sign() processes them and returns them as ICallData types
@@ -150,8 +156,7 @@ export const borrow = async (
               // wrapAssetCallData.length > 0, // Ignore if dealing with a wrapped collateral!
             },
           ],
-          processCode,
-          chainId
+          processCode
         );
 
         /**

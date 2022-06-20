@@ -12,9 +12,9 @@ const utils_1 = require("../utils");
 const yieldUtils_1 = require("../utils/yieldUtils");
 const rollLend = (amount, fromSeries, toSeries) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Subscribe to and get the values from the observables:  */
-    (0, rxjs_1.combineLatest)([observables_1.yieldProtocolø, observables_1.chainIdø, observables_1.assetMapø, observables_1.accountø, observables_1.userSettingsø])
+    (0, rxjs_1.combineLatest)([observables_1.yieldProtocolø, observables_1.assetMapø, observables_1.accountø, observables_1.userSettingsø])
         .pipe((0, rxjs_1.take)(1)) // only take one and then finish.
-        .subscribe(([{ ladle }, chainId, assetMap, account, { slippageTolerance },]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+        .subscribe(([{ ladle }, assetMap, account, { slippageTolerance },]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         /* generate the reproducible txCode for tx tracking and tracing */
         const txCode = (0, utils_1.getProcessCode)(types_1.ActionCodes.ROLL_POSITION, fromSeries.id);
         /* Get the values from the observables/subjects */
@@ -35,7 +35,7 @@ const rollLend = (amount, fromSeries, toSeries) => tslib_1.__awaiter(void 0, voi
                 amount: _fyTokenValueOfInput,
                 ignoreIf: alreadyApproved === true,
             },
-        ], txCode, chainId);
+        ], txCode);
         /* Reciever of transfer (based on maturity) the series maturity */
         const transferToAddress = () => {
             if (seriesIsMature)

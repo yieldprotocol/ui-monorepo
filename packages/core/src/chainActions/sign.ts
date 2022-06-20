@@ -1,8 +1,5 @@
 import { signDaiPermit, signERC2612Permit } from 'eth-permit';
-import { ethers } from 'ethers';
 import { ERC20Permit__factory, ERC1155__factory } from '../contracts';
-import { account$, accountProvider$ } from '../observables';
-import { userSettings$, userSettingsø } from '../observables/userSettings';
 import {
   ISignData,
   ICallData,
@@ -14,8 +11,10 @@ import {
   IYieldSig,
 } from '../types';
 import { IGNORED_CALLDATA, MAX_256 } from '../utils/constants';
-import { resetProcess, updateProcess} from '../observables/transactions';
+import { resetProcess, updateProcess } from '../observables/transactions';
 import { getSignId } from '../utils/yieldUtils';
+import { first, lastValueFrom } from 'rxjs';
+import { accountProviderø, accountø, chainIdø, userSettingsø } from '../observables';
 
 // const _handleSignSuccess = (reqSig: ISignData, processCode:string ) => {
 //     /* update the processMap to indicate the signing was successfull */
@@ -45,12 +44,19 @@ const _handleSignError = (err: Error, processCode: string) => {
  * @returns { Promise<ICallData[]> }
  */
 
-export const sign = async (requestedSignatures: ISignData[], processCode: string, chainId: number): Promise<ICallData[]> => {
+export const sign = async (requestedSignatures: ISignData[], processCode: string): Promise<ICallData[]> => {
+  const account = await lastValueFrom(accountø.pipe(first()));
+  const chainId = await lastValueFrom(chainIdø.pipe(first()));
+  const { maxApproval, approvalMethod } = await lastValueFrom(userSettingsø.pipe(first()));
+  const accountProvider = await lastValueFrom(accountProviderø.pipe(first())); //  await lastValueFrom(accountProviderø);
 
-  /* Get the values from the SUBJECTS $$ */
- const account = account$.value;
- const accountProvider = accountProvider$.value;
- const { maxApproval, approvalMethod } = userSettings$.value;
+  // /* Get the signer from the accountProvider */
+  const signer = accountProvider.getSigner(account);
+
+  /* check if a contract wallet is being used */
+  const walletCode = await accountProvider.getCode(account!);
+  const isContractWallet = walletCode !== '0x0';
+  isContractWallet && console.log('Contract wallet detected - using approval by transaction');
 
   /* First, filter out any ignored calls */
   const _requestedSigs = requestedSignatures.filter((_rs: ISignData) => !_rs.ignoreIf);
@@ -67,13 +73,7 @@ export const sign = async (requestedSignatures: ISignData[], processCode: string
     stage: ProcessStage.SIGNING_APPROVAL_REQUESTED,
   });
 
-  const isContractWallet = (account && (await accountProvider.getCode(account)) !== '0x0') || '0x';
-  console.log(isContractWallet);
-
-  const signer = account
-    ? accountProvider.getSigner(account)
-    : accountProvider.getSigner(0); // TODO: signer is WRONG here.
-
+  // const signer = account ? accountProvider.getSigner(account) : accountProvider.getSigner(0); // TODO: signer is WRONG here.
   const _processedSigs = _requestedSigs.map(async (reqSig: ISignData): Promise<ICallData> => {
     /**
      * CASE 1:  ERC2612 Permit style (and approval by transaction not  selected)
@@ -178,7 +178,6 @@ export const sign = async (requestedSignatures: ISignData[], processCode: string
         processCode,
         signMap: new Map(_signMap.set(getSignId(reqSig), { signData: reqSig, status: TxState.SUCCESSFUL })),
       });
-
     } else {
       /* else use a regular approval */
       const connectedERC20 = ERC20Permit__factory.connect(reqSig.target.address, signer);
@@ -192,14 +191,19 @@ export const sign = async (requestedSignatures: ISignData[], processCode: string
         signMap: new Map(_signMap.set(getSignId(reqSig), { signData: reqSig, status: TxState.SUCCESSFUL })),
       });
     }
+
+    // /* update the processMap to indicate the signing was successfull */
+    // updateProcess({
+    //   processCode,
+    //   signMap: new Map(_signMap.set(getSignId(reqSig), { signData: reqSig, status: TxState.SUCCESSFUL })),
+    // });
+
     /* Approval transaction complete: return a dummy ICalldata ( which will ALWAYS get ignored )*/
     return IGNORED_CALLDATA;
-
   });
 
   /* Returns the processed list of txs required as ICallData[] if all successful (  may as well filter out ignored values here too ) */
   const signedList = await Promise.all(_processedSigs);
 
   return signedList.filter((x: ICallData) => !x.ignoreIf);
-
-}
+};

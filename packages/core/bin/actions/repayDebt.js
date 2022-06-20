@@ -60,7 +60,7 @@ const repayDebt = (amount, vault, reclaimCollateral) => tslib_1.__awaiter(void 0
         /* Check if already apporved */
         const alreadyApproved = (yield base.getAllowance(account, ladleAddress)).gte(amountToTransfer);
         // const wrapAssetCallData : ICallData[] = await wrapAsset(ilk, account!);
-        const unwrapAssetCallData = reclaimCollateral ? yield (0, _wrapUnwrapAsset_1.unwrapAsset)(ilk, account, chainId) : [];
+        const unwrapAssetCallData = reclaimCollateral ? yield (0, _wrapUnwrapAsset_1.unwrapAsset)(ilk, account) : [];
         const permitCallData = yield (0, sign_1.sign)([
             {
                 // before maturity
@@ -69,7 +69,7 @@ const repayDebt = (amount, vault, reclaimCollateral) => tslib_1.__awaiter(void 0
                 amount: amountToTransfer.mul(110).div(100),
                 ignoreIf: alreadyApproved === true,
             },
-        ], txCode, chainId);
+        ], txCode);
         /* Remove ETH collateral. (exit_ether sweeps all the eth out of the ladle, so exact amount is not importnat -> just greater than zero) */
         const removeEthCallData = isEthCollateral ? (0, _addRemoveEth_1.removeEth)(constants_1.ONE_BN) : [];
         /* Address to send the funds to either ladle (if eth is used as collateral) or account */

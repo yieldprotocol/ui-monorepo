@@ -31,7 +31,7 @@ export const removeCollateral = async (amount: string, vault: IVault, unwrapOnRe
       const _amount = inputToTokenValue(amount, ilk.decimals);
 
       /* handle wrapped tokens:  */
-      const unwrapCallData: ICallData[] = unwrapOnRemove ? await unwrapAsset(ilk, account!, chainId) : [];
+      const unwrapCallData: ICallData[] = unwrapOnRemove ? await unwrapAsset(ilk, account!) : [];
       const removeEthCallData: ICallData[] = isEthCollateral ? removeEth(ONE_BN) : []; // (exit_ether sweeps all the eth out the ladle, so exact amount is not importnat -> just greater than zero)
 
       /* is convex-type collateral */

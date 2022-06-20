@@ -21,12 +21,11 @@ import { wrapAsset } from './_wrapUnwrapAsset';
 
 export const addCollateral = async (amount: string, vault?: IVault | string) => {
   /* Subscribe to and get the values from the observables:  */
-  combineLatest([yieldProtocolø, chainIdø, assetMapø, vaultMapø, accountø, selectedø ])
+  combineLatest([yieldProtocolø, assetMapø, vaultMapø, accountø, selectedø ])
     .pipe(take(1)) // only take one and then finish.
     .subscribe(
       async ([
         { ladle, moduleMap },
-        chainId,
         assetMap,
         vaultMap,
         account,
@@ -79,7 +78,7 @@ export const addCollateral = async (amount: string, vault?: IVault | string) => 
         const alreadyApproved = ethers.BigNumber.isBigNumber(_allowance) ? _allowance.gte(_amount) : _allowance;
 
         /* Handle wrapping of tokens:  */
-        const wrapAssetCallData: ICallData[] = await wrapAsset(_amount, ilk!, txCode, chainId);
+        const wrapAssetCallData: ICallData[] = await wrapAsset(_amount, ilk!, txCode );
 
         /* Gather all the required signatures - sign() processes them and returns them as ICallData types */
         const permitCallData: ICallData[] = await sign(
@@ -92,8 +91,7 @@ export const addCollateral = async (amount: string, vault?: IVault | string) => 
               ignoreIf: isEthCollateral || alreadyApproved === true || wrapAssetCallData.length > 0,
             },
           ],
-          txCode,
-          chainId
+          txCode
         );
 
         /* Handle adding eth if required (ie. if the ilk is ETH_BASED). If not, else simply sent ZERO to the addEth fn */

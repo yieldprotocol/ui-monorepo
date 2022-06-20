@@ -18,9 +18,17 @@ const rxjs_1 = require("rxjs");
 const borrow = (amount, collateralAmount, vault, getValuesFromNetwork = true // Get market values by network call or offline calc (default: NETWORK)
 ) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Subscribe to and get the values from the observables:  */
-    (0, rxjs_1.combineLatest)([observables_1.yieldProtocolø, observables_1.chainIdø, observables_1.assetMapø, observables_1.seriesMapø, observables_1.vaultMapø, observables_1.accountø, observables_1.selectedø, observables_1.userSettingsø])
+    (0, rxjs_1.combineLatest)([
+        observables_1.yieldProtocolø,
+        observables_1.assetMapø,
+        observables_1.seriesMapø,
+        observables_1.vaultMapø,
+        observables_1.accountø,
+        observables_1.selectedø,
+        observables_1.userSettingsø,
+    ])
         .pipe((0, rxjs_1.take)(1)) // only take one and then finish.
-        .subscribe(([{ ladle, moduleMap }, chainId, assetMap, seriesMap, vaultMap, account, selected, { slippageTolerance },]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+        .subscribe(([{ ladle, moduleMap }, assetMap, seriesMap, vaultMap, account, selected, { slippageTolerance },]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         var _a;
         /** Use the vault/vaultId provided else use blank vault TODO: Add a check for existing vault */
         const getValidatedVault = (v) => {
@@ -86,7 +94,7 @@ const borrow = (amount, collateralAmount, vault, getValuesFromNetwork = true // 
         /* handle remove/unwrap WETH > if ETH is what is being borrowed */
         const removeEthCallData = (0, _addRemoveEth_1.removeEth)(isEthBase ? ui_math_1.ONE_BN : ui_math_1.ZERO_BN); // (exit_ether sweeps all the eth out the ladle, so exact amount is not importnat -> just greater than zero)
         /* handle wrapping of collateral if required */
-        const wrapAssetCallData = yield (0, _wrapUnwrapAsset_1.wrapAsset)(_collAmount, selected.ilk, processCode, chainId); // note: selected ilk used here, not wrapped version
+        const wrapAssetCallData = yield (0, _wrapUnwrapAsset_1.wrapAsset)(_collAmount, selected.ilk, processCode); // note: selected ilk used here, not wrapped version
         /**
          * Gather all the required signatures - sign() processes them and returns them as ICallData types
          * NOTE: this is an async function
@@ -101,7 +109,7 @@ const borrow = (amount, collateralAmount, vault, getValuesFromNetwork = true // 
                     _collAmount.eq(ethers_1.ethers.constants.Zero), // || // ignore if zero collateral value
                 // wrapAssetCallData.length > 0, // Ignore if dealing with a wrapped collateral!
             },
-        ], processCode, chainId);
+        ], processCode);
         /**
          *
          * Collate all the calls required for the process

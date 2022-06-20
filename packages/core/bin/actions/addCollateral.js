@@ -16,9 +16,9 @@ const _addRemoveEth_1 = require("./_addRemoveEth");
 const _wrapUnwrapAsset_1 = require("./_wrapUnwrapAsset");
 const addCollateral = (amount, vault) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Subscribe to and get the values from the observables:  */
-    (0, rxjs_1.combineLatest)([observables_1.yieldProtocolø, observables_1.chainIdø, observables_1.assetMapø, observables_1.vaultMapø, observables_1.accountø, observables_1.selectedø])
+    (0, rxjs_1.combineLatest)([observables_1.yieldProtocolø, observables_1.assetMapø, observables_1.vaultMapø, observables_1.accountø, observables_1.selectedø])
         .pipe((0, rxjs_1.take)(1)) // only take one and then finish.
-        .subscribe(([{ ladle, moduleMap }, chainId, assetMap, vaultMap, account, selected,]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+        .subscribe(([{ ladle, moduleMap }, assetMap, vaultMap, account, selected,]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         var _a;
         /* Get the values from the observables/subjects */
         const ladleAddress = ladle.address;
@@ -60,7 +60,7 @@ const addCollateral = (amount, vault) => tslib_1.__awaiter(void 0, void 0, void 
         const _allowance = yield (ilk === null || ilk === void 0 ? void 0 : ilk.getAllowance(account, ilk.joinAddress));
         const alreadyApproved = ethers_1.ethers.BigNumber.isBigNumber(_allowance) ? _allowance.gte(_amount) : _allowance;
         /* Handle wrapping of tokens:  */
-        const wrapAssetCallData = yield (0, _wrapUnwrapAsset_1.wrapAsset)(_amount, ilk, txCode, chainId);
+        const wrapAssetCallData = yield (0, _wrapUnwrapAsset_1.wrapAsset)(_amount, ilk, txCode);
         /* Gather all the required signatures - sign() processes them and returns them as ICallData types */
         const permitCallData = yield (0, chainActions_1.sign)([
             {
@@ -70,7 +70,7 @@ const addCollateral = (amount, vault) => tslib_1.__awaiter(void 0, void 0, void 
                 /* ignore if: 1) collateral is ETH 2) approved already 3) wrapAssets call is > 0 (because the permit is handled with wrapping) */
                 ignoreIf: isEthCollateral || alreadyApproved === true || wrapAssetCallData.length > 0,
             },
-        ], txCode, chainId);
+        ], txCode);
         /* Handle adding eth if required (ie. if the ilk is ETH_BASED). If not, else simply sent ZERO to the addEth fn */
         const addEthCallData = (0, _addRemoveEth_1.addEth)(assets_1.ETH_BASED_ASSETS.includes(ilk === null || ilk === void 0 ? void 0 : ilk.proxyId) ? _amount : utils_1.ZERO_BN, undefined, ilk === null || ilk === void 0 ? void 0 : ilk.proxyId);
         /* pour destination based on ilk/asset is an eth asset variety */

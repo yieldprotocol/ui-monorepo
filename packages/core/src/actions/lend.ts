@@ -16,12 +16,11 @@ import { combineLatest, take } from 'rxjs';
 
 export const lend = async (amount: string | undefined, series: ISeries) => {
   /* Subscribe to and get the values from the observables:  */
-  combineLatest([yieldProtocolø, chainIdø, assetMapø, accountø, userSettingsø])
+  combineLatest([yieldProtocolø, assetMapø, accountø, userSettingsø])
     .pipe(take(1)) // only take one and then finish.
     .subscribe(
       async ([
         { ladle },
-        chainId,
         assetMap,
         account,
         { slippageTolerance },
@@ -60,8 +59,7 @@ export const lend = async (amount: string | undefined, series: ISeries) => {
               ignoreIf: alreadyApproved === true,
             },
           ],
-          processCode,
-          chainId
+          processCode
         );
 
         const addEthCallData = () => {

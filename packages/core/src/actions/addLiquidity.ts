@@ -35,9 +35,9 @@ export const addLiquidity = async (
   matchingVault: IVault | undefined = undefined
 ) => {
   /* Subscribe to and get the values from the observables:  */
-  combineLatest([yieldProtocolø, chainIdø, assetMapø, seriesMapø, accountø, userSettingsø, vaultMapø, strategyMapø])
+  combineLatest([yieldProtocolø, assetMapø, seriesMapø, accountø, userSettingsø, vaultMapø, strategyMapø])
     .pipe(take(1)) // only take one and then finish.
-    .subscribe(async ([{ ladle }, chainId, assetMap, seriesMap, account, { slippageTolerance }]) => {
+    .subscribe(async ([{ ladle }, assetMap, seriesMap, account, { slippageTolerance }]) => {
       /* Get the values from the observables/subjects */
       const ladleAddress = ladle.address;
 
@@ -128,8 +128,7 @@ export const addLiquidity = async (
             ignoreIf: alreadyApproved === true,
           },
         ],
-        txCode,
-        chainId
+        txCode
       );
 
       /* if  Eth base, build the correct add ethCalls */

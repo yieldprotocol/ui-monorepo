@@ -4,12 +4,12 @@ exports.sign = void 0;
 const tslib_1 = require("tslib");
 const eth_permit_1 = require("eth-permit");
 const contracts_1 = require("../contracts");
-const observables_1 = require("../observables");
-const userSettings_1 = require("../observables/userSettings");
 const types_1 = require("../types");
 const constants_1 = require("../utils/constants");
 const transactions_1 = require("../observables/transactions");
 const yieldUtils_1 = require("../utils/yieldUtils");
+const rxjs_1 = require("rxjs");
+const observables_1 = require("../observables");
 // const _handleSignSuccess = (reqSig: ISignData, processCode:string ) => {
 //     /* update the processMap to indicate the signing was successfull */
 //     updateProcess({
@@ -35,11 +35,17 @@ const _handleSignError = (err, processCode) => {
  *
  * @returns { Promise<ICallData[]> }
  */
-const sign = (requestedSignatures, processCode, chainId) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    /* Get the values from the SUBJECTS $$ */
-    const account = observables_1.account$.value;
-    const accountProvider = observables_1.accountProvider$.value;
-    const { maxApproval, approvalMethod } = userSettings_1.userSettings$.value;
+const sign = (requestedSignatures, processCode) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    const account = yield (0, rxjs_1.lastValueFrom)(observables_1.accountø.pipe((0, rxjs_1.first)()));
+    const chainId = yield (0, rxjs_1.lastValueFrom)(observables_1.chainIdø.pipe((0, rxjs_1.first)()));
+    const { maxApproval, approvalMethod } = yield (0, rxjs_1.lastValueFrom)(observables_1.userSettingsø.pipe((0, rxjs_1.first)()));
+    const accountProvider = yield (0, rxjs_1.lastValueFrom)(observables_1.accountProviderø.pipe((0, rxjs_1.first)())); //  await lastValueFrom(accountProviderø);
+    // /* Get the signer from the accountProvider */
+    const signer = accountProvider.getSigner(account);
+    /* check if a contract wallet is being used */
+    const walletCode = yield accountProvider.getCode(account);
+    const isContractWallet = walletCode !== '0x0';
+    isContractWallet && console.log('Contract wallet detected - using approval by transaction');
     /* First, filter out any ignored calls */
     const _requestedSigs = requestedSignatures.filter((_rs) => !_rs.ignoreIf);
     /* Build out the signMap for this process */
@@ -50,11 +56,7 @@ const sign = (requestedSignatures, processCode, chainId) => tslib_1.__awaiter(vo
         signMap: new Map(_signMap),
         stage: types_1.ProcessStage.SIGNING_APPROVAL_REQUESTED,
     });
-    const isContractWallet = (account && (yield accountProvider.getCode(account)) !== '0x0') || '0x';
-    console.log(isContractWallet);
-    const signer = account
-        ? accountProvider.getSigner(account)
-        : accountProvider.getSigner(0); // TODO: signer is WRONG here.
+    // const signer = account ? accountProvider.getSigner(account) : accountProvider.getSigner(0); // TODO: signer is WRONG here.
     const _processedSigs = _requestedSigs.map((reqSig) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         var _a;
         /**
@@ -152,6 +154,11 @@ const sign = (requestedSignatures, processCode, chainId) => tslib_1.__awaiter(vo
                 signMap: new Map(_signMap.set((0, yieldUtils_1.getSignId)(reqSig), { signData: reqSig, status: types_1.TxState.SUCCESSFUL })),
             });
         }
+        // /* update the processMap to indicate the signing was successfull */
+        // updateProcess({
+        //   processCode,
+        //   signMap: new Map(_signMap.set(getSignId(reqSig), { signData: reqSig, status: TxState.SUCCESSFUL })),
+        // });
         /* Approval transaction complete: return a dummy ICalldata ( which will ALWAYS get ignored )*/
         return constants_1.IGNORED_CALLDATA;
     }));

@@ -102,7 +102,7 @@ export const repayDebt = async (amount: string | undefined, vault: IVault, recla
       const alreadyApproved = (await base.getAllowance(account!, ladleAddress)).gte(amountToTransfer);
 
       // const wrapAssetCallData : ICallData[] = await wrapAsset(ilk, account!);
-      const unwrapAssetCallData: ICallData[] = reclaimCollateral ? await unwrapAsset(ilk, account!, chainId) : [];
+      const unwrapAssetCallData: ICallData[] = reclaimCollateral ? await unwrapAsset(ilk, account!) : [];
 
       const permitCallData: ICallData[] = await sign(
         [
@@ -114,8 +114,7 @@ export const repayDebt = async (amount: string | undefined, vault: IVault, recla
             ignoreIf: alreadyApproved === true,
           },
         ],
-        txCode,
-        chainId
+        txCode
       );
 
       /* Remove ETH collateral. (exit_ether sweeps all the eth out of the ladle, so exact amount is not importnat -> just greater than zero) */
