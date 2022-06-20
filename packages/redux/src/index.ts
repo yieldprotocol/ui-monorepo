@@ -1,5 +1,5 @@
 import { createSlice, configureStore } from '@reduxjs/toolkit'
-import { filter, combineLatest, map } from "rxjs";
+import { combineLatest } from "rxjs";
 import {
   yieldObservables,
 //   yieldFunctions,
@@ -17,7 +17,6 @@ const yieldProtocolSlice = createSlice({
   reducers: {
     updateProtocol: (state: any, action:any) =>  {
         // console.log('STATE UPDATE: ', state, action.payload);
-        console.log ('ehererererererer')
         return  { ...state, ...action.payload} ;
     },
   }
@@ -30,6 +29,6 @@ export const store = configureStore({
 
 combineLatest([ messagesø, yieldProtocolø ] ).pipe(
 ).subscribe(([msg, yp]) => { 
-    if  (msg?.id === 'protocolLoaded' ) { console.log( '>>>>>>> protocol Loaded ');   };
-    if  (msg?.id === 'protocolLoaded' ) updateProtocol( { yp } );
+    if  (msg.has('protocolLoaded') ) { console.log( '>>>>>>> protocol Loaded ');   };
+    if  (msg.has('protocolLoaded') ) updateProtocol( { yp } );
 });
