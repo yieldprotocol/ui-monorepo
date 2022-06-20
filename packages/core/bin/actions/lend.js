@@ -35,14 +35,16 @@ const lend = (amount, series) => tslib_1.__awaiter(void 0, void 0, void 0, funct
                 ignoreIf: alreadyApproved === true,
             },
         ], processCode);
-        const addEthCallData = () => {
-            if (isEthBase)
-                return (0, _addRemoveEth_1.addEth)(_amount, series.poolAddress);
+        const addEthCallData = yield (() => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+            if (isEthBase) {
+                const ethToPoolCall = yield (0, _addRemoveEth_1.addEth)(_amount, series.poolAddress);
+                return ethToPoolCall;
+            }
             return [];
-        };
+        }))();
         const calls = [
             ...permitCallData,
-            ...addEthCallData(),
+            ...addEthCallData,
             {
                 operation: types_1.LadleActions.Fn.TRANSFER,
                 args: [base.address, series.poolAddress, _amount],

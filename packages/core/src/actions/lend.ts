@@ -62,14 +62,17 @@ export const lend = async (amount: string | undefined, series: ISeries) => {
           processCode
         );
 
-        const addEthCallData = () => {
-          if (isEthBase) return addEth(_amount, series.poolAddress);
+        const addEthCallData = await ( async () => {
+          if (isEthBase) {
+            const ethToPoolCall = await addEth(_amount, series.poolAddress);
+            return ethToPoolCall;
+          } 
           return [];
-        };
+        })();
 
         const calls: ICallData[] = [
           ...permitCallData,
-          ...addEthCallData(),
+          ...addEthCallData,
           {
             operation: LadleActions.Fn.TRANSFER,
             args: [base.address, series.poolAddress, _amount] as LadleActions.Args.TRANSFER,

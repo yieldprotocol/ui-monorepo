@@ -356,14 +356,14 @@ export interface IYieldTx extends ContractTransaction {
     status: TxState;
 }
 export declare enum ProcessStage {
-    PROCESS_INACTIVE = 0,
-    SIGNING_APPROVAL_REQUESTED = 1,
-    APPROVAL_TRANSACTION_PENDING = 2,
-    SIGNING_APPROVAL_COMPLETE = 3,
-    TRANSACTION_REQUESTED = 4,
-    TRANSACTION_PENDING = 5,
-    PROCESS_COMPLETE = 6,
-    PROCESS_COMPLETE_TIMEOUT = 7
+    PROCESS_INACTIVE = "Process inactive",
+    SIGNING_APPROVAL_REQUESTED = "Signing requested",
+    APPROVAL_TRANSACTION_PENDING = "Approval transaction pending",
+    SIGNING_APPROVAL_COMPLETE = "Signing/Approval complete",
+    TRANSACTION_REQUESTED = "Transaction requested ",
+    TRANSACTION_PENDING = "Transaction pending",
+    PROCESS_COMPLETE = "Process complete",
+    PROCESS_COMPLETE_TIMEOUT = "Process complete: timeout"
 }
 export interface IYieldProcess {
     processCode: string;

@@ -41,7 +41,7 @@ const _handleTxWillFail = (error, processCode, transaction) => {
     // updateState({ type: TxStateItem.TX_WILL_FAIL, payload: true });
     (0, transactions_1.updateProcess)({
         processCode,
-        stage: 0,
+        stage: types_1.ProcessStage.PROCESS_INACTIVE,
         error: { error, message: 'Transaction Aborted (expected to fail)' },
         tx: transaction,
     });
@@ -56,7 +56,7 @@ const _handleTxRejection = (err, processCode) => {
     /* If user cancelled/rejected the tx */
     if (err.code === 4001) {
         console.log('User cancelled');
-        (0, transactions_1.updateProcess)({ processCode, stage: 0, error: { error: err, message: 'Transaction rejected by user.' } });
+        (0, transactions_1.updateProcess)({ processCode, stage: types_1.ProcessStage.PROCESS_INACTIVE, error: { error: err, message: 'Transaction rejected by user.' } });
     }
     else {
         /* Else, the transaction was likely cancelled by the wallet/provider before getting submitted?  */

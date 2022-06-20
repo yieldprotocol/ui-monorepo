@@ -34,14 +34,14 @@ var TxState;
 })(TxState = exports.TxState || (exports.TxState = {}));
 var ProcessStage;
 (function (ProcessStage) {
-    ProcessStage[ProcessStage["PROCESS_INACTIVE"] = 0] = "PROCESS_INACTIVE";
-    ProcessStage[ProcessStage["SIGNING_APPROVAL_REQUESTED"] = 1] = "SIGNING_APPROVAL_REQUESTED";
-    ProcessStage[ProcessStage["APPROVAL_TRANSACTION_PENDING"] = 2] = "APPROVAL_TRANSACTION_PENDING";
-    ProcessStage[ProcessStage["SIGNING_APPROVAL_COMPLETE"] = 3] = "SIGNING_APPROVAL_COMPLETE";
-    ProcessStage[ProcessStage["TRANSACTION_REQUESTED"] = 4] = "TRANSACTION_REQUESTED";
-    ProcessStage[ProcessStage["TRANSACTION_PENDING"] = 5] = "TRANSACTION_PENDING";
-    ProcessStage[ProcessStage["PROCESS_COMPLETE"] = 6] = "PROCESS_COMPLETE";
-    ProcessStage[ProcessStage["PROCESS_COMPLETE_TIMEOUT"] = 7] = "PROCESS_COMPLETE_TIMEOUT";
+    ProcessStage["PROCESS_INACTIVE"] = "Process inactive";
+    ProcessStage["SIGNING_APPROVAL_REQUESTED"] = "Signing requested";
+    ProcessStage["APPROVAL_TRANSACTION_PENDING"] = "Approval transaction pending";
+    ProcessStage["SIGNING_APPROVAL_COMPLETE"] = "Signing/Approval complete";
+    ProcessStage["TRANSACTION_REQUESTED"] = "Transaction requested ";
+    ProcessStage["TRANSACTION_PENDING"] = "Transaction pending";
+    ProcessStage["PROCESS_COMPLETE"] = "Process complete";
+    ProcessStage["PROCESS_COMPLETE_TIMEOUT"] = "Process complete: timeout";
 })(ProcessStage = exports.ProcessStage || (exports.ProcessStage = {}));
 var MenuView;
 (function (MenuView) {
