@@ -1,7 +1,7 @@
 // export { account$, accountø, updateAccount } from './account';
 export { appConfig$, updateYieldConfig } from './appConfig';
 export { assetMap$, assetsø, updateAssets } from './assets';
-export { assetPairMap$, assetPairMapø, updatePair } from './assetPairs';
+export { assetPairMap$, assetPairsø, updatePair } from './assetPairs';
 export {
   provider$,
   providerø,

@@ -12,7 +12,7 @@ import { chainIdø } from './connection';
 
 /** @internal */
 export const assetPairMap$: BehaviorSubject<Map<string, IAssetPair>> = new BehaviorSubject(new Map([]));
-export const assetPairMapø: Observable<Map<string, IAssetPair>> = assetPairMap$.pipe(shareReplay(1));
+export const assetPairsø: Observable<Map<string, IAssetPair>> = assetPairMap$.pipe(shareReplay(1));
 
 /**
  *

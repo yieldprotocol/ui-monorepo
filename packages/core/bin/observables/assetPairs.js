@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updatePair = exports.assetPairMapø = exports.assetPairMap$ = void 0;
+exports.updatePair = exports.assetPairsø = exports.assetPairMap$ = void 0;
 const tslib_1 = require("tslib");
 const ui_math_1 = require("@yield-protocol/ui-math");
 const ethers_1 = require("ethers");
@@ -13,7 +13,7 @@ const yieldUtils_1 = require("../utils/yieldUtils");
 const connection_1 = require("./connection");
 /** @internal */
 exports.assetPairMap$ = new rxjs_1.BehaviorSubject(new Map([]));
-exports.assetPairMapø = exports.assetPairMap$.pipe((0, rxjs_1.shareReplay)(1));
+exports.assetPairsø = exports.assetPairMap$.pipe((0, rxjs_1.shareReplay)(1));
 /**
  *
  * Watch selected elements, on every change if both a base and ilk are selected,

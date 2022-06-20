@@ -13,7 +13,7 @@ const input_1 = require("./input");
  * Maximum amount of debt allowed by the protocol for a particular [[IAssetPair | Asset Pair]]
  * @category Borrow
  * */
-exports.maxDebtLimitø = (0, rxjs_1.combineLatest)([observables_1.selectedø, observables_1.assetPairMapø]).pipe(
+exports.maxDebtLimitø = (0, rxjs_1.combineLatest)([observables_1.selectedø, observables_1.assetPairsø]).pipe(
 /* only proceed if pairMap has the reqd info */
 (0, rxjs_1.filter)(([selected, pairMap]) => pairMap.has((0, yieldUtils_1.getAssetPairId)(selected.base.id, selected.ilk.id))), 
 /* return the max debt of the asset pair */
@@ -26,7 +26,7 @@ exports.maxDebtLimitø = (0, rxjs_1.combineLatest)([observables_1.selectedø, ob
  * Minimum amount of debt allowed by the protocol ( Dust level ) for a particular [[IAssetPair | Asset Pair]]
  * @category Borrow
  * */
-exports.minDebtLimitø = (0, rxjs_1.combineLatest)([observables_1.selectedø, observables_1.assetPairMapø]).pipe(
+exports.minDebtLimitø = (0, rxjs_1.combineLatest)([observables_1.selectedø, observables_1.assetPairsø]).pipe(
 /* only let events proceed if pairMap has the reqd info */
 (0, rxjs_1.filter)(([selected, pairMap]) => pairMap.has((0, yieldUtils_1.getAssetPairId)(selected.base.id, selected.ilk.id))), 
 /* return the min required debt of the asset pair */
@@ -62,7 +62,7 @@ exports.isBorrowLimitedø = (0, rxjs_1.combineLatest)([input_1.borrowInputø, ob
  * Check if the user can roll the selected vault to a new [future] series
  * @category Borrow | Roll
  * */
-exports.isRollVaultPossibleø = (0, rxjs_1.combineLatest)([observables_1.selectedø, observables_1.assetPairMapø]).pipe(
+exports.isRollVaultPossibleø = (0, rxjs_1.combineLatest)([observables_1.selectedø, observables_1.assetPairsø]).pipe(
 /* only let events proceed if futureSeries and vault, and has a validasset pair has the reqd info */
 (0, rxjs_1.filter)(([selected, assetPairMap]) => {
     const { vault, futureSeries } = selected;

@@ -1,6 +1,6 @@
 export { appConfig$, updateYieldConfig } from './appConfig';
 export { assetMap$, assetsø, updateAssets } from './assets';
-export { assetPairMap$, assetPairMapø, updatePair } from './assetPairs';
+export { assetPairMap$, assetPairsø, updatePair } from './assetPairs';
 export { provider$, providerø, updateProvider, accountProvider$, accountProviderø, updateAccountProvider, account$, accountø, updateAccount, chainIdø, updateChainId, } from './connection';
 export { selected$, selectedø, selectBase, selectIlk, selectSeries, selectVault, selectStrategy } from './selected';
 export { seriesMap$, seriesø, updateSeries } from './series';

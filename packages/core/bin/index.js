@@ -44,7 +44,7 @@ const yieldObservables = {
     accountProviderø: connection_2.accountProviderø,
     selectedø: selected_1.selectedø,
     transactionsø: observables_1.transactionsø,
-    assetPairMapø: observables_1.assetPairMapø,
+    assetPairsø: observables_1.assetPairsø,
     userSettingsø: observables_1.userSettingsø,
     messagesø: messages_1.messagesø,
 };

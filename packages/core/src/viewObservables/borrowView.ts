@@ -1,7 +1,7 @@
 import { buyBase, calculateMinCollateral, decimalNToDecimal18, maxFyTokenIn } from '@yield-protocol/ui-math';
 import { BigNumber } from 'ethers';
 import { combineLatest, filter, map, Observable } from 'rxjs';
-import { assetPairMapø, selectedø } from '../observables';
+import { assetPairsø, selectedø } from '../observables';
 import { MessageType, sendMsg } from '../observables/messages';
 import { W3Number } from '../types';
 import { ZERO_BN } from '../utils';
@@ -13,7 +13,7 @@ import { borrowInputø, repayInputø } from './input';
  * Maximum amount of debt allowed by the protocol for a particular [[IAssetPair | Asset Pair]]
  * @category Borrow
  * */
-export const maxDebtLimitø: Observable<W3Number> = combineLatest([selectedø, assetPairMapø]).pipe(
+export const maxDebtLimitø: Observable<W3Number> = combineLatest([selectedø, assetPairsø]).pipe(
   /* only proceed if pairMap has the reqd info */
   filter(([selected, pairMap]) => pairMap.has(getAssetPairId(selected.base!.id, selected.ilk!.id))),
   /* return the max debt of the asset pair */
@@ -28,7 +28,7 @@ export const maxDebtLimitø: Observable<W3Number> = combineLatest([selectedø, a
  * Minimum amount of debt allowed by the protocol ( Dust level ) for a particular [[IAssetPair | Asset Pair]]
  * @category Borrow
  * */
-export const minDebtLimitø: Observable<W3Number> = combineLatest([selectedø, assetPairMapø]).pipe(
+export const minDebtLimitø: Observable<W3Number> = combineLatest([selectedø, assetPairsø]).pipe(
   /* only let events proceed if pairMap has the reqd info */
   filter(([selected, pairMap]) => pairMap.has(getAssetPairId(selected.base!.id, selected.ilk!.id))),
   /* return the min required debt of the asset pair */
@@ -71,7 +71,7 @@ export const isBorrowLimitedø: Observable<boolean> = combineLatest([borrowInput
  * Check if the user can roll the selected vault to a new [future] series
  * @category Borrow | Roll
  * */
-export const isRollVaultPossibleø: Observable<boolean> = combineLatest([selectedø, assetPairMapø]).pipe(
+export const isRollVaultPossibleø: Observable<boolean> = combineLatest([selectedø, assetPairsø]).pipe(
   /* only let events proceed if futureSeries and vault, and has a validasset pair has the reqd info */
   filter(([selected, assetPairMap]) => {
     const { vault, futureSeries } = selected;

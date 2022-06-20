@@ -74,7 +74,7 @@ export interface IYieldObservables {
     assetsø: Observable<Map<string, IAsset>>;
     vaultsø: Observable<Map<string, IVault>>;
     strategiesø: Observable<Map<string, IStrategy>>;
-    assetPairMapø: Observable<Map<string, IAssetPair>>;
+    assetPairsø: Observable<Map<string, IAssetPair>>;
     transactionsø: Observable<Map<string, IYieldProcess>>;
     selectedø: Observable<ISelected>;
     userSettingsø: Observable<IUserSettings>;

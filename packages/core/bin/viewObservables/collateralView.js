@@ -14,7 +14,7 @@ const constants_1 = require("../utils/constants");
  * INTERNAL:
  * Keeps the track of the current selectedPair
  * */
-const _selectedPairø = (0, rxjs_1.combineLatest)([observables_1.selectedø, assetPairs_1.assetPairMapø]).pipe((0, rxjs_1.map)(([selected, pairMap]) => {
+const _selectedPairø = (0, rxjs_1.combineLatest)([observables_1.selectedø, assetPairs_1.assetPairsø]).pipe((0, rxjs_1.map)(([selected, pairMap]) => {
     if (!!selected.ilk && !!selected.base) {
         const _pairId = (0, yieldUtils_1.getAssetPairId)(selected.base.id, selected.ilk.id);
         return pairMap.get(_pairId);
