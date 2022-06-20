@@ -10,7 +10,7 @@ import {
   seriesø,
   strategiesø,
   userSettingsø,
-  vaultMapø,
+  vaultsø,
   yieldProtocolø,
 } from '../observables';
 import {
@@ -35,7 +35,7 @@ export const addLiquidity = async (
   matchingVault: IVault | undefined = undefined
 ) => {
   /* Subscribe to and get the values from the observables:  */
-  combineLatest([yieldProtocolø, assetsø, seriesø, accountø, userSettingsø, vaultMapø, strategiesø])
+  combineLatest([yieldProtocolø, assetsø, seriesø, accountø, userSettingsø, vaultsø, strategiesø])
     .pipe(take(1)) // only take one and then finish.
     .subscribe(async ([{ ladle }, assetMap, seriesMap, account, { slippageTolerance }]) => {
       /* Get the values from the observables/subjects */

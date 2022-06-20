@@ -55,7 +55,7 @@ exports.maximumRemoveLiquidityø = observables_1.selectedø.pipe((0, rxjs_1.map)
  * Get the vault ( if adding liquidity was done using the 'Borrow and Pool' method. )
  * @category Pool | Remove Liquidity
  */
-exports.borrowAndPoolVaultø = (0, rxjs_1.combineLatest)([observables_1.selectedø, observables_1.vaultMapø]).pipe((0, rxjs_1.filter)(([selected]) => !!selected.strategy), (0, rxjs_1.map)(([{ strategy }, vaultMap]) => {
+exports.borrowAndPoolVaultø = (0, rxjs_1.combineLatest)([observables_1.selectedø, observables_1.vaultsø]).pipe((0, rxjs_1.filter)(([selected]) => !!selected.strategy), (0, rxjs_1.map)(([{ strategy }, vaultMap]) => {
     const { baseId, currentSeriesId } = strategy;
     const arr = Array.from(vaultMap.values());
     const _matchingVault = arr

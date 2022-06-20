@@ -20,5 +20,5 @@ export { seriesMap$, seriesø, updateSeries } from './series';
 export { strategyMap$, strategiesø, updateStrategies } from './strategies';
 export { transactionMap$, transactionsø, updateProcess, resetProcess } from './transactions';
 export { userSettings$, userSettingsø, updateUserSettings } from './userSettings';
-export { vaultMap$, vaultMapø, updateVaults } from './vaults';
+export { vaultMap$, vaultsø, updateVaults } from './vaults';
 export { yieldProtocol$, yieldProtocolø, updateYieldProtocol } from './yieldProtocol';

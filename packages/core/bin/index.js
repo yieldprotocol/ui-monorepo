@@ -37,7 +37,7 @@ const yieldObservables = {
     yieldProtocolø: yieldProtocol_1.yieldProtocolø,
     seriesø: series_1.seriesø,
     assetsø: assets_1.assetsø,
-    vaultMapø: vaults_1.vaultMapø,
+    vaultsø: vaults_1.vaultsø,
     strategiesø: strategies_1.strategiesø,
     providerø: connection_2.providerø,
     accountø: connection_1.accountø,

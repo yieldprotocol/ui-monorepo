@@ -16,7 +16,7 @@ const _addRemoveEth_1 = require("./_addRemoveEth");
 const _wrapUnwrapAsset_1 = require("./_wrapUnwrapAsset");
 const addCollateral = (amount, vault) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Subscribe to and get the values from the observables:  */
-    (0, rxjs_1.combineLatest)([observables_1.yieldProtocolø, observables_1.assetsø, observables_1.vaultMapø, observables_1.accountø, observables_1.selectedø])
+    (0, rxjs_1.combineLatest)([observables_1.yieldProtocolø, observables_1.assetsø, observables_1.vaultsø, observables_1.accountø, observables_1.selectedø])
         .pipe((0, rxjs_1.take)(1)) // only take one and then finish.
         .subscribe(([{ ladle, moduleMap }, assetMap, vaultMap, account, selected,]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         var _a;

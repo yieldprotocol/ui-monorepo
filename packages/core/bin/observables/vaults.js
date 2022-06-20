@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateVaults = exports.vaultMapø = exports.vaultMap$ = void 0;
+exports.updateVaults = exports.vaultsø = exports.vaultMap$ = void 0;
 const tslib_1 = require("tslib");
 const date_fns_1 = require("date-fns");
 const ethers_1 = require("ethers");
@@ -16,7 +16,7 @@ const yieldUtils_1 = require("../utils/yieldUtils");
 const appConfig_1 = require("./appConfig");
 /** @internal */
 exports.vaultMap$ = new rxjs_1.BehaviorSubject(new Map([]));
-exports.vaultMapø = exports.vaultMap$.pipe((0, rxjs_1.shareReplay)(1));
+exports.vaultsø = exports.vaultMap$.pipe((0, rxjs_1.shareReplay)(1));
 /* Update vaults function */
 const updateVaults = (vaultList, suppressEventLogQueries = false) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const list = vaultList !== undefined ? vaultList : Array.from(exports.vaultMap$.value.values());

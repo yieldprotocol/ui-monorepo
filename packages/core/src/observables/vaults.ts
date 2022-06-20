@@ -14,7 +14,7 @@ import { appConfigø } from './appConfig';
 
 /** @internal */
 export const vaultMap$: BehaviorSubject<Map<string, IVault>> = new BehaviorSubject(new Map([]));
-export const vaultMapø: Observable<Map<string, IVault>> = vaultMap$.pipe(shareReplay(1));
+export const vaultsø: Observable<Map<string, IVault>> = vaultMap$.pipe(shareReplay(1));
 
 /* Update vaults function */
 export const updateVaults = async (vaultList?: IVault[] | IVaultRoot[], suppressEventLogQueries:boolean = false) => {

@@ -22,7 +22,7 @@ const borrow = (amount, collateralAmount, vault, getValuesFromNetwork = true // 
         observables_1.yieldProtocolø,
         observables_1.assetsø,
         observables_1.seriesø,
-        observables_1.vaultMapø,
+        observables_1.vaultsø,
         observables_1.accountø,
         observables_1.selectedø,
         observables_1.userSettingsø,

@@ -10,7 +10,7 @@ import {
 } from '@yield-protocol/ui-math';
 import { BigNumber, ethers } from 'ethers';
 import { combineLatest, filter, map, Observable } from 'rxjs';
-import { selectedø, userSettingsø, vaultMapø } from '../observables';
+import { selectedø, userSettingsø, vaultsø } from '../observables';
 import { IStrategy, IVault, W3Number } from '../types';
 import { ZERO_BN } from '../utils';
 import { ZERO_W3NUMBER } from '../utils/constants';
@@ -97,7 +97,7 @@ export const maximumRemoveLiquidityø: Observable<W3Number> = selectedø.pipe(
  * Get the vault ( if adding liquidity was done using the 'Borrow and Pool' method. )
  * @category Pool | Remove Liquidity
  */
-export const borrowAndPoolVaultø: Observable<IVault | undefined> = combineLatest([selectedø, vaultMapø]).pipe(
+export const borrowAndPoolVaultø: Observable<IVault | undefined> = combineLatest([selectedø, vaultsø]).pipe(
   filter(([selected]) => !!selected.strategy),
   map(([{ strategy }, vaultMap]) => {
     const { baseId, currentSeriesId } = strategy as IStrategy;

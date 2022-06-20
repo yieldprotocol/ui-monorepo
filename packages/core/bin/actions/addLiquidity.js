@@ -14,7 +14,7 @@ const yieldUtils_1 = require("../utils/yieldUtils");
 const _addRemoveEth_1 = require("./_addRemoveEth");
 const addLiquidity = (amount, strategy, method = types_1.AddLiquidityType.BUY, matchingVault = undefined) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Subscribe to and get the values from the observables:  */
-    (0, rxjs_1.combineLatest)([observables_1.yieldProtocolø, observables_1.assetsø, observables_1.seriesø, observables_1.accountø, observables_1.userSettingsø, observables_1.vaultMapø, observables_1.strategiesø])
+    (0, rxjs_1.combineLatest)([observables_1.yieldProtocolø, observables_1.assetsø, observables_1.seriesø, observables_1.accountø, observables_1.userSettingsø, observables_1.vaultsø, observables_1.strategiesø])
         .pipe((0, rxjs_1.take)(1)) // only take one and then finish.
         .subscribe(([{ ladle }, assetMap, seriesMap, account, { slippageTolerance }]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         /* Get the values from the observables/subjects */
