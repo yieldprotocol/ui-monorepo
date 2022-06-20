@@ -90,9 +90,9 @@ const borrow = (amount, collateralAmount, vault, getValuesFromNetwork = true // 
             return account;
         };
         /* handle ETH deposit as Collateral, if required (only if collateral used is ETH-based ), else send ZERO_BN */
-        const addEthCallData = (0, _addRemoveEth_1.addEth)(isEthCollateral ? _collAmount : ui_math_1.ZERO_BN);
+        const addEthCallData = yield (0, _addRemoveEth_1.addEth)(isEthCollateral ? _collAmount : ui_math_1.ZERO_BN);
         /* handle remove/unwrap WETH > if ETH is what is being borrowed */
-        const removeEthCallData = (0, _addRemoveEth_1.removeEth)(isEthBase ? ui_math_1.ONE_BN : ui_math_1.ZERO_BN); // (exit_ether sweeps all the eth out the ladle, so exact amount is not importnat -> just greater than zero)
+        const removeEthCallData = yield (0, _addRemoveEth_1.removeEth)(isEthBase ? ui_math_1.ONE_BN : ui_math_1.ZERO_BN); // (exit_ether sweeps all the eth out the ladle, so exact amount is not importnat -> just greater than zero)
         /* handle wrapping of collateral if required */
         const wrapAssetCallData = yield (0, _wrapUnwrapAsset_1.wrapAsset)(_collAmount, selected.ilk, processCode); // note: selected ilk used here, not wrapped version
         /**

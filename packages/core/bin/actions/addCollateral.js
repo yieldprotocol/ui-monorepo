@@ -72,7 +72,7 @@ const addCollateral = (amount, vault) => tslib_1.__awaiter(void 0, void 0, void 
             },
         ], txCode);
         /* Handle adding eth if required (ie. if the ilk is ETH_BASED). If not, else simply sent ZERO to the addEth fn */
-        const addEthCallData = (0, _addRemoveEth_1.addEth)(assets_1.ETH_BASED_ASSETS.includes(ilk === null || ilk === void 0 ? void 0 : ilk.proxyId) ? _amount : utils_1.ZERO_BN, undefined, ilk === null || ilk === void 0 ? void 0 : ilk.proxyId);
+        const addEthCallData = yield (0, _addRemoveEth_1.addEth)(assets_1.ETH_BASED_ASSETS.includes(ilk === null || ilk === void 0 ? void 0 : ilk.proxyId) ? _amount : utils_1.ZERO_BN, undefined, ilk === null || ilk === void 0 ? void 0 : ilk.proxyId);
         /* pour destination based on ilk/asset is an eth asset variety */
         const pourToAddress = () => {
             if (isEthCollateral)

@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.removeEth = exports.addEth = void 0;
+const tslib_1 = require("tslib");
+const rxjs_1 = require("rxjs");
 const observables_1 = require("../observables");
 const types_1 = require("../types");
 const operations_1 = require("../types/operations");
@@ -8,10 +10,10 @@ const constants_1 = require("../utils/constants");
 /**
  * @internal
  * */
-const addEth = (value, to = undefined, alternateEthAssetId = undefined) => {
-    const { moduleMap } = observables_1.yieldProtocol$.value; // TODO: consider removing this value -> by means of a subscription.
+const addEth = (value, to = undefined, alternateEthAssetId = undefined) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    const { moduleMap } = yield (0, rxjs_1.lastValueFrom)(observables_1.yieldProtocolø.pipe((0, rxjs_1.first)()));
     const WrapEtherModuleContract = moduleMap.get('WrapEtherModule');
-    const account = observables_1.account$.value;
+    const account = yield (0, rxjs_1.lastValueFrom)(observables_1.accountø.pipe((0, rxjs_1.first)()));
     /* if there is a destination 'to' then use the ladle module (wrapEtherModule) */
     if (to)
         return [
@@ -33,19 +35,22 @@ const addEth = (value, to = undefined, alternateEthAssetId = undefined) => {
             overrides: { value },
         },
     ];
-};
+});
 exports.addEth = addEth;
-// 
+//
 /**
  * @internal
  * @comment EXIT_ETHER sweeps all out of the ladle, so *value* is not important > it must just be bigger than zero to not be ignored
  * */
-const removeEth = (value, to = undefined) => [
-    {
-        operation: types_1.LadleActions.Fn.EXIT_ETHER,
-        args: [to || observables_1.account$.value],
-        ignoreIf: value.eq(constants_1.ZERO_BN), // ignores if value is ZERO. NB NOTE: sign (+-) is irrelevant here
-    },
-];
+const removeEth = (value, to = undefined) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    const account = yield (0, rxjs_1.lastValueFrom)(observables_1.accountø.pipe((0, rxjs_1.first)()));
+    return [
+        {
+            operation: types_1.LadleActions.Fn.EXIT_ETHER,
+            args: [to || account],
+            ignoreIf: value.eq(constants_1.ZERO_BN), // ignores if value is ZERO. NB NOTE: sign (+-) is irrelevant here
+        },
+    ];
+});
 exports.removeEth = removeEth;
 //# sourceMappingURL=_addRemoveEth.js.map

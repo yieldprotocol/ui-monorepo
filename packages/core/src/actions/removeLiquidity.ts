@@ -142,7 +142,7 @@ export const removeLiquidity = async (
 
       /* handle removeing eth BAse tokens:  */
       // NOTE: REMOVE ETH FOR ALL PATHS/OPTIONS (exit_ether sweeps all the eth out the ladle, so exact amount is not important -> just greater than zero)
-      const removeEthCallData: ICallData[] = isEthBase ? removeEth(ONE_BN) : [];
+      const removeEthCallData: ICallData[] = isEthBase ? await removeEth(ONE_BN) : [];
 
       const permitCallData: ICallData[] = await sign(
         [

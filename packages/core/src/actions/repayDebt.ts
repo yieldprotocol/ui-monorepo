@@ -118,7 +118,7 @@ export const repayDebt = async (amount: string | undefined, vault: IVault, recla
       );
 
       /* Remove ETH collateral. (exit_ether sweeps all the eth out of the ladle, so exact amount is not importnat -> just greater than zero) */
-      const removeEthCallData = isEthCollateral ? removeEth(ONE_BN) : [];
+      const removeEthCallData = isEthCollateral ? await removeEth(ONE_BN) : [];
 
       /* Address to send the funds to either ladle (if eth is used as collateral) or account */
       const reclaimToAddress = () => {
@@ -128,6 +128,16 @@ export const repayDebt = async (amount: string | undefined, vault: IVault, recla
         return account;
       };
 
+      const addEthCallData = await ( async () => {
+        if ( isEthBase ) {
+          const to = series.isMature() ? undefined : transferToAddress
+          const ethToAddr = await addEth( amountToTransfer, to)
+          return ethToAddr
+        }
+        return [];
+      } )();
+
+
       const calls: ICallData[] = [
         ...permitCallData,
 
@@ -135,8 +145,10 @@ export const repayDebt = async (amount: string | undefined, vault: IVault, recla
         // ...wrapAssetCallData
 
         /* If ethBase, Send ETH to either base join or pool  */
-        ...addEth(isEthBase && !series.isMature() ? amountToTransfer : ZERO_BN, transferToAddress), // destination = either join or series depending if tradeable
-        ...addEth(isEthBase && series.isMature() ? amountToTransfer : ZERO_BN), // no destination defined after maturity , amount +1% will will go to weth join
+        ...addEthCallData,
+
+        // ...addEth(isEthBase && !series.isMature() ? amountToTransfer : ZERO_BN, transferToAddress), // destination = either join or series depending if tradeable
+        // ...addEth(isEthBase && series.isMature() ? amountToTransfer : ZERO_BN), // no destination defined after maturity , amount +1% will will go to weth join
 
         /* Else, Send Token to either join or pool via a ladle.transfer() */
         {

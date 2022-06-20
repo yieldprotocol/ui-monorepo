@@ -65,7 +65,7 @@ export const closeLend = async (amount: string | undefined, series: ISeries) => 
           txCode
         );
       
-        const removeEthCallData = isEthBase ? removeEth(ONE_BN) : [];
+        const removeEthCallData = isEthBase ? await removeEth(ONE_BN) : [];
       
         /* Set the transferTo address based on series maturity */
         const transferToAddress = () => {

@@ -32,7 +32,7 @@ export const removeCollateral = async (amount: string, vault: IVault, unwrapOnRe
 
       /* handle wrapped tokens:  */
       const unwrapCallData: ICallData[] = unwrapOnRemove ? await unwrapAsset(ilk, account!) : [];
-      const removeEthCallData: ICallData[] = isEthCollateral ? removeEth(ONE_BN) : []; // (exit_ether sweeps all the eth out the ladle, so exact amount is not importnat -> just greater than zero)
+      const removeEthCallData: ICallData[] = isEthCollateral ? await removeEth(ONE_BN) : []; // (exit_ether sweeps all the eth out the ladle, so exact amount is not importnat -> just greater than zero)
 
       /* is convex-type collateral */
       const isConvexCollateral = CONVEX_BASED_ASSETS.includes(ilk.proxyId);

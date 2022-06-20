@@ -132,17 +132,17 @@ export const addLiquidity = async (
       );
 
       /* if  Eth base, build the correct add ethCalls */
-      const addEthCallData = () => {
+      const addEthCallData = await ( async () => {
         /* BUY send WETH to  poolAddress */
-        if (isEthBase && method === AddLiquidityType.BUY) return addEth(_amount, _series.poolAddress);
+        if (isEthBase && method === AddLiquidityType.BUY) return await addEth(_amount, _series.poolAddress);
         /* BORROW send WETH to both basejoin and poolAddress */
-        if (isEthBase && method === AddLiquidityType.BORROW)
-          return [
-            ...addEth(_baseToFyToken, _base.joinAddress),
-            ...addEth(_baseToPoolWithSlippage, _series.poolAddress),
-          ];
+        if (isEthBase && method === AddLiquidityType.BORROW) {
+          const ethToJoin = await addEth(_baseToFyToken, _base.joinAddress);
+          const ethToPool = await addEth(_baseToPoolWithSlippage, _series.poolAddress);
+          return [ ...ethToJoin, ...ethToPool];
+        }
         return []; // sends back an empty array [] if not eth base
-      };
+      })();
 
       /**
        * BUILD CALL DATA ARRAY
@@ -151,8 +151,7 @@ export const addLiquidity = async (
         ...permitCallData,
 
         /* addETh calldata */
-
-        ...addEthCallData(),
+        ...addEthCallData,
 
         /**
          * Provide liquidity by BUYING :

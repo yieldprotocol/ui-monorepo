@@ -31,7 +31,7 @@ const removeCollateral = (amount, vault, unwrapOnRemove = true) => tslib_1.__awa
         const _amount = (0, yieldUtils_1.inputToTokenValue)(amount, ilk.decimals);
         /* handle wrapped tokens:  */
         const unwrapCallData = unwrapOnRemove ? yield (0, _wrapUnwrapAsset_1.unwrapAsset)(ilk, account) : [];
-        const removeEthCallData = isEthCollateral ? (0, _addRemoveEth_1.removeEth)(utils_1.ONE_BN) : []; // (exit_ether sweeps all the eth out the ladle, so exact amount is not importnat -> just greater than zero)
+        const removeEthCallData = isEthCollateral ? yield (0, _addRemoveEth_1.removeEth)(utils_1.ONE_BN) : []; // (exit_ether sweeps all the eth out the ladle, so exact amount is not importnat -> just greater than zero)
         /* is convex-type collateral */
         const isConvexCollateral = assets_1.CONVEX_BASED_ASSETS.includes(ilk.proxyId);
         const convexJoinContract = contracts_1.ConvexJoin__factory.connect(ilk.joinAddress, provider);

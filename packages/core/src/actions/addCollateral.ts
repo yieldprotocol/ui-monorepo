@@ -95,7 +95,7 @@ export const addCollateral = async (amount: string, vault?: IVault | string) => 
         );
 
         /* Handle adding eth if required (ie. if the ilk is ETH_BASED). If not, else simply sent ZERO to the addEth fn */
-        const addEthCallData: ICallData[] = addEth(
+        const addEthCallData: ICallData[] = await addEth(
           ETH_BASED_ASSETS.includes(ilk?.proxyId!) ? _amount : ZERO_BN,
           undefined,
           ilk?.proxyId

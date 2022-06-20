@@ -52,25 +52,25 @@ const addLiquidity = (amount, strategy, method = types_1.AddLiquidityType.BUY, m
             },
         ], txCode);
         /* if  Eth base, build the correct add ethCalls */
-        const addEthCallData = () => {
+        const addEthCallData = yield (() => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
             /* BUY send WETH to  poolAddress */
             if (isEthBase && method === types_1.AddLiquidityType.BUY)
-                return (0, _addRemoveEth_1.addEth)(_amount, _series.poolAddress);
+                return yield (0, _addRemoveEth_1.addEth)(_amount, _series.poolAddress);
             /* BORROW send WETH to both basejoin and poolAddress */
-            if (isEthBase && method === types_1.AddLiquidityType.BORROW)
-                return [
-                    ...(0, _addRemoveEth_1.addEth)(_baseToFyToken, _base.joinAddress),
-                    ...(0, _addRemoveEth_1.addEth)(_baseToPoolWithSlippage, _series.poolAddress),
-                ];
+            if (isEthBase && method === types_1.AddLiquidityType.BORROW) {
+                const ethToJoin = yield (0, _addRemoveEth_1.addEth)(_baseToFyToken, _base.joinAddress);
+                const ethToPool = yield (0, _addRemoveEth_1.addEth)(_baseToPoolWithSlippage, _series.poolAddress);
+                return [...ethToJoin, ...ethToPool];
+            }
             return []; // sends back an empty array [] if not eth base
-        };
+        }))();
         /**
          * BUILD CALL DATA ARRAY
          * */
         const calls = [
             ...permitCallData,
             /* addETh calldata */
-            ...addEthCallData(),
+            ...addEthCallData,
             /**
              * Provide liquidity by BUYING :
              * */

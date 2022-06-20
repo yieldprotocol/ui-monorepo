@@ -131,9 +131,9 @@ export const borrow = async (
         };
 
         /* handle ETH deposit as Collateral, if required (only if collateral used is ETH-based ), else send ZERO_BN */
-        const addEthCallData: ICallData[] = addEth(isEthCollateral ? _collAmount : ZERO_BN);
+        const addEthCallData: ICallData[] = await addEth(isEthCollateral ? _collAmount : ZERO_BN);
         /* handle remove/unwrap WETH > if ETH is what is being borrowed */
-        const removeEthCallData: ICallData[] = removeEth(isEthBase ? ONE_BN : ZERO_BN); // (exit_ether sweeps all the eth out the ladle, so exact amount is not importnat -> just greater than zero)
+        const removeEthCallData: ICallData[] = await removeEth(isEthBase ? ONE_BN : ZERO_BN); // (exit_ether sweeps all the eth out the ladle, so exact amount is not importnat -> just greater than zero)
 
         /* handle wrapping of collateral if required */
         const wrapAssetCallData: ICallData[] = await wrapAsset(_collAmount, selected.ilk!, processCode ); // note: selected ilk used here, not wrapped version

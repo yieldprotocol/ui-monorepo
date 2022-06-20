@@ -40,7 +40,7 @@ const closeLend = (amount, series) => tslib_1.__awaiter(void 0, void 0, void 0, 
                 ignoreIf: alreadyApproved === true,
             },
         ], txCode);
-        const removeEthCallData = isEthBase ? (0, _addRemoveEth_1.removeEth)(utils_1.ONE_BN) : [];
+        const removeEthCallData = isEthBase ? yield (0, _addRemoveEth_1.removeEth)(utils_1.ONE_BN) : [];
         /* Set the transferTo address based on series maturity */
         const transferToAddress = () => {
             if (seriesIsMature)

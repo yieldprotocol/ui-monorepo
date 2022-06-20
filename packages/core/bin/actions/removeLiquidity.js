@@ -88,7 +88,7 @@ const removeLiquidity = (amount, series, matchingVault, tradeFyToken = true) => 
         const seriesIsMature = series.isMature();
         /* handle removeing eth BAse tokens:  */
         // NOTE: REMOVE ETH FOR ALL PATHS/OPTIONS (exit_ether sweeps all the eth out the ladle, so exact amount is not important -> just greater than zero)
-        const removeEthCallData = isEthBase ? (0, _addRemoveEth_1.removeEth)(utils_1.ONE_BN) : [];
+        const removeEthCallData = isEthBase ? yield (0, _addRemoveEth_1.removeEth)(utils_1.ONE_BN) : [];
         const permitCallData = yield (0, chainActions_1.sign)([
             /* give strategy permission to sell tokens to pool */
             {

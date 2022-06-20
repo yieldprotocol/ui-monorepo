@@ -71,7 +71,7 @@ const repayDebt = (amount, vault, reclaimCollateral = true) => tslib_1.__awaiter
             },
         ], txCode);
         /* Remove ETH collateral. (exit_ether sweeps all the eth out of the ladle, so exact amount is not importnat -> just greater than zero) */
-        const removeEthCallData = isEthCollateral ? (0, _addRemoveEth_1.removeEth)(constants_1.ONE_BN) : [];
+        const removeEthCallData = isEthCollateral ? yield (0, _addRemoveEth_1.removeEth)(constants_1.ONE_BN) : [];
         /* Address to send the funds to either ladle (if eth is used as collateral) or account */
         const reclaimToAddress = () => {
             var _a, _b;
@@ -81,13 +81,22 @@ const repayDebt = (amount, vault, reclaimCollateral = true) => tslib_1.__awaiter
                 return (_b = ilk.unwrapHandlerAddresses) === null || _b === void 0 ? void 0 : _b.get(chainId); // if there is somethign to unwrap
             return account;
         };
+        const addEthCallData = yield (() => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+            if (isEthBase) {
+                const to = series.isMature() ? undefined : transferToAddress;
+                const ethToAddr = yield (0, _addRemoveEth_1.addEth)(amountToTransfer, to);
+                return ethToAddr;
+            }
+            return [];
+        }))();
         const calls = [
             ...permitCallData,
             /* Reqd. when we have a wrappedBase */
             // ...wrapAssetCallData
             /* If ethBase, Send ETH to either base join or pool  */
-            ...(0, _addRemoveEth_1.addEth)(isEthBase && !series.isMature() ? amountToTransfer : constants_1.ZERO_BN, transferToAddress),
-            ...(0, _addRemoveEth_1.addEth)(isEthBase && series.isMature() ? amountToTransfer : constants_1.ZERO_BN),
+            ...addEthCallData,
+            // ...addEth(isEthBase && !series.isMature() ? amountToTransfer : ZERO_BN, transferToAddress), // destination = either join or series depending if tradeable
+            // ...addEth(isEthBase && series.isMature() ? amountToTransfer : ZERO_BN), // no destination defined after maturity , amount +1% will will go to weth join
             /* Else, Send Token to either join or pool via a ladle.transfer() */
             {
                 operation: types_1.LadleActions.Fn.TRANSFER,

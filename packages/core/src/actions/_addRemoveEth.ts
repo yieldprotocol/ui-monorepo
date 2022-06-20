@@ -1,6 +1,6 @@
 import { BigNumber } from 'ethers';
-import { combineLatest, take } from 'rxjs';
-import { account$, yieldProtocol$, yieldProtocolø  } from '../observables';
+import { combineLatest, first, lastValueFrom, take } from 'rxjs';
+import { account$, accountø, yieldProtocol$, yieldProtocolø } from '../observables';
 import { ICallData, LadleActions } from '../types';
 import { ModuleActions } from '../types/operations';
 import { ZERO_BN } from '../utils/constants';
@@ -8,15 +8,14 @@ import { ZERO_BN } from '../utils/constants';
 /**
  * @internal
  * */
-export const addEth = (
+export const addEth = async (
   value: BigNumber,
   to: string | undefined = undefined,
   alternateEthAssetId: string | undefined = undefined
-): ICallData[] => {
-          
-  const { moduleMap } = yieldProtocol$.value; // TODO: consider removing this value -> by means of a subscription.
+): Promise<ICallData[]> => {
+  const { moduleMap } = await lastValueFrom(yieldProtocolø.pipe(first()));
   const WrapEtherModuleContract = moduleMap.get('WrapEtherModule');
-  const account = account$.value;
+  const account = await lastValueFrom(accountø.pipe(first()));
 
   /* if there is a destination 'to' then use the ladle module (wrapEtherModule) */
   if (to)
@@ -41,16 +40,19 @@ export const addEth = (
   ];
 };
 
-// 
+//
 
 /**
  * @internal
  * @comment EXIT_ETHER sweeps all out of the ladle, so *value* is not important > it must just be bigger than zero to not be ignored
  * */
-export const removeEth = (value: BigNumber, to: string | undefined = undefined): ICallData[] => [
-  {
-    operation: LadleActions.Fn.EXIT_ETHER,
-    args: [to || account$.value] as LadleActions.Args.EXIT_ETHER,
-    ignoreIf: value.eq(ZERO_BN), // ignores if value is ZERO. NB NOTE: sign (+-) is irrelevant here
-  },
-];
+export const removeEth = async (value: BigNumber, to: string | undefined = undefined): Promise<ICallData[]> => {
+  const account = await lastValueFrom(accountø.pipe(first()));
+  return [
+    {
+      operation: LadleActions.Fn.EXIT_ETHER,
+      args: [to || account] as LadleActions.Args.EXIT_ETHER,
+      ignoreIf: value.eq(ZERO_BN), // ignores if value is ZERO. NB NOTE: sign (+-) is irrelevant here
+    },
+  ];
+};
