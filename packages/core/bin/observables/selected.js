@@ -94,11 +94,21 @@ const selectStrategy = (strategy) => {
         /* Update the selected$ */
         exports.selected$.next(Object.assign(Object.assign({}, exports.selected$.value), { strategy: _strategy || null, 
             /* Ensure the other releant components match the vault */
-            base: assets_2.assetMap$.value.get(_strategy.baseId) || exports.selected$.value.base }));
+            base: assets_2.assetMap$.value.get(_strategy.baseId) || exports.selected$.value.base, series: series_1.seriesMap$.value.get(_strategy.currentSeriesId) || exports.selected$.value.series }));
     }
     /* if undefined sent in, deselect vault only */
     !strategy && exports.selected$.next(Object.assign(Object.assign({}, exports.selected$.value), { vault: null }));
     console.log(strategy ? `Selected Strategy: ${(strategy === null || strategy === void 0 ? void 0 : strategy.id) || strategy}` : 'Vaults unselected');
 };
 exports.selectStrategy = selectStrategy;
+/* Watch the selected base id make sure they match the strategy, if not, unselect the strategy */
+// selectedø
+// .pipe( 
+//   filter((selected) => !!selected.strategy)
+// )
+// .subscribe(
+//   (selected) => {
+//     selected.base?.id !== selected.strategy?.baseId && selected$.next({ ...selected$.value, strategy: null});
+//   }
+// );
 //# sourceMappingURL=selected.js.map

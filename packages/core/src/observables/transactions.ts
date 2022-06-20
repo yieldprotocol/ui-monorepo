@@ -7,7 +7,6 @@ export const transactionsø: Observable<Map<string, IYieldProcess>> = transactio
 
 /* Update a process  */ 
 export const updateProcess = (process: IYieldProcess) => {
-  console.log('herere trnascations')
   const prevProcess = transactionMap$.value.get(process.processCode);
   const updatedProcess = transactionMap$.value.set(process.processCode, { ...prevProcess, ...process });
   transactionMap$.next(new Map(updatedProcess));

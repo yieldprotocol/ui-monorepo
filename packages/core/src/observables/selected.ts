@@ -88,7 +88,7 @@ export const selectSeries = (series: ISeries | string, futureSeries: boolean = f
         ...selected$.value,
         series: _series || null,
         /* Ensure the selectBase always matches the selected series */
-        base: assetMap$.value.get(_series!.baseId) || selected$.value.base,
+        base: assetMap$.value.get(_series!.baseId) || selected$.value.base
       });
   /* log to console */
   console.log(
@@ -125,10 +125,21 @@ export const selectStrategy = (strategy?: IStrategy | string) => {
     strategy: _strategy || null,
     /* Ensure the other releant components match the vault */
     base: assetMap$.value.get(_strategy!.baseId) || selected$.value.base,
-    // series: seriesMap$.value.get(_strategy!.currentSeries!.id) || selected$.value.series,
+    series: seriesMap$.value.get(_strategy!.currentSeriesId) || selected$.value.series,
   });
 }
   /* if undefined sent in, deselect vault only */
   !strategy && selected$.next({ ...selected$.value, vault: null});
   console.log(strategy ? `Selected Strategy: ${ (strategy as IStrategy)?.id || strategy}` : 'Vaults unselected');
 };
+
+/* Watch the selected base id make sure they match the strategy, if not, unselect the strategy */
+// selectedø
+// .pipe( 
+//   filter((selected) => !!selected.strategy)
+// )
+// .subscribe(
+//   (selected) => {
+//     selected.base?.id !== selected.strategy?.baseId && selected$.next({ ...selected$.value, strategy: null});
+//   }
+// );

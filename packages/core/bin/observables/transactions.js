@@ -8,7 +8,6 @@ exports.transactionMap$ = new rxjs_1.BehaviorSubject(new Map([]));
 exports.transactionsø = exports.transactionMap$.pipe((0, rxjs_1.share)());
 /* Update a process  */
 const updateProcess = (process) => {
-    console.log('herere trnascations');
     const prevProcess = exports.transactionMap$.value.get(process.processCode);
     const updatedProcess = exports.transactionMap$.value.set(process.processCode, Object.assign(Object.assign({}, prevProcess), process));
     exports.transactionMap$.next(new Map(updatedProcess));
