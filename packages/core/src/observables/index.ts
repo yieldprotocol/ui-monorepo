@@ -18,7 +18,7 @@ export {
 export { selected$, selectedø, selectBase, selectIlk, selectSeries, selectVault, selectStrategy } from './selected';
 export { seriesMap$, seriesMapø, updateSeries } from './seriesMap';
 export { strategyMap$, strategyMapø, updateStrategies } from './strategyMap';
-export { transactionMap$, transactionMapø, updateProcess, resetProcess } from './transactions';
+export { transactionMap$, transactionsø, updateProcess, resetProcess } from './transactions';
 export { userSettings$, userSettingsø, updateUserSettings } from './userSettings';
 export { vaultMap$, vaultMapø, updateVaults } from './vaultMap';
 export { yieldProtocol$, yieldProtocolø, updateYieldProtocol } from './yieldProtocol';

@@ -3,7 +3,7 @@ import { IYieldProcess, ProcessStage } from '../types';
 
 /** @internal */
 export const transactionMap$: BehaviorSubject<Map<string, IYieldProcess>> = new BehaviorSubject(new Map([]));
-export const transactionMapø: Observable<Map<string, IYieldProcess>> = transactionMap$.pipe(share());
+export const transactionsø: Observable<Map<string, IYieldProcess>> = transactionMap$.pipe(share());
 
 /* Update a process  */ 
 export const updateProcess = (process: IYieldProcess) => {

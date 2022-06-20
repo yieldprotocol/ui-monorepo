@@ -19,7 +19,7 @@ import * as assetConstants from './config/assets';
 
 import { borrow } from './actions';
 
-import { transactionMapø, assetPairMapø, userSettingsø } from './observables';
+import { transactionsø, assetPairMapø, userSettingsø } from './observables';
 import {
   borrowInputø,
   collateralInputø,
@@ -64,7 +64,7 @@ const yieldObservables: IYieldObservables = {
   accountø,
   accountProviderø,
   selectedø,
-  transactionMapø,
+  transactionsø,
   assetPairMapø,
   userSettingsø,
   messagesø,

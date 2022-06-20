@@ -51,7 +51,7 @@ const YieldProvider = ({ props, children }: any) => {
     vaultMapø,
     accountø,
     messagesø,
-    transactionMapø,
+    transactionsø,
     selectedø,
   } = yieldObservables;
 
@@ -75,7 +75,7 @@ const YieldProvider = ({ props, children }: any) => {
 
   const messages = useObservable(messagesø) as unknown as Map<string, IMessage>;
   const selected = useObservable(selectedø) as unknown as ISelected;
-  const transactions = useObservable(transactionMapø) as unknown as Map<string, IYieldProcess>;
+  const transactions = useObservable(transactionsø) as unknown as Map<string, IYieldProcess>;
 
   return (
     <YieldContext.Provider
