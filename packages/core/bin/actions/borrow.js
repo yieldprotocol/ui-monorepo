@@ -21,7 +21,7 @@ const borrow = (amount, collateralAmount, vault, getValuesFromNetwork = true // 
     (0, rxjs_1.combineLatest)([
         observables_1.yieldProtocolø,
         observables_1.assetsø,
-        observables_1.seriesMapø,
+        observables_1.seriesø,
         observables_1.vaultMapø,
         observables_1.accountø,
         observables_1.selectedø,

@@ -33,10 +33,10 @@ export var useObservable = function (observable, showError) {
 /* Build up the Provider state */
 var YieldProvider = function (_a) {
     var props = _a.props, children = _a.children;
-    var yieldProtocolø = yieldObservables.yieldProtocolø, assetsø = yieldObservables.assetsø, seriesMapø = yieldObservables.seriesMapø, strategyMapø = yieldObservables.strategyMapø, vaultMapø = yieldObservables.vaultMapø, accountø = yieldObservables.accountø, messagesø = yieldObservables.messagesø, transactionsø = yieldObservables.transactionsø, selectedø = yieldObservables.selectedø;
+    var yieldProtocolø = yieldObservables.yieldProtocolø, assetsø = yieldObservables.assetsø, seriesø = yieldObservables.seriesø, strategyMapø = yieldObservables.strategyMapø, vaultMapø = yieldObservables.vaultMapø, accountø = yieldObservables.accountø, messagesø = yieldObservables.messagesø, transactionsø = yieldObservables.transactionsø, selectedø = yieldObservables.selectedø;
     var yieldProtocol = useObservable(yieldProtocolø);
     var assetMap = useObservable(assetsø);
-    var seriesMap = useObservable(seriesMapø);
+    var seriesMap = useObservable(seriesø);
     var strategyMap = useObservable(strategyMapø);
     var vaultMap = useObservable(vaultMapø);
     // const provider = useObservable(providerø) as unknown as string;

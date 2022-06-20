@@ -3,7 +3,7 @@ import { buildProtocol } from './initProtocol/buildProtocol';
 import { IYieldFunctions, IYieldObservables } from './types';
 import { accountø, chainIdø, updateAccount} from './observables/connection';
 import { assetsø } from './observables/assets';
-import { seriesMapø } from './observables/series';
+import { seriesø } from './observables/series';
 import { updateYieldProtocol, yieldProtocolø } from './observables/yieldProtocol';
 import { strategyMapø } from './observables/strategies';
 import { vaultMapø } from './observables/vaults';
@@ -56,7 +56,7 @@ import { collateralizationPercentø, collateralizationRatioø } from './viewObse
 /* Expose the observables */
 const yieldObservables: IYieldObservables = {
   yieldProtocolø,
-  seriesMapø,
+  seriesø,
   assetsø,
   vaultMapø,
   strategyMapø,

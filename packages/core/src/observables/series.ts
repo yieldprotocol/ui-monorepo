@@ -24,7 +24,7 @@ export const seriesMap$: BehaviorSubject<Map<string, ISeries>> = new BehaviorSub
 /**
  * SeriesMap observable and update function.
  */
-export const seriesMapø: Observable<Map<string, ISeries>> = seriesMap$.pipe(shareReplay(1));
+export const seriesø: Observable<Map<string, ISeries>> = seriesMap$.pipe(shareReplay(1));
 export const updateSeries = async (seriesList?: ISeries[], account?: string, accountDataOnly: boolean = false) => {
   const list = seriesList?.length ? seriesList : Array.from(seriesMap$.value.values());
   await Promise.all(
@@ -60,7 +60,7 @@ combineLatest([ yieldProtocolø, providerø ])
 /**
  * Observe Accountø changes ('update dynamic/User Data')
  * */
-accountø.pipe(withLatestFrom(seriesMapø)).subscribe(async ([account, seriesMap]) => {
+accountø.pipe(withLatestFrom(seriesø)).subscribe(async ([account, seriesMap]) => {
   if (account && seriesMap.size) {
     await updateSeries(Array.from(seriesMap.values()), account, true);
     console.log('Series updated with new account info.');

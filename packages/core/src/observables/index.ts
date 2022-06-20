@@ -16,7 +16,7 @@ export {
   updateChainId,
 } from './connection';
 export { selected$, selectedø, selectBase, selectIlk, selectSeries, selectVault, selectStrategy } from './selected';
-export { seriesMap$, seriesMapø, updateSeries } from './series';
+export { seriesMap$, seriesø, updateSeries } from './series';
 export { strategyMap$, strategyMapø, updateStrategies } from './strategies';
 export { transactionMap$, transactionsø, updateProcess, resetProcess } from './transactions';
 export { userSettings$, userSettingsø, updateUserSettings } from './userSettings';

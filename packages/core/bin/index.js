@@ -8,8 +8,8 @@ const connection_1 = require("./observables/connection");
 const assets_1 = require("./observables/assets");
 const series_1 = require("./observables/series");
 const yieldProtocol_1 = require("./observables/yieldProtocol");
-const strategyMap_1 = require("./observables/strategyMap");
-const vaultMap_1 = require("./observables/vaultMap");
+const strategies_1 = require("./observables/strategies");
+const vaults_1 = require("./observables/vaults");
 const appConfig_1 = require("./observables/appConfig");
 const connection_2 = require("./observables/connection");
 const selected_1 = require("./observables/selected");
@@ -35,10 +35,10 @@ const collateralView_1 = require("./viewObservables/collateralView");
 /* Expose the observables */
 const yieldObservables = {
     yieldProtocolø: yieldProtocol_1.yieldProtocolø,
-    seriesMapø: series_1.seriesMapø,
+    seriesø: series_1.seriesø,
     assetsø: assets_1.assetsø,
-    vaultMapø: vaultMap_1.vaultMapø,
-    strategyMapø: strategyMap_1.strategyMapø,
+    vaultMapø: vaults_1.vaultMapø,
+    strategyMapø: strategies_1.strategyMapø,
     providerø: connection_2.providerø,
     accountø: connection_1.accountø,
     accountProviderø: connection_2.accountProviderø,

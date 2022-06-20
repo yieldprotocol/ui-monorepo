@@ -9,7 +9,7 @@ import {
   assetsø,
   chainIdø,
   yieldProtocolø,
-  seriesMapø,
+  seriesø,
   vaultMapø,
   selectedø,
   userSettingsø,
@@ -38,7 +38,7 @@ export const borrow = async (
   combineLatest([
     yieldProtocolø,
     assetsø,
-    seriesMapø,
+    seriesø,
     vaultMapø,
     accountø,
     selectedø,

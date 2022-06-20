@@ -4,7 +4,7 @@ import { IAsset, ISelected, ISeries, IStrategy, IVault, MessageType } from '../t
 import { appConfigø } from './appConfig';
 import { assetMap$, assetsø } from './assets';
 import { internalMessagesø, messagesø, sendMsg } from './messages';
-import { seriesMap$, seriesMapø } from './series';
+import { seriesMap$, seriesø } from './series';
 import { strategyMap$ } from './strategies';
 import { vaultMap$ } from './vaults';
 
@@ -28,7 +28,7 @@ export const selectedø: Observable<ISelected> = selected$.pipe(shareReplay(1));
 internalMessagesø.pipe(
   filter( (messages) => messages.has('seriesLoaded')), 
   take(1), // only take one for first load
-  withLatestFrom(seriesMapø, appConfigø)
+  withLatestFrom(seriesø, appConfigø)
   ).subscribe(([, [sMap], appConfig]) => {
     selectSeries(appConfig.defaultSeriesId || [...sMap][0])
 });

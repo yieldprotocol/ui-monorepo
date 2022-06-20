@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateSeries = exports.seriesMapø = exports.seriesMap$ = void 0;
+exports.updateSeries = exports.seriesø = exports.seriesMap$ = void 0;
 const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
 const ethers_1 = require("ethers");
@@ -17,7 +17,7 @@ exports.seriesMap$ = new rxjs_1.BehaviorSubject(new Map([]));
 /**
  * SeriesMap observable and update function.
  */
-exports.seriesMapø = exports.seriesMap$.pipe((0, rxjs_1.shareReplay)(1));
+exports.seriesø = exports.seriesMap$.pipe((0, rxjs_1.shareReplay)(1));
 const updateSeries = (seriesList, account, accountDataOnly = false) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const list = (seriesList === null || seriesList === void 0 ? void 0 : seriesList.length) ? seriesList : Array.from(exports.seriesMap$.value.values());
     yield Promise.all(list.map((series) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
@@ -45,7 +45,7 @@ exports.updateSeries = updateSeries;
 /**
  * Observe Accountø changes ('update dynamic/User Data')
  * */
-connection_1.accountø.pipe((0, rxjs_1.withLatestFrom)(exports.seriesMapø)).subscribe(([account, seriesMap]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+connection_1.accountø.pipe((0, rxjs_1.withLatestFrom)(exports.seriesø)).subscribe(([account, seriesMap]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (account && seriesMap.size) {
         yield (0, exports.updateSeries)(Array.from(seriesMap.values()), account, true);
         console.log('Series updated with new account info.');

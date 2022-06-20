@@ -7,8 +7,8 @@ const appConfig_1 = require("./appConfig");
 const assets_2 = require("./assets");
 const messages_1 = require("./messages");
 const series_1 = require("./series");
-const strategyMap_1 = require("./strategyMap");
-const vaultMap_1 = require("./vaultMap");
+const strategies_1 = require("./strategies");
+const vaults_1 = require("./vaults");
 const initSelection = {
     base: null,
     ilk: null,
@@ -25,7 +25,7 @@ exports.selectedø = exports.selected$.pipe((0, rxjs_1.shareReplay)(1));
  * this automatically selects the base)
  * */
 messages_1.internalMessagesø.pipe((0, rxjs_1.filter)((messages) => messages.has('seriesLoaded')), (0, rxjs_1.take)(1), // only take one for first load
-(0, rxjs_1.withLatestFrom)(series_1.seriesMapø, appConfig_1.appConfigø)).subscribe(([, [sMap], appConfig]) => {
+(0, rxjs_1.withLatestFrom)(series_1.seriesø, appConfig_1.appConfigø)).subscribe(([, [sMap], appConfig]) => {
     (0, exports.selectSeries)(appConfig.defaultSeriesId || [...sMap][0]);
 });
 /**
@@ -77,7 +77,7 @@ const selectSeries = (series, futureSeries = false) => {
 exports.selectSeries = selectSeries;
 const selectVault = (vault) => {
     if (vault) {
-        const _vault = vault.id ? vault : vaultMap_1.vaultMap$.value.get(vault);
+        const _vault = vault.id ? vault : vaults_1.vaultMap$.value.get(vault);
         /* Update the selected$ */
         exports.selected$.next(Object.assign(Object.assign({}, exports.selected$.value), { vault: _vault || null, 
             /* Ensure the other releant components match the vault */
@@ -90,7 +90,7 @@ const selectVault = (vault) => {
 exports.selectVault = selectVault;
 const selectStrategy = (strategy) => {
     if (strategy) {
-        const _strategy = strategy.id ? strategy : strategyMap_1.strategyMap$.value.get(strategy);
+        const _strategy = strategy.id ? strategy : strategies_1.strategyMap$.value.get(strategy);
         /* Update the selected$ */
         exports.selected$.next(Object.assign(Object.assign({}, exports.selected$.value), { strategy: _strategy || null, 
             /* Ensure the other releant components match the vault */
