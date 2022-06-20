@@ -2,20 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.viewFunctions = exports.viewObservables = exports.yieldConstants = exports.yieldFunctions = exports.yieldObservables = void 0;
 const tslib_1 = require("tslib");
-const rxjs_1 = require("rxjs");
-const buildProtocol_1 = require("./initProtocol/buildProtocol");
-const connection_1 = require("./observables/connection");
-const assets_1 = require("./observables/assets");
-const series_1 = require("./observables/series");
-const yieldProtocol_1 = require("./observables/yieldProtocol");
-const strategies_1 = require("./observables/strategies");
-const vaults_1 = require("./observables/vaults");
-const appConfig_1 = require("./observables/appConfig");
-const connection_2 = require("./observables/connection");
-const selected_1 = require("./observables/selected");
 const constants = tslib_1.__importStar(require("./utils/constants"));
 const assetConstants = tslib_1.__importStar(require("./config/assets"));
-// TODO: import all dynamically when things are up and running 
+// TODO: import all dynamically when things are up and running
 // import * as yieldObservables from './observables';
 const actions_1 = require("./actions");
 const observables_1 = require("./observables");
@@ -23,26 +12,28 @@ const input_1 = require("./viewObservables/input");
 const messages_1 = require("./observables/messages");
 const borrowView_1 = require("./viewObservables/borrowView");
 const collateralView_1 = require("./viewObservables/collateralView");
+const rxjs_1 = require("rxjs");
+const buildProtocol_1 = require("./initProtocol/buildProtocol");
+const appConfig_1 = require("./observables/appConfig");
 /**
  * On app start (or provider change ) (and on providerø, chainId$ or appConfig$ observed changes ),
  * appConfig gathers all the required information from env etc.
  * sets things up, and then the stream finishes indicating that everything is ready to go.
  */
-(0, rxjs_1.combineLatest)([connection_2.providerø, appConfig_1.appConfigø, connection_1.chainIdø])
-    .subscribe(([provider, config, chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    (0, yieldProtocol_1.updateYieldProtocol)(yield (0, buildProtocol_1.buildProtocol)(provider, chainId, config));
+(0, rxjs_1.combineLatest)([observables_1.providerø, appConfig_1.appConfigø, observables_1.chainIdø]).subscribe(([provider, config, chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    (0, observables_1.updateYieldProtocol)(yield (0, buildProtocol_1.buildProtocol)(provider, chainId, config));
 }));
 /* Expose the observables */
 const yieldObservables = {
-    yieldProtocolø: yieldProtocol_1.yieldProtocolø,
-    seriesø: series_1.seriesø,
-    assetsø: assets_1.assetsø,
-    vaultsø: vaults_1.vaultsø,
-    strategiesø: strategies_1.strategiesø,
-    providerø: connection_2.providerø,
-    accountø: connection_1.accountø,
-    accountProviderø: connection_2.accountProviderø,
-    selectedø: selected_1.selectedø,
+    yieldProtocolø: observables_1.yieldProtocolø,
+    seriesø: observables_1.seriesø,
+    assetsø: observables_1.assetsø,
+    vaultsø: observables_1.vaultsø,
+    strategiesø: observables_1.strategiesø,
+    providerø: observables_1.providerø,
+    accountø: observables_1.accountø,
+    accountProviderø: observables_1.accountProviderø,
+    selectedø: observables_1.selectedø,
     transactionsø: observables_1.transactionsø,
     assetPairsø: observables_1.assetPairsø,
     userSettingsø: observables_1.userSettingsø,
@@ -78,15 +69,17 @@ exports.viewFunctions = viewFunctions;
 const yieldFunctions = {
     /* actions */
     borrow: actions_1.borrow,
-    updateProvider: connection_2.updateProvider,
-    updateYieldConfig: appConfig_1.updateYieldConfig,
-    updateAccount: connection_1.updateAccount,
+    repayDebt: actions_1.repayDebt,
+    addLiquidity: actions_1.addLiquidity,
+    updateProvider: observables_1.updateProvider,
+    updateYieldConfig: observables_1.updateYieldConfig,
+    updateAccount: observables_1.updateAccount,
     /* selector functions */
-    selectIlk: selected_1.selectIlk,
-    selectBase: selected_1.selectBase,
-    selectVault: selected_1.selectVault,
-    selectSeries: selected_1.selectSeries,
-    selectStrategy: selected_1.selectStrategy,
+    selectIlk: observables_1.selectIlk,
+    selectBase: observables_1.selectBase,
+    selectVault: observables_1.selectVault,
+    selectSeries: observables_1.selectSeries,
+    selectStrategy: observables_1.selectStrategy,
 };
 exports.yieldFunctions = yieldFunctions;
 /* Expose constants that might be useful */

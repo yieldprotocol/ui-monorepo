@@ -89,7 +89,9 @@ export interface IYieldFunctions {
     selectVault: (vault: string | IVault) => void;
     selectSeries: (series: string | ISeries, futureSeries: boolean) => void;
     selectStrategy: (strategy: string | IStrategy) => void;
-    borrow: () => void;
+    borrow: () => Promise<void>;
+    repayDebt: any;
+    addLiquidity: any;
 }
 export interface ISelected {
     base: IAsset | null;

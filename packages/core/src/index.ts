@@ -1,25 +1,35 @@
-import { combineLatest, ConnectableObservable, throwError, timeout, withLatestFrom } from 'rxjs';
-import { buildProtocol } from './initProtocol/buildProtocol';
-import { IYieldFunctions, IYieldObservables } from './types';
-import { accountø, chainIdø, updateAccount} from './observables/connection';
-import { assetsø } from './observables/assets';
-import { seriesø } from './observables/series';
-import { updateYieldProtocol, yieldProtocolø } from './observables/yieldProtocol';
-import { strategiesø } from './observables/strategies';
-import { vaultsø } from './observables/vaults';
-import { appConfigø, updateYieldConfig } from './observables/appConfig';
-import { accountProviderø, providerø, updateProvider } from './observables/connection';
-import { selectBase, selectedø, selectIlk, selectSeries, selectStrategy, selectVault } from './observables/selected';
-
 import * as constants from './utils/constants';
 import * as assetConstants from './config/assets';
 
-// TODO: import all dynamically when things are up and running 
+// TODO: import all dynamically when things are up and running
 // import * as yieldObservables from './observables';
 
-import { borrow } from './actions';
+import { addLiquidity, borrow, repayDebt } from './actions';
 
-import { transactionsø, assetPairsø, userSettingsø } from './observables';
+import {
+  transactionsø,
+  assetPairsø,
+  userSettingsø,
+  accountProviderø,
+  accountø,
+  assetsø,
+  chainIdø,
+  providerø,
+  selectBase,
+  selectedø,
+  selectIlk,
+  selectSeries,
+  selectStrategy,
+  selectVault,
+  seriesø,
+  strategiesø,
+  updateAccount,
+  updateProvider,
+  updateYieldConfig,
+  updateYieldProtocol,
+  vaultsø,
+  yieldProtocolø,
+} from './observables';
 import {
   borrowInputø,
   collateralInputø,
@@ -41,17 +51,19 @@ import {
   minimumRepayø,
 } from './viewObservables/borrowView';
 import { collateralizationPercentø, collateralizationRatioø } from './viewObservables/collateralView';
- 
+import { combineLatest } from 'rxjs';
+import { buildProtocol } from './initProtocol/buildProtocol';
+import { appConfigø } from './observables/appConfig';
+import { IYieldObservables, IYieldFunctions } from './types';
 
-/** 
- * On app start (or provider change ) (and on providerø, chainId$ or appConfig$ observed changes ), 
+/**
+ * On app start (or provider change ) (and on providerø, chainId$ or appConfig$ observed changes ),
  * appConfig gathers all the required information from env etc.
  * sets things up, and then the stream finishes indicating that everything is ready to go.
  */
- combineLatest([ providerø, appConfigø, chainIdø ])
- .subscribe(async ([provider, config, chainId]) => {
+combineLatest([providerø, appConfigø, chainIdø]).subscribe(async ([provider, config, chainId]) => {
   updateYieldProtocol(await buildProtocol(provider, chainId, config));
- });
+});
 
 /* Expose the observables */
 const yieldObservables: IYieldObservables = {
@@ -86,7 +98,6 @@ const viewObservables: any = {
   // with collateral
   collateralizationPercentø,
   collateralizationRatioø,
-
 };
 
 const viewFunctions: any = {
@@ -104,12 +115,14 @@ const viewFunctions: any = {
 /* Expose any required functions */
 const yieldFunctions: IYieldFunctions = {
   /* actions */
-  borrow, 
+  borrow,
+  repayDebt,
+  addLiquidity,
 
   updateProvider,
   updateYieldConfig,
   updateAccount,
-  
+
   /* selector functions */
   selectIlk,
   selectBase,

@@ -40,6 +40,8 @@ const YieldExampleComponent = () => {
     selectStrategy,
 
     borrow,
+    repay,
+    addLiquidity,
 
   } = yieldFunctions;
 
@@ -86,7 +88,7 @@ const YieldExampleComponent = () => {
       <div>
         <input
           onChange={(e) => updateBorrowInput(e.target.value)}
-          placeholder="Borrow Amount?"
+          placeholder="Amount?"
         />
         <p style={{ color: isBorrowPossible ? undefined : "red" }}>
           {" "}
@@ -97,13 +99,16 @@ const YieldExampleComponent = () => {
       <div>
         <input
           onChange={(e) => updateCollateralInput(e.target.value)}
-          placeholder="Collateral to add?"
+          placeholder="Collateral?"
         />
         <p>
           {collateralizationPercent ? `${collateralizationPercent}%` : ""}{" "}
         </p>
 
         <button onClick={() => borrow('5000', '10') }>borrow</button> 
+        <button onClick={() => repay('5000', '10') }>repay</button>
+
+        <button onClick={() => addLiquidity('10000') }>add 10000 liquidity</button>
       </div>
 
       <hr />

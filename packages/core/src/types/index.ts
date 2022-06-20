@@ -124,7 +124,9 @@ export interface IYieldFunctions {
   selectStrategy: (strategy: string | IStrategy) => void;
 
   /* actions */
-  borrow: ()=> void;
+  borrow: () => Promise<void>;
+  repayDebt: any;
+  addLiquidity: any;
 
 }
 

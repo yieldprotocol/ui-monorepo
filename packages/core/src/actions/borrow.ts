@@ -13,7 +13,6 @@ import {
   vaultsø,
   selectedø,
   userSettingsø,
-  accountProviderø,
 } from '../observables';
 import { sign, transact } from '../chainActions';
 
