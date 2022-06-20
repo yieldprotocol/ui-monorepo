@@ -69,9 +69,10 @@ const YieldExampleComponent = () => {
   // useEffect(() => {
   //   messages && console.log(messages);
   // }, [messages]);
-    useEffect(() => {
-      transactions && console.log(transactions);
-    }, [transactions]);
+  
+    // useEffect(() => {
+    //   transactions && console.log(transactions);
+    // }, [transactions]);
 
   return (
     <div
