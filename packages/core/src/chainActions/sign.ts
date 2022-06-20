@@ -55,7 +55,7 @@ export const sign = async (requestedSignatures: ISignData[], processCode: string
 
   /* check if a contract wallet is being used */
   const walletCode = await accountProvider.getCode(account!);
-  const isContractWallet = walletCode !== '0x0';
+  const isContractWallet = walletCode !== '0x';
   isContractWallet && console.log('Contract wallet detected - using approval by transaction');
 
   /* First, filter out any ignored calls */

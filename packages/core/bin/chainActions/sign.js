@@ -44,7 +44,7 @@ const sign = (requestedSignatures, processCode) => tslib_1.__awaiter(void 0, voi
     const signer = accountProvider.getSigner(account);
     /* check if a contract wallet is being used */
     const walletCode = yield accountProvider.getCode(account);
-    const isContractWallet = walletCode !== '0x0';
+    const isContractWallet = walletCode !== '0x';
     isContractWallet && console.log('Contract wallet detected - using approval by transaction');
     /* First, filter out any ignored calls */
     const _requestedSigs = requestedSignatures.filter((_rs) => !_rs.ignoreIf);
