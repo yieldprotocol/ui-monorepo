@@ -6,7 +6,7 @@ const rxjs_1 = require("rxjs");
 const buildProtocol_1 = require("./initProtocol/buildProtocol");
 const connection_1 = require("./observables/connection");
 const assets_1 = require("./observables/assets");
-const seriesMap_1 = require("./observables/seriesMap");
+const series_1 = require("./observables/series");
 const yieldProtocol_1 = require("./observables/yieldProtocol");
 const strategyMap_1 = require("./observables/strategyMap");
 const vaultMap_1 = require("./observables/vaultMap");
@@ -35,7 +35,7 @@ const collateralView_1 = require("./viewObservables/collateralView");
 /* Expose the observables */
 const yieldObservables = {
     yieldProtocolø: yieldProtocol_1.yieldProtocolø,
-    seriesMapø: seriesMap_1.seriesMapø,
+    seriesMapø: series_1.seriesMapø,
     assetsø: assets_1.assetsø,
     vaultMapø: vaultMap_1.vaultMapø,
     strategyMapø: strategyMap_1.strategyMapø,

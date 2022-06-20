@@ -4,9 +4,9 @@ import { IAsset, ISelected, ISeries, IStrategy, IVault, MessageType } from '../t
 import { appConfigø } from './appConfig';
 import { assetMap$, assetsø } from './assets';
 import { internalMessagesø, messagesø, sendMsg } from './messages';
-import { seriesMap$, seriesMapø } from './seriesMap';
-import { strategyMap$ } from './strategyMap';
-import { vaultMap$ } from './vaultMap';
+import { seriesMap$, seriesMapø } from './series';
+import { strategyMap$ } from './strategies';
+import { vaultMap$ } from './vaults';
 
 const initSelection: ISelected = {
   base: null,

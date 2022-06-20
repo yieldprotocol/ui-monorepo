@@ -6,7 +6,7 @@ const assets_1 = require("../config/assets");
 const appConfig_1 = require("./appConfig");
 const assets_2 = require("./assets");
 const messages_1 = require("./messages");
-const seriesMap_1 = require("./seriesMap");
+const series_1 = require("./series");
 const strategyMap_1 = require("./strategyMap");
 const vaultMap_1 = require("./vaultMap");
 const initSelection = {
@@ -25,7 +25,7 @@ exports.selectedø = exports.selected$.pipe((0, rxjs_1.shareReplay)(1));
  * this automatically selects the base)
  * */
 messages_1.internalMessagesø.pipe((0, rxjs_1.filter)((messages) => messages.has('seriesLoaded')), (0, rxjs_1.take)(1), // only take one for first load
-(0, rxjs_1.withLatestFrom)(seriesMap_1.seriesMapø, appConfig_1.appConfigø)).subscribe(([, [sMap], appConfig]) => {
+(0, rxjs_1.withLatestFrom)(series_1.seriesMapø, appConfig_1.appConfigø)).subscribe(([, [sMap], appConfig]) => {
     (0, exports.selectSeries)(appConfig.defaultSeriesId || [...sMap][0]);
 });
 /**
@@ -48,7 +48,7 @@ const selectBase = (asset) => {
         /* Update the selected$ */
         exports.selected$.next(Object.assign(Object.assign({}, exports.selected$.value), { base: base || null, 
             /* if a base is selected, then auto select the first 'mature' series that has that base */
-            series: [...seriesMap_1.seriesMap$.value.values()].find((s) => s.baseId === base.id && !s.isMature()) || null }));
+            series: [...series_1.seriesMap$.value.values()].find((s) => s.baseId === base.id && !s.isMature()) || null }));
         console.log(base ? `Selected Base: ${base.id}` : 'Bases unselected');
     }
 };
@@ -62,7 +62,7 @@ const selectIlk = (asset) => {
 exports.selectIlk = selectIlk;
 const selectSeries = (series, futureSeries = false) => {
     /* Try to get the series if argument is a string */
-    const _series = (series === null || series === void 0 ? void 0 : series.id) ? series : seriesMap_1.seriesMap$.value.get(series);
+    const _series = (series === null || series === void 0 ? void 0 : series.id) ? series : series_1.seriesMap$.value.get(series);
     /* Update the selected$  (either series or futureSeries) */
     futureSeries
         ? exports.selected$.next(Object.assign(Object.assign({}, exports.selected$.value), { futureSeries: _series || null }))
@@ -81,7 +81,7 @@ const selectVault = (vault) => {
         /* Update the selected$ */
         exports.selected$.next(Object.assign(Object.assign({}, exports.selected$.value), { vault: _vault || null, 
             /* Ensure the other releant components match the vault */
-            base: assets_2.assetMap$.value.get(_vault.baseId) || exports.selected$.value.base, ilk: assets_2.assetMap$.value.get(_vault.ilkId) || exports.selected$.value.ilk, series: seriesMap_1.seriesMap$.value.get(_vault.seriesId) || exports.selected$.value.series }));
+            base: assets_2.assetMap$.value.get(_vault.baseId) || exports.selected$.value.base, ilk: assets_2.assetMap$.value.get(_vault.ilkId) || exports.selected$.value.ilk, series: series_1.seriesMap$.value.get(_vault.seriesId) || exports.selected$.value.series }));
     }
     /* if undefined sent in, deselect vault only */
     !vault && exports.selected$.next(Object.assign(Object.assign({}, exports.selected$.value), { vault: null }));

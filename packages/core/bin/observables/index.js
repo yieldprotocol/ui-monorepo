@@ -33,10 +33,10 @@ Object.defineProperty(exports, "selectIlk", { enumerable: true, get: function ()
 Object.defineProperty(exports, "selectSeries", { enumerable: true, get: function () { return selected_1.selectSeries; } });
 Object.defineProperty(exports, "selectVault", { enumerable: true, get: function () { return selected_1.selectVault; } });
 Object.defineProperty(exports, "selectStrategy", { enumerable: true, get: function () { return selected_1.selectStrategy; } });
-var seriesMap_1 = require("./seriesMap");
-Object.defineProperty(exports, "seriesMap$", { enumerable: true, get: function () { return seriesMap_1.seriesMap$; } });
-Object.defineProperty(exports, "seriesMap\u00F8", { enumerable: true, get: function () { return seriesMap_1.seriesMapø; } });
-Object.defineProperty(exports, "updateSeries", { enumerable: true, get: function () { return seriesMap_1.updateSeries; } });
+var series_1 = require("./series");
+Object.defineProperty(exports, "seriesMap$", { enumerable: true, get: function () { return series_1.seriesMap$; } });
+Object.defineProperty(exports, "seriesMap\u00F8", { enumerable: true, get: function () { return series_1.seriesMapø; } });
+Object.defineProperty(exports, "updateSeries", { enumerable: true, get: function () { return series_1.updateSeries; } });
 var strategyMap_1 = require("./strategyMap");
 Object.defineProperty(exports, "strategyMap$", { enumerable: true, get: function () { return strategyMap_1.strategyMap$; } });
 Object.defineProperty(exports, "strategyMap\u00F8", { enumerable: true, get: function () { return strategyMap_1.strategyMapø; } });

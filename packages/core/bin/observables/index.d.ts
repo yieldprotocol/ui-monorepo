@@ -3,7 +3,7 @@ export { assetMap$, assetsø, updateAssets } from './assets';
 export { assetPairMap$, assetPairMapø, updatePair } from './assetPairMap';
 export { provider$, providerø, updateProvider, accountProvider$, accountProviderø, updateAccountProvider, account$, accountø, updateAccount, chainIdø, updateChainId, } from './connection';
 export { selected$, selectedø, selectBase, selectIlk, selectSeries, selectVault, selectStrategy } from './selected';
-export { seriesMap$, seriesMapø, updateSeries } from './seriesMap';
+export { seriesMap$, seriesMapø, updateSeries } from './series';
 export { strategyMap$, strategyMapø, updateStrategies } from './strategyMap';
 export { transactionMap$, transactionsø, updateProcess, resetProcess } from './transactions';
 export { userSettings$, userSettingsø, updateUserSettings } from './userSettings';
