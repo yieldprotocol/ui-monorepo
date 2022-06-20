@@ -20,7 +20,7 @@ import { bnToW3Number } from '../utils/yieldUtils';
 
 /** @internal */
 export const strategyMap$: BehaviorSubject<Map<string, IStrategy>> = new BehaviorSubject(new Map([]));
-export const strategyMapø: Observable<Map<string, IStrategy>> = strategyMap$.pipe(shareReplay(1));
+export const strategiesø: Observable<Map<string, IStrategy>> = strategyMap$.pipe(shareReplay(1));
 
 /* Update strategies function */
 export const updateStrategies = async (
@@ -63,7 +63,7 @@ yieldProtocolø
 /**
  * Observe Account$ changes ('update dynamic/User Data')
  * */
-accountø.pipe(withLatestFrom(strategyMapø, providerø)).subscribe(async ([account, stratMap, provider]) => {
+accountø.pipe(withLatestFrom(strategiesø, providerø)).subscribe(async ([account, stratMap, provider]) => {
   if (account && stratMap.size) {
     await updateStrategies(provider, Array.from(stratMap.values()), account, true);
     console.log('Strategies updated with new account info.');

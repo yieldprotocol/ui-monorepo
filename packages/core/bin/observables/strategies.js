@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateStrategies = exports.strategyMapø = exports.strategyMap$ = void 0;
+exports.updateStrategies = exports.strategiesø = exports.strategyMap$ = void 0;
 const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
 const ethers_1 = require("ethers");
@@ -14,7 +14,7 @@ const messages_1 = require("./messages");
 const yieldUtils_1 = require("../utils/yieldUtils");
 /** @internal */
 exports.strategyMap$ = new rxjs_1.BehaviorSubject(new Map([]));
-exports.strategyMapø = exports.strategyMap$.pipe((0, rxjs_1.shareReplay)(1));
+exports.strategiesø = exports.strategyMap$.pipe((0, rxjs_1.shareReplay)(1));
 /* Update strategies function */
 const updateStrategies = (provider, strategyList, account, accountDataOnly = false) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* If strategyList parameter is empty/undefined, update all the straetegies in the strategyMap */
@@ -42,7 +42,7 @@ yieldProtocol_1.yieldProtocolø
 /**
  * Observe Account$ changes ('update dynamic/User Data')
  * */
-connection_1.accountø.pipe((0, rxjs_1.withLatestFrom)(exports.strategyMapø, connection_1.providerø)).subscribe(([account, stratMap, provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+connection_1.accountø.pipe((0, rxjs_1.withLatestFrom)(exports.strategiesø, connection_1.providerø)).subscribe(([account, stratMap, provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (account && stratMap.size) {
         yield (0, exports.updateStrategies)(provider, Array.from(stratMap.values()), account, true);
         console.log('Strategies updated with new account info.');

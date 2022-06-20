@@ -47,7 +47,7 @@ const YieldProvider = ({ props, children }: any) => {
     yieldProtocolø,
     assetsø,
     seriesø,
-    strategyMapø,
+    strategiesø,
     vaultMapø,
     accountø,
     messagesø,
@@ -64,7 +64,7 @@ const YieldProvider = ({ props, children }: any) => {
     string,
     ISeries
   >;
-  const strategyMap = useObservable(strategyMapø) as unknown as Map<
+  const strategyMap = useObservable(strategiesø) as unknown as Map<
     string,
     IStrategy
   >;

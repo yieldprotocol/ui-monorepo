@@ -5,7 +5,7 @@ import { accountø, chainIdø, updateAccount} from './observables/connection';
 import { assetsø } from './observables/assets';
 import { seriesø } from './observables/series';
 import { updateYieldProtocol, yieldProtocolø } from './observables/yieldProtocol';
-import { strategyMapø } from './observables/strategies';
+import { strategiesø } from './observables/strategies';
 import { vaultMapø } from './observables/vaults';
 import { appConfigø, updateYieldConfig } from './observables/appConfig';
 import { accountProviderø, providerø, updateProvider } from './observables/connection';
@@ -59,7 +59,7 @@ const yieldObservables: IYieldObservables = {
   seriesø,
   assetsø,
   vaultMapø,
-  strategyMapø,
+  strategiesø,
   providerø,
   accountø,
   accountProviderø,
