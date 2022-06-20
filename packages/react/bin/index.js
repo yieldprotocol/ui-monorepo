@@ -44,12 +44,10 @@ var YieldProvider = function (_a) {
     var account = useObservable(accountø);
     var messages = useObservable(messagesø);
     var selected = useObservable(selectedø);
-    // const transactionMap = useObservable(transactionMapø) as unknown as string;
-    // useEffect(() => {
-    //   // props?.provider && yieldFunctions.updateProvider(props?.provider);
-    // }, [props?.provider]);
+    var transactions = useObservable(transactionMapø);
     return (_jsx(YieldContext.Provider, __assign({ value: {
             messages: messages,
+            transactions: transactions,
             yieldProtocol: yieldProtocol,
             assetMap: assetMap,
             seriesMap: seriesMap,

@@ -14,7 +14,7 @@ import {
   IYieldSig,
 } from '../types';
 import { IGNORED_CALLDATA, MAX_256 } from '../utils/constants';
-import { resetProcess, updateProcess} from '../observables/transactionMap';
+import { resetProcess, updateProcess} from '../observables/transactions';
 import { getSignId } from '../utils/yieldUtils';
 
 // const _handleSignSuccess = (reqSig: ISignData, processCode:string ) => {

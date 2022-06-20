@@ -8,7 +8,7 @@ const observables_1 = require("../observables");
 const userSettings_1 = require("../observables/userSettings");
 const types_1 = require("../types");
 const constants_1 = require("../utils/constants");
-const transactionMap_1 = require("../observables/transactionMap");
+const transactions_1 = require("../observables/transactions");
 const yieldUtils_1 = require("../utils/yieldUtils");
 // const _handleSignSuccess = (reqSig: ISignData, processCode:string ) => {
 //     /* update the processMap to indicate the signing was successfull */
@@ -19,7 +19,7 @@ const yieldUtils_1 = require("../utils/yieldUtils");
 // };
 const _handleSignError = (err, processCode) => {
     /* End the process on signature rejection or sign failure */
-    (0, transactionMap_1.resetProcess)(processCode);
+    (0, transactions_1.resetProcess)(processCode);
     console.log(err);
     return Promise.reject(err);
 };
@@ -45,7 +45,7 @@ const sign = (requestedSignatures, processCode, chainId) => tslib_1.__awaiter(vo
     /* Build out the signMap for this process */
     const _signMap = new Map(_requestedSigs.map((s) => [(0, yieldUtils_1.getSignId)(s), { signData: s, status: types_1.TxState.PENDING }]));
     /* update the process with a list of signatures required, and start the process*/
-    (0, transactionMap_1.updateProcess)({
+    (0, transactions_1.updateProcess)({
         processCode,
         signMap: new Map(_signMap),
         stage: types_1.ProcessStage.SIGNING_APPROVAL_REQUESTED,
@@ -115,7 +115,7 @@ const sign = (requestedSignatures, processCode, chainId) => tslib_1.__awaiter(vo
                 s,
             ];
             /* update the entry in the processMap to indicate the signing was successfull */
-            (0, transactionMap_1.updateProcess)({
+            (0, transactions_1.updateProcess)({
                 processCode,
                 signMap: new Map(_signMap.set((0, yieldUtils_1.getSignId)(reqSig), { signData: reqSig, status: types_1.TxState.SUCCESSFUL })),
             });
@@ -135,7 +135,7 @@ const sign = (requestedSignatures, processCode, chainId) => tslib_1.__awaiter(vo
                 .setApprovalForAll(reqSig.spender, true)
                 .catch((err) => _handleSignError(err, processCode));
             /* update the processMap to indicate the signing was successfull */
-            (0, transactionMap_1.updateProcess)({
+            (0, transactions_1.updateProcess)({
                 processCode,
                 signMap: new Map(_signMap.set((0, yieldUtils_1.getSignId)(reqSig), { signData: reqSig, status: types_1.TxState.SUCCESSFUL })),
             });
@@ -147,7 +147,7 @@ const sign = (requestedSignatures, processCode, chainId) => tslib_1.__awaiter(vo
                 .approve(reqSig.spender, reqSig.amount)
                 .catch((err) => _handleSignError(err, processCode));
             /* update the processMap to indicate the signing was successfull */
-            (0, transactionMap_1.updateProcess)({
+            (0, transactions_1.updateProcess)({
                 processCode,
                 signMap: new Map(_signMap.set((0, yieldUtils_1.getSignId)(reqSig), { signData: reqSig, status: types_1.TxState.SUCCESSFUL })),
             });

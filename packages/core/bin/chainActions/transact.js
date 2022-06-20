@@ -6,11 +6,13 @@ const ethers_1 = require("ethers");
 const observables_1 = require("../observables/");
 const types_1 = require("../types");
 const constants_1 = require("../utils/constants");
-const transactionMap_1 = require("../observables/transactionMap");
+const transactions_1 = require("../observables/transactions");
 const rxjs_1 = require("rxjs");
 const appConfig_1 = require("../observables/appConfig");
 /* Encode the calls: */ // TODO: this could probably be refactored to look better
-const _encodeCalls = (calls, ladle) => calls.map((call) => {
+const _encodeCalls = (calls, ladle) => calls
+    .filter((call) => call.ignoreIf !== true)
+    .map((call) => {
     /* 'pre-encode' routed/module calls if required */
     if (call.operation === types_1.LadleActions.Fn.ROUTE || call.operation === types_1.LadleActions.Fn.MODULE) {
         if (call.fnName && call.targetContract) {
@@ -32,21 +34,38 @@ const _totalBatchValue = (calls) => calls.reduce((sum, call) => {
 }, constants_1.ZERO_BN);
 /* Handle the transaction error */
 const _handleTxError = () => { };
+/* Handle the case where the transaction will inevitably fail */
+// const _handleTxWillFail = () => { console.log( 'transaction will fail')};
+const _handleTxWillFail = (error, processCode, transaction) => {
+    /* simply toggles the txWillFail txState */
+    // updateState({ type: TxStateItem.TX_WILL_FAIL, payload: true });
+    (0, transactions_1.updateProcess)({
+        processCode,
+        stage: 0,
+        error: { error, message: 'Transaction Aborted (expected to fail)' },
+        tx: transaction,
+    });
+    // // updateState({ type: TxStateItem.TX_WILL_FAIL_INFO, payload: { error, transaction } });
+    // updateProcess({ processCode: processCode!, stage: 0, error: { error, message: 'ad'}, tx: transaction });
+    (0, transactions_1.resetProcess)(processCode);
+    // txCode && updateState({ type: TxStateItem.RESET_PROCESS, payload: txCode });
+};
 /* handle case when user or wallet rejects the tx (before submission) */
 const _handleTxRejection = (err, processCode) => {
-    (0, transactionMap_1.resetProcess)(processCode);
+    (0, transactions_1.resetProcess)(processCode);
     /* If user cancelled/rejected the tx */
     if (err.code === 4001) {
-        (0, transactionMap_1.updateProcess)({ processCode, stage: 0, error: { error: err, message: 'Transaction rejected by user.' } });
+        console.log('User cancelled');
+        (0, transactions_1.updateProcess)({ processCode, stage: 0, error: { error: err, message: 'Transaction rejected by user.' } });
     }
     else {
-        /* Else, the transaction was likely cancelled by the wallet/provider before getting submitted */
+        /* Else, the transaction was likely cancelled by the wallet/provider before getting submitted?  */
         const _msg = err.data.message.includes()
             ? `${err.data.message.split('VM Exception while processing transaction: revert').pop()}`
             : `Something went wrong.`;
-        (0, transactionMap_1.updateProcess)({ processCode, stage: 0, error: { error: err, message: _msg } });
+        (0, transactions_1.updateProcess)({ processCode, stage: types_1.ProcessStage.PROCESS_INACTIVE, error: { error: err, message: _msg } });
         /* Always log error to the console */
-        console.log(err);
+        console.log('here', err);
     }
 };
 const transact = (calls, processCode) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
@@ -54,15 +73,18 @@ const transact = (calls, processCode) => tslib_1.__awaiter(void 0, void 0, void 
     (0, rxjs_1.combineLatest)([observables_1.yieldProtocolø, observables_1.accountø, observables_1.accountProviderø, appConfig_1.appConfigø])
         .pipe((0, rxjs_1.take)(1)) // take one and then unsubscribe
         .subscribe(([{ ladle }, account, provider, { forceTransactions }]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        (0, transactionMap_1.updateProcess)({ processCode, stage: types_1.ProcessStage.TRANSACTION_REQUESTED });
+        (0, transactions_1.updateProcess)({ processCode, stage: types_1.ProcessStage.TRANSACTION_REQUESTED });
         /* Get the signer */
         const signer = account ? provider.getSigner(account) : provider.getSigner(0);
         /* Set the connected contract instance, ladle by default */
         const ladleContract = ladle.connect(signer);
-        const encodedCalls = _encodeCalls(calls, ladleContract);
-        const batchValue = _totalBatchValue(calls);
+        /* Filter out ignored calls */
+        const filteredCalls = calls.filter((call) => call.ignoreIf !== true);
+        /* Encode the calls */
+        const encodedCalls = _encodeCalls(filteredCalls, ladleContract);
+        /* Get the total value of all the calls */
+        const batchValue = _totalBatchValue(filteredCalls);
         let gasEst;
-        // let gasEst: boolean = false;
         try {
             gasEst = yield ladleContract.estimateGas.batch(encodedCalls, { value: batchValue });
             console.log('Auto Gas estimate: ', gasEst.mul(120).div(100).toString());
@@ -71,7 +93,7 @@ const transact = (calls, processCode) => tslib_1.__awaiter(void 0, void 0, void 
             /* handle if the tx if going to fail and transactions aren't forced */
             gasEst = ethers_1.BigNumber.from(1000000);
             if (!forceTransactions)
-                console.log('transaction will fail'); // handleTxWillFail(e.error, processCode, e.transaction);
+                _handleTxWillFail(e.error, processCode, e.transaction);
         }
         let tx;
         let res;
@@ -83,7 +105,7 @@ const transact = (calls, processCode) => tslib_1.__awaiter(void 0, void 0, void 
                     gasLimit: gasEst.mul(120).div(100),
                 });
                 /* update process list > Tx Pending */
-                (0, transactionMap_1.updateProcess)({
+                (0, transactions_1.updateProcess)({
                     processCode,
                     stage: types_1.ProcessStage.TRANSACTION_PENDING,
                     tx: Object.assign(Object.assign({}, tx), { receipt: null, status: types_1.TxState.PENDING }),
@@ -98,7 +120,7 @@ const transact = (calls, processCode) => tslib_1.__awaiter(void 0, void 0, void 
             /* check the tx status ( failed/success ) */
             const txSuccess = res.status === 1 || false;
             /* update process list > Tx Complete + status */
-            (0, transactionMap_1.updateProcess)({
+            (0, transactions_1.updateProcess)({
                 processCode,
                 stage: types_1.ProcessStage.PROCESS_COMPLETE,
                 tx: Object.assign(Object.assign({}, tx), { receipt: res, status: txSuccess ? types_1.TxState.SUCCESSFUL : types_1.TxState.FAILED }),

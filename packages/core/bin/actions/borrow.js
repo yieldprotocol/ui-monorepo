@@ -17,14 +17,11 @@ const yieldUtils_1 = require("../utils/yieldUtils");
 const rxjs_1 = require("rxjs");
 const borrow = (amount, collateralAmount, vault, getValuesFromNetwork = true // Get market values by network call or offline calc (default: NETWORK)
 ) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    (0, rxjs_1.combineLatest)([observables_1.yieldProtocolø, observables_1.chainIdø, observables_1.assetMapø, observables_1.seriesMapø, observables_1.vaultMapø, observables_1.accountø, observables_1.selectedø, observables_1.userSettingsø])
-        .subscribe(([yp, chainId]) => console.log('asdasdasd', chainId, yp));
     /* Subscribe to and get the values from the observables:  */
     (0, rxjs_1.combineLatest)([observables_1.yieldProtocolø, observables_1.chainIdø, observables_1.assetMapø, observables_1.seriesMapø, observables_1.vaultMapø, observables_1.accountø, observables_1.selectedø, observables_1.userSettingsø])
         .pipe((0, rxjs_1.take)(1)) // only take one and then finish.
         .subscribe(([{ ladle, moduleMap }, chainId, assetMap, seriesMap, vaultMap, account, selected, { slippageTolerance },]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         var _a;
-        console.log('indeide');
         /** Use the vault/vaultId provided else use blank vault TODO: Add a check for existing vault */
         const getValidatedVault = (v) => {
             if (v) {
@@ -66,6 +63,8 @@ const borrow = (amount, collateralAmount, vault, getValuesFromNetwork = true // 
         const isEthBase = assets_1.ETH_BASED_ASSETS.includes(series.baseId);
         /* FLAG: is convex-type collateral */
         const isConvexCollateral = assets_1.CONVEX_BASED_ASSETS.includes(selected.ilk.proxyId);
+        console.log('convex? ', isConvexCollateral);
+        console.log('vault? ', vaultId);
         /* Calculate expected debt (fytokens) from EITHER network or calculated : default = Network */
         const _expectedFyToken = getValuesFromNetwork
             ? yield series.poolContract.buyBasePreview(_amount)
@@ -128,7 +127,7 @@ const borrow = (amount, collateralAmount, vault, getValuesFromNetwork = true // 
                 fnName: operations_1.ModuleActions.Fn.ADD_CONVEX_VAULT,
                 args: [ilk.joinAddress, vaultId],
                 targetContract: ConvexLadleModuleContract,
-                ignoreIf: vaultId !== utils_1.BLANK_VAULT || !isConvexCollateral,
+                ignoreIf: vaultId !== utils_1.BLANK_VAULT || isConvexCollateral === false,
             },
             {
                 operation: types_1.LadleActions.Fn.SERVE,

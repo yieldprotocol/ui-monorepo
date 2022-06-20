@@ -9,5 +9,5 @@ export default {
   defaultForkMap : new Map([
     [1, new ethers.providers.JsonRpcProvider('https://rpc.tenderly.co/fork/f8730f17-bd41-41ff-bd59-2f1be4a144f1') ],
   ]),
-  suppressEventLogQueries: true,
+  suppressEventLogQueries: false,
 };

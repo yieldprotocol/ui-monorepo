@@ -1,7 +1,8 @@
 import { Observable, BehaviorSubject, share, map, tap, takeWhile, takeUntil, distinctUntilChanged, takeLast, take, withLatestFrom, skip, filter, shareReplay } from 'rxjs';
+import { WETH } from '../config/assets';
 import { IAsset, ISelected, ISeries, IStrategy, IVault, MessageType } from '../types';
 import { appConfigø } from './appConfig';
-import { assetMap$ } from './assetMap';
+import { assetMap$, assetMapø } from './assetMap';
 import { internalMessagesø, messagesø, sendMsg } from './messages';
 import { seriesMap$, seriesMapø } from './seriesMap';
 import { strategyMap$ } from './strategyMap';
@@ -29,9 +30,21 @@ internalMessagesø.pipe(
   take(1), // only take one for first load
   withLatestFrom(seriesMapø, appConfigø)
   ).subscribe(([, [sMap], appConfig]) => {
-    console.log( 'herere')
     selectSeries(appConfig.defaultSeriesId || [...sMap][0])
 });
+
+/**
+ * Set the selected Ilk once on load (either )
+ * TODO: add the selected Ilk preference to the the default app config. 
+ * */
+ internalMessagesø.pipe(
+  filter( (messages) => messages.has('assetsLoaded')), 
+  take(1), // only take one for first load
+  // withLatestFrom(assetMapø, appConfigø)
+  ).subscribe(([]) => {
+    selectIlk( WETH )
+});
+
 
 /**
  *  Functions to selecting elements

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.selectStrategy = exports.selectVault = exports.selectSeries = exports.selectIlk = exports.selectBase = exports.selectedø = exports.selected$ = void 0;
 const rxjs_1 = require("rxjs");
+const assets_1 = require("../config/assets");
 const appConfig_1 = require("./appConfig");
 const assetMap_1 = require("./assetMap");
 const messages_1 = require("./messages");
@@ -25,8 +26,14 @@ exports.selectedø = exports.selected$.pipe((0, rxjs_1.shareReplay)(1));
  * */
 messages_1.internalMessagesø.pipe((0, rxjs_1.filter)((messages) => messages.has('seriesLoaded')), (0, rxjs_1.take)(1), // only take one for first load
 (0, rxjs_1.withLatestFrom)(seriesMap_1.seriesMapø, appConfig_1.appConfigø)).subscribe(([, [sMap], appConfig]) => {
-    console.log('herere');
     (0, exports.selectSeries)(appConfig.defaultSeriesId || [...sMap][0]);
+});
+/**
+ * Set the selected Ilk once on load (either )
+ * TODO: add the selected Ilk preference to the the default app config.
+ * */
+messages_1.internalMessagesø.pipe((0, rxjs_1.filter)((messages) => messages.has('assetsLoaded')), (0, rxjs_1.take)(1)).subscribe(([]) => {
+    (0, exports.selectIlk)(assets_1.WETH);
 });
 /**
  *  Functions to selecting elements

@@ -14,7 +14,9 @@ import {
   ISeries,
   IStrategy,
   IVault,
+  IYieldProcess,
   IYieldProtocol,
+  IYieldTx,
 } from "@yield-protocol/ui-core/bin/types";
 
 /* Build the context */
@@ -73,16 +75,13 @@ const YieldProvider = ({ props, children }: any) => {
 
   const messages = useObservable(messagesø) as unknown as Map<string, IMessage>;
   const selected = useObservable(selectedø) as unknown as ISelected;
-  // const transactionMap = useObservable(transactionMapø) as unknown as string;
-
-  // useEffect(() => {
-  //   // props?.provider && yieldFunctions.updateProvider(props?.provider);
-  // }, [props?.provider]);
+  const transactions = useObservable(transactionMapø) as unknown as Map<string, IYieldProcess>;
 
   return (
     <YieldContext.Provider
       value={{
         messages,
+        transactions,
 
         yieldProtocol,
         assetMap,

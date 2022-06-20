@@ -13,7 +13,9 @@ const YieldExampleComponent = () => {
     strategyMap,
     vaultMap,
     account,
+
     messages,
+    transactions,
     selected,
 
     yieldFunctions,
@@ -62,10 +64,12 @@ const YieldExampleComponent = () => {
     updateYieldConfig(config);
   }, []); // empty array to only do this once on load
 
-  // Example of using a yieldProtocol config file.
-  useEffect(() => {
-    messages && console.log(messages);
-  }, [messages]); // empty array to only do this once on load
+  // useEffect(() => {
+  //   messages && console.log(messages);
+  // }, [messages]);
+    useEffect(() => {
+      transactions && console.log(transactions);
+    }, [transactions]);
 
   return (
     <div
@@ -99,7 +103,7 @@ const YieldExampleComponent = () => {
           {collateralizationPercent ? `${collateralizationPercent}%` : ""}{" "}
         </p>
 
-        <button onClick={() => borrow() }>borrow</button> 
+        <button onClick={() => borrow('5000', '10') }>borrow</button> 
       </div>
 
       <hr />
