@@ -10,7 +10,7 @@ import { combineLatest, distinctUntilChanged, filter, map, Observable, share, wi
 import { selectedø } from '../observables';
 import { ONE_BN, ZERO_BN } from '../utils';
 import { bnToW3Number, getAssetPairId, ratioToPercent } from '../utils/yieldUtils';
-import { assetPairMapø } from '../observables/assetPairMap';
+import { assetPairMapø } from '../observables/assetPairs';
 import { borrowInputø, collateralInputø } from './input';
 
 import { appConfigø } from '../observables/appConfig';
