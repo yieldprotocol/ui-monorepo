@@ -9,7 +9,7 @@ const types_1 = require("../types");
 const utils_1 = require("../utils");
 const rollDebt = (vault, toSeries) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Subscribe to and get the values from the observables:  */
-    observables_1.assetMapø
+    observables_1.assetsø
         .pipe((0, rxjs_1.take)(1)) // only take one and then finish.
         .subscribe((assetMap) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         const txCode = (0, utils_1.getProcessCode)(types_1.ActionCodes.ROLL_DEBT, vault.id);

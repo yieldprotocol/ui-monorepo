@@ -71,11 +71,11 @@ export interface IYieldObservables {
     accountø: Observable<string | undefined>;
     accountProviderø: Observable<ethers.providers.Web3Provider>;
     seriesMapø: Observable<Map<string, ISeries>>;
-    assetMapø: Observable<Map<string, IAsset>>;
+    assetsø: Observable<Map<string, IAsset>>;
     vaultMapø: Observable<Map<string, IVault>>;
     strategyMapø: Observable<Map<string, IStrategy>>;
     assetPairMapø: Observable<Map<string, IAssetPair>>;
-    transactionMapø: Observable<Map<string, IYieldProcess>>;
+    transactionsø: Observable<Map<string, IYieldProcess>>;
     selectedø: Observable<ISelected>;
     userSettingsø: Observable<IUserSettings>;
     messagesø: Observable<Map<string, IMessage>>;

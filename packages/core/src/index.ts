@@ -2,7 +2,7 @@ import { combineLatest, ConnectableObservable, throwError, timeout, withLatestFr
 import { buildProtocol } from './initProtocol/buildProtocol';
 import { IYieldFunctions, IYieldObservables } from './types';
 import { accountø, chainIdø, updateAccount} from './observables/connection';
-import { assetMapø } from './observables/assetMap';
+import { assetsø } from './observables/assets';
 import { seriesMapø } from './observables/seriesMap';
 import { updateYieldProtocol, yieldProtocolø } from './observables/yieldProtocol';
 import { strategyMapø } from './observables/strategyMap';
@@ -57,7 +57,7 @@ import { collateralizationPercentø, collateralizationRatioø } from './viewObse
 const yieldObservables: IYieldObservables = {
   yieldProtocolø,
   seriesMapø,
-  assetMapø,
+  assetsø,
   vaultMapø,
   strategyMapø,
   providerø,

@@ -6,7 +6,7 @@ import { ConvexLadleModule } from '../contracts';
 
 import {
   accountø,
-  assetMapø,
+  assetsø,
   chainIdø,
   yieldProtocolø,
   seriesMapø,
@@ -37,7 +37,7 @@ export const borrow = async (
   /* Subscribe to and get the values from the observables:  */
   combineLatest([
     yieldProtocolø,
-    assetMapø,
+    assetsø,
     seriesMapø,
     vaultMapø,
     accountø,

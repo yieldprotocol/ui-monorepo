@@ -5,7 +5,7 @@ const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
 const buildProtocol_1 = require("./initProtocol/buildProtocol");
 const connection_1 = require("./observables/connection");
-const assetMap_1 = require("./observables/assetMap");
+const assets_1 = require("./observables/assets");
 const seriesMap_1 = require("./observables/seriesMap");
 const yieldProtocol_1 = require("./observables/yieldProtocol");
 const strategyMap_1 = require("./observables/strategyMap");
@@ -36,14 +36,14 @@ const collateralView_1 = require("./viewObservables/collateralView");
 const yieldObservables = {
     yieldProtocolø: yieldProtocol_1.yieldProtocolø,
     seriesMapø: seriesMap_1.seriesMapø,
-    assetMapø: assetMap_1.assetMapø,
+    assetsø: assets_1.assetsø,
     vaultMapø: vaultMap_1.vaultMapø,
     strategyMapø: strategyMap_1.strategyMapø,
     providerø: connection_2.providerø,
     accountø: connection_1.accountø,
     accountProviderø: connection_2.accountProviderø,
     selectedø: selected_1.selectedø,
-    transactionMapø: observables_1.transactionMapø,
+    transactionsø: observables_1.transactionsø,
     assetPairMapø: observables_1.assetPairMapø,
     userSettingsø: observables_1.userSettingsø,
     messagesø: messages_1.messagesø,

@@ -97,7 +97,7 @@ export interface IYieldObservables {
 
   /* maps */
   seriesMapø: Observable<Map<string, ISeries>>;
-  assetMapø: Observable<Map<string, IAsset>>;
+  assetsø: Observable<Map<string, IAsset>>;
   vaultMapø: Observable<Map<string, IVault>>;
   strategyMapø: Observable<Map<string, IStrategy>>;
 

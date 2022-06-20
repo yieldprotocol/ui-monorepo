@@ -2,7 +2,7 @@ import { Observable, BehaviorSubject, share, map, tap, takeWhile, takeUntil, dis
 import { WETH } from '../config/assets';
 import { IAsset, ISelected, ISeries, IStrategy, IVault, MessageType } from '../types';
 import { appConfigø } from './appConfig';
-import { assetMap$, assetMapø } from './assetMap';
+import { assetMap$, assetsø } from './assets';
 import { internalMessagesø, messagesø, sendMsg } from './messages';
 import { seriesMap$, seriesMapø } from './seriesMap';
 import { strategyMap$ } from './strategyMap';
@@ -40,7 +40,7 @@ internalMessagesø.pipe(
  internalMessagesø.pipe(
   filter( (messages) => messages.has('assetsLoaded')), 
   take(1), // only take one for first load
-  // withLatestFrom(assetMapø, appConfigø)
+  // withLatestFrom(assetsø, appConfigø)
   ).subscribe(([]) => {
     selectIlk( WETH )
 });

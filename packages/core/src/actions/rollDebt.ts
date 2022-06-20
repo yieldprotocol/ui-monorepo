@@ -1,12 +1,12 @@
 import { combineLatest, take } from 'rxjs';
 import { transact } from '../chainActions';
-import { assetMapø } from '../observables';
+import { assetsø } from '../observables';
 import { IVault, ISeries, ActionCodes, ICallData, LadleActions } from '../types';
 import { getProcessCode, ZERO_BN, MAX_128 } from '../utils';
 
 export const rollDebt = async (vault: IVault, toSeries: ISeries) => {
   /* Subscribe to and get the values from the observables:  */
-  assetMapø
+  assetsø
     .pipe(take(1)) // only take one and then finish.
     .subscribe(async (assetMap) => {
       const txCode = getProcessCode(ActionCodes.ROLL_DEBT, vault.id);

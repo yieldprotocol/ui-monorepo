@@ -18,7 +18,7 @@ export const assetMap$: BehaviorSubject<Map<string, IAsset>> = new BehaviorSubje
 /**
  * Unsubscribed Assetmap observable
  */
-export const assetMapø: Observable<Map<string, IAsset>> = assetMap$.pipe(shareReplay(1));
+export const assetsø: Observable<Map<string, IAsset>> = assetMap$.pipe(shareReplay(1));
 
 /**
  * Update Assets function
@@ -62,7 +62,7 @@ yieldProtocolø
 /**
  * Observe Accountø changes ('update dynamic/User Data')
  * */
- accountø.pipe(withLatestFrom(assetMapø)).subscribe(async ([account, assetMap ]) => {
+ accountø.pipe(withLatestFrom(assetsø)).subscribe(async ([account, assetMap ]) => {
   if (account && assetMap.size) { 
     await updateAssets( Array.from(assetMap.values()), account);
     console.log('Assets updated with new account balances');

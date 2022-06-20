@@ -5,7 +5,7 @@ import { sign, transact } from '../chainActions';
 import { ETH_BASED_ASSETS } from '../config/assets';
 import {
   accountø,
-  assetMapø,
+  assetsø,
   chainIdø,
   seriesMapø,
   strategyMapø,
@@ -35,7 +35,7 @@ export const addLiquidity = async (
   matchingVault: IVault | undefined = undefined
 ) => {
   /* Subscribe to and get the values from the observables:  */
-  combineLatest([yieldProtocolø, assetMapø, seriesMapø, accountø, userSettingsø, vaultMapø, strategyMapø])
+  combineLatest([yieldProtocolø, assetsø, seriesMapø, accountø, userSettingsø, vaultMapø, strategyMapø])
     .pipe(take(1)) // only take one and then finish.
     .subscribe(async ([{ ladle }, assetMap, seriesMap, account, { slippageTolerance }]) => {
       /* Get the values from the observables/subjects */

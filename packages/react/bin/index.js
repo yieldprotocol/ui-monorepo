@@ -33,9 +33,9 @@ export var useObservable = function (observable, showError) {
 /* Build up the Provider state */
 var YieldProvider = function (_a) {
     var props = _a.props, children = _a.children;
-    var yieldProtocolø = yieldObservables.yieldProtocolø, assetMapø = yieldObservables.assetMapø, seriesMapø = yieldObservables.seriesMapø, strategyMapø = yieldObservables.strategyMapø, vaultMapø = yieldObservables.vaultMapø, accountø = yieldObservables.accountø, messagesø = yieldObservables.messagesø, transactionMapø = yieldObservables.transactionMapø, selectedø = yieldObservables.selectedø;
+    var yieldProtocolø = yieldObservables.yieldProtocolø, assetsø = yieldObservables.assetsø, seriesMapø = yieldObservables.seriesMapø, strategyMapø = yieldObservables.strategyMapø, vaultMapø = yieldObservables.vaultMapø, accountø = yieldObservables.accountø, messagesø = yieldObservables.messagesø, transactionsø = yieldObservables.transactionsø, selectedø = yieldObservables.selectedø;
     var yieldProtocol = useObservable(yieldProtocolø);
-    var assetMap = useObservable(assetMapø);
+    var assetMap = useObservable(assetsø);
     var seriesMap = useObservable(seriesMapø);
     var strategyMap = useObservable(strategyMapø);
     var vaultMap = useObservable(vaultMapø);
@@ -44,7 +44,7 @@ var YieldProvider = function (_a) {
     var account = useObservable(accountø);
     var messages = useObservable(messagesø);
     var selected = useObservable(selectedø);
-    var transactions = useObservable(transactionMapø);
+    var transactions = useObservable(transactionsø);
     return (_jsx(YieldContext.Provider, __assign({ value: {
             messages: messages,
             transactions: transactions,

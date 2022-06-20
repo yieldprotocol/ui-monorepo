@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resetProcess = exports.updateProcess = exports.transactionMapø = exports.transactionMap$ = void 0;
+exports.resetProcess = exports.updateProcess = exports.transactionsø = exports.transactionMap$ = void 0;
 const rxjs_1 = require("rxjs");
 const types_1 = require("../types");
 /** @internal */
 exports.transactionMap$ = new rxjs_1.BehaviorSubject(new Map([]));
-exports.transactionMapø = exports.transactionMap$.pipe((0, rxjs_1.share)());
+exports.transactionsø = exports.transactionMap$.pipe((0, rxjs_1.share)());
 /* Update a process  */
 const updateProcess = (process) => {
     console.log('herere trnascations');

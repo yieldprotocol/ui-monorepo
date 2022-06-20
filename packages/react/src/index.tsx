@@ -45,7 +45,7 @@ export const useObservable = (
 const YieldProvider = ({ props, children }: any) => {
   const {
     yieldProtocolø,
-    assetMapø,
+    assetsø,
     seriesMapø,
     strategyMapø,
     vaultMapø,
@@ -59,7 +59,7 @@ const YieldProvider = ({ props, children }: any) => {
     yieldProtocolø
   ) as unknown as IYieldProtocol;
 
-  const assetMap = useObservable(assetMapø) as unknown as Map<string, IAsset>;
+  const assetMap = useObservable(assetsø) as unknown as Map<string, IAsset>;
   const seriesMap = useObservable(seriesMapø) as unknown as Map<
     string,
     ISeries

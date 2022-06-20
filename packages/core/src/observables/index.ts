@@ -1,6 +1,6 @@
 // export { account$, accountø, updateAccount } from './account';
 export { appConfig$, updateYieldConfig } from './appConfig';
-export { assetMap$, assetMapø, updateAssets } from './assetMap';
+export { assetMap$, assetsø, updateAssets } from './assets';
 export { assetPairMap$, assetPairMapø, updatePair } from './assetPairMap';
 export {
   provider$,

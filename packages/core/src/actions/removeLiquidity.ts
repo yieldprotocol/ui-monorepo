@@ -29,7 +29,7 @@ import { sign, transact } from '../chainActions';
 import { ETH_BASED_ASSETS } from '../config/assets';
 import {
   accountø,
-  assetMapø,
+  assetsø,
   chainIdø,
   selectedø,
   yieldProtocolø,
@@ -46,7 +46,7 @@ export const removeLiquidity = async (
   tradeFyToken: boolean = true
 ) => {
   /* Subscribe to and get the values from the observables:  */
-  combineLatest([yieldProtocolø, assetMapø, accountø, selectedø])
+  combineLatest([yieldProtocolø, assetsø, accountø, selectedø])
     .pipe(take(1)) // only take one and then finish.
     .subscribe(async ([{ ladle }, assetMap, account, selected]) => {
       /* generate the reproducible txCode for tx tracking and tracing */

@@ -12,7 +12,7 @@ const utils_1 = require("../utils");
 const yieldUtils_1 = require("../utils/yieldUtils");
 const rollLend = (amount, fromSeries, toSeries) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Subscribe to and get the values from the observables:  */
-    (0, rxjs_1.combineLatest)([observables_1.yieldProtocolø, observables_1.assetMapø, observables_1.accountø, observables_1.userSettingsø])
+    (0, rxjs_1.combineLatest)([observables_1.yieldProtocolø, observables_1.assetsø, observables_1.accountø, observables_1.userSettingsø])
         .pipe((0, rxjs_1.take)(1)) // only take one and then finish.
         .subscribe(([{ ladle }, assetMap, account, { slippageTolerance },]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         /* generate the reproducible txCode for tx tracking and tracing */

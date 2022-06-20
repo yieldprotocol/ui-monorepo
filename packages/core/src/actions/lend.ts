@@ -3,7 +3,7 @@ import { ETH_BASED_ASSETS } from '../config/assets';
 import {
   chainIdø,
   accountø,
-  assetMapø,
+  assetsø,
   userSettingsø,
   yieldProtocolø,
 } from '../observables';
@@ -16,7 +16,7 @@ import { combineLatest, take } from 'rxjs';
 
 export const lend = async (amount: string | undefined, series: ISeries) => {
   /* Subscribe to and get the values from the observables:  */
-  combineLatest([yieldProtocolø, assetMapø, accountø, userSettingsø])
+  combineLatest([yieldProtocolø, assetsø, accountø, userSettingsø])
     .pipe(take(1)) // only take one and then finish.
     .subscribe(
       async ([

@@ -4,7 +4,7 @@ import { combineLatest, take } from 'rxjs';
 import { sign, transact } from '../chainActions';
 import {
   accountø,
-  assetMapø,
+  assetsø,
   chainIdø,
   userSettingsø,
   yieldProtocolø,
@@ -15,7 +15,7 @@ import { inputToTokenValue } from '../utils/yieldUtils';
 
 export const rollLend = async (amount: string | undefined, fromSeries: ISeries, toSeries: ISeries) => {
   /* Subscribe to and get the values from the observables:  */
-  combineLatest([yieldProtocolø, assetMapø, accountø, userSettingsø])
+  combineLatest([yieldProtocolø, assetsø, accountø, userSettingsø])
     .pipe(take(1)) // only take one and then finish.
     .subscribe(
       async ([

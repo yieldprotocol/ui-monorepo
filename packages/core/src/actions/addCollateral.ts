@@ -5,7 +5,7 @@ import { ETH_BASED_ASSETS, CONVEX_BASED_ASSETS } from '../config/assets';
 import { ConvexLadleModule } from '../contracts';
 import {
   accountø,
-  assetMapø,
+  assetsø,
   chainIdø,
   selectedø,
   vaultMapø,
@@ -21,7 +21,7 @@ import { wrapAsset } from './_wrapUnwrapAsset';
 
 export const addCollateral = async (amount: string, vault?: IVault | string) => {
   /* Subscribe to and get the values from the observables:  */
-  combineLatest([yieldProtocolø, assetMapø, vaultMapø, accountø, selectedø ])
+  combineLatest([yieldProtocolø, assetsø, vaultMapø, accountø, selectedø ])
     .pipe(take(1)) // only take one and then finish.
     .subscribe(
       async ([
