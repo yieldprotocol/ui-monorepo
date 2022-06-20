@@ -5,4 +5,4 @@ import { IVault } from '../types';
  * @param amount
  * @param reclaimCollateral
  */
-export declare const repayDebt: (amount: string | undefined, vault: IVault, reclaimCollateral: boolean) => Promise<void>;
+export declare const repayDebt: (amount: string | undefined, vault: IVault, reclaimCollateral?: boolean) => Promise<void>;

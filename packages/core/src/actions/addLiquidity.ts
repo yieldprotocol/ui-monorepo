@@ -123,7 +123,7 @@ export const addLiquidity = async (
         [
           {
             target: _base,
-            spender: 'LADLE',
+            spender: ladleAddress,
             amount: _amount,
             ignoreIf: alreadyApproved === true,
           },

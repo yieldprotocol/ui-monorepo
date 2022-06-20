@@ -29,13 +29,13 @@ import { combineLatest, take } from 'rxjs';
  * @param amount
  * @param reclaimCollateral
  */
-export const repayDebt = async (amount: string | undefined, vault: IVault, reclaimCollateral: boolean) => {
+export const repayDebt = async (amount: string | undefined, vault: IVault, reclaimCollateral: boolean = true) => {
   /* Subscribe to and get the values from the observables:  */
   combineLatest([yieldProtocolø, chainIdø, assetsø, seriesø, accountø, userSettingsø, providerø])
     .pipe(take(1)) // only take one and then finish.
     .subscribe(async ([{ ladle }, chainId, assetMap, seriesMap, account, { slippageTolerance }, provider]) => {
+      
       const txCode = getProcessCode(ActionCodes.REPAY, vault.id);
-
       const ladleAddress = ladle.address;
       const series: ISeries = seriesMap.get(vault.seriesId)!;
       const base: IAsset = assetMap.get(vault.baseId)!;
@@ -109,7 +109,7 @@ export const repayDebt = async (amount: string | undefined, vault: IVault, recla
           {
             // before maturity
             target: base,
-            spender: 'LADLE',
+            spender: ladleAddress,
             amount: amountToTransfer.mul(110).div(100), // generous approval permits on repayment we can refine at a later stage
             ignoreIf: alreadyApproved === true,
           },

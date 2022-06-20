@@ -46,7 +46,7 @@ const addLiquidity = (amount, strategy, method = types_1.AddLiquidityType.BUY, m
         const permitCallData = yield (0, chainActions_1.sign)([
             {
                 target: _base,
-                spender: 'LADLE',
+                spender: ladleAddress,
                 amount: _amount,
                 ignoreIf: alreadyApproved === true,
             },

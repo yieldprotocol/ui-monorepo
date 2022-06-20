@@ -40,7 +40,7 @@ const YieldExampleComponent = () => {
     selectStrategy,
 
     borrow,
-    repay,
+    repayDebt,
     addLiquidity,
 
   } = yieldFunctions;
@@ -105,10 +105,10 @@ const YieldExampleComponent = () => {
           {collateralizationPercent ? `${collateralizationPercent}%` : ""}{" "}
         </p>
 
-        <button onClick={() => borrow('5000', '10') }>borrow</button> 
-        <button onClick={() => repay('5000', '10') }>repay</button>
+        <button onClick={() => borrow('5000', '10',selected?.vault || undefined) }>borrow 5000 {selected?.vault?.id}</button>  
+        <button onClick={() => repayDebt('6000', selected?.vault ) }>repay 6000 {selected?.vault?.id}</button>
 
-        <button onClick={() => addLiquidity('10000') }>add 10000 liquidity</button>
+        <button onClick={() => addLiquidity('10000', selected?.strategy) }>add 10000 liquidity</button>
       </div>
 
       <hr />

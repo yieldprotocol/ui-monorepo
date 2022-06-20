@@ -21,7 +21,7 @@ const rxjs_1 = require("rxjs");
  * @param amount
  * @param reclaimCollateral
  */
-const repayDebt = (amount, vault, reclaimCollateral) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+const repayDebt = (amount, vault, reclaimCollateral = true) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Subscribe to and get the values from the observables:  */
     (0, rxjs_1.combineLatest)([observables_1.yieldProtocolø, observables_1.chainIdø, observables_1.assetsø, observables_1.seriesø, observables_1.accountø, observables_1.userSettingsø, observables_1.providerø])
         .pipe((0, rxjs_1.take)(1)) // only take one and then finish.
@@ -65,7 +65,7 @@ const repayDebt = (amount, vault, reclaimCollateral) => tslib_1.__awaiter(void 0
             {
                 // before maturity
                 target: base,
-                spender: 'LADLE',
+                spender: ladleAddress,
                 amount: amountToTransfer.mul(110).div(100),
                 ignoreIf: alreadyApproved === true,
             },
