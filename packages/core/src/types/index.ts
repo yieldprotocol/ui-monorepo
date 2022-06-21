@@ -47,7 +47,7 @@ export interface IYieldConfig {
   defaultProviderMap: Map<number, ethers.providers.BaseProvider>;
   defaultChainId: number;
 
-  defaultAccountProvider: ethers.providers.Web3Provider; // the default provider used for getting the account information and signing/transacting
+  defaultAccountProvider: ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider; // the default provider used for getting the account information and signing/transacting
   useAccountProviderAsProvider: boolean; // link the default provider to the account provider
   autoConnectAccountProvider: boolean;
 
@@ -93,7 +93,7 @@ export interface IYieldObservables {
   providerø: Observable<ethers.providers.BaseProvider>;
   accountø: Observable<string | undefined>;
 
-  accountProviderø: Observable<ethers.providers.Web3Provider>;
+  accountProviderø: Observable<ethers.providers.Web3Provider| ethers.providers.JsonRpcProvider >;
 
   /* maps */
   seriesø: Observable<Map<string, ISeries>>;

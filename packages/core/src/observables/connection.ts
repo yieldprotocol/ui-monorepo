@@ -55,16 +55,12 @@ combineLatest([chainIdø, appConfigø])
   .subscribe(async ([chainId, appConfig]) => {
     /* Set the provider ( forked or not ) */
     if (appConfig.useFork && appConfig.defaultForkMap.has(chainId)) {
-
       const forkProvider = appConfig.defaultForkMap.get(chainId);
       provider$.next(forkProvider!);
-      console.log('FORK BLOCK NUMBER > ' , (await forkProvider?.getBlockNumber())?.toString() ) ;
+      console.log('FORK BLOCK NUMBER > ', (await forkProvider?.getBlockNumber())?.toString());
       sendMsg({ message: 'Using forked Environment.', timeoutOverride: Infinity });
-
     } else if (appConfig.defaultProviderMap.has(chainId)) {
-
       provider$.next(appConfig.defaultProviderMap.get(chainId) as ethers.providers.BaseProvider);
-
     } else {
       sendMsg({ message: 'NETWORK NOT SUPPORTED', type: MessageType.WARNING, timeoutOverride: Infinity });
     }
@@ -85,7 +81,8 @@ export const updateAccount = (newAccount: string) => {
  **/
 /** @internal */
 export const accountProvider$ = new BehaviorSubject(defaultAccountProvider);
-export const accountProviderø: Observable<ethers.providers.Web3Provider> = accountProvider$.pipe(shareReplay(1));
+export const accountProviderø: Observable<ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider> =
+  accountProvider$.pipe(shareReplay(1));
 export const updateAccountProvider = (newProvider: ethers.providers.Web3Provider) => {
   // TODO: wrap the EIP provider into a ethers.web3Provider if required.
   accountProvider$.next(newProvider); // update to whole new protocol

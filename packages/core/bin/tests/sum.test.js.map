@@ -1,0 +1,1 @@
+{"version":3,"file":"sum.test.js","sourceRoot":"","sources":["../../src/tests/sum.test.ts"],"names":[],"mappings":";;;AAAA,cAAc;AACd,uDAAiD;AAEjD,yDAAyD;AAGzD,SAAS,CAAC,GAAQ,EAAE;IACnB,uBAAuB;AAExB,CAAC,CAAA,CAAC,CAAA;AAGF,IAAI,CAAC,UAAU,EAAE,GAAG,EAAE;IACpB,OAAO,CAAC,GAAG,CAAC,gBAAK,CAAC,CAAA;IAClB,MAAM,CAAC,CAAC,CAAC,CAAC,IAAI,CAAC,CAAC,CAAC,CAAC;AACpB,CAAC,CAAC,CAAC"}
