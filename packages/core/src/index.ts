@@ -41,7 +41,7 @@ import {
   updateRemoveLiqInput,
   updateRepayInput,
 } from './viewObservables/input';
-import { messagesø } from './observables/messages';
+import { internalMessagesø, messagesø } from './observables/messages';
 import {
   isBorrowPossibleø,
   isRollVaultPossibleø,

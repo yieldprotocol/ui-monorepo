@@ -64,7 +64,6 @@ internalMessagesø
  */
 export const selectBase = async (asset?: IAsset | string) => {
   const assetMap = await lastValueFrom(assetsø.pipe(first()));
-
   const base = (asset as IAsset)?.id ? (asset as IAsset) : assetMap.get(asset as string);
   /* only switch the base if the asset in question is a valid YIELD base */
   if (!base?.isYieldBase) {

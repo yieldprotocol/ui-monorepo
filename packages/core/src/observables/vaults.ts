@@ -1,16 +1,15 @@
-import { format } from 'date-fns';
-import { ethers, BigNumber } from 'ethers';
-import { bytesToBytes32, calcAccruedDebt } from '@yield-protocol/ui-math';
-import { BehaviorSubject, Observable, share, combineLatest, filter, take, withLatestFrom, shareReplay } from 'rxjs';
-
-import { buildVaultMap } from '../initProtocol/buildVaultsRoot';
-import { ISeries, IVault, IVaultRoot, IYieldConfig, IYieldProtocol, MessageType } from '../types';
-import { ZERO_BN } from '../utils/constants';
-import { account$, accountø, chainIdø, providerø } from './connection';
-import { yieldProtocol$, yieldProtocolø } from './yieldProtocol';
-import { sendMsg } from './messages';
-import { bnToW3Number } from '../utils/yieldUtils';
-import { appConfigø } from './appConfig';
+import { bytesToBytes32, calcAccruedDebt } from "@yield-protocol/ui-math";
+import { format } from "date-fns";
+import { ethers, BigNumber } from "ethers";
+import { BehaviorSubject, Observable, shareReplay, lastValueFrom, first, combineLatest, filter, withLatestFrom } from "rxjs";
+import { buildVaultMap } from "../initProtocol/buildVaultsRoot";
+import { IVault, IVaultRoot, MessageType, IYieldProtocol, ISeries } from "../types";
+import { ZERO_BN } from "../utils";
+import { bnToW3Number } from "../utils/yieldUtils";
+import { appConfigø } from "./appConfig";
+import { accountø, chainIdø, providerø } from "./connection";
+import { sendMsg } from "./messages";
+import { yieldProtocolø } from "./yieldProtocol";
 
 /** @internal */
 export const vaultMap$: BehaviorSubject<Map<string, IVault>> = new BehaviorSubject(new Map([]));
@@ -19,11 +18,15 @@ export const vaultsø: Observable<Map<string, IVault>> = vaultMap$.pipe(shareRep
 /* Update vaults function */
 export const updateVaults = async (vaultList?: IVault[] | IVaultRoot[], suppressEventLogQueries:boolean = false) => {
   const list = vaultList !== undefined ? vaultList : Array.from(vaultMap$.value.values());
+
+  const account = await lastValueFrom(accountø.pipe(first()));
+  const yieldProtocol = await lastValueFrom(yieldProtocolø.pipe(first()));
+
   /* if there are some vaults: */
-  if (list.length) {
+  if (list.length && account) {
     await Promise.all(
       list.map(async (_vault: IVault | IVaultRoot) => {
-        const vaultUpdate = await _updateVault(_vault, account$.value as string, yieldProtocol$.value, suppressEventLogQueries);
+        const vaultUpdate = await _updateVault(_vault, account, yieldProtocol, suppressEventLogQueries);
         vaultMap$.next(new Map(vaultMap$.value.set(_vault.id, vaultUpdate))); // note: new Map to enforce ref update
       })
     );

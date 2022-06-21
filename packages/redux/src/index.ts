@@ -8,8 +8,6 @@ import {
 //   viewFunctions,
 } from "@yield-protocol/ui-core";
 
-const { yieldProtocolø, selectedø, messagesø } = yieldObservables;
-
 export const yieldProtocolSlice = createSlice({
   name: 'yieldProtocol',
   initialState: 1,
@@ -27,11 +25,11 @@ export const store = configureStore({
   reducer: yieldProtocolSlice.reducer
 });
 
-combineLatest([ messagesø, yieldProtocolø ] ).pipe(
-).subscribe(([msg, yp]) => { 
-    if  (msg.has('protocolLoaded') ) { console.log( '>>>>>>> protocol Loaded ');   };
-    if  (msg.has('protocolLoaded') ) updateProtocol( { yp } );
-});
+// combineLatest( [ yieldObservables.messagesø , yieldObservables.yieldProtocolø ] ).pipe(
+// ).subscribe(( [ msg, protocol] : [IMessage,IYieldProtocol] ) => { 
+//     if  (msg.has('protocolLoaded') ) { console.log( '>>>>>>> protocol Loaded ');   };
+//     if  (msg.has('protocolLoaded') ) updateProtocol('somethign');
+// });
 
 // combineLatest([ messagesø, yieldProtocolø ] ).pipe(
 //   ).subscribe(([msg, yp]) => { 
