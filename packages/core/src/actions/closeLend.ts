@@ -9,7 +9,7 @@ import { getProcessCode, ONE_BN } from '../utils';
 import { inputToTokenValue } from '../utils/yieldUtils';
 import { removeEth } from './_addRemoveEth';
 
-export const closeLend = async (amount: string | undefined, series: ISeries) => {
+export const closeLend = async (amount: string, series: ISeries) => {
 
     /* Subscribe to and get the values from the observables:  */
     combineLatest([yieldProtocolø, assetsø, accountø, userSettingsø])

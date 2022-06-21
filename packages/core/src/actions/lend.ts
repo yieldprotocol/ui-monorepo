@@ -14,7 +14,7 @@ import { addEth } from './_addRemoveEth';
 import { getProcessCode, inputToTokenValue } from '../utils/yieldUtils';
 import { combineLatest, take } from 'rxjs';
 
-export const lend = async (amount: string | undefined, series: ISeries) => {
+export const lend = async (amount: string, series: ISeries) => {
   /* Subscribe to and get the values from the observables:  */
   combineLatest([yieldProtocolø, assetsø, accountø, userSettingsø])
     .pipe(take(1)) // only take one and then finish.

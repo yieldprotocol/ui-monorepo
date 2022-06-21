@@ -37,11 +37,11 @@ internalMessagesø
   .pipe(
     takeWhile(
       (msg) =>
-        !(msg.has('assetsLoaded') && msg.has('seriesLoaded') && msg.has('strategiesLoaded') && msg.has('vaultsLoaded')),
+        !(msg.has('assetsLoaded') && msg.has('seriesLoaded') && msg.has('strategiesLoaded')),
       true
     ),
     finalize(() => {
-      sendMsg({ message: 'Protocol Ready (default wait)', id: 'protocolLoaded', timeoutOverride: 3000 });
+      sendMsg({ message: 'Protocol Ready', id: 'protocolReady', type: MessageType.INTERNAL });
       sendMsg({ message: 'Protocol Ready (custom wait 5000ms)', timeoutOverride: 5000 });
     })
   )

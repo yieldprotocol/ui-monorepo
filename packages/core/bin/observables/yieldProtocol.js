@@ -4,6 +4,7 @@ exports.updateYieldProtocol = exports.yieldProtocolø = exports.yieldProtocol$ =
 const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
 const ethers_1 = require("ethers");
+const types_1 = require("../types");
 const contracts = tslib_1.__importStar(require("../contracts"));
 const messages_1 = require("./messages");
 // TODO: try to get rid of this init?
@@ -32,8 +33,8 @@ exports.updateYieldProtocol = updateYieldProtocol;
  *
  * */
 messages_1.internalMessagesø
-    .pipe((0, rxjs_1.takeWhile)((msg) => !(msg.has('assetsLoaded') && msg.has('seriesLoaded') && msg.has('strategiesLoaded') && msg.has('vaultsLoaded')), true), (0, rxjs_1.finalize)(() => {
-    (0, messages_1.sendMsg)({ message: 'Protocol Ready (default wait)', id: 'protocolLoaded', timeoutOverride: 3000 });
+    .pipe((0, rxjs_1.takeWhile)((msg) => !(msg.has('assetsLoaded') && msg.has('seriesLoaded') && msg.has('strategiesLoaded')), true), (0, rxjs_1.finalize)(() => {
+    (0, messages_1.sendMsg)({ message: 'Protocol Ready', id: 'protocolReady', type: types_1.MessageType.INTERNAL });
     (0, messages_1.sendMsg)({ message: 'Protocol Ready (custom wait 5000ms)', timeoutOverride: 5000 });
 }))
     .subscribe();

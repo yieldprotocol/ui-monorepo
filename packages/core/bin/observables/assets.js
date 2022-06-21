@@ -37,8 +37,8 @@ exports.updateAssets = updateAssets;
  * 2. update asset list
  * */
 yieldProtocol_1.yieldProtocolø
-    .pipe((0, rxjs_1.filter)((protocol) => protocol.assetRootMap.size > 0), (0, rxjs_1.withLatestFrom)(connection_1.accountø, connection_1.providerø))
-    .subscribe(([_protocol, _account, _provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    .pipe((0, rxjs_1.filter)((protocol) => protocol.assetRootMap.size > 0), (0, rxjs_1.withLatestFrom)(connection_1.providerø, connection_1.accountø))
+    .subscribe(([_protocol, _provider, _account]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* 'Charge' all the assets (using the current provider) */
     const chargedList = Array.from(_protocol.assetRootMap.values()).map((a) => _chargeAsset(a, _provider));
     /* Update the assets with dynamic/user data */

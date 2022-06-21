@@ -91,7 +91,7 @@ const buildAssetMap = (cauldron, ladle, provider, chainId, appConfig) => tslib_1
         (0, appUtils_1.setBrowserCachedValue)(`${chainId}_lastAssetUpdate`, _blockNum);
     }
     console.log(`Yield Protocol ASSET data updated [Block: ${_blockNum}]`);
-    // console.log( assetRootMap);
+    console.log(assetRootMap);
     return assetRootMap;
 });
 exports.buildAssetMap = buildAssetMap;

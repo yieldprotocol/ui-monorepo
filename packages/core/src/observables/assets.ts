@@ -44,10 +44,10 @@ export const updateAssets = async (assetList?: IAsset[], account?: string) => {
 yieldProtocolø
   .pipe(
     filter((protocol) => protocol.assetRootMap.size > 0),
-    withLatestFrom(accountø, providerø)
+    withLatestFrom( providerø, accountø,)
   )
   .subscribe(
-    async ([_protocol, _account, _provider]) => {
+    async ([_protocol, _provider, _account]) => {
       /* 'Charge' all the assets (using the current provider) */
       const chargedList = Array.from(_protocol.assetRootMap.values()).map((a: IAssetRoot) =>
         _chargeAsset(a, _provider)

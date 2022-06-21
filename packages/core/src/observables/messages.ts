@@ -1,4 +1,4 @@
-import { filter, map, Observable, reduce, scan, share, Subject, tap } from 'rxjs';
+import { filter, map, Observable, reduce, scan, share, shareReplay, Subject, tap } from 'rxjs';
 import { IMessage, MessageType } from '../types';
 
 // TODO: implement this better, handle multiple messages here . also custom timer esetting?
@@ -33,11 +33,11 @@ export const sendMsg = (message: IMessage) => {
 
 /**
  * Internal messages filters out undefined and doesn't set a timelimit on the messages
- * @internal
  **/
 export const internalMessagesø: Observable<any> = messages$.pipe(
   filter((msg) => !!msg && msg.type === MessageType.INTERNAL),
-  scan((acc, curr) => acc.set(curr.id, curr), new Map([]))
+  scan((acc, curr) => acc.set(curr.id, curr), new Map([])),
+  shareReplay(1), // TODO: this shareReplay() is only used for testing, maybe remove? 
 );
 
 /* export types for convenience */
