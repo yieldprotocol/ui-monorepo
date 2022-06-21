@@ -26,6 +26,6 @@ exports.sendMsg = sendMsg;
 /**
  * Internal messages filters out undefined and doesn't set a timelimit on the messages
  * @internal
- * */
+ **/
 exports.internalMessagesø = exports.messages$.pipe((0, rxjs_1.filter)((msg) => !!msg && msg.type === types_1.MessageType.INTERNAL), (0, rxjs_1.scan)((acc, curr) => acc.set(curr.id, curr), new Map([])));
 //# sourceMappingURL=messages.js.map

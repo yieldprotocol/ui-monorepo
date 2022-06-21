@@ -7,7 +7,6 @@ import {
 //   viewObservables,
 //   viewFunctions,
 } from "@yield-protocol/ui-core";
-import { IMessage } from '@yield-protocol/ui-core/bin/types';
 
 const { yieldProtocolø, selectedø, messagesø } = yieldObservables;
 
@@ -32,3 +31,15 @@ combineLatest([ messagesø, yieldProtocolø ] ).pipe(
     if  (msg.has('protocolLoaded') ) { console.log( '>>>>>>> protocol Loaded ');   };
     if  (msg.has('protocolLoaded') ) updateProtocol( { yp } );
 });
+
+// combineLatest([ messagesø, yieldProtocolø ] ).pipe(
+//   ).subscribe(([msg, yp]) => { 
+//       if  (msg.has('protocolLoaded') ) { console.log( '>>>>>>> protocol Loaded ');   };
+//       if  (msg.has('protocolLoaded') ) updateProtocol( { yp } );
+//   });
+
+//   combineLatest([ messagesø, yieldProtocolø ] ).pipe(
+//     ).subscribe(([msg, yp]) => { 
+//         if  (msg.has('protocolLoaded') ) { console.log( '>>>>>>> protocol Loaded ');   };
+//         if  (msg.has('protocolLoaded') ) updateProtocol( { yp } );
+//     });

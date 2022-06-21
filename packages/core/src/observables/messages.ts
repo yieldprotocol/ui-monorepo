@@ -34,7 +34,7 @@ export const sendMsg = (message: IMessage) => {
 /**
  * Internal messages filters out undefined and doesn't set a timelimit on the messages
  * @internal
- * */
+ **/
 export const internalMessagesø: Observable<any> = messages$.pipe(
   filter((msg) => !!msg && msg.type === MessageType.INTERNAL),
   scan((acc, curr) => acc.set(curr.id, curr), new Map([]))

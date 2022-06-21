@@ -264,7 +264,7 @@ export function burnFromStrategy(
  * @param { BigNumber | string } ts
  * @param { BigNumber | string } g1
  * @param { number } decimals
- *
+ * 
  * @returns {[BigNumber, BigNumber]}
  */
 export function mintWithBase(

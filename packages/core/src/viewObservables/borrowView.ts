@@ -46,12 +46,14 @@ export const minDebtLimitø: Observable<W3Number> = combineLatest([selectedø, a
 export const isBorrowPossibleø: Observable<boolean> = combineLatest([borrowInputø, selectedø]).pipe(
   map(([input, selected]) => {
     if (selected.series! && input.bn.gt(ZERO_BN) && input.bn.lte(selected.series.baseReserves.bn)) return true;
+    
     input.bn.gt(ZERO_BN) &&
       sendMsg({
         message: 'Not enough liquidity in the pool.',
         type: MessageType.WARNING,
         origin: 'borrowInput',
       });
+      
     return false;
   })
 );

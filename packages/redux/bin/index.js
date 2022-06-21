@@ -11,7 +11,6 @@ const yieldProtocolSlice = (0, toolkit_1.createSlice)({
     reducers: {
         updateProtocol: (state, action) => {
             // console.log('STATE UPDATE: ', state, action.payload);
-            console.log('ehererererererer');
             return Object.assign(Object.assign({}, state), action.payload);
         },
     }
@@ -21,11 +20,21 @@ exports.store = (0, toolkit_1.configureStore)({
     reducer: yieldProtocolSlice.reducer
 });
 (0, rxjs_1.combineLatest)([messagesø, yieldProtocolø]).pipe().subscribe(([msg, yp]) => {
-    if ((msg === null || msg === void 0 ? void 0 : msg.id) === 'protocolLoaded') {
+    if (msg.has('protocolLoaded')) {
         console.log('>>>>>>> protocol Loaded ');
     }
     ;
-    if ((msg === null || msg === void 0 ? void 0 : msg.id) === 'protocolLoaded')
+    if (msg.has('protocolLoaded'))
         (0, exports.updateProtocol)({ yp });
 });
+// combineLatest([ messagesø, yieldProtocolø ] ).pipe(
+//   ).subscribe(([msg, yp]) => { 
+//       if  (msg.has('protocolLoaded') ) { console.log( '>>>>>>> protocol Loaded ');   };
+//       if  (msg.has('protocolLoaded') ) updateProtocol( { yp } );
+//   });
+//   combineLatest([ messagesø, yieldProtocolø ] ).pipe(
+//     ).subscribe(([msg, yp]) => { 
+//         if  (msg.has('protocolLoaded') ) { console.log( '>>>>>>> protocol Loaded ');   };
+//         if  (msg.has('protocolLoaded') ) updateProtocol( { yp } );
+//     });
 //# sourceMappingURL=index.js.map

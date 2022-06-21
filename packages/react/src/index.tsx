@@ -16,7 +16,6 @@ import {
   IVault,
   IYieldProcess,
   IYieldProtocol,
-  IYieldTx,
 } from "@yield-protocol/ui-core/bin/types";
 
 /* Build the context */
