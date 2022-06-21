@@ -41,7 +41,7 @@ export const updateChainId = (chainId: number) => {
 };
 
 /** @internal */
-export const provider$: Subject<ethers.providers.BaseProvider> = new Subject();
+const provider$: Subject<ethers.providers.BaseProvider> = new Subject();
 export const providerø = provider$.pipe(shareReplay(1));
 export const updateProvider = (newProvider: ethers.providers.BaseProvider) => {
   provider$.next(newProvider); // update to whole new protocol
@@ -67,7 +67,7 @@ combineLatest([chainIdø, appConfigø])
   });
 
 /** @internal */
-export const account$ = new BehaviorSubject(undefined as string | undefined);
+const account$ = new BehaviorSubject(undefined as string | undefined);
 export const accountø: Observable<string | undefined> = account$.pipe(shareReplay(1));
 export const updateAccount = (newAccount: string) => {
   /* Check if account is a vaild address before assigning */
@@ -80,7 +80,7 @@ export const updateAccount = (newAccount: string) => {
  * It also adds a number of listeners to monitor account changes etc.
  **/
 /** @internal */
-export const accountProvider$ = new BehaviorSubject(defaultAccountProvider);
+const accountProvider$ = new BehaviorSubject(defaultAccountProvider);
 export const accountProviderø: Observable<ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider> =
   accountProvider$.pipe(shareReplay(1));
 export const updateAccountProvider = (newProvider: ethers.providers.Web3Provider) => {
