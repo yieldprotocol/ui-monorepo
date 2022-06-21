@@ -15,7 +15,7 @@
   },
   "scripts": {
     "test": "tsc && jest",
-    "compile": "tsc",
+    "compile": "tsc -b",
     "docs": "typedoc",
     "watch": "tsc -b -w",
     "minify": "uglifyjs --compress --mangle --output name.min.js -- ./bin/index.js",
