@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updatePair = exports.assetPairsø = exports.assetPairMap$ = void 0;
+exports.updatePair = exports.assetPairsø = void 0;
 const tslib_1 = require("tslib");
 const ui_math_1 = require("@yield-protocol/ui-math");
 const ethers_1 = require("ethers");
@@ -12,8 +12,8 @@ const selected_1 = require("./selected");
 const yieldUtils_1 = require("../utils/yieldUtils");
 const connection_1 = require("./connection");
 /** @internal */
-exports.assetPairMap$ = new rxjs_1.BehaviorSubject(new Map([]));
-exports.assetPairsø = exports.assetPairMap$.pipe((0, rxjs_1.shareReplay)(1));
+const assetPairMap$ = new rxjs_1.BehaviorSubject(new Map([]));
+exports.assetPairsø = assetPairMap$.pipe((0, rxjs_1.shareReplay)(1));
 /**
  *
  * Watch selected elements, on every change if both a base and ilk are selected,
@@ -25,7 +25,7 @@ selected_1.selectedø
 /* Only handle events that have both a selected base and ilk, and are NOT already in the assetPairMap */
 (0, rxjs_1.filter)(([sel]) => {
     const bothBaseAndIlkSelected = !!sel.base && !!sel.ilk;
-    const mapHasPair = sel.base && sel.ilk && exports.assetPairMap$.value.has((0, yieldUtils_1.getAssetPairId)(sel.base.id, sel.ilk.id));
+    const mapHasPair = sel.base && sel.ilk && assetPairMap$.value.has((0, yieldUtils_1.getAssetPairId)(sel.base.id, sel.ilk.id));
     // mapHasPair && console.log ( 'Selected base and asset already in map');
     return bothBaseAndIlkSelected === true && mapHasPair === false;
 }), (0, rxjs_1.map)(([selected, chainId]) => {
@@ -76,7 +76,7 @@ const updatePair = (baseId, ilkId, chainId) => tslib_1.__awaiter(void 0, void 0,
             oracle: oracleName || '',
         };
         /* update the assetPairMap */
-        exports.assetPairMap$.next(exports.assetPairMap$.value.set(pairId, newPair));
+        assetPairMap$.next(assetPairMap$.value.set(pairId, newPair));
         console.log('New Asset Pair Info: ', newPair);
         /* return the new pair so we don't have to go looking for it again after assetpairMap has been updated */
         return newPair;

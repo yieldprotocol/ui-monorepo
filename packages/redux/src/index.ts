@@ -10,7 +10,7 @@ import {
 
 const { yieldProtocolø, selectedø, messagesø } = yieldObservables;
 
-const yieldProtocolSlice = createSlice({
+export const yieldProtocolSlice = createSlice({
   name: 'yieldProtocol',
   initialState: 1,
   reducers: {
@@ -22,6 +22,7 @@ const yieldProtocolSlice = createSlice({
 });
 
 export const { updateProtocol } = yieldProtocolSlice.actions
+
 export const store = configureStore({
   reducer: yieldProtocolSlice.reducer
 });
@@ -43,3 +44,4 @@ combineLatest([ messagesø, yieldProtocolø ] ).pipe(
 //         if  (msg.has('protocolLoaded') ) { console.log( '>>>>>>> protocol Loaded ');   };
 //         if  (msg.has('protocolLoaded') ) updateProtocol( { yp } );
 //     });
+

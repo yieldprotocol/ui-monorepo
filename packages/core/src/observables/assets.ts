@@ -13,7 +13,7 @@ import { MessageType, sendMsg } from './messages';
 import { bnToW3Number } from '../utils/yieldUtils';
 
 /** @internal */
-export const assetMap$: BehaviorSubject<Map<string, IAsset>> = new BehaviorSubject(new Map([]));
+const assetMap$: BehaviorSubject<Map<string, IAsset>> = new BehaviorSubject(new Map([]));
 
 /**
  * Unsubscribed Assetmap observable

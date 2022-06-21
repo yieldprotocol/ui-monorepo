@@ -1,18 +1,18 @@
-// @ts-nocheck
-import { store } from '@yield-protocol/ui-redux';
-// const { yieldProtocol } = latest store .subscribe()
+import * as yieldObservables from '../observables';
+
+const { yieldProtocolø, selectedø } = yieldObservables;
 
 
-beforeAll(async ()=> {
- //  console.log( store)
-
-}) 
-
-
-test('protocol loads', () => {
-
-  const state = store.getState()
-  console.log(state);
-  expect(3).toBe(3);
+test('The protocol should load successfully', done => {
+  let last = 100;
+  // messagesø
+  // .subscribe({
+  //     next: val => {
+  //         expect(val).toBe(last)
+  //         last += 100
+  //       },
+  //     complete: () => done(),
+  // })e
+  done();
 });
 

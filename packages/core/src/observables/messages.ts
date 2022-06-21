@@ -9,7 +9,7 @@ const _handleTimeout = (message: IMessage) => {
 };
 
 /** @internal */
-export const messages$: Subject<IMessage> = new Subject();
+const messages$: Subject<IMessage> = new Subject();
 
 export const messagesø: Observable<Map<string,IMessage>> = messages$.pipe(
   filter((msg) => !!msg && msg.type !== MessageType.INTERNAL),

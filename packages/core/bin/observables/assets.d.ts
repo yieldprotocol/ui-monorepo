@@ -1,7 +1,5 @@
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { IAsset } from '../types';
-/** @internal */
-export declare const assetMap$: BehaviorSubject<Map<string, IAsset>>;
 /**
  * Unsubscribed Assetmap observable
  */

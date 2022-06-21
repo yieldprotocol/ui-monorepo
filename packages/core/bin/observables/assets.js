@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateAssets = exports.assetsø = exports.assetMap$ = void 0;
+exports.updateAssets = exports.assetsø = void 0;
 const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
 const types_1 = require("../types");
@@ -12,11 +12,11 @@ const constants_1 = require("../utils/constants");
 const messages_1 = require("./messages");
 const yieldUtils_1 = require("../utils/yieldUtils");
 /** @internal */
-exports.assetMap$ = new rxjs_1.BehaviorSubject(new Map([]));
+const assetMap$ = new rxjs_1.BehaviorSubject(new Map([]));
 /**
  * Unsubscribed Assetmap observable
  */
-exports.assetsø = exports.assetMap$.pipe((0, rxjs_1.shareReplay)(1));
+exports.assetsø = assetMap$.pipe((0, rxjs_1.shareReplay)(1));
 /**
  * Update Assets function
  * @param assetList  list of assets to update
@@ -24,10 +24,10 @@ exports.assetsø = exports.assetMap$.pipe((0, rxjs_1.shareReplay)(1));
  */
 const updateAssets = (assetList, account) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* if passed an empty list, update ALL assets in the assetMap$ subject */
-    const list = (assetList === null || assetList === void 0 ? void 0 : assetList.length) ? assetList : Array.from(exports.assetMap$.value.values());
+    const list = (assetList === null || assetList === void 0 ? void 0 : assetList.length) ? assetList : Array.from(assetMap$.value.values());
     yield Promise.all(list.map((asset) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         const assetUpdate = account ? yield _updateAccountInfo(asset, account) : asset;
-        exports.assetMap$.next(new Map(exports.assetMap$.value.set(asset.id, assetUpdate))); // note: new Map to enforce ref update
+        assetMap$.next(new Map(assetMap$.value.set(asset.id, assetUpdate))); // note: new Map to enforce ref update
     })));
 });
 exports.updateAssets = updateAssets;

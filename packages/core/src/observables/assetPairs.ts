@@ -11,7 +11,7 @@ import { bnToW3Number, getAssetPairId } from '../utils/yieldUtils';
 import { chainIdø } from './connection';
 
 /** @internal */
-export const assetPairMap$: BehaviorSubject<Map<string, IAssetPair>> = new BehaviorSubject(new Map([]));
+const assetPairMap$: BehaviorSubject<Map<string, IAssetPair>> = new BehaviorSubject(new Map([]));
 export const assetPairsø: Observable<Map<string, IAssetPair>> = assetPairMap$.pipe(shareReplay(1));
 
 /**
