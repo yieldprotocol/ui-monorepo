@@ -52,13 +52,13 @@ exports.updateProvider = updateProvider;
     var _a;
     /* Set the provider ( forked or not ) */
     if (appConfig.useFork && appConfig.defaultForkMap.has(chainId)) {
-        const forkProvider = appConfig.defaultForkMap.get(chainId);
+        const forkProvider = appConfig.defaultForkMap.get(chainId)();
         provider$.next(forkProvider);
         console.log('FORK BLOCK NUMBER > ', (_a = (yield (forkProvider === null || forkProvider === void 0 ? void 0 : forkProvider.getBlockNumber()))) === null || _a === void 0 ? void 0 : _a.toString());
         (0, messages_1.sendMsg)({ message: 'Using forked Environment.', timeoutOverride: Infinity });
     }
     else if (appConfig.defaultProviderMap.has(chainId)) {
-        provider$.next(appConfig.defaultProviderMap.get(chainId));
+        provider$.next(appConfig.defaultProviderMap.get(chainId)());
     }
     else {
         (0, messages_1.sendMsg)({ message: 'NETWORK NOT SUPPORTED', type: messages_1.MessageType.WARNING, timeoutOverride: Infinity });

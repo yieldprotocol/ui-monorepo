@@ -35,7 +35,7 @@ export interface IUserSettings {
     unwrapTokens: boolean;
 }
 export interface IYieldConfig {
-    defaultProviderMap: Map<number, ethers.providers.BaseProvider>;
+    defaultProviderMap: Map<number, () => ethers.providers.BaseProvider>;
     defaultChainId: number;
     defaultAccountProvider: ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider;
     useAccountProviderAsProvider: boolean;
@@ -50,7 +50,7 @@ export interface IYieldConfig {
     browserCaching: boolean;
     forceTransactions: boolean;
     useFork: boolean;
-    defaultForkMap: Map<number, ethers.providers.BaseProvider>;
+    defaultForkMap: Map<number, () => ethers.providers.BaseProvider>;
     suppressEventLogQueries: boolean;
     diagnostics: boolean;
 }

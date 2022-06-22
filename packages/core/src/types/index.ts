@@ -44,7 +44,7 @@ export interface IUserSettings {
 }
 
 export interface IYieldConfig {
-  defaultProviderMap: Map<number, ethers.providers.BaseProvider>;
+  defaultProviderMap: Map<number, ()=>ethers.providers.BaseProvider>;
   defaultChainId: number;
 
   defaultAccountProvider: ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider; // the default provider used for getting the account information and signing/transacting
@@ -67,7 +67,7 @@ export interface IYieldConfig {
 
   forceTransactions: boolean;
   useFork: boolean;
-  defaultForkMap: Map<number, ethers.providers.BaseProvider>;
+  defaultForkMap: Map<number, () => ethers.providers.BaseProvider>;
   suppressEventLogQueries: boolean, // don't query historical data 
 
   diagnostics: boolean;

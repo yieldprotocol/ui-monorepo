@@ -1,7 +1,7 @@
 import { Web3Provider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
 import { Observable, BehaviorSubject, Subject, shareReplay, mergeMap, combineLatest } from 'rxjs';
-import { defaultAccountProvider, defaultProviderMap, defaultForkMap } from '../config/defaultproviders';
+import { defaultAccountProvider } from '../config/defaultproviders';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils';
 import { appConfigø } from './appConfig';
 import { MessageType, sendMsg } from './messages';
@@ -54,12 +54,12 @@ combineLatest([chainIdø, appConfigø])
   .subscribe(async ([chainId, appConfig]) => {
     /* Set the provider ( forked or not ) */
     if (appConfig.useFork && appConfig.defaultForkMap.has(chainId)) {
-      const forkProvider = appConfig.defaultForkMap.get(chainId);
+      const forkProvider = appConfig.defaultForkMap.get(chainId)!();
       provider$.next(forkProvider!);
       console.log('FORK BLOCK NUMBER > ', (await forkProvider?.getBlockNumber())?.toString());
       sendMsg({ message: 'Using forked Environment.', timeoutOverride: Infinity });
     } else if (appConfig.defaultProviderMap.has(chainId)) {
-      provider$.next(appConfig.defaultProviderMap.get(chainId) as ethers.providers.BaseProvider);
+      provider$.next( appConfig.defaultProviderMap.get(chainId)!() as ethers.providers.BaseProvider);
     } else {
       sendMsg({ message: 'NETWORK NOT SUPPORTED', type: MessageType.WARNING, timeoutOverride: Infinity });
     }
