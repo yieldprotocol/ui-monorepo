@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateStrategies = exports.strategiesø = exports.strategyMap$ = void 0;
+exports.updateStrategies = exports.strategiesø = void 0;
 const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
 const ethers_1 = require("ethers");
@@ -12,19 +12,18 @@ const yieldProtocol_1 = require("./yieldProtocol");
 const constants_1 = require("../utils/constants");
 const messages_1 = require("./messages");
 const yieldUtils_1 = require("../utils/yieldUtils");
-/** @internal */
-exports.strategyMap$ = new rxjs_1.BehaviorSubject(new Map([]));
-exports.strategiesø = exports.strategyMap$.pipe((0, rxjs_1.shareReplay)(1));
+const strategyMap$ = new rxjs_1.BehaviorSubject(new Map([]));
+exports.strategiesø = strategyMap$.pipe((0, rxjs_1.shareReplay)(1));
 /* Update strategies function */
 const updateStrategies = (provider, strategyList, account, accountDataOnly = false) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* If strategyList parameter is empty/undefined, update all the straetegies in the strategyMap */
-    const list = (strategyList === null || strategyList === void 0 ? void 0 : strategyList.length) ? strategyList : Array.from(exports.strategyMap$.value.values());
+    const list = (strategyList === null || strategyList === void 0 ? void 0 : strategyList.length) ? strategyList : Array.from(strategyMap$.value.values());
     yield Promise.all(list.map((strategy) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         /* if account data only, just return the strategy */
         const strategyUpdate = accountDataOnly ? strategy : yield _updateInfo(strategy, provider);
         /* if account provided, append account data */
         const strategyUpdateAll = account ? yield _updateAccountInfo(strategyUpdate, account) : strategyUpdate;
-        exports.strategyMap$.next(new Map(exports.strategyMap$.value.set(strategy.id, strategyUpdateAll))); // note: new Map to enforce ref update
+        strategyMap$.next(new Map(strategyMap$.value.set(strategy.id, strategyUpdateAll))); // note: new Map to enforce ref update
     })));
 });
 exports.updateStrategies = updateStrategies;

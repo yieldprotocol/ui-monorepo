@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateYieldProtocol = exports.yieldProtocolø = exports.yieldProtocol$ = void 0;
+exports.updateYieldProtocol = exports.yieldProtocolø = void 0;
 const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
 const ethers_1 = require("ethers");
@@ -19,11 +19,10 @@ const _blankProtocol = {
     seriesRootMap: new Map([]),
     strategyRootMap: new Map([]),
 };
-/** @internal */
-exports.yieldProtocol$ = new rxjs_1.BehaviorSubject(_blankProtocol);
-exports.yieldProtocolø = exports.yieldProtocol$.pipe((0, rxjs_1.shareReplay)(1));
+const yieldProtocol$ = new rxjs_1.BehaviorSubject(_blankProtocol);
+exports.yieldProtocolø = yieldProtocol$.pipe((0, rxjs_1.shareReplay)(1));
 const updateYieldProtocol = (newProtocol) => {
-    exports.yieldProtocol$.next(newProtocol); // update to whole new protocol
+    yieldProtocol$.next(newProtocol); // update to whole new protocol
 };
 exports.updateYieldProtocol = updateYieldProtocol;
 /**

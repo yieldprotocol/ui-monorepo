@@ -40,7 +40,6 @@ export const updateChainId = (chainId: number) => {
   location.reload();
 };
 
-/** @internal */
 const provider$: Subject<ethers.providers.BaseProvider> = new Subject();
 export const providerø = provider$.pipe(shareReplay(1));
 export const updateProvider = (newProvider: ethers.providers.BaseProvider) => {
@@ -66,7 +65,6 @@ combineLatest([chainIdø, appConfigø])
     }
   });
 
-/** @internal */
 const account$ = new BehaviorSubject(undefined as string | undefined);
 export const accountø: Observable<string | undefined> = account$.pipe(shareReplay(1));
 export const updateAccount = (newAccount: string) => {
@@ -79,7 +77,7 @@ export const updateAccount = (newAccount: string) => {
  * The accountProvider is the sign provider (web3Provider) that handles the user account, signing and transacting.
  * It also adds a number of listeners to monitor account changes etc.
  **/
-/** @internal */
+
 const accountProvider$ = new BehaviorSubject(defaultAccountProvider);
 export const accountProviderø: Observable<ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider> =
   accountProvider$.pipe(shareReplay(1));

@@ -11,7 +11,6 @@ const yieldProtocol_1 = require("./yieldProtocol");
 const selected_1 = require("./selected");
 const yieldUtils_1 = require("../utils/yieldUtils");
 const connection_1 = require("./connection");
-/** @internal */
 const assetPairMap$ = new rxjs_1.BehaviorSubject(new Map([]));
 exports.assetPairsø = assetPairMap$.pipe((0, rxjs_1.shareReplay)(1));
 /**
@@ -35,7 +34,8 @@ selected_1.selectedø
 /* Update Assets function */
 const updatePair = (baseId, ilkId, chainId) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
-    const { cauldron, assetRootMap, oracleMap } = yieldProtocol_1.yieldProtocol$.value;
+    const yieldProtocol = yield (0, rxjs_1.lastValueFrom)(yieldProtocol_1.yieldProtocolø.pipe((0, rxjs_1.first)()));
+    const { cauldron, assetRootMap, oracleMap } = yieldProtocol;
     const oracleName = (_b = (_a = oracles_1.ORACLES.get(chainId)) === null || _a === void 0 ? void 0 : _a.get(baseId)) === null || _b === void 0 ? void 0 : _b.get(ilkId);
     const PriceOracle = oracleMap.get(oracleName);
     const base = assetRootMap.get(baseId);

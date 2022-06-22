@@ -18,8 +18,8 @@ import { ZERO_BN } from '../utils/constants';
 import { sendMsg } from './messages';
 import { bnToW3Number } from '../utils/yieldUtils';
 
-/** @internal */
-export const strategyMap$: BehaviorSubject<Map<string, IStrategy>> = new BehaviorSubject(new Map([]));
+
+const strategyMap$: BehaviorSubject<Map<string, IStrategy>> = new BehaviorSubject(new Map([]));
 export const strategiesø: Observable<Map<string, IStrategy>> = strategyMap$.pipe(shareReplay(1));
 
 /* Update strategies function */

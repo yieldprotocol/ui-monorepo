@@ -4,7 +4,7 @@ import { IYieldConfig } from '../types';
 /* Handle configuration */
 import defaultConfig from '../config/yield.config';
 
-/** @internal */
+
 const appConfig$: Subject<IYieldConfig> = new Subject();
 
 /**
@@ -23,6 +23,7 @@ export const appConfigø: Observable<IYieldConfig> = appConfig$
   shareReplay(1),
 )
 
-export const updateYieldConfig = (appConfig: IYieldConfig) => {
+export const updateAppConfig = (appConfig: Partial<IYieldConfig>) => {
   appConfig$.next({ ...defaultConfig, ...appConfig });
 };
+

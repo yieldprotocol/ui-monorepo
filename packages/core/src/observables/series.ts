@@ -18,9 +18,7 @@ import { ETH_BASED_ASSETS } from '../config/assets';
 import { sendMsg } from './messages';
 import { bnToW3Number } from '../utils/yieldUtils';
 
-/** @internal */
-export const seriesMap$: BehaviorSubject<Map<string, ISeries>> = new BehaviorSubject(new Map([]));
-
+const seriesMap$: BehaviorSubject<Map<string, ISeries>> = new BehaviorSubject(new Map([]));
 /**
  * SeriesMap observable and update function.
  */

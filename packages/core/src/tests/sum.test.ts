@@ -1,7 +1,7 @@
-import { combineLatest, finalize, takeWhile, take, subscribeOn } from 'rxjs';
+import { combineLatest, finalize, takeWhile, take, subscribeOn, first, lastValueFrom } from 'rxjs';
 import { buildProtocol } from '../initProtocol/buildProtocol';
 import * as yieldObservables from '../observables';
-import { internalMessagesø, updateYieldConfig } from '../observables';
+import { internalMessagesø, providerø, updateAppConfig } from '../observables';
 import defaultConfig from '../config/yield.config';
 import { ethers } from 'ethers';
 
@@ -21,18 +21,18 @@ const config = {
   suppressEventLogQueries: false,
 };
 
-let loadSubscription: any;
 
 beforeAll((done) => {
   console.log('Loading Protocol...');
 
-  updateYieldConfig({ ...defaultConfig, ...config });
-  loadSubscription = combineLatest([yieldObservables.providerø, yieldObservables.appConfigø, yieldObservables.chainIdø]).subscribe(
+  updateAppConfig(config);
+  combineLatest([yieldObservables.providerø, yieldObservables.appConfigø, yieldObservables.chainIdø]).subscribe(
     async ([provider, config, chainId]) => {
       const protocol = await buildProtocol(provider, chainId, config);
       yieldObservables.updateYieldProtocol(protocol);
     }
   )
+
   internalMessagesø
     .pipe(
       finalize( () => done() ),
@@ -54,4 +54,7 @@ test('The protocol should have loaded successfully.', (done) => {
   })
 });
 
-afterAll( () => loadSubscription.unsubscribe() )
+// afterAll( async () => { 
+//   const provider = await lastValueFrom(providerø.pipe(first())) 
+//   (provide
+// })

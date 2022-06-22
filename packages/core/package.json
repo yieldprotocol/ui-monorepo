@@ -14,7 +14,7 @@
     "unique-names-generator": "^4.6.0"
   },
   "scripts": {
-    "test": "tsc && jest ",
+    "test": "tsc && jest --detectOpenHandles ",
     "compile": "tsc -b",
     "docs": "typedoc",
     "watch": "tsc -b -w",

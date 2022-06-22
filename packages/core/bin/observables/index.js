@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.internalMessagesø = exports.messagesø = exports.updateYieldProtocol = exports.yieldProtocolø = exports.updateVaults = exports.vaultsø = exports.updateUserSettings = exports.userSettingsø = exports.resetProcess = exports.updateProcess = exports.transactionsø = exports.updateStrategies = exports.strategiesø = exports.updateSeries = exports.seriesø = exports.selectStrategy = exports.selectVault = exports.selectSeries = exports.selectIlk = exports.selectBase = exports.selectedø = exports.updateChainId = exports.chainIdø = exports.updateAccount = exports.accountø = exports.updateAccountProvider = exports.accountProviderø = exports.updateProvider = exports.providerø = exports.updatePair = exports.assetPairsø = exports.updateAssets = exports.assetsø = exports.updateYieldConfig = exports.appConfigø = void 0;
+exports.internalMessagesø = exports.messagesø = exports.updateYieldProtocol = exports.yieldProtocolø = exports.updateVaults = exports.vaultsø = exports.updateUserSettings = exports.userSettingsø = exports.resetProcess = exports.updateProcess = exports.transactionsø = exports.updateStrategies = exports.strategiesø = exports.updateSeries = exports.seriesø = exports.selectStrategy = exports.selectVault = exports.selectSeries = exports.selectIlk = exports.selectBase = exports.selectedø = exports.updateChainId = exports.chainIdø = exports.updateAccount = exports.accountø = exports.updateAccountProvider = exports.accountProviderø = exports.updateProvider = exports.providerø = exports.updatePair = exports.assetPairsø = exports.updateAssets = exports.assetsø = exports.updateAppConfig = exports.appConfigø = void 0;
 // export { account$, accountø, updateAccount } from './account';
 var appConfig_1 = require("./appConfig");
 Object.defineProperty(exports, "appConfig\u00F8", { enumerable: true, get: function () { return appConfig_1.appConfigø; } });
-Object.defineProperty(exports, "updateYieldConfig", { enumerable: true, get: function () { return appConfig_1.updateYieldConfig; } });
+Object.defineProperty(exports, "updateAppConfig", { enumerable: true, get: function () { return appConfig_1.updateAppConfig; } });
 var assets_1 = require("./assets");
 Object.defineProperty(exports, "assets\u00F8", { enumerable: true, get: function () { return assets_1.assetsø; } });
 Object.defineProperty(exports, "updateAssets", { enumerable: true, get: function () { return assets_1.updateAssets; } });

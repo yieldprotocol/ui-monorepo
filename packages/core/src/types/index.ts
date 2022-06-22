@@ -114,7 +114,7 @@ export interface IYieldFunctions {
 
 
   updateProvider: (provider: ethers.providers.BaseProvider) => void;
-  updateYieldConfig: (config: IYieldConfig) => void;
+  updateAppConfig: (config: IYieldConfig) => void;
   updateAccount: (account: string) => void;
   /* selectors */
   selectIlk: (asset: string | IAsset) => void;

@@ -11,7 +11,6 @@ const assets_1 = require("../config/assets");
 const constants_1 = require("../utils/constants");
 const messages_1 = require("./messages");
 const yieldUtils_1 = require("../utils/yieldUtils");
-/** @internal */
 const assetMap$ = new rxjs_1.BehaviorSubject(new Map([]));
 /**
  * Unsubscribed Assetmap observable

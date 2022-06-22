@@ -8,9 +8,7 @@ const _handleTimeout = (message: IMessage) => {
   if (waitMs !== Infinity) setTimeout(() => messages$.next({ ...message, expired: true }), waitMs);
 };
 
-/** @internal */
 const messages$: Subject<IMessage> = new Subject();
-
 export const messagesø: Observable<Map<string,IMessage>> = messages$.pipe(
   filter((msg) => !!msg && msg.type !== MessageType.INTERNAL),
   /* add in a timeout, that would fire after a period of time */
@@ -30,6 +28,7 @@ export const sendMsg = (message: IMessage) => {
     ...message,
   });
 };
+
 
 /**
  * Internal messages filters out undefined and doesn't set a timelimit on the messages

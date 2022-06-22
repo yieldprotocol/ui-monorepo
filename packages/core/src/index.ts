@@ -25,7 +25,7 @@ import {
   strategiesø,
   updateAccount,
   updateProvider,
-  updateYieldConfig,
+  updateAppConfig,
   updateYieldProtocol,
   vaultsø,
   yieldProtocolø,
@@ -120,7 +120,7 @@ const yieldFunctions: IYieldFunctions = {
   addLiquidity,
 
   updateProvider,
-  updateYieldConfig,
+  updateAppConfig,
   updateAccount,
 
   /* selector functions */

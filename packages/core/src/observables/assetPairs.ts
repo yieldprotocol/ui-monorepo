@@ -1,16 +1,16 @@
 import { bytesToBytes32, decimal18ToDecimalN } from '@yield-protocol/ui-math';
 import { BigNumber, ethers } from 'ethers';
-import { BehaviorSubject, filter, map, Observable, share, shareReplay, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, filter, first, lastValueFrom, map, Observable, share, shareReplay, withLatestFrom } from 'rxjs';
 
 import { ORACLES } from '../config/oracles';
 import { IAssetPair, ISelected } from '../types';
 import { WAD_BN } from '../utils';
-import { yieldProtocol$ } from './yieldProtocol';
+import { yieldProtocolø } from './yieldProtocol';
 import { selectedø } from './selected';
 import { bnToW3Number, getAssetPairId } from '../utils/yieldUtils';
 import { chainIdø } from './connection';
 
-/** @internal */
+
 const assetPairMap$: BehaviorSubject<Map<string, IAssetPair>> = new BehaviorSubject(new Map([]));
 export const assetPairsø: Observable<Map<string, IAssetPair>> = assetPairMap$.pipe(shareReplay(1));
 
@@ -38,7 +38,10 @@ selectedø
 
 /* Update Assets function */
 export const updatePair = async (baseId: string, ilkId: string, chainId: number): Promise<IAssetPair | null> => {
-  const { cauldron, assetRootMap, oracleMap } = yieldProtocol$.value;
+
+  const yieldProtocol = await lastValueFrom(yieldProtocolø.pipe(first()));
+
+  const { cauldron, assetRootMap, oracleMap } = yieldProtocol;
   const oracleName = ORACLES.get(chainId)?.get(baseId)?.get(ilkId);
 
   const PriceOracle = oracleMap.get(oracleName!);

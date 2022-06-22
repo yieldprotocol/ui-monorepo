@@ -11,8 +11,7 @@ import { accountø, chainIdø, providerø } from "./connection";
 import { sendMsg } from "./messages";
 import { yieldProtocolø } from "./yieldProtocol";
 
-/** @internal */
-export const vaultMap$: BehaviorSubject<Map<string, IVault>> = new BehaviorSubject(new Map([]));
+const vaultMap$: BehaviorSubject<Map<string, IVault>> = new BehaviorSubject(new Map([]));
 export const vaultsø: Observable<Map<string, IVault>> = vaultMap$.pipe(shareReplay(1));
 
 /* Update vaults function */

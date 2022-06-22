@@ -14,9 +14,9 @@ import { IAsset, ISelected, ISeries, IStrategy, IVault } from '../types';
 import { appConfigø } from './appConfig';
 import { assetsø } from './assets';
 import { internalMessagesø, sendMsg } from './messages';
-import { seriesMap$, seriesø } from './series';
-import { strategyMap$ } from './strategies';
-import { vaultMap$ } from './vaults';
+import { seriesø } from './series';
+import { strategiesø } from './strategies';
+import { vaultsø } from './vaults';
 
 const initSelection: ISelected = {
   base: null,
@@ -27,7 +27,6 @@ const initSelection: ISelected = {
   strategy: null,
 };
 
-/** @internal */
 const selected$: BehaviorSubject<ISelected> = new BehaviorSubject(initSelection);
 export const selectedø: Observable<ISelected> = selected$.pipe(shareReplay(1));
 
@@ -64,6 +63,8 @@ internalMessagesø
  */
 export const selectBase = async (asset?: IAsset | string) => {
   const assetMap = await lastValueFrom(assetsø.pipe(first()));
+  const seriesMap = await lastValueFrom(seriesø.pipe(first()));
+
   const base = (asset as IAsset)?.id ? (asset as IAsset) : assetMap.get(asset as string);
   /* only switch the base if the asset in question is a valid YIELD base */
   if (!base?.isYieldBase) {
@@ -74,7 +75,7 @@ export const selectBase = async (asset?: IAsset | string) => {
       ...selected$.value,
       base: base || null,
       /* if a base is selected, then auto select the first 'mature' series that has that base */
-      series: [...seriesMap$.value.values()].find((s: ISeries) => s.baseId === base!.id && !s.isMature()) || null,
+      series: [...seriesMap.values()].find((s: ISeries) => s.baseId === base!.id && !s.isMature()) || null,
     });
     console.log(base ? `Selected Base: ${base.id}` : 'Bases unselected');
   }
@@ -117,9 +118,11 @@ export const selectSeries = async (series: ISeries | string, futureSeries: boole
 
 export const selectVault = async (vault?: IVault | string) => {
   const assetMap = await lastValueFrom(assetsø.pipe(first()));
+  const seriesMap = await lastValueFrom(seriesø.pipe(first()));
+  const vaultMap = await lastValueFrom(vaultsø.pipe(first()));
 
   if (vault) {
-    const _vault = (vault as IVault).id ? (vault as IVault) : vaultMap$.value.get(vault as string);
+    const _vault = (vault as IVault).id ? (vault as IVault) : vaultMap.get(vault as string);
     /* Update the selected$ */
     selected$.next({
       ...selected$.value,
@@ -127,7 +130,7 @@ export const selectVault = async (vault?: IVault | string) => {
       /* Ensure the other releant components match the vault */
       base: assetMap.get(_vault!.baseId) || selected$.value.base,
       ilk: assetMap.get(_vault!.ilkId) || selected$.value.ilk,
-      series: seriesMap$.value.get(_vault!.seriesId) || selected$.value.series,
+      series: seriesMap.get(_vault!.seriesId) || selected$.value.series,
     });
   }
   /* if undefined sent in, deselect vault only */
@@ -136,16 +139,21 @@ export const selectVault = async (vault?: IVault | string) => {
 };
 
 export const selectStrategy = async (strategy?: IStrategy | string) => {
+  
   if (strategy) {
+
     const assetMap = await lastValueFrom(assetsø.pipe(first()));
-    const _strategy = (strategy as IStrategy).id ? (strategy as IStrategy) : strategyMap$.value.get(strategy as string);
+    const seriesMap = await lastValueFrom(seriesø.pipe(first()));
+    const strategyMap = await lastValueFrom(strategiesø.pipe(first()));
+
+    const _strategy = (strategy as IStrategy).id ? (strategy as IStrategy) : strategyMap.get(strategy as string);
     /* Update the selected$ */
     selected$.next({
       ...selected$.value,
       strategy: _strategy || null,
       /* Ensure the other releant components match the vault */
       base: assetMap.get(_strategy!.baseId) || selected$.value.base,
-      series: seriesMap$.value.get(_strategy!.currentSeriesId) || selected$.value.series,
+      series: seriesMap.get(_strategy!.currentSeriesId) || selected$.value.series,
     });
   }
   /* if undefined sent in, deselect vault only */

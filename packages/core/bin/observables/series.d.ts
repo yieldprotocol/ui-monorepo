@@ -1,7 +1,5 @@
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ISeries } from '../types';
-/** @internal */
-export declare const seriesMap$: BehaviorSubject<Map<string, ISeries>>;
 /**
  * SeriesMap observable and update function.
  */

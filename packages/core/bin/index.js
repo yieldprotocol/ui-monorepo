@@ -72,7 +72,7 @@ const yieldFunctions = {
     repayDebt: actions_1.repayDebt,
     addLiquidity: actions_1.addLiquidity,
     updateProvider: observables_1.updateProvider,
-    updateYieldConfig: observables_1.updateYieldConfig,
+    updateAppConfig: observables_1.updateAppConfig,
     updateAccount: observables_1.updateAccount,
     /* selector functions */
     selectIlk: observables_1.selectIlk,

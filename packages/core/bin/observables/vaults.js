@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateVaults = exports.vaultsø = exports.vaultMap$ = void 0;
+exports.updateVaults = exports.vaultsø = void 0;
 const tslib_1 = require("tslib");
 const ui_math_1 = require("@yield-protocol/ui-math");
 const date_fns_1 = require("date-fns");
@@ -14,24 +14,23 @@ const appConfig_1 = require("./appConfig");
 const connection_1 = require("./connection");
 const messages_1 = require("./messages");
 const yieldProtocol_1 = require("./yieldProtocol");
-/** @internal */
-exports.vaultMap$ = new rxjs_1.BehaviorSubject(new Map([]));
-exports.vaultsø = exports.vaultMap$.pipe((0, rxjs_1.shareReplay)(1));
+const vaultMap$ = new rxjs_1.BehaviorSubject(new Map([]));
+exports.vaultsø = vaultMap$.pipe((0, rxjs_1.shareReplay)(1));
 /* Update vaults function */
 const updateVaults = (vaultList, suppressEventLogQueries = false) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    const list = vaultList !== undefined ? vaultList : Array.from(exports.vaultMap$.value.values());
+    const list = vaultList !== undefined ? vaultList : Array.from(vaultMap$.value.values());
     const account = yield (0, rxjs_1.lastValueFrom)(connection_1.accountø.pipe((0, rxjs_1.first)()));
     const yieldProtocol = yield (0, rxjs_1.lastValueFrom)(yieldProtocol_1.yieldProtocolø.pipe((0, rxjs_1.first)()));
     /* if there are some vaults: */
     if (list.length && account) {
         yield Promise.all(list.map((_vault) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
             const vaultUpdate = yield _updateVault(_vault, account, yieldProtocol, suppressEventLogQueries);
-            exports.vaultMap$.next(new Map(exports.vaultMap$.value.set(_vault.id, vaultUpdate))); // note: new Map to enforce ref update
+            vaultMap$.next(new Map(vaultMap$.value.set(_vault.id, vaultUpdate))); // note: new Map to enforce ref update
         })));
     }
     else {
         /* if the list is empty, return an empty vaultMap */
-        exports.vaultMap$.next(new Map([]));
+        vaultMap$.next(new Map([]));
     }
 });
 exports.updateVaults = updateVaults;
@@ -51,7 +50,7 @@ exports.updateVaults = updateVaults;
     }
     else {
         /* if account changes and is undefined > EMPTY the vaultMap */
-        exports.vaultMap$.next(new Map([]));
+        vaultMap$.next(new Map([]));
     }
 }));
 const _updateVault = (vault, account, yieldProtocol, suppressEventLogQueries) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {

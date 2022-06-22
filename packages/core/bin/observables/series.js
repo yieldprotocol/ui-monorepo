@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateSeries = exports.seriesø = exports.seriesMap$ = void 0;
+exports.updateSeries = exports.seriesø = void 0;
 const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
 const ethers_1 = require("ethers");
@@ -12,20 +12,19 @@ const yieldProtocol_1 = require("./yieldProtocol");
 const assets_1 = require("../config/assets");
 const messages_1 = require("./messages");
 const yieldUtils_1 = require("../utils/yieldUtils");
-/** @internal */
-exports.seriesMap$ = new rxjs_1.BehaviorSubject(new Map([]));
+const seriesMap$ = new rxjs_1.BehaviorSubject(new Map([]));
 /**
  * SeriesMap observable and update function.
  */
-exports.seriesø = exports.seriesMap$.pipe((0, rxjs_1.shareReplay)(1));
+exports.seriesø = seriesMap$.pipe((0, rxjs_1.shareReplay)(1));
 const updateSeries = (seriesList, account, accountDataOnly = false) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    const list = (seriesList === null || seriesList === void 0 ? void 0 : seriesList.length) ? seriesList : Array.from(exports.seriesMap$.value.values());
+    const list = (seriesList === null || seriesList === void 0 ? void 0 : seriesList.length) ? seriesList : Array.from(seriesMap$.value.values());
     yield Promise.all(list.map((series) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         /* if account data only, just return the series */
         const seriesUpdate = accountDataOnly ? series : yield _updateDynamicInfo(series);
         /* if account provided, append account data */
         const seriesUpdateAll = account ? yield _updateAccountInfo(seriesUpdate, account) : seriesUpdate;
-        exports.seriesMap$.next(new Map(exports.seriesMap$.value.set(series.id, seriesUpdateAll))); // note: new Map to enforce ref update
+        seriesMap$.next(new Map(seriesMap$.value.set(series.id, seriesUpdateAll))); // note: new Map to enforce ref update
     })));
 });
 exports.updateSeries = updateSeries;

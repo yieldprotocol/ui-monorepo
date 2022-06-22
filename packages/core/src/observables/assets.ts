@@ -12,9 +12,8 @@ import { truncateValue } from '../utils';
 import { MessageType, sendMsg } from './messages';
 import { bnToW3Number } from '../utils/yieldUtils';
 
-/** @internal */
-const assetMap$: BehaviorSubject<Map<string, IAsset>> = new BehaviorSubject(new Map([]));
 
+const assetMap$: BehaviorSubject<Map<string, IAsset>> = new BehaviorSubject(new Map([]));
 /**
  * Unsubscribed Assetmap observable
  */

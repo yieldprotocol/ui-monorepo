@@ -82,7 +82,7 @@ export interface IYieldObservables {
 }
 export interface IYieldFunctions {
     updateProvider: (provider: ethers.providers.BaseProvider) => void;
-    updateYieldConfig: (config: IYieldConfig) => void;
+    updateAppConfig: (config: IYieldConfig) => void;
     updateAccount: (account: string) => void;
     selectIlk: (asset: string | IAsset) => void;
     selectBase: (asset: string | IAsset) => void;

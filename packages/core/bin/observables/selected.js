@@ -18,7 +18,6 @@ const initSelection = {
     vault: null,
     strategy: null,
 };
-/** @internal */
 const selected$ = new rxjs_1.BehaviorSubject(initSelection);
 exports.selectedø = selected$.pipe((0, rxjs_1.shareReplay)(1));
 /**
@@ -47,6 +46,7 @@ messages_1.internalMessagesø
  */
 const selectBase = (asset) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const assetMap = yield (0, rxjs_1.lastValueFrom)(assets_2.assetsø.pipe((0, rxjs_1.first)()));
+    const seriesMap = yield (0, rxjs_1.lastValueFrom)(series_1.seriesø.pipe((0, rxjs_1.first)()));
     const base = (asset === null || asset === void 0 ? void 0 : asset.id) ? asset : assetMap.get(asset);
     /* only switch the base if the asset in question is a valid YIELD base */
     if (!(base === null || base === void 0 ? void 0 : base.isYieldBase)) {
@@ -56,7 +56,7 @@ const selectBase = (asset) => tslib_1.__awaiter(void 0, void 0, void 0, function
         /* Update the selected$ */
         selected$.next(Object.assign(Object.assign({}, selected$.value), { base: base || null, 
             /* if a base is selected, then auto select the first 'mature' series that has that base */
-            series: [...series_1.seriesMap$.value.values()].find((s) => s.baseId === base.id && !s.isMature()) || null }));
+            series: [...seriesMap.values()].find((s) => s.baseId === base.id && !s.isMature()) || null }));
         console.log(base ? `Selected Base: ${base.id}` : 'Bases unselected');
     }
 });
@@ -88,12 +88,14 @@ const selectSeries = (series, futureSeries = false) => tslib_1.__awaiter(void 0,
 exports.selectSeries = selectSeries;
 const selectVault = (vault) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const assetMap = yield (0, rxjs_1.lastValueFrom)(assets_2.assetsø.pipe((0, rxjs_1.first)()));
+    const seriesMap = yield (0, rxjs_1.lastValueFrom)(series_1.seriesø.pipe((0, rxjs_1.first)()));
+    const vaultMap = yield (0, rxjs_1.lastValueFrom)(vaults_1.vaultsø.pipe((0, rxjs_1.first)()));
     if (vault) {
-        const _vault = vault.id ? vault : vaults_1.vaultMap$.value.get(vault);
+        const _vault = vault.id ? vault : vaultMap.get(vault);
         /* Update the selected$ */
         selected$.next(Object.assign(Object.assign({}, selected$.value), { vault: _vault || null, 
             /* Ensure the other releant components match the vault */
-            base: assetMap.get(_vault.baseId) || selected$.value.base, ilk: assetMap.get(_vault.ilkId) || selected$.value.ilk, series: series_1.seriesMap$.value.get(_vault.seriesId) || selected$.value.series }));
+            base: assetMap.get(_vault.baseId) || selected$.value.base, ilk: assetMap.get(_vault.ilkId) || selected$.value.ilk, series: seriesMap.get(_vault.seriesId) || selected$.value.series }));
     }
     /* if undefined sent in, deselect vault only */
     !vault && selected$.next(Object.assign(Object.assign({}, selected$.value), { vault: null }));
@@ -103,11 +105,13 @@ exports.selectVault = selectVault;
 const selectStrategy = (strategy) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (strategy) {
         const assetMap = yield (0, rxjs_1.lastValueFrom)(assets_2.assetsø.pipe((0, rxjs_1.first)()));
-        const _strategy = strategy.id ? strategy : strategies_1.strategyMap$.value.get(strategy);
+        const seriesMap = yield (0, rxjs_1.lastValueFrom)(series_1.seriesø.pipe((0, rxjs_1.first)()));
+        const strategyMap = yield (0, rxjs_1.lastValueFrom)(strategies_1.strategiesø.pipe((0, rxjs_1.first)()));
+        const _strategy = strategy.id ? strategy : strategyMap.get(strategy);
         /* Update the selected$ */
         selected$.next(Object.assign(Object.assign({}, selected$.value), { strategy: _strategy || null, 
             /* Ensure the other releant components match the vault */
-            base: assetMap.get(_strategy.baseId) || selected$.value.base, series: series_1.seriesMap$.value.get(_strategy.currentSeriesId) || selected$.value.series }));
+            base: assetMap.get(_strategy.baseId) || selected$.value.base, series: seriesMap.get(_strategy.currentSeriesId) || selected$.value.series }));
     }
     /* if undefined sent in, deselect vault only */
     !strategy && selected$.next(Object.assign(Object.assign({}, selected$.value), { vault: null }));

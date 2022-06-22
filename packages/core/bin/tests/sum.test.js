@@ -5,7 +5,6 @@ const rxjs_1 = require("rxjs");
 const buildProtocol_1 = require("../initProtocol/buildProtocol");
 const yieldObservables = tslib_1.__importStar(require("../observables"));
 const observables_1 = require("../observables");
-const yield_config_1 = tslib_1.__importDefault(require("../config/yield.config"));
 const ethers_1 = require("ethers");
 jest.setTimeout(20000);
 const config = {
@@ -19,12 +18,12 @@ const config = {
     ]),
     suppressEventLogQueries: false,
 };
-let loadSubscription;
 beforeAll((done) => {
     console.log('Loading Protocol...');
-    (0, observables_1.updateYieldConfig)(Object.assign(Object.assign({}, yield_config_1.default), config));
-    loadSubscription = (0, rxjs_1.combineLatest)([yieldObservables.providerø, yieldObservables.appConfigø, yieldObservables.chainIdø]).subscribe(([provider, config, chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        yieldObservables.updateYieldProtocol(yield (0, buildProtocol_1.buildProtocol)(provider, chainId, config));
+    (0, observables_1.updateAppConfig)(config);
+    (0, rxjs_1.combineLatest)([yieldObservables.providerø, yieldObservables.appConfigø, yieldObservables.chainIdø]).subscribe(([provider, config, chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+        const protocol = yield (0, buildProtocol_1.buildProtocol)(provider, chainId, config);
+        yieldObservables.updateYieldProtocol(protocol);
     }));
     observables_1.internalMessagesø
         .pipe((0, rxjs_1.finalize)(() => done()), (0, rxjs_1.takeWhile)((val) => !val.has('protocolReady'), true))
@@ -40,5 +39,8 @@ test('The protocol should have loaded successfully.', (done) => {
         complete: () => done(),
     });
 });
-afterAll(() => loadSubscription.unsubscribe());
+// afterAll( async () => { 
+//   const provider = await lastValueFrom(providerø.pipe(first())) 
+//   (provide
+// })
 //# sourceMappingURL=sum.test.js.map

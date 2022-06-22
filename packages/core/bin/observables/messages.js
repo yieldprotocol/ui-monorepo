@@ -11,7 +11,6 @@ const _handleTimeout = (message) => {
     if (waitMs !== Infinity)
         setTimeout(() => messages$.next(Object.assign(Object.assign({}, message), { expired: true })), waitMs);
 };
-/** @internal */
 const messages$ = new rxjs_1.Subject();
 exports.messagesø = messages$.pipe((0, rxjs_1.filter)((msg) => !!msg && msg.type !== types_1.MessageType.INTERNAL), 
 /* add in a timeout, that would fire after a period of time */

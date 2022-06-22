@@ -3,8 +3,7 @@ import { IUserSettings } from '../types';
 
 import defaultConfig from '../config/yield.config';
 
-/** @internal */
-export const userSettings$: BehaviorSubject<IUserSettings> = new BehaviorSubject(defaultConfig.defaultUserSettings);
+const userSettings$: BehaviorSubject<IUserSettings> = new BehaviorSubject(defaultConfig.defaultUserSettings);
 export const userSettingsø: Observable<IUserSettings> = userSettings$.pipe(shareReplay(1));
 
 export const updateUserSettings = (settings: IUserSettings) => {

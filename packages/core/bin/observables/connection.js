@@ -37,7 +37,6 @@ const updateChainId = (chainId) => {
     location.reload();
 };
 exports.updateChainId = updateChainId;
-/** @internal */
 const provider$ = new rxjs_1.Subject();
 exports.providerø = provider$.pipe((0, rxjs_1.shareReplay)(1));
 const updateProvider = (newProvider) => {
@@ -65,7 +64,6 @@ exports.updateProvider = updateProvider;
         (0, messages_1.sendMsg)({ message: 'NETWORK NOT SUPPORTED', type: messages_1.MessageType.WARNING, timeoutOverride: Infinity });
     }
 }));
-/** @internal */
 const account$ = new rxjs_1.BehaviorSubject(undefined);
 exports.accountø = account$.pipe((0, rxjs_1.shareReplay)(1));
 const updateAccount = (newAccount) => {
@@ -78,7 +76,6 @@ exports.updateAccount = updateAccount;
  * The accountProvider is the sign provider (web3Provider) that handles the user account, signing and transacting.
  * It also adds a number of listeners to monitor account changes etc.
  **/
-/** @internal */
 const accountProvider$ = new rxjs_1.BehaviorSubject(defaultproviders_1.defaultAccountProvider);
 exports.accountProviderø = accountProvider$.pipe((0, rxjs_1.shareReplay)(1));
 const updateAccountProvider = (newProvider) => {
