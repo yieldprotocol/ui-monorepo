@@ -129,7 +129,7 @@ export const buildAssetMap = async (
   }
   console.log(`Yield Protocol ASSET data updated [Block: ${_blockNum}]`);
   
-  console.log( assetRootMap);
+  // console.log( assetRootMap);
 
   return assetRootMap;
 };

@@ -6,6 +6,7 @@ exports.defaultAccountProvider = typeof window !== 'undefined'
     ? new ethers_1.ethers.providers.Web3Provider(window.ethereum)
     : new ethers_1.ethers.providers.JsonRpcProvider();
 exports.defaultProviderMap = new Map([
+    // [1, () => new ethers.providers.JsonRpcProvider(`https://mainnet.infura.io/v3/de43fd0c912d4bdc94712ab4b37613ea`)],
     [1, () => new ethers_1.ethers.providers.WebSocketProvider(`wss://mainnet.infura.io/ws/v3/de43fd0c912d4bdc94712ab4b37613ea`)],
     [5, () => new ethers_1.ethers.providers.WebSocketProvider(`wss://goerli.infura.io/ws/v3/de43fd0c912d4bdc94712ab4b37613ea`)],
     [
