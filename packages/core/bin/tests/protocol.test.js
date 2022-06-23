@@ -33,12 +33,14 @@ beforeAll((done) => {
     observables_1.internalMessagesø
         .pipe((0, rxjs_1.finalize)(() => done()), (0, rxjs_1.takeWhile)((val) => !val.has('protocolReady'), true))
         .subscribe();
-    /* set a max timelimit of 10s for loading */
+    /* set a max timelimit of 10s for loading, and running tests -> any longer is likely a network issue */
 }, 10000);
 test('The protocol loads successfully.', (done) => {
-    observables_1.internalMessagesø.pipe(
+    observables_1.internalMessagesø
+        .pipe(
     /* take one here ends the stream after the first message > TODO: check this may not always be the case. a takewhil while might be more applicable */
-    (0, rxjs_1.take)(1)).subscribe({
+    (0, rxjs_1.take)(1))
+        .subscribe({
         next: (msgMap) => {
             expect(msgMap.has(observables_1.internalMessagesø)).toBeTruthy;
         },
@@ -63,19 +65,23 @@ test('The assets load, and each have a correct, connected token contract', (done
         }),
     });
 });
-test('The series load, and ', (done) => {
-    assetsø.pipe((0, rxjs_1.take)(1)).subscribe({
+test('The series load, and each has a contract attached, and connected to the correct chain', (done) => {
+    seriesø.pipe((0, rxjs_1.take)(1), (0, rxjs_1.withLatestFrom)(chainIdø)).subscribe({
+        next: ([msgMap, chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+            yield Promise.all([...msgMap.values()].map((series) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+                const seriesChainId = yield series.fyTokenContract.deploymentChainId();
+                return expect(seriesChainId.toString()).toBe(chainId.toString());
+            })));
+            done();
+        }),
+    });
+});
+test('Each series has an associated pool that has the corresponding connected contract', (done) => {
+    seriesø.pipe((0, rxjs_1.take)(1)).subscribe({
         next: (msgMap) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-            yield Promise.all([...msgMap.values()].map((asset) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-                /* check if contract is connected correctly for non-ERC1155 tokens */
-                if (asset.tokenType === types_1.TokenType.ERC1155_) {
-                    /* TODO: better check for other token types */
-                    return expect(1).toBe(1);
-                }
-                else {
-                    const symbolAsync = yield asset.assetContract.symbol();
-                    return expect(symbolAsync).toBe(asset.symbol);
-                }
+            yield Promise.all([...msgMap.values()].map((series) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+                const seriesAddressFromPool = yield series.poolContract.fyToken();
+                return expect(seriesAddressFromPool).toBe(series.address);
             })));
             done();
         }),
