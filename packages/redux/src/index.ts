@@ -9,7 +9,7 @@ import {
 } from "@yield-protocol/ui-core";
 
 export const yieldProtocolSlice = createSlice({
-  name: 'yieldProtocol',
+  name: 'protocol',
   initialState: 1,
   reducers: {
     updateProtocol: (state: any, action:any) =>  {

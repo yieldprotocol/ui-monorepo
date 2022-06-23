@@ -19,13 +19,13 @@ export const updateVaults = async (vaultList?: IVault[] | IVaultRoot[], suppress
   const list = vaultList !== undefined ? vaultList : Array.from(vaultMap$.value.values());
 
   const account = await lastValueFrom(accountø.pipe(first()));
-  const yieldProtocol = await lastValueFrom(protocolø.pipe(first()));
+  const protocol = await lastValueFrom(protocolø.pipe(first()));
 
   /* if there are some vaults: */
   if (list.length && account) {
     await Promise.all(
       list.map(async (_vault: IVault | IVaultRoot) => {
-        const vaultUpdate = await _updateVault(_vault, account, yieldProtocol, suppressEventLogQueries);
+        const vaultUpdate = await _updateVault(_vault, account, protocol, suppressEventLogQueries);
         vaultMap$.next(new Map(vaultMap$.value.set(_vault.id, vaultUpdate))); // note: new Map to enforce ref update
       })
     );
@@ -60,10 +60,10 @@ combineLatest([accountø, protocolø])
 const _updateVault = async (
   vault: IVault | IVaultRoot,
   account: string,
-  yieldProtocol: IYieldProtocol,
+  protocol: IYieldProtocol,
   suppressEventLogQueries: boolean,
 ): Promise<IVault> => {
-  const { seriesRootMap, cauldron, witch, oracleMap } = yieldProtocol;
+  const { seriesRootMap, cauldron, witch, oracleMap } = protocol;
   const RateOracle = oracleMap.get('RateOracle') as ethers.Contract;
 
   /* Get dynamic vault data */
@@ -80,7 +80,7 @@ const _updateVault = async (
   /* Check for liquidation event date */
   const liquidationDate = liquidations.length ? liquidations[0].args.start.toNumber() : undefined;
 
-  /* check if the series is mature - Note: calc'd from yieldProtocol.seriesMap instead of relying on seriesMap$ observations */
+  /* check if the series is mature - Note: calc'd from protocol.seriesMap instead of relying on seriesMap$ observations */
   const series = seriesRootMap.get(seriesId) as ISeries;
   /* Note: If the series is 'ignored' in the appConfig (or undefined) > the series maturity will be considered 'mature' */
   const seriesIsMature = series ? series.maturity - Math.round(new Date().getTime() / 1000) <= 0 : true;

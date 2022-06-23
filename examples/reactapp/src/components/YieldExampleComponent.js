@@ -7,7 +7,7 @@ import { ethers } from "ethers";
 
 const YieldExampleComponent = () => {
   const {
-    yieldProtocol,
+    protocol,
     assetMap,
     seriesMap,
     strategyMap,
@@ -26,7 +26,7 @@ const YieldExampleComponent = () => {
   } = React.useContext(YieldContext);
 
   const { protocolVersion, moduleMap, oracleMap, cauldron, ladle, witch } = {
-    ...yieldProtocol,
+    ...protocol,
   }; // tricksy destructuring for error avoidance :)
 
   const {
@@ -153,7 +153,7 @@ const YieldExampleComponent = () => {
         <button onClick={() => selectIlk()}>selected ilk: undefined</button>
       </div>
 
-      {yieldProtocol && (
+      {protocol && (
         <>
           <div>
             <h3>Protocol Contracts:</h3>

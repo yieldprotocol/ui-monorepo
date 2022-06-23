@@ -10,13 +10,13 @@ import { ethers } from 'ethers';
  *
  * */
 export const buildVaultMap = async (
-  yieldProtocol: IYieldProtocol,
+  protocol: IYieldProtocol,
   provider: ethers.providers.BaseProvider,
   account: string,
   chainId: number,
   appConfig: IYieldConfig
 ): Promise<Map<string, IVaultRoot>> => {
-  const { cauldron, seriesRootMap, assetRootMap } = yieldProtocol;
+  const { cauldron, seriesRootMap, assetRootMap } = protocol;
 
   /* Check for cached assets or start with empty array */
   const cachedVaults: any[] = (appConfig.browserCaching && getBrowserCachedValue(`${chainId}_vaults#${account}`)) || [];

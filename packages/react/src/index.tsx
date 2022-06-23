@@ -54,7 +54,7 @@ const YieldProvider = ({ props, children }: any) => {
     selectedø,
   } = yieldObservables;
 
-  const yieldProtocol = useObservable(
+  const protocol = useObservable(
     protocolø
   ) as unknown as IYieldProtocol;
 
@@ -82,7 +82,7 @@ const YieldProvider = ({ props, children }: any) => {
         messages,
         transactions,
 
-        yieldProtocol,
+        protocol,
         assetMap,
         seriesMap,
         strategyMap,

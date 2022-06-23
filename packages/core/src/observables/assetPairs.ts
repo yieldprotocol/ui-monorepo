@@ -39,9 +39,9 @@ selectedø
 /* Update Assets function */
 export const updatePair = async (baseId: string, ilkId: string, chainId: number): Promise<IAssetPair | null> => {
 
-  const yieldProtocol = await lastValueFrom(protocolø.pipe(first()));
+  const protocol = await lastValueFrom(protocolø.pipe(first()));
 
-  const { cauldron, assetRootMap, oracleMap } = yieldProtocol;
+  const { cauldron, assetRootMap, oracleMap } = protocol;
   const oracleName = ORACLES.get(chainId)?.get(baseId)?.get(ilkId);
 
   const PriceOracle = oracleMap.get(oracleName!);
