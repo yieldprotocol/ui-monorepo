@@ -13,7 +13,7 @@ import * as contracts from '../contracts';
 
 import { ISeries, ISeriesRoot, MessageType } from '../types';
 import { accountø, providerø } from './connection';
-import { yieldProtocolø } from './yieldProtocol';
+import { protocolø } from './protocol';
 import { ETH_BASED_ASSETS } from '../config/assets';
 import { sendMsg } from './messages';
 import { bnToW3Number } from '../utils/yieldUtils';
@@ -37,9 +37,9 @@ export const updateSeries = async (seriesList?: ISeries[], account?: string, acc
 };
 
 /**
- * Observe YieldProtocolø changes, if protocol changes in any way, update series map accordingly
+ * Observe protocolø changes, if protocol changes in any way, update series map accordingly
  * */
-combineLatest([ yieldProtocolø, providerø ])
+combineLatest([ protocolø, providerø ])
   .pipe(
     filter(([protocol]) => protocol.seriesRootMap.size > 0),
     withLatestFrom( accountø)

@@ -3,7 +3,7 @@ import { BigNumber, Contract, ethers } from 'ethers';
 
 import { IAsset, IAssetRoot, TokenType, IYieldProtocol } from '../types';
 import { accountø, providerø } from './connection';
-import { yieldProtocolø } from './yieldProtocol';
+import { protocolø } from './protocol';
 
 import * as contracts from '../contracts';
 import { ASSETS, ETH_BASED_ASSETS } from '../config/assets';
@@ -36,11 +36,11 @@ export const updateAssets = async (assetList?: IAsset[], account?: string) => {
 };
 
 /**
- * Observe YieldProtocolø changes, and update map accordingly
+ * Observe protocolø changes, and update map accordingly
  * 1. 'charge' asset list
  * 2. update asset list
  * */
-yieldProtocolø
+protocolø
   .pipe(
     filter((protocol) => protocol.assetRootMap.size > 0),
     withLatestFrom( providerø, accountø,)

@@ -1,6 +1,6 @@
 import { Contract, PayableOverrides, BigNumber, ContractTransaction } from 'ethers';
 import { Ladle } from '../contracts';
-import { accountProviderø, accountø, yieldProtocolø } from '../observables/';
+import { accountProviderø, accountø, protocolø } from '../observables/';
 import { ICallData, LadleActions, ProcessStage, TxState } from '../types';
 import { ZERO_BN } from '../utils/constants';
 import { resetProcess, updateProcess } from '../observables/transactions';
@@ -77,7 +77,7 @@ const _handleTxRejection = (err: any, processCode: string) => {
 
 export const transact = async (calls: ICallData[], processCode: string) => {
   /* Subscribe to observables */
-  combineLatest([yieldProtocolø, accountø, accountProviderø, appConfigø])
+  combineLatest([protocolø, accountø, accountProviderø, appConfigø])
     .pipe(take(1)) // take one and then unsubscribe
     .subscribe(async ([{ ladle }, account, provider, { forceTransactions }]) => {
       updateProcess({ processCode, stage: ProcessStage.TRANSACTION_REQUESTED });

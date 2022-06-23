@@ -11,7 +11,7 @@ const constants_1 = require("../utils/constants");
  * @internal
  * */
 const addEth = (value, to = undefined, alternateEthAssetId = undefined) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    const { moduleMap } = yield (0, rxjs_1.lastValueFrom)(observables_1.yieldProtocolø.pipe((0, rxjs_1.first)()));
+    const { moduleMap } = yield (0, rxjs_1.lastValueFrom)(observables_1.protocolø.pipe((0, rxjs_1.first)()));
     const WrapEtherModuleContract = moduleMap.get('WrapEtherModule');
     const account = yield (0, rxjs_1.lastValueFrom)(observables_1.accountø.pipe((0, rxjs_1.first)()));
     /* if there is a destination 'to' then use the ladle module (wrapEtherModule) */

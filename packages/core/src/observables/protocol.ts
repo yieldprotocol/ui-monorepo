@@ -20,10 +20,10 @@ const _blankProtocol = {
   strategyRootMap: new Map([]) as Map<string, IStrategyRoot>,
 };
 
-const yieldProtocol$: BehaviorSubject<IYieldProtocol> = new BehaviorSubject(_blankProtocol);
-export const yieldProtocolø: Observable<IYieldProtocol> = yieldProtocol$.pipe(shareReplay(1));
-export const updateYieldProtocol = (newProtocol: IYieldProtocol) => {
-  yieldProtocol$.next(newProtocol); // update to whole new protocol
+const protocol$: BehaviorSubject<IYieldProtocol> = new BehaviorSubject(_blankProtocol);
+export const protocolø: Observable<IYieldProtocol> = protocol$.pipe(shareReplay(1));
+export const updateProtocol = (newProtocol: IYieldProtocol) => {
+  protocol$.next(newProtocol); // update to whole new protocol
 };
 
 /**

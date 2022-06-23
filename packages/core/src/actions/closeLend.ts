@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 import { combineLatest, take } from 'rxjs';
 import { sign, transact } from '../chainActions';
 import { ETH_BASED_ASSETS } from '../config/assets';
-import { accountø, assetsø, chainIdø, userSettingsø, yieldProtocolø } from '../observables';
+import { accountø, assetsø, chainIdø, userSettingsø, protocolø } from '../observables';
 import { ISeries, ActionCodes, ICallData, LadleActions, RoutedActions } from '../types';
 import { getProcessCode, ONE_BN } from '../utils';
 import { inputToTokenValue } from '../utils/yieldUtils';
@@ -12,7 +12,7 @@ import { removeEth } from './_addRemoveEth';
 export const closeLend = async (amount: string, series: ISeries) => {
 
     /* Subscribe to and get the values from the observables:  */
-    combineLatest([yieldProtocolø, assetsø, accountø, userSettingsø])
+    combineLatest([protocolø, assetsø, accountø, userSettingsø])
     .pipe(take(1)) // only take one and then finish.
     .subscribe(
       async ([

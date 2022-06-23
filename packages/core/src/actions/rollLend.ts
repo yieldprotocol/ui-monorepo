@@ -7,7 +7,7 @@ import {
   assetsø,
   chainIdø,
   userSettingsø,
-  yieldProtocolø,
+  protocolø,
 } from '../observables';
 import { ISeries, ActionCodes, IAsset, ICallData, LadleActions, RoutedActions } from '../types';
 import { getProcessCode } from '../utils';
@@ -15,7 +15,7 @@ import { inputToTokenValue } from '../utils/yieldUtils';
 
 export const rollLend = async (amount: string | undefined, fromSeries: ISeries, toSeries: ISeries) => {
   /* Subscribe to and get the values from the observables:  */
-  combineLatest([yieldProtocolø, assetsø, accountø, userSettingsø])
+  combineLatest([protocolø, assetsø, accountø, userSettingsø])
     .pipe(take(1)) // only take one and then finish.
     .subscribe(
       async ([

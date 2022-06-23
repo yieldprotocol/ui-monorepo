@@ -8,7 +8,7 @@ import {
   accountø,
   assetsø,
   chainIdø,
-  yieldProtocolø,
+  protocolø,
   seriesø,
   vaultsø,
   selectedø,
@@ -35,7 +35,7 @@ export const borrow = async (
 ) => {
   /* Subscribe to and get the values from the observables:  */
   combineLatest([
-    yieldProtocolø,
+    protocolø,
     assetsø,
     seriesø,
     vaultsø,

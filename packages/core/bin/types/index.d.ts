@@ -66,7 +66,7 @@ export interface IYieldProtocol {
     strategyRootMap: Map<string, IStrategyRoot>;
 }
 export interface IYieldObservables {
-    yieldProtocolø: Observable<IYieldProtocol>;
+    protocolø: Observable<IYieldProtocol>;
     providerø: Observable<ethers.providers.BaseProvider>;
     accountø: Observable<string | undefined>;
     accountProviderø: Observable<ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider>;

@@ -5,7 +5,7 @@ import { BehaviorSubject, filter, first, lastValueFrom, map, Observable, share, 
 import { ORACLES } from '../config/oracles';
 import { IAssetPair, ISelected } from '../types';
 import { WAD_BN } from '../utils';
-import { yieldProtocolø } from './yieldProtocol';
+import { protocolø } from './protocol';
 import { selectedø } from './selected';
 import { bnToW3Number, getAssetPairId } from '../utils/yieldUtils';
 import { chainIdø } from './connection';
@@ -39,7 +39,7 @@ selectedø
 /* Update Assets function */
 export const updatePair = async (baseId: string, ilkId: string, chainId: number): Promise<IAssetPair | null> => {
 
-  const yieldProtocol = await lastValueFrom(yieldProtocolø.pipe(first()));
+  const yieldProtocol = await lastValueFrom(protocolø.pipe(first()));
 
   const { cauldron, assetRootMap, oracleMap } = yieldProtocol;
   const oracleName = ORACLES.get(chainId)?.get(baseId)?.get(ilkId);

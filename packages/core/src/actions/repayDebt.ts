@@ -19,7 +19,7 @@ import {
   providerø,
   seriesø,
   userSettingsø,
-  yieldProtocolø,
+  protocolø,
 } from '../observables';
 import { combineLatest, take } from 'rxjs';
 
@@ -31,7 +31,7 @@ import { combineLatest, take } from 'rxjs';
  */
 export const repayDebt = async (amount: string | undefined, vault: IVault, reclaimCollateral: boolean = true) => {
   /* Subscribe to and get the values from the observables:  */
-  combineLatest([yieldProtocolø, chainIdø, assetsø, seriesø, accountø, userSettingsø, providerø])
+  combineLatest([protocolø, chainIdø, assetsø, seriesø, accountø, userSettingsø, providerø])
     .pipe(take(1)) // only take one and then finish.
     .subscribe(async ([{ ladle }, chainId, assetMap, seriesMap, account, { slippageTolerance }, provider]) => {
       

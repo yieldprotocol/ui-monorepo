@@ -25,19 +25,19 @@ export const store = configureStore({
   reducer: yieldProtocolSlice.reducer
 });
 
-// combineLatest( [ yieldObservables.messagesø , yieldObservables.yieldProtocolø ] ).pipe(
+// combineLatest( [ yieldObservables.messagesø , yieldObservables.protocolø ] ).pipe(
 // ).subscribe(( [ msg, protocol] : [IMessage,IYieldProtocol] ) => { 
 //     if  (msg.has('protocolLoaded') ) { console.log( '>>>>>>> protocol Loaded ');   };
 //     if  (msg.has('protocolLoaded') ) updateProtocol('somethign');
 // });
 
-// combineLatest([ messagesø, yieldProtocolø ] ).pipe(
+// combineLatest([ messagesø, protocolø ] ).pipe(
 //   ).subscribe(([msg, yp]) => { 
 //       if  (msg.has('protocolLoaded') ) { console.log( '>>>>>>> protocol Loaded ');   };
 //       if  (msg.has('protocolLoaded') ) updateProtocol( { yp } );
 //   });
 
-//   combineLatest([ messagesø, yieldProtocolø ] ).pipe(
+//   combineLatest([ messagesø, protocolø ] ).pipe(
 //     ).subscribe(([msg, yp]) => { 
 //         if  (msg.has('protocolLoaded') ) { console.log( '>>>>>>> protocol Loaded ');   };
 //         if  (msg.has('protocolLoaded') ) updateProtocol( { yp } );

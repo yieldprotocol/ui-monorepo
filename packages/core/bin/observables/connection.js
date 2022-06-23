@@ -22,7 +22,7 @@ exports.chainIdø = appConfig_1.appConfigø.pipe((0, rxjs_1.mergeMap)((config) =
         console.log('ChainId from cache:', fromCache);
         return fromCache; // second, from the last id used in the cache
     }
-    /* in a non-browser environment : return 1 */
+    /* in a non-browser environment : return the chainId set in the default */
     console.log('ChainId from default:', config.defaultChainId);
     return config.defaultChainId; // defaults to the defaultChainId in the settings
     // console.log( config)
@@ -92,17 +92,40 @@ exports.updateAccountProvider = updateAccountProvider;
      * however, we can attempt to skip this if the user already has a connected account
      * */
     try {
-        appConfig.autoConnectAccountProvider && account$.next((yield accProvider.send('eth_requestAccounts', []))[0]);
+        appConfig.autoConnectAccountProvider &&
+            account$.next((yield accProvider.send('eth_requestAccounts', []))[0]);
     }
     catch (e) {
         console.log(e);
     }
+    // function connect() {
+    //   ethereum
+    //     .request({ method: 'eth_requestAccounts' })
+    //     .then(handleAccountsChanged)
+    //     .catch((err) => {
+    //       if (err.code === 4001) {
+    //         // EIP-1193 userRejectedRequest error
+    //         // If this happens, the user rejected the connection request.
+    //         console.log('Please connect to MetaMask.');
+    //       } else {
+    //         console.error(err);
+    //       }
+    //     });
+    // }
     /**
      * Attach listeners for EIP1193 events
      * (Unless supressed, or not in a browser environment )
      * */
     if (typeof window !== 'undefined' && !appConfig.supressInjectedListeners) {
-        window.ethereum.on('accountsChanged', (addr) => account$.next(addr[0]));
+        window.ethereum.on('accountsChanged', (accounts) => {
+            if (accounts.length === 0) {
+                // MetaMask is locked or the user has not connected any accounts
+                console.log('Please connect to MetaMask.');
+            }
+            else if (accounts[0] !== account$.value) {
+                account$.next(accounts[0]);
+            }
+        });
         /* Reload the page on every network change as per reccommendation */
         window.ethereum.on('chainChanged', (id) => (0, exports.updateChainId)(parseInt(id, 16)));
         /* Connect/Disconnect listeners */

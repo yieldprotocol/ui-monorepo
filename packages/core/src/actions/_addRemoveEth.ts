@@ -1,6 +1,6 @@
 import { BigNumber } from 'ethers';
 import { first, lastValueFrom, take } from 'rxjs';
-import { accountø, yieldProtocolø } from '../observables';
+import { accountø, protocolø } from '../observables';
 import { ICallData, LadleActions } from '../types';
 import { ModuleActions } from '../types/operations';
 import { ZERO_BN } from '../utils/constants';
@@ -13,7 +13,7 @@ export const addEth = async (
   to: string | undefined = undefined,
   alternateEthAssetId: string | undefined = undefined
 ): Promise<ICallData[]> => {
-  const { moduleMap } = await lastValueFrom(yieldProtocolø.pipe(first()));
+  const { moduleMap } = await lastValueFrom(protocolø.pipe(first()));
   const WrapEtherModuleContract = moduleMap.get('WrapEtherModule');
   const account = await lastValueFrom(accountø.pipe(first()));
 

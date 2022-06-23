@@ -8,7 +8,7 @@ const ui_math_1 = require("@yield-protocol/ui-math");
 const contracts = tslib_1.__importStar(require("../contracts"));
 const types_1 = require("../types");
 const connection_1 = require("./connection");
-const yieldProtocol_1 = require("./yieldProtocol");
+const protocol_1 = require("./protocol");
 const assets_1 = require("../config/assets");
 const messages_1 = require("./messages");
 const yieldUtils_1 = require("../utils/yieldUtils");
@@ -29,9 +29,9 @@ const updateSeries = (seriesList, account, accountDataOnly = false) => tslib_1._
 });
 exports.updateSeries = updateSeries;
 /**
- * Observe YieldProtocolø changes, if protocol changes in any way, update series map accordingly
+ * Observe protocolø changes, if protocol changes in any way, update series map accordingly
  * */
-(0, rxjs_1.combineLatest)([yieldProtocol_1.yieldProtocolø, connection_1.providerø])
+(0, rxjs_1.combineLatest)([protocol_1.protocolø, connection_1.providerø])
     .pipe((0, rxjs_1.filter)(([protocol]) => protocol.seriesRootMap.size > 0), (0, rxjs_1.withLatestFrom)(connection_1.accountø))
     .subscribe(([[_protocol, _provider], _account]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* 'Charge' all the series (using the current provider) */

@@ -5,7 +5,7 @@ const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
 const types_1 = require("../types");
 const connection_1 = require("./connection");
-const yieldProtocol_1 = require("./yieldProtocol");
+const protocol_1 = require("./protocol");
 const contracts = tslib_1.__importStar(require("../contracts"));
 const assets_1 = require("../config/assets");
 const constants_1 = require("../utils/constants");
@@ -31,11 +31,11 @@ const updateAssets = (assetList, account) => tslib_1.__awaiter(void 0, void 0, v
 });
 exports.updateAssets = updateAssets;
 /**
- * Observe YieldProtocolø changes, and update map accordingly
+ * Observe protocolø changes, and update map accordingly
  * 1. 'charge' asset list
  * 2. update asset list
  * */
-yieldProtocol_1.yieldProtocolø
+protocol_1.protocolø
     .pipe((0, rxjs_1.filter)((protocol) => protocol.assetRootMap.size > 0), (0, rxjs_1.withLatestFrom)(connection_1.providerø, connection_1.accountø))
     .subscribe(([_protocol, _provider, _account]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* 'Charge' all the assets (using the current provider) */

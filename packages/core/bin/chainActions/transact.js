@@ -70,7 +70,7 @@ const _handleTxRejection = (err, processCode) => {
 };
 const transact = (calls, processCode) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Subscribe to observables */
-    (0, rxjs_1.combineLatest)([observables_1.yieldProtocolø, observables_1.accountø, observables_1.accountProviderø, appConfig_1.appConfigø])
+    (0, rxjs_1.combineLatest)([observables_1.protocolø, observables_1.accountø, observables_1.accountProviderø, appConfig_1.appConfigø])
         .pipe((0, rxjs_1.take)(1)) // take one and then unsubscribe
         .subscribe(([{ ladle }, account, provider, { forceTransactions }]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         (0, transactions_1.updateProcess)({ processCode, stage: types_1.ProcessStage.TRANSACTION_REQUESTED });

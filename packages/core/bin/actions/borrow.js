@@ -19,7 +19,7 @@ const borrow = (amount, collateralAmount, vault, getValuesFromNetwork = true // 
 ) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Subscribe to and get the values from the observables:  */
     (0, rxjs_1.combineLatest)([
-        observables_1.yieldProtocolø,
+        observables_1.protocolø,
         observables_1.assetsø,
         observables_1.seriesø,
         observables_1.vaultsø,

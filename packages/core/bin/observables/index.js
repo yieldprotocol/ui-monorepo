@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.internalMessagesø = exports.messagesø = exports.updateYieldProtocol = exports.yieldProtocolø = exports.updateVaults = exports.vaultsø = exports.updateUserSettings = exports.userSettingsø = exports.resetProcess = exports.updateProcess = exports.transactionsø = exports.updateStrategies = exports.strategiesø = exports.updateSeries = exports.seriesø = exports.selectStrategy = exports.selectVault = exports.selectSeries = exports.selectIlk = exports.selectBase = exports.selectedø = exports.updateChainId = exports.chainIdø = exports.updateAccount = exports.accountø = exports.updateAccountProvider = exports.accountProviderø = exports.updateProvider = exports.providerø = exports.updatePair = exports.assetPairsø = exports.updateAssets = exports.assetsø = exports.updateAppConfig = exports.appConfigø = void 0;
+exports.internalMessagesø = exports.messagesø = exports.updateProtocol = exports.protocolø = exports.updateVaults = exports.vaultsø = exports.updateUserSettings = exports.userSettingsø = exports.resetProcess = exports.updateProcess = exports.transactionsø = exports.updateStrategies = exports.strategiesø = exports.updateSeries = exports.seriesø = exports.selectStrategy = exports.selectVault = exports.selectSeries = exports.selectIlk = exports.selectBase = exports.selectedø = exports.updateChainId = exports.chainIdø = exports.updateAccount = exports.accountø = exports.updateAccountProvider = exports.accountProviderø = exports.updateProvider = exports.providerø = exports.updatePair = exports.assetPairsø = exports.updateAssets = exports.assetsø = exports.updateAppConfig = exports.appConfigø = void 0;
 // export { account$, accountø, updateAccount } from './account';
 var appConfig_1 = require("./appConfig");
 Object.defineProperty(exports, "appConfig\u00F8", { enumerable: true, get: function () { return appConfig_1.appConfigø; } });
@@ -43,9 +43,9 @@ Object.defineProperty(exports, "updateUserSettings", { enumerable: true, get: fu
 var vaults_1 = require("./vaults");
 Object.defineProperty(exports, "vaults\u00F8", { enumerable: true, get: function () { return vaults_1.vaultsø; } });
 Object.defineProperty(exports, "updateVaults", { enumerable: true, get: function () { return vaults_1.updateVaults; } });
-var yieldProtocol_1 = require("./yieldProtocol");
-Object.defineProperty(exports, "yieldProtocol\u00F8", { enumerable: true, get: function () { return yieldProtocol_1.yieldProtocolø; } });
-Object.defineProperty(exports, "updateYieldProtocol", { enumerable: true, get: function () { return yieldProtocol_1.updateYieldProtocol; } });
+var protocol_1 = require("./protocol");
+Object.defineProperty(exports, "protocol\u00F8", { enumerable: true, get: function () { return protocol_1.protocolø; } });
+Object.defineProperty(exports, "updateProtocol", { enumerable: true, get: function () { return protocol_1.updateProtocol; } });
 var messages_1 = require("./messages");
 Object.defineProperty(exports, "messages\u00F8", { enumerable: true, get: function () { return messages_1.messagesø; } });
 Object.defineProperty(exports, "internalMessages\u00F8", { enumerable: true, get: function () { return messages_1.internalMessagesø; } });

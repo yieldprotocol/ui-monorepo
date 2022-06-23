@@ -21,11 +21,11 @@ const appConfig_1 = require("./observables/appConfig");
  * sets things up, and then the stream finishes indicating that everything is ready to go.
  */
 (0, rxjs_1.combineLatest)([observables_1.providerø, appConfig_1.appConfigø, observables_1.chainIdø]).subscribe(([provider, config, chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    (0, observables_1.updateYieldProtocol)(yield (0, buildProtocol_1.buildProtocol)(provider, chainId, config));
+    (0, observables_1.updateProtocol)(yield (0, buildProtocol_1.buildProtocol)(provider, chainId, config));
 }));
 /* Expose the observables */
 const yieldObservables = {
-    yieldProtocolø: observables_1.yieldProtocolø,
+    protocolø: observables_1.protocolø,
     seriesø: observables_1.seriesø,
     assetsø: observables_1.assetsø,
     vaultsø: observables_1.vaultsø,

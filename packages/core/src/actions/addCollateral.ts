@@ -9,7 +9,7 @@ import {
   chainIdø,
   selectedø,
   vaultsø,
-  yieldProtocolø,
+  protocolø,
 } from '../observables';
 import { MessageType, sendMsg } from '../observables/messages';
 import { IVault, IAsset, ActionCodes, ICallData, LadleActions } from '../types';
@@ -21,7 +21,7 @@ import { wrapAsset } from './_wrapUnwrapAsset';
 
 export const addCollateral = async (amount: string, vault?: IVault | string) => {
   /* Subscribe to and get the values from the observables:  */
-  combineLatest([yieldProtocolø, assetsø, vaultsø, accountø, selectedø ])
+  combineLatest([protocolø, assetsø, vaultsø, accountø, selectedø ])
     .pipe(take(1)) // only take one and then finish.
     .subscribe(
       async ([

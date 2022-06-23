@@ -32,7 +32,7 @@ import {
   assetsø,
   chainIdø,
   selectedø,
-  yieldProtocolø,
+  protocolø,
 } from '../observables';
 import { ISeries, IVault, ActionCodes, IAsset, ICallData, LadleActions, RoutedActions } from '../types';
 import { getProcessCode, ZERO_BN, ONE_BN } from '../utils';
@@ -46,7 +46,7 @@ export const removeLiquidity = async (
   tradeFyToken: boolean = true
 ) => {
   /* Subscribe to and get the values from the observables:  */
-  combineLatest([yieldProtocolø, assetsø, accountø, selectedø])
+  combineLatest([protocolø, assetsø, accountø, selectedø])
     .pipe(take(1)) // only take one and then finish.
     .subscribe(async ([{ ladle }, assetMap, account, selected]) => {
       /* generate the reproducible txCode for tx tracking and tracing */

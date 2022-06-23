@@ -26,9 +26,9 @@ import {
   updateAccount,
   updateProvider,
   updateAppConfig,
-  updateYieldProtocol,
+  updateProtocol,
   vaultsø,
-  yieldProtocolø,
+  protocolø,
 } from './observables';
 import {
   borrowInputø,
@@ -62,12 +62,12 @@ import { IYieldObservables, IYieldFunctions } from './types';
  * sets things up, and then the stream finishes indicating that everything is ready to go.
  */
 combineLatest([providerø, appConfigø, chainIdø]).subscribe(async ([provider, config, chainId]) => {
-  updateYieldProtocol(await buildProtocol(provider, chainId, config));
+  updateProtocol(await buildProtocol(provider, chainId, config));
 });
 
 /* Expose the observables */
 const yieldObservables: IYieldObservables = {
-  yieldProtocolø,
+  protocolø,
   seriesø,
   assetsø,
   vaultsø,

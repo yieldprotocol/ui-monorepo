@@ -9,7 +9,7 @@ import { bnToW3Number } from "../utils/yieldUtils";
 import { appConfigø } from "./appConfig";
 import { accountø, chainIdø, providerø } from "./connection";
 import { sendMsg } from "./messages";
-import { yieldProtocolø } from "./yieldProtocol";
+import { protocolø } from "./protocol";
 
 const vaultMap$: BehaviorSubject<Map<string, IVault>> = new BehaviorSubject(new Map([]));
 export const vaultsø: Observable<Map<string, IVault>> = vaultMap$.pipe(shareReplay(1));
@@ -19,7 +19,7 @@ export const updateVaults = async (vaultList?: IVault[] | IVaultRoot[], suppress
   const list = vaultList !== undefined ? vaultList : Array.from(vaultMap$.value.values());
 
   const account = await lastValueFrom(accountø.pipe(first()));
-  const yieldProtocol = await lastValueFrom(yieldProtocolø.pipe(first()));
+  const yieldProtocol = await lastValueFrom(protocolø.pipe(first()));
 
   /* if there are some vaults: */
   if (list.length && account) {
@@ -36,9 +36,9 @@ export const updateVaults = async (vaultList?: IVault[] | IVaultRoot[], suppress
 };
 
 /**
- *  Observe yieldProtocolø and accountø changes TOGETHER >  Initiate OR Empty VAULT Map
+ *  Observe protocolø and accountø changes TOGETHER >  Initiate OR Empty VAULT Map
  * */
-combineLatest([accountø, yieldProtocolø])
+combineLatest([accountø, protocolø])
   // only emit if account is defined and yp.cauldron adress exists - indicating protocol has mostly loaded
   .pipe(
     filter(([a, yp]) => a !== undefined && yp.cauldron.address !== ''),

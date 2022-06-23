@@ -13,7 +13,7 @@ import * as contracts from '../contracts';
 import { IStrategy, IStrategyRoot, MessageType } from '../types';
 
 import { accountø, providerø } from './connection';
-import { yieldProtocolø } from './yieldProtocol';
+import { protocolø } from './protocol';
 import { ZERO_BN } from '../utils/constants';
 import { sendMsg } from './messages';
 import { bnToW3Number } from '../utils/yieldUtils';
@@ -43,8 +43,8 @@ export const updateStrategies = async (
   );
 };
 
-/* Observe YieldProtocolø changes, and update map accordingly */
-yieldProtocolø
+/* Observe protocolø changes, and update map accordingly */
+protocolø
   .pipe(
     filter((protocol) => protocol.strategyRootMap.size > 0),
     withLatestFrom(providerø, accountø)

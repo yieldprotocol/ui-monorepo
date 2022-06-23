@@ -8,5 +8,5 @@ export { strategiesø, updateStrategies } from './strategies';
 export { transactionsø, updateProcess, resetProcess } from './transactions';
 export { userSettingsø, updateUserSettings } from './userSettings';
 export { vaultsø, updateVaults } from './vaults';
-export { yieldProtocolø, updateYieldProtocol } from './yieldProtocol';
+export { protocolø, updateProtocol } from './protocol';
 export { messagesø, internalMessagesø } from './messages';

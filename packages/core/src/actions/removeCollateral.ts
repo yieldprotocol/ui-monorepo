@@ -3,7 +3,7 @@ import { transact } from '../chainActions';
 import { ETH_BASED_ASSETS, CONVEX_BASED_ASSETS } from '../config/assets';
 import { combineLatest, take } from 'rxjs';
 import { ConvexJoin__factory } from '../contracts';
-import { yieldProtocolø, accountø, assetsø, chainIdø, providerø } from '../observables';
+import { protocolø, accountø, assetsø, chainIdø, providerø } from '../observables';
 import { IVault, ActionCodes, ICallData, LadleActions, RoutedActions } from '../types';
 import { getProcessCode, ONE_BN, ZERO_BN } from '../utils';
 import { inputToTokenValue } from '../utils/yieldUtils';
@@ -12,7 +12,7 @@ import { unwrapAsset } from './_wrapUnwrapAsset';
 
 export const removeCollateral = async (amount: string, vault: IVault, unwrapOnRemove: boolean = true) => {
   /* Subscribe to and get the values from the observables:  */
-  combineLatest([yieldProtocolø, chainIdø, assetsø, accountø, providerø])
+  combineLatest([protocolø, chainIdø, assetsø, accountø, providerø])
     .pipe(take(1)) // only take one and then finish.
     .subscribe(async ([{ ladle }, chainId, assetMap, account, provider]) => {
       /* generate the txCode for tx tracking and tracing */

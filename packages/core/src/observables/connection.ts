@@ -22,7 +22,7 @@ export const chainIdø: Observable<number> = appConfigø.pipe(
       console.log('ChainId from cache:', fromCache);
       return fromCache; // second, from the last id used in the cache
     }
-    /* in a non-browser environment : return 1 */
+    /* in a non-browser environment : return the chainId set in the default */
     console.log('ChainId from default:', config.defaultChainId);
     return config.defaultChainId; // defaults to the defaultChainId in the settings
     // console.log( config)
@@ -59,7 +59,7 @@ combineLatest([chainIdø, appConfigø])
       console.log('FORK BLOCK NUMBER > ', (await forkProvider?.getBlockNumber())?.toString());
       sendMsg({ message: 'Using forked Environment.', timeoutOverride: Infinity });
     } else if (appConfig.defaultProviderMap.has(chainId)) {
-      provider$.next( appConfig.defaultProviderMap.get(chainId)!() as ethers.providers.BaseProvider);
+      provider$.next(appConfig.defaultProviderMap.get(chainId)!() as ethers.providers.BaseProvider);
     } else {
       sendMsg({ message: 'NETWORK NOT SUPPORTED', type: MessageType.WARNING, timeoutOverride: Infinity });
     }
@@ -77,7 +77,6 @@ export const updateAccount = (newAccount: string) => {
  * The accountProvider is the sign provider (web3Provider) that handles the user account, signing and transacting.
  * It also adds a number of listeners to monitor account changes etc.
  **/
-
 const accountProvider$ = new BehaviorSubject(defaultAccountProvider);
 export const accountProviderø: Observable<ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider> =
   accountProvider$.pipe(shareReplay(1));
@@ -95,17 +94,43 @@ combineLatest([accountProviderø, appConfigø]).subscribe(async ([accProvider, a
    * however, we can attempt to skip this if the user already has a connected account
    * */
   try {
-    appConfig.autoConnectAccountProvider && account$.next((await accProvider.send('eth_requestAccounts', []))[0]);
+    appConfig.autoConnectAccountProvider && 
+    
+    account$.next((await accProvider.send('eth_requestAccounts', []))[0]);
   } catch (e) {
     console.log(e);
   }
+
+  // function connect() {
+  //   ethereum
+  //     .request({ method: 'eth_requestAccounts' })
+  //     .then(handleAccountsChanged)
+  //     .catch((err) => {
+  //       if (err.code === 4001) {
+  //         // EIP-1193 userRejectedRequest error
+  //         // If this happens, the user rejected the connection request.
+  //         console.log('Please connect to MetaMask.');
+  //       } else {
+  //         console.error(err);
+  //       }
+  //     });
+  // }
 
   /**
    * Attach listeners for EIP1193 events
    * (Unless supressed, or not in a browser environment )
    * */
   if (typeof window !== 'undefined' && !appConfig.supressInjectedListeners) {
-    window.ethereum.on('accountsChanged', (addr: string[]) => account$.next(addr[0]));
+
+    window.ethereum.on('accountsChanged', (accounts: string[]) => {
+      if (accounts.length === 0) {
+        // MetaMask is locked or the user has not connected any accounts
+        console.log('Please connect to MetaMask.');
+      } else if (accounts[0] !== account$.value) {
+        account$.next(accounts[0]);
+      }
+    });
+
     /* Reload the page on every network change as per reccommendation */
     window.ethereum.on('chainChanged', (id: string) => updateChainId(parseInt(id, 16)));
     /* Connect/Disconnect listeners */

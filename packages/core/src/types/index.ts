@@ -89,7 +89,7 @@ export interface IYieldProtocol {
 }
 
 export interface IYieldObservables {
-  yieldProtocolø: Observable<IYieldProtocol>;
+  protocolø: Observable<IYieldProtocol>;
   providerø: Observable<ethers.providers.BaseProvider>;
   accountø: Observable<string | undefined>;
 

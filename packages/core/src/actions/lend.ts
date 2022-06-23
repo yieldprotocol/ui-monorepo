@@ -5,7 +5,7 @@ import {
   accountø,
   assetsø,
   userSettingsø,
-  yieldProtocolø,
+  protocolø,
 } from '../observables';
 import { sign, transact } from '../chainActions';
 
@@ -16,7 +16,7 @@ import { combineLatest, take } from 'rxjs';
 
 export const lend = async (amount: string, series: ISeries) => {
   /* Subscribe to and get the values from the observables:  */
-  combineLatest([yieldProtocolø, assetsø, accountø, userSettingsø])
+  combineLatest([protocolø, assetsø, accountø, userSettingsø])
     .pipe(take(1)) // only take one and then finish.
     .subscribe(
       async ([

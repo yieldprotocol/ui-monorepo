@@ -7,7 +7,7 @@ const ethers_1 = require("ethers");
 const rxjs_1 = require("rxjs");
 const oracles_1 = require("../config/oracles");
 const utils_1 = require("../utils");
-const yieldProtocol_1 = require("./yieldProtocol");
+const protocol_1 = require("./protocol");
 const selected_1 = require("./selected");
 const yieldUtils_1 = require("../utils/yieldUtils");
 const connection_1 = require("./connection");
@@ -34,7 +34,7 @@ selected_1.selectedø
 /* Update Assets function */
 const updatePair = (baseId, ilkId, chainId) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
-    const yieldProtocol = yield (0, rxjs_1.lastValueFrom)(yieldProtocol_1.yieldProtocolø.pipe((0, rxjs_1.first)()));
+    const yieldProtocol = yield (0, rxjs_1.lastValueFrom)(protocol_1.protocolø.pipe((0, rxjs_1.first)()));
     const { cauldron, assetRootMap, oracleMap } = yieldProtocol;
     const oracleName = (_b = (_a = oracles_1.ORACLES.get(chainId)) === null || _a === void 0 ? void 0 : _a.get(baseId)) === null || _b === void 0 ? void 0 : _b.get(ilkId);
     const PriceOracle = oracleMap.get(oracleName);

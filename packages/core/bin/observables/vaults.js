@@ -13,14 +13,14 @@ const yieldUtils_1 = require("../utils/yieldUtils");
 const appConfig_1 = require("./appConfig");
 const connection_1 = require("./connection");
 const messages_1 = require("./messages");
-const yieldProtocol_1 = require("./yieldProtocol");
+const protocol_1 = require("./protocol");
 const vaultMap$ = new rxjs_1.BehaviorSubject(new Map([]));
 exports.vaultsø = vaultMap$.pipe((0, rxjs_1.shareReplay)(1));
 /* Update vaults function */
 const updateVaults = (vaultList, suppressEventLogQueries = false) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const list = vaultList !== undefined ? vaultList : Array.from(vaultMap$.value.values());
     const account = yield (0, rxjs_1.lastValueFrom)(connection_1.accountø.pipe((0, rxjs_1.first)()));
-    const yieldProtocol = yield (0, rxjs_1.lastValueFrom)(yieldProtocol_1.yieldProtocolø.pipe((0, rxjs_1.first)()));
+    const yieldProtocol = yield (0, rxjs_1.lastValueFrom)(protocol_1.protocolø.pipe((0, rxjs_1.first)()));
     /* if there are some vaults: */
     if (list.length && account) {
         yield Promise.all(list.map((_vault) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
@@ -35,9 +35,9 @@ const updateVaults = (vaultList, suppressEventLogQueries = false) => tslib_1.__a
 });
 exports.updateVaults = updateVaults;
 /**
- *  Observe yieldProtocolø and accountø changes TOGETHER >  Initiate OR Empty VAULT Map
+ *  Observe protocolø and accountø changes TOGETHER >  Initiate OR Empty VAULT Map
  * */
-(0, rxjs_1.combineLatest)([connection_1.accountø, yieldProtocol_1.yieldProtocolø])
+(0, rxjs_1.combineLatest)([connection_1.accountø, protocol_1.protocolø])
     // only emit if account is defined and yp.cauldron adress exists - indicating protocol has mostly loaded
     .pipe((0, rxjs_1.filter)(([a, yp]) => a !== undefined && yp.cauldron.address !== ''), (0, rxjs_1.withLatestFrom)(connection_1.chainIdø, appConfig_1.appConfigø, connection_1.providerø))
     .subscribe(([[account, protocol], chainId, appConfig, provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
