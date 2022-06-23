@@ -15,7 +15,7 @@
   },
   "scripts": {
     "test": "tsc && jest --detectOpenHandles ",
-    "compile": "tsc -b",
+    "compile": "tsc -b --force",
     "docs": "typedoc",
     "watch": "tsc -b -w",
     "minify": "uglifyjs --compress --mangle --output name.min.js -- ./bin/index.js",

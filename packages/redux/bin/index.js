@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.store = exports.updateProtocol = exports.yieldProtocolSlice = void 0;
 const toolkit_1 = require("@reduxjs/toolkit");
 exports.yieldProtocolSlice = (0, toolkit_1.createSlice)({
-    name: 'yieldProtocol',
+    name: 'protocol',
     initialState: 1,
     reducers: {
         updateProtocol: (state, action) => {
@@ -16,17 +16,17 @@ exports.updateProtocol = exports.yieldProtocolSlice.actions.updateProtocol;
 exports.store = (0, toolkit_1.configureStore)({
     reducer: exports.yieldProtocolSlice.reducer
 });
-// combineLatest( [ yieldObservables.messagesø , yieldObservables.yieldProtocolø ] ).pipe(
+// combineLatest( [ yieldObservables.messagesø , yieldObservables.protocolø ] ).pipe(
 // ).subscribe(( [ msg, protocol] : [IMessage,IYieldProtocol] ) => { 
 //     if  (msg.has('protocolLoaded') ) { console.log( '>>>>>>> protocol Loaded ');   };
 //     if  (msg.has('protocolLoaded') ) updateProtocol('somethign');
 // });
-// combineLatest([ messagesø, yieldProtocolø ] ).pipe(
+// combineLatest([ messagesø, protocolø ] ).pipe(
 //   ).subscribe(([msg, yp]) => { 
 //       if  (msg.has('protocolLoaded') ) { console.log( '>>>>>>> protocol Loaded ');   };
 //       if  (msg.has('protocolLoaded') ) updateProtocol( { yp } );
 //   });
-//   combineLatest([ messagesø, yieldProtocolø ] ).pipe(
+//   combineLatest([ messagesø, protocolø ] ).pipe(
 //     ).subscribe(([msg, yp]) => { 
 //         if  (msg.has('protocolLoaded') ) { console.log( '>>>>>>> protocol Loaded ');   };
 //         if  (msg.has('protocolLoaded') ) updateProtocol( { yp } );
