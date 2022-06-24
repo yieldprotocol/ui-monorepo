@@ -56,7 +56,11 @@ const _handleTxRejection = (err, processCode) => {
     /* If user cancelled/rejected the tx */
     if (err.code === 4001) {
         console.log('User cancelled');
-        (0, transactions_1.updateProcess)({ processCode, stage: types_1.ProcessStage.PROCESS_INACTIVE, error: { error: err, message: 'Transaction rejected by user.' } });
+        (0, transactions_1.updateProcess)({
+            processCode,
+            stage: types_1.ProcessStage.PROCESS_INACTIVE,
+            error: { error: err, message: 'Transaction rejected by user.' },
+        });
     }
     else {
         /* Else, the transaction was likely cancelled by the wallet/provider before getting submitted?  */
@@ -86,6 +90,7 @@ const transact = (calls, processCode) => tslib_1.__awaiter(void 0, void 0, void 
         const batchValue = _totalBatchValue(filteredCalls);
         let gasEst;
         try {
+            console.log('getting gas estimate');
             gasEst = yield ladleContract.estimateGas.batch(encodedCalls, { value: batchValue });
             console.log('Auto Gas estimate: ', gasEst.mul(120).div(100).toString());
         }
@@ -96,41 +101,38 @@ const transact = (calls, processCode) => tslib_1.__awaiter(void 0, void 0, void 
                 _handleTxWillFail(e.error, processCode, e.transaction);
         }
         let tx;
-        let res;
+        /* first try the transaction with connected wallet and catch any 'pre-chain'/'pre-tx' errors */
         try {
-            /* first try the transaction with connected wallet and catch any 'pre-chain'/'pre-tx' errors */
-            try {
-                tx = yield ladleContract.batch(encodedCalls, {
-                    value: batchValue,
-                    gasLimit: gasEst.mul(120).div(100),
-                });
-                /* update process list > Tx Pending */
-                (0, transactions_1.updateProcess)({
-                    processCode,
-                    stage: types_1.ProcessStage.TRANSACTION_PENDING,
-                    tx: Object.assign(Object.assign({}, tx), { receipt: null, status: types_1.TxState.PENDING }),
-                });
-            }
-            catch (e) {
-                /* this case is when user rejects tx OR wallet rejects tx */
-                _handleTxRejection(e, processCode);
-            }
-            /* wait for the tx to complete */
-            res = yield tx.wait();
-            /* check the tx status ( failed/success ) */
-            const txSuccess = res.status === 1 || false;
-            /* update process list > Tx Complete + status */
+            tx = yield ladleContract.batch(encodedCalls, {
+                value: batchValue,
+                gasLimit: gasEst.mul(120).div(100),
+            });
+            /* update process list > Tx Pending */
             (0, transactions_1.updateProcess)({
                 processCode,
-                stage: types_1.ProcessStage.PROCESS_COMPLETE,
-                tx: Object.assign(Object.assign({}, tx), { receipt: res, status: txSuccess ? types_1.TxState.SUCCESSFUL : types_1.TxState.FAILED }),
+                stage: types_1.ProcessStage.TRANSACTION_PENDING,
+                tx: Object.assign(Object.assign({}, tx), { receipt: null, status: types_1.TxState.PENDING }),
             });
         }
         catch (e) {
-            /* catch tx errors */
-            //  _handleTxError('Transaction failed', e.transaction, processCode);
-            console.log(' Error', e.transaction, processCode);
+            /* this case is when user rejects tx OR wallet rejects tx */
+            _handleTxRejection(e, processCode);
         }
+        /* wait for the tx to complete */
+        const res = yield tx.wait();
+        /* check the tx status ( failed/success ) */
+        const txSuccess = res.status === 1 || false;
+        /* update process list > Tx Complete + status */
+        (0, transactions_1.updateProcess)({
+            processCode,
+            stage: types_1.ProcessStage.PROCESS_COMPLETE,
+            tx: Object.assign(Object.assign({}, tx), { receipt: res, status: txSuccess ? types_1.TxState.SUCCESSFUL : types_1.TxState.FAILED }),
+        });
+        // } catch (e: any) {
+        //   /* catch tx errors */
+        //   //  _handleTxError('Transaction failed', e.transaction, processCode);
+        //   console.log(' Error', e, processCode);
+        // }
     }));
 });
 exports.transact = transact;

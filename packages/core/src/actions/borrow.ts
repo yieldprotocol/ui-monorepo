@@ -4,16 +4,7 @@ import { buyBase, calculateSlippage, ONE_BN, ZERO_BN } from '@yield-protocol/ui-
 import { ETH_BASED_ASSETS, CONVEX_BASED_ASSETS } from '../config/assets';
 import { ConvexLadleModule } from '../contracts';
 
-import {
-  accountø,
-  assetsø,
-  chainIdø,
-  protocolø,
-  seriesø,
-  vaultsø,
-  selectedø,
-  userSettingsø,
-} from '../observables';
+import { accountø, assetsø, chainIdø, protocolø, seriesø, vaultsø, selectedø, userSettingsø } from '../observables';
 import { sign, transact } from '../chainActions';
 
 import { IVault, ActionCodes, ISeries, IAsset, ICallData, LadleActions } from '../types';
@@ -27,6 +18,9 @@ import { MessageType, sendMsg } from '../observables/messages';
 import { inputToTokenValue } from '../utils/yieldUtils';
 import { combineLatest, take } from 'rxjs';
 
+
+
+
 export const borrow = async (
   amount?: string,
   collateralAmount?: string,
@@ -34,28 +28,13 @@ export const borrow = async (
   getValuesFromNetwork: boolean = true // Get market values by network call or offline calc (default: NETWORK)
 ) => {
   /* Subscribe to and get the values from the observables:  */
-  combineLatest([
-    protocolø,
-    assetsø,
-    seriesø,
-    vaultsø,
-    accountø,
-    selectedø,
-    userSettingsø,
-  ])
+  combineLatest([protocolø, assetsø, seriesø, vaultsø, accountø, selectedø, userSettingsø])
     .pipe(take(1)) // only take one and then finish.
     .subscribe(
-      async ([
-        { ladle, moduleMap },
-        assetMap,
-        seriesMap,
-        vaultMap,
-        account,
-        selected,
-        { slippageTolerance },
-      ]) => {
+      async ([{ ladle, moduleMap }, assetMap, seriesMap, vaultMap, account, selected, { slippageTolerance }]) => {
+
         /** Use the vault/vaultId provided else use blank vault TODO: Add a check for existing vault */
-        const getValidatedVault = (v: IVault | string | undefined): IVault | undefined => {
+        const _getValidatedVault = (v: IVault | string | undefined): IVault | undefined => {
           if (v) {
             if ((v as IVault).id) return v as IVault;
             if (vaultMap.has(v as string)) return vaultMap.get(v as string);
@@ -75,13 +54,24 @@ export const borrow = async (
           return undefined;
         };
 
-        const _vault = getValidatedVault(vault);
+        const _vault = _getValidatedVault(vault);
         const vaultId: string = _vault ? _vault.id : BLANK_VAULT;
 
         /* Set the series and ilk based on the vault that has been selected or if it's a new vault, get from the globally selected SeriesId */
         const series: ISeries = _vault ? seriesMap.get(_vault.seriesId)! : selected.series!;
         const base: IAsset = assetMap.get(series.baseId)!;
         const ilk: IAsset = _vault ? assetMap.get(_vault.ilkId)! : assetMap.get(selected.ilk!.proxyId)!; // NOTE: Here we use the 'wrapped version' of the selected Ilk, if required.
+
+        /* Shortcut if series is mature -> no borrowing */
+        if (series.isMature()) {
+          console.log('Series is mature. ');
+          sendMsg({
+            message: 'Series is mature.',
+            type: MessageType.INFO,
+            origin: series.id,
+          });
+          return;
+        }
 
         /* bring in the Convex Mmdule where reqd. */
         const ConvexLadleModuleContract = moduleMap.get('ConvexLadleModule') as ConvexLadleModule;
@@ -136,7 +126,7 @@ export const borrow = async (
         const removeEthCallData: ICallData[] = await removeEth(isEthBase ? ONE_BN : ZERO_BN); // (exit_ether sweeps all the eth out the ladle, so exact amount is not importnat -> just greater than zero)
 
         /* handle wrapping of collateral if required */
-        const wrapAssetCallData: ICallData[] = await wrapAsset(_collAmount, selected.ilk!, processCode ); // note: selected ilk used here, not wrapped version
+        const wrapAssetCallData: ICallData[] = await wrapAsset(_collAmount, selected.ilk!, processCode); // note: selected ilk used here, not wrapped version
 
         /**
          * Gather all the required signatures - sign() processes them and returns them as ICallData types
@@ -205,7 +195,7 @@ export const borrow = async (
         ];
 
         /* finally, handle the transaction */
-        transact(calls, processCode);
+        await transact(calls, processCode);
       }
     );
 };

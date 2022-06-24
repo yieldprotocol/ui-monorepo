@@ -18,20 +18,12 @@ const rxjs_1 = require("rxjs");
 const borrow = (amount, collateralAmount, vault, getValuesFromNetwork = true // Get market values by network call or offline calc (default: NETWORK)
 ) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Subscribe to and get the values from the observables:  */
-    (0, rxjs_1.combineLatest)([
-        observables_1.protocolø,
-        observables_1.assetsø,
-        observables_1.seriesø,
-        observables_1.vaultsø,
-        observables_1.accountø,
-        observables_1.selectedø,
-        observables_1.userSettingsø,
-    ])
+    (0, rxjs_1.combineLatest)([observables_1.protocolø, observables_1.assetsø, observables_1.seriesø, observables_1.vaultsø, observables_1.accountø, observables_1.selectedø, observables_1.userSettingsø])
         .pipe((0, rxjs_1.take)(1)) // only take one and then finish.
-        .subscribe(([{ ladle, moduleMap }, assetMap, seriesMap, vaultMap, account, selected, { slippageTolerance },]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+        .subscribe(([{ ladle, moduleMap }, assetMap, seriesMap, vaultMap, account, selected, { slippageTolerance }]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         var _a;
         /** Use the vault/vaultId provided else use blank vault TODO: Add a check for existing vault */
-        const getValidatedVault = (v) => {
+        const _getValidatedVault = (v) => {
             if (v) {
                 if (v.id)
                     return v;
@@ -52,12 +44,22 @@ const borrow = (amount, collateralAmount, vault, getValuesFromNetwork = true // 
             });
             return undefined;
         };
-        const _vault = getValidatedVault(vault);
+        const _vault = _getValidatedVault(vault);
         const vaultId = _vault ? _vault.id : utils_1.BLANK_VAULT;
         /* Set the series and ilk based on the vault that has been selected or if it's a new vault, get from the globally selected SeriesId */
         const series = _vault ? seriesMap.get(_vault.seriesId) : selected.series;
         const base = assetMap.get(series.baseId);
         const ilk = _vault ? assetMap.get(_vault.ilkId) : assetMap.get(selected.ilk.proxyId); // NOTE: Here we use the 'wrapped version' of the selected Ilk, if required.
+        /* Shortcut if series is mature -> no borrowing */
+        if (series.isMature()) {
+            console.log('Series is mature. ');
+            (0, messages_1.sendMsg)({
+                message: 'Series is mature.',
+                type: messages_1.MessageType.INFO,
+                origin: series.id,
+            });
+            return;
+        }
         /* bring in the Convex Mmdule where reqd. */
         const ConvexLadleModuleContract = moduleMap.get('ConvexLadleModule');
         /* generate the reproducible processCode for tx tracking and tracing */
@@ -151,7 +153,7 @@ const borrow = (amount, collateralAmount, vault, getValuesFromNetwork = true // 
             ...removeEthCallData,
         ];
         /* finally, handle the transaction */
-        (0, chainActions_1.transact)(calls, processCode);
+        yield (0, chainActions_1.transact)(calls, processCode);
     }));
 });
 exports.borrow = borrow;

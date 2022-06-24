@@ -27,8 +27,9 @@ exports.selectedø = selected$.pipe((0, rxjs_1.shareReplay)(1));
 messages_1.internalMessagesø
     .pipe((0, rxjs_1.filter)((messages) => messages.has('seriesLoaded')), (0, rxjs_1.take)(1), // only take one for first load
 (0, rxjs_1.withLatestFrom)(series_1.seriesø, appConfig_1.appConfigø))
-    .subscribe(([, [sMap], appConfig]) => {
-    (0, exports.selectSeries)(appConfig.defaultSeriesId || [...sMap][0]);
+    .subscribe(([, series, appConfig]) => {
+    const nonMatureSeries = Array.from(series.values()).filter((s) => !s.isMature());
+    (0, exports.selectSeries)(appConfig.defaultSeriesId || nonMatureSeries[0]);
 });
 /**
  * Set the selected Ilk once on load (either )

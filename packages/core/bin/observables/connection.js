@@ -55,7 +55,7 @@ exports.updateProvider = updateProvider;
         const forkProvider = appConfig.defaultForkMap.get(chainId)();
         provider$.next(forkProvider);
         console.log('FORK BLOCK NUMBER > ', (_a = (yield (forkProvider === null || forkProvider === void 0 ? void 0 : forkProvider.getBlockNumber()))) === null || _a === void 0 ? void 0 : _a.toString());
-        (0, messages_1.sendMsg)({ message: 'Using forked Environment.', timeoutOverride: Infinity });
+        (0, messages_1.sendMsg)({ message: 'Using forked Environment.', timeoutOverride: Infinity, id: 'forkedEnv' });
     }
     else if (appConfig.defaultProviderMap.has(chainId)) {
         provider$.next(appConfig.defaultProviderMap.get(chainId)());
@@ -83,16 +83,26 @@ const updateAccountProvider = (newProvider) => {
     accountProvider$.next(newProvider); // update to whole new protocol
 };
 exports.updateAccountProvider = updateAccountProvider;
+appConfig_1.appConfigø.subscribe((appConfig) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    if (appConfig && appConfig.useFork) {
+        const rpcProvider = new ethers_1.ethers.providers.JsonRpcProvider();
+        const account = (yield rpcProvider.listAccounts())[0];
+        account$.next(account);
+        accountProvider$.next(rpcProvider);
+    }
+}));
 /**
  * Handle any events on the accountProvider ( web3Provider )
  * */
-(0, rxjs_1.combineLatest)([exports.accountProviderø, appConfig_1.appConfigø]).subscribe(([accProvider, appConfig]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+(0, rxjs_1.combineLatest)([exports.accountProviderø, appConfig_1.appConfigø])
+    .subscribe(([accProvider, appConfig]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /**
      * MetaMask requires requesting permission to connect users accounts >
      * however, we can attempt to skip this if the user already has a connected account
      * */
     try {
         appConfig.autoConnectAccountProvider &&
+            !appConfig.useFork &&
             account$.next((yield accProvider.send('eth_requestAccounts', []))[0]);
     }
     catch (e) {

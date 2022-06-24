@@ -42,7 +42,6 @@ const YieldExampleComponent = () => {
     borrow,
     repayDebt,
     addLiquidity,
-
   } = yieldFunctions;
 
   const { updateBorrowInput, updateCollateralInput } = viewFunctions;
@@ -69,10 +68,10 @@ const YieldExampleComponent = () => {
   // useEffect(() => {
   //   messages && console.log(messages);
   // }, [messages]);
-  
-    // useEffect(() => {
-    //   transactions && console.log(transactions);
-    // }, [transactions]);
+
+  // useEffect(() => {
+  //   transactions && console.log(transactions);
+  // }, [transactions]);
 
   return (
     <div
@@ -85,6 +84,21 @@ const YieldExampleComponent = () => {
         overflow: "auto",
       }}
     >
+      {messages &&
+        !Array.from(messages.values()).includes((x) => x.id === "forkedEnv") && (
+            <div
+              style={{
+                position:'absolute',
+                top:'10px',
+                right:'10px',
+                backgroundColor: "red",
+                padding: "10px",
+              }}
+            >
+              Using a forked environment
+            </div>
+        )}
+
       <div>YieldProtocol UI version: {protocolVersion}</div>
       <div>
         <input
@@ -102,14 +116,20 @@ const YieldExampleComponent = () => {
           onChange={(e) => updateCollateralInput(e.target.value)}
           placeholder="Collateral?"
         />
-        <p>
-          {collateralizationPercent ? `${collateralizationPercent}%` : ""}{" "}
-        </p>
+        <p>{collateralizationPercent ? `${collateralizationPercent}%` : ""} </p>
 
-        <button onClick={() => borrow('5000', '10',selected?.vault || undefined) }>borrow 5000 {selected?.vault?.id}</button>  
-        <button onClick={() => repayDebt('6000', selected?.vault ) }>repay 6000 {selected?.vault?.id}</button>
+        <button
+          onClick={() => borrow("5000", "10", selected?.vault || undefined)}
+        >
+          borrow 5000 {selected?.vault?.id}
+        </button>
+        <button onClick={() => repayDebt("6000", selected?.vault)}>
+          repay 6000 {selected?.vault?.id}
+        </button>
 
-        <button onClick={() => addLiquidity('10000', selected?.strategy) }>add 10000 liquidity</button>
+        <button onClick={() => addLiquidity("10", selected?.strategy)}>
+          add 10000 liquidity
+        </button>
       </div>
 
       <hr />
@@ -289,7 +309,7 @@ const YieldExampleComponent = () => {
         <p> Selected Strategy: {selected?.strategy?.id}</p>
       </div>
 
-      {messages && !Array.from(messages.values()).every((x) => x.expired) && (
+      {messages && !Array.from(messages.values()).every((x) => x.expired || x.timeoutOverride === Infinity ) && (
         <div
           style={{
             backgroundColor: "lightblue",

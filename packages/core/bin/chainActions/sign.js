@@ -65,6 +65,7 @@ const sign = (requestedSignatures, processCode) => tslib_1.__awaiter(void 0, voi
         if (!isContractWallet &&
             approvalMethod === types_1.ApprovalMethod.SIG &&
             reqSig.target.tokenType === types_1.TokenType.ERC20_Permit) {
+            console.log('Approval via permit signature: ERC2612');
             /* get the  ERC2612 signed data */
             const _amount = maxApproval ? constants_1.MAX_256 : (_a = reqSig.amount) === null || _a === void 0 ? void 0 : _a.toString();
             const { v, r, s, value, deadline } = yield (0, eth_permit_1.signERC2612Permit)(accountProvider, 
@@ -97,6 +98,7 @@ const sign = (requestedSignatures, processCode) => tslib_1.__awaiter(void 0, voi
         if (!isContractWallet &&
             approvalMethod === types_1.ApprovalMethod.SIG &&
             reqSig.target.tokenType === types_1.TokenType.ERC20_DaiPermit) {
+            console.log('Approval via permit signature: Dai Permit');
             /* Get the sign data */
             const { v, r, s, nonce, expiry, allowed } = yield (0, eth_permit_1.signDaiPermit)(accountProvider, 
             /* build domain */
@@ -128,9 +130,11 @@ const sign = (requestedSignatures, processCode) => tslib_1.__awaiter(void 0, voi
             };
         }
         /**
-         * CASE 3: FALLBACK / DEFAULT CASE: Approval by transaction ( on transaction success return blank ICallData value (IGNORED_CALLDATA). )
+         * CASE 3: FALLBACK / DEFAULT CASE: Approval by transaction
+         * ( after transaction success,  return blank ICallData value (IGNORED_CALLDATA). )
          * */
         if (reqSig.target.tokenType === types_1.TokenType.ERC1155_) {
+            console.log('Approval via transaction: ERC1155');
             /* if token type is ERC1155 then set approval 'ApprovalForAll' */
             const connectedERC1155 = contracts_1.ERC1155__factory.connect(reqSig.target.address, signer);
             yield connectedERC1155
@@ -141,8 +145,11 @@ const sign = (requestedSignatures, processCode) => tslib_1.__awaiter(void 0, voi
                 processCode,
                 signMap: new Map(_signMap.set((0, yieldUtils_1.getSignId)(reqSig), { signData: reqSig, status: types_1.TxState.SUCCESSFUL })),
             });
+            /* Approval transaction complete: return a dummy ICalldata ( which will ALWAYS get ignored )*/
+            return constants_1.IGNORED_CALLDATA;
         }
         else {
+            console.log('Approval via transaction: ERC20');
             /* else use a regular approval */
             const connectedERC20 = contracts_1.ERC20Permit__factory.connect(reqSig.target.address, signer);
             yield connectedERC20
@@ -153,14 +160,9 @@ const sign = (requestedSignatures, processCode) => tslib_1.__awaiter(void 0, voi
                 processCode,
                 signMap: new Map(_signMap.set((0, yieldUtils_1.getSignId)(reqSig), { signData: reqSig, status: types_1.TxState.SUCCESSFUL })),
             });
+            /* Approval transaction complete: return a dummy ICalldata ( which will ALWAYS get ignored )*/
+            return constants_1.IGNORED_CALLDATA;
         }
-        // /* update the processMap to indicate the signing was successfull */
-        // updateProcess({
-        //   processCode,
-        //   signMap: new Map(_signMap.set(getSignId(reqSig), { signData: reqSig, status: TxState.SUCCESSFUL })),
-        // });
-        /* Approval transaction complete: return a dummy ICalldata ( which will ALWAYS get ignored )*/
-        return constants_1.IGNORED_CALLDATA;
     }));
     /* Returns the processed list of txs required as ICallData[] if all successful (  may as well filter out ignored values here too ) */
     const signedList = yield Promise.all(_processedSigs);

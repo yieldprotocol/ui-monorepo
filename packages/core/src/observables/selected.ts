@@ -40,8 +40,9 @@ internalMessagesø
     take(1), // only take one for first load
     withLatestFrom(seriesø, appConfigø)
   )
-  .subscribe(([, [sMap], appConfig]) => {
-    selectSeries(appConfig.defaultSeriesId || [...sMap][0]);
+  .subscribe(([, series, appConfig]) => {
+    const nonMatureSeries = Array.from(series.values()).filter((s) => !s.isMature() )
+    selectSeries(appConfig.defaultSeriesId || nonMatureSeries[0]);
   });
 
 /**

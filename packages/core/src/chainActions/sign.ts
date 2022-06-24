@@ -83,6 +83,7 @@ export const sign = async (requestedSignatures: ISignData[], processCode: string
       approvalMethod === ApprovalMethod.SIG &&
       reqSig.target.tokenType === TokenType.ERC20_Permit
     ) {
+      console.log( 'Approval via permit signature: ERC2612')
       /* get the  ERC2612 signed data */
       const _amount = maxApproval ? MAX_256 : reqSig.amount?.toString();
       const { v, r, s, value, deadline } = await signERC2612Permit(
@@ -125,6 +126,7 @@ export const sign = async (requestedSignatures: ISignData[], processCode: string
       approvalMethod === ApprovalMethod.SIG &&
       reqSig.target.tokenType === TokenType.ERC20_DaiPermit
     ) {
+      console.log( 'Approval via permit signature: Dai Permit')
       /* Get the sign data */
       const { v, r, s, nonce, expiry, allowed } = await signDaiPermit(
         accountProvider,
@@ -164,21 +166,28 @@ export const sign = async (requestedSignatures: ISignData[], processCode: string
     }
 
     /**
-     * CASE 3: FALLBACK / DEFAULT CASE: Approval by transaction ( on transaction success return blank ICallData value (IGNORED_CALLDATA). )
+     * CASE 3: FALLBACK / DEFAULT CASE: Approval by transaction 
+     * ( after transaction success,  return blank ICallData value (IGNORED_CALLDATA). )
      * */
     if (reqSig.target.tokenType === TokenType.ERC1155_) {
+      
+      console.log( 'Approval via transaction: ERC1155')
       /* if token type is ERC1155 then set approval 'ApprovalForAll' */
       const connectedERC1155 = ERC1155__factory.connect(reqSig.target.address, signer);
       await connectedERC1155
         .setApprovalForAll(reqSig.spender, true)
         .catch((err: any) => _handleSignError(err, processCode));
-
       /* update the processMap to indicate the signing was successfull */
       updateProcess({
         processCode,
         signMap: new Map(_signMap.set(getSignId(reqSig), { signData: reqSig, status: TxState.SUCCESSFUL })),
       });
+      /* Approval transaction complete: return a dummy ICalldata ( which will ALWAYS get ignored )*/
+      return IGNORED_CALLDATA;
+
     } else {
+
+      console.log( 'Approval via transaction: ERC20')
       /* else use a regular approval */
       const connectedERC20 = ERC20Permit__factory.connect(reqSig.target.address, signer);
       await connectedERC20
@@ -190,16 +199,11 @@ export const sign = async (requestedSignatures: ISignData[], processCode: string
         processCode,
         signMap: new Map(_signMap.set(getSignId(reqSig), { signData: reqSig, status: TxState.SUCCESSFUL })),
       });
+
+      /* Approval transaction complete: return a dummy ICalldata ( which will ALWAYS get ignored )*/
+      return IGNORED_CALLDATA;
+
     }
-
-    // /* update the processMap to indicate the signing was successfull */
-    // updateProcess({
-    //   processCode,
-    //   signMap: new Map(_signMap.set(getSignId(reqSig), { signData: reqSig, status: TxState.SUCCESSFUL })),
-    // });
-
-    /* Approval transaction complete: return a dummy ICalldata ( which will ALWAYS get ignored )*/
-    return IGNORED_CALLDATA;
   });
 
   /* Returns the processed list of txs required as ICallData[] if all successful (  may as well filter out ignored values here too ) */

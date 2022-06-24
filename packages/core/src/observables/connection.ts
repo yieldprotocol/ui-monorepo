@@ -1,6 +1,6 @@
 import { Web3Provider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
-import { Observable, BehaviorSubject, Subject, shareReplay, mergeMap, combineLatest } from 'rxjs';
+import { Observable, BehaviorSubject, Subject, shareReplay, mergeMap, combineLatest, withLatestFrom } from 'rxjs';
 import { defaultAccountProvider } from '../config/defaultproviders';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils';
 import { appConfigø } from './appConfig';
@@ -57,7 +57,7 @@ combineLatest([chainIdø, appConfigø])
       const forkProvider = appConfig.defaultForkMap.get(chainId)!();
       provider$.next(forkProvider!);
       console.log('FORK BLOCK NUMBER > ', (await forkProvider?.getBlockNumber())?.toString());
-      sendMsg({ message: 'Using forked Environment.', timeoutOverride: Infinity });
+      sendMsg({ message: 'Using forked Environment.', timeoutOverride: Infinity, id:'forkedEnv' });
     } else if (appConfig.defaultProviderMap.has(chainId)) {
       provider$.next(appConfig.defaultProviderMap.get(chainId)!() as ethers.providers.BaseProvider);
     } else {
@@ -73,6 +73,7 @@ export const updateAccount = (newAccount: string) => {
   account$.next(isValidAcc ? newAccount : undefined);
 };
 
+
 /**
  * The accountProvider is the sign provider (web3Provider) that handles the user account, signing and transacting.
  * It also adds a number of listeners to monitor account changes etc.
@@ -85,17 +86,31 @@ export const updateAccountProvider = (newProvider: ethers.providers.Web3Provider
   accountProvider$.next(newProvider); // update to whole new protocol
 };
 
+appConfigø.subscribe( async (appConfig) => {
+  if (appConfig && appConfig.useFork)  {
+    
+    const rpcProvider = new ethers.providers.JsonRpcProvider();
+    const account = (await rpcProvider.listAccounts())[0] ;
+   
+    account$.next( account );
+    accountProvider$.next(rpcProvider);
+  }
+})
+
+
+
 /**
  * Handle any events on the accountProvider ( web3Provider )
  * */
-combineLatest([accountProviderø, appConfigø]).subscribe(async ([accProvider, appConfig]) => {
+combineLatest([accountProviderø, appConfigø])
+.subscribe(async ([accProvider, appConfig]) => {
   /**
    * MetaMask requires requesting permission to connect users accounts >
    * however, we can attempt to skip this if the user already has a connected account
    * */
   try {
     appConfig.autoConnectAccountProvider && 
-    
+    !appConfig.useFork && 
     account$.next((await accProvider.send('eth_requestAccounts', []))[0]);
   } catch (e) {
     console.log(e);
@@ -121,7 +136,6 @@ combineLatest([accountProviderø, appConfigø]).subscribe(async ([accProvider, a
    * (Unless supressed, or not in a browser environment )
    * */
   if (typeof window !== 'undefined' && !appConfig.supressInjectedListeners) {
-
     window.ethereum.on('accountsChanged', (accounts: string[]) => {
       if (accounts.length === 0) {
         // MetaMask is locked or the user has not connected any accounts
@@ -130,7 +144,6 @@ combineLatest([accountProviderø, appConfigø]).subscribe(async ([accProvider, a
         account$.next(accounts[0]);
       }
     });
-
     /* Reload the page on every network change as per reccommendation */
     window.ethereum.on('chainChanged', (id: string) => updateChainId(parseInt(id, 16)));
     /* Connect/Disconnect listeners */
@@ -143,4 +156,7 @@ combineLatest([accountProviderø, appConfigø]).subscribe(async ([accProvider, a
    * TODO: untested
    * */
   if (appConfig.useAccountProviderAsProvider) updateProvider(accProvider);
+
+  
+
 });
