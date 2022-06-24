@@ -33,7 +33,7 @@ export var useObservable = function (observable, showError) {
 /* Build up the Provider state */
 var YieldProvider = function (_a) {
     var props = _a.props, children = _a.children;
-    var protocolø = yieldObservables.protocolø, assetsø = yieldObservables.assetsø, seriesø = yieldObservables.seriesø, strategiesø = yieldObservables.strategiesø, vaultsø = yieldObservables.vaultsø, accountø = yieldObservables.accountø, messagesø = yieldObservables.messagesø, transactionsø = yieldObservables.transactionsø, selectedø = yieldObservables.selectedø;
+    var protocolø = yieldObservables.protocolø, assetsø = yieldObservables.assetsø, seriesø = yieldObservables.seriesø, strategiesø = yieldObservables.strategiesø, vaultsø = yieldObservables.vaultsø, accountø = yieldObservables.accountø, messagesø = yieldObservables.messagesø, transactionsø = yieldObservables.transactionsø, selectedø = yieldObservables.selectedø, providerø = yieldObservables.providerø, accountProviderø = yieldObservables.accountProviderø;
     var protocol = useObservable(protocolø);
     var assetMap = useObservable(assetsø);
     var seriesMap = useObservable(seriesø);
@@ -45,7 +45,9 @@ var YieldProvider = function (_a) {
     var messages = useObservable(messagesø);
     var selected = useObservable(selectedø);
     var transactions = useObservable(transactionsø);
+    var provider = useObservable(providerø);
     return (_jsx(YieldContext.Provider, __assign({ value: {
+            provider: provider,
             messages: messages,
             transactions: transactions,
             protocol: protocol,

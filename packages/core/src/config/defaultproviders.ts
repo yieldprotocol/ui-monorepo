@@ -17,7 +17,7 @@ export const defaultProviderMap: Map<number, () => ethers.providers.BaseProvider
   ],
 ]);
 
-export const defaultForkMap: Map<number, () => ethers.providers.BaseProvider> = new Map([
+export const defaultForkMap: Map<number, () => ethers.providers.JsonRpcProvider> = new Map([
   [1, () => new ethers.providers.JsonRpcProvider()],
   [1337, () => new ethers.providers.JsonRpcProvider()],
 ]);

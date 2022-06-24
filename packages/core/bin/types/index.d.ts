@@ -50,7 +50,7 @@ export interface IYieldConfig {
     browserCaching: boolean;
     forceTransactions: boolean;
     useFork: boolean;
-    defaultForkMap: Map<number, () => ethers.providers.BaseProvider>;
+    defaultForkMap: Map<number, () => ethers.providers.JsonRpcProvider>;
     suppressEventLogQueries: boolean;
     diagnostics: boolean;
 }

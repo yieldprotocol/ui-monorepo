@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { useObservable, YieldContext } from "@yield-protocol/ui-react";
 
 import config from "../yield.config";
-import { ethers, providers } from "ethers";
+import { ethers } from "ethers";
 
 const YieldExampleComponent = () => {
   const {
@@ -13,11 +13,11 @@ const YieldExampleComponent = () => {
     strategyMap,
     vaultMap,
     account,
+    provider,
 
     messages,
     transactions,
     selected,
-    provider,
 
     yieldFunctions,
     yieldConstants,
@@ -66,14 +66,6 @@ const YieldExampleComponent = () => {
     updateAppConfig(config);
   }, []); // empty array to only do this once on load
 
-  // useEffect(() => {
-  //   messages && console.log(messages);
-  // }, [messages]);
-
-  // useEffect(() => {
-  //   transactions && console.log(transactions);
-  // }, [transactions]);
-
   return (
     <div
       align="left"
@@ -85,44 +77,40 @@ const YieldExampleComponent = () => {
         overflow: "auto",
       }}
     >
-      { messages?.has('FORKED_ENV') && (
-            <div
-              style={{
-                position:'absolute',
-                right:'8px',
-                backgroundColor: "pink",
-                padding: "8px",
-              }}
-            >
-              Using a forked environment: 
-              { console.log(provider)  }
-            </div>
-        )}
+      {messages?.has("FORKED_ENV") && (
+        <div
+          style={{
+            position: "absolute",
+            right: "8px",
+            backgroundColor: "pink",
+            padding: "8px",
+          }}
+        >
+          Using a forked environment:
+          <div>{provider?.connection?.url}</div>
+        </div>
+      )}
 
-        { transactions?.size > 0 && (
-            <div
-              style={{
-                position:'absolute',
-                top:'10%',
-                right:'8px',
-                backgroundColor: "pink",
-                padding: "8px",
-              }}
-            >
-
-
-             { Array.from(transactions.values()).map((tx) => {
-
-              return (
-                <div>
-                    {tx.processCode}
-                    {tx.stage}
-                  </div>
-              )
-             })}
-
-            </div>
-        )}
+      {transactions?.size > 0 && (
+        <div
+          style={{
+            position: "absolute",
+            top: "10%",
+            right: "8px",
+            backgroundColor: "pink",
+            padding: "8px",
+          }}
+        >
+          {Array.from(transactions.values()).map((tx) => {
+            return (
+              <div key={tx.processCode}>
+                {tx.processCode}
+                <div>{tx.stage}</div>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       <div>YieldProtocol UI version: {protocolVersion}</div>
       <div>
@@ -334,31 +322,34 @@ const YieldExampleComponent = () => {
         <p> Selected Strategy: {selected?.strategy?.id}</p>
       </div>
 
-      {messages && !Array.from(messages.values()).every((x) => x.expired || x.timeoutOverride === Infinity ) && (
-        <div
-          style={{
-            backgroundColor: "lightblue",
-            position: "absolute",
-            bottom: "10%",
-            left: "10px",
-            padding: "10px",
-          }}
-        >
-          {Array.from(messages.values())
-            .filter((msg) => !msg.expired && msg.timeoutOverride !== Infinity )
-            .map((msg) => (
-              <div
-                key={msg.id}
-                style={{
-                  backgroundColor: "lightgreen",
-                  padding: "10px",
-                }}
-              >
-                {msg.message}
-              </div>
-            ))}
-        </div>
-      )}
+      {messages &&
+        !Array.from(messages.values()).every(
+          (x) => x.expired || x.timeoutOverride === Infinity
+        ) && (
+          <div
+            style={{
+              backgroundColor: "lightblue",
+              position: "absolute",
+              bottom: "10%",
+              left: "10px",
+              padding: "10px",
+            }}
+          >
+            {Array.from(messages.values())
+              .filter((msg) => !msg.expired && msg.timeoutOverride !== Infinity)
+              .map((msg) => (
+                <div
+                  key={msg.id}
+                  style={{
+                    backgroundColor: "lightgreen",
+                    padding: "10px",
+                  }}
+                >
+                  {msg.message}
+                </div>
+              ))}
+          </div>
+        )}
     </div>
   );
 };

@@ -7,32 +7,18 @@ import * as assetConstants from './config/assets';
 import { addLiquidity, borrow, repayDebt } from './actions';
 
 import {
-  transactionsø,
-  assetPairsø,
-  userSettingsø,
-  accountProviderø,
-  accountø,
-  assetsø,
-  chainIdø,
-  providerø,
   selectBase,
-  selectedø,
   selectIlk,
   selectSeries,
   selectStrategy,
   selectVault,
-  seriesø,
-  strategiesø,
   updateAccount,
   updateProvider,
   updateAppConfig,
   updateProtocol,
-  vaultsø,
-  protocolø,
 } from './observables';
+
 import {
-  borrowInputø,
-  collateralInputø,
   updateBorrowInput,
   updateCollateralInput,
   updateLendInput,
@@ -41,21 +27,9 @@ import {
   updateRemoveLiqInput,
   updateRepayInput,
 } from './viewObservables/input';
-import { internalMessagesø, messagesø } from './observables/messages';
-import {
-  isBorrowPossibleø,
-  isRollVaultPossibleø,
-  maxDebtLimitø,
-  maximumRepayø,
-  minDebtLimitø,
-  minimumRepayø,
-} from './viewObservables/borrowView';
-import { collateralizationPercentø, collateralizationRatioø } from './viewObservables/collateralView';
 import { combineLatest } from 'rxjs';
 import { buildProtocol } from './initProtocol/buildProtocol';
-import { appConfigø } from './observables/appConfig';
-import { IYieldObservables, IYieldFunctions } from './types';
-
+import { IYieldFunctions } from './types';
 
 import * as yieldObservables from './observables';
 import * as viewObservables from './viewObservables';
@@ -65,11 +39,12 @@ import * as viewObservables from './viewObservables';
  * appConfig gathers all the required information from env etc.
  * sets things up, and then the stream finishes indicating that everything is ready to go.
  */
-combineLatest([providerø, appConfigø, chainIdø]).subscribe(async ([provider, config, chainId]) => {
-  updateProtocol(await buildProtocol(provider, chainId, config));
-});
-
-
+combineLatest([yieldObservables.providerø, yieldObservables.appConfigø, yieldObservables.chainIdø]).subscribe(
+  async ([provider, config, chainId]) => {
+    console.log( provider )
+    updateProtocol(await buildProtocol(provider, chainId, config));
+  }
+);
 
 /* Expose the observables */
 // const yieldObservables: IYieldObservables = {

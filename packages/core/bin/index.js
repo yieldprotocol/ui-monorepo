@@ -11,7 +11,6 @@ const observables_1 = require("./observables");
 const input_1 = require("./viewObservables/input");
 const rxjs_1 = require("rxjs");
 const buildProtocol_1 = require("./initProtocol/buildProtocol");
-const appConfig_1 = require("./observables/appConfig");
 const yieldObservables = tslib_1.__importStar(require("./observables"));
 exports.yieldObservables = yieldObservables;
 const viewObservables = tslib_1.__importStar(require("./viewObservables"));
@@ -21,7 +20,8 @@ exports.viewObservables = viewObservables;
  * appConfig gathers all the required information from env etc.
  * sets things up, and then the stream finishes indicating that everything is ready to go.
  */
-(0, rxjs_1.combineLatest)([observables_1.providerø, appConfig_1.appConfigø, observables_1.chainIdø]).subscribe(([provider, config, chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+(0, rxjs_1.combineLatest)([yieldObservables.providerø, yieldObservables.appConfigø, yieldObservables.chainIdø]).subscribe(([provider, config, chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    console.log(provider);
     (0, observables_1.updateProtocol)(yield (0, buildProtocol_1.buildProtocol)(provider, chainId, config));
 }));
 /* Expose the observables */

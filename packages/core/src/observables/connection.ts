@@ -1,6 +1,6 @@
 import { Web3Provider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
-import { Observable, BehaviorSubject, Subject, shareReplay, mergeMap, combineLatest, withLatestFrom } from 'rxjs';
+import { Observable, BehaviorSubject, Subject, shareReplay, mergeMap, combineLatest,share } from 'rxjs';
 import { defaultAccountProvider } from '../config/defaultproviders';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils';
 import { appConfigø } from './appConfig';
@@ -55,9 +55,18 @@ combineLatest([chainIdø, appConfigø])
     /* Set the provider ( forked or not ) */
     if (appConfig.useFork && appConfig.defaultForkMap.has(chainId)) {
       const forkProvider = appConfig.defaultForkMap.get(chainId)!();
-      provider$.next(forkProvider!);
-      console.log('FORK BLOCK NUMBER > ', (await forkProvider?.getBlockNumber())?.toString());
-      sendMsg({ message: 'Using forked Environment.', timeoutOverride: Infinity, id:'FORKED_ENV' });
+      
+      /* Set account provider, and account provider as the fork */ 
+      const account = (await forkProvider.listAccounts())[0];
+      provider$.next(forkProvider);
+      account$.next(account);
+      accountProvider$.next(forkProvider);
+
+      sendMsg({
+        message: `Using forked Environment. (block ${(await forkProvider.getBlockNumber())?.toString()})`,
+        timeoutOverride: Infinity,
+        id: 'FORKED_ENV',
+      });
     } else if (appConfig.defaultProviderMap.has(chainId)) {
       provider$.next(appConfig.defaultProviderMap.get(chainId)!() as ethers.providers.BaseProvider);
     } else {
@@ -73,7 +82,6 @@ export const updateAccount = (newAccount: string) => {
   account$.next(isValidAcc ? newAccount : undefined);
 };
 
-
 /**
  * The accountProvider is the sign provider (web3Provider) that handles the user account, signing and transacting.
  * It also adds a number of listeners to monitor account changes etc.
@@ -86,32 +94,19 @@ export const updateAccountProvider = (newProvider: ethers.providers.Web3Provider
   accountProvider$.next(newProvider); // update to whole new protocol
 };
 
-appConfigø.subscribe( async (appConfig) => {
-  if (appConfig && appConfig.useFork)  {
-    
-    const rpcProvider = new ethers.providers.JsonRpcProvider();
-    const account = (await rpcProvider.listAccounts())[0] ;
-   
-    account$.next( account );
-    accountProvider$.next(rpcProvider);
-  }
-})
-
-
 
 /**
  * Handle any events on the accountProvider ( web3Provider )
  * */
-combineLatest([accountProviderø, appConfigø])
-.subscribe(async ([accProvider, appConfig]) => {
+combineLatest([accountProviderø, appConfigø]).subscribe(async ([accProvider, appConfig]) => {
   /**
    * MetaMask requires requesting permission to connect users accounts >
    * however, we can attempt to skip this if the user already has a connected account
    * */
   try {
-    appConfig.autoConnectAccountProvider && 
-    !appConfig.useFork && 
-    account$.next((await accProvider.send('eth_requestAccounts', []))[0]);
+    appConfig.autoConnectAccountProvider &&
+      !appConfig.useFork &&
+      account$.next((await accProvider.send('eth_requestAccounts', []))[0]);
   } catch (e) {
     console.log(e);
   }
@@ -156,7 +151,4 @@ combineLatest([accountProviderø, appConfigø])
    * TODO: untested
    * */
   if (appConfig.useAccountProviderAsProvider) updateProvider(accProvider);
-
-  
-
 });

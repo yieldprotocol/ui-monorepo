@@ -8,7 +8,7 @@ import { YieldProvider } from '@yield-protocol/ui-react';
 
 ReactDOM.render(
   <React.StrictMode>
-    <YieldProvider provider={ undefined }>
+    <YieldProvider >
       <App />
     </YieldProvider>
   </React.StrictMode>,

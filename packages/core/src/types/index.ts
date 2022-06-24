@@ -67,7 +67,7 @@ export interface IYieldConfig {
 
   forceTransactions: boolean;
   useFork: boolean;
-  defaultForkMap: Map<number, () => ethers.providers.BaseProvider>;
+  defaultForkMap: Map<number, () => ethers.providers.JsonRpcProvider>;
   suppressEventLogQueries: boolean, // don't query historical data 
 
   diagnostics: boolean;

@@ -17,7 +17,6 @@ import {
   IYieldProcess,
   IYieldProtocol,
 } from "@yield-protocol/ui-core/bin/types";
-import { WrapEtherModule__factory } from "@yield-protocol/ui-core/bin/contracts";
 
 /* Build the context */
 const YieldContext = React.createContext<any>({});
@@ -54,6 +53,7 @@ const YieldProvider = ({ props, children }: any) => {
     transactionsø,
     selectedø,
     providerø,
+    accountProviderø,
   } = yieldObservables;
 
   const protocol = useObservable(
