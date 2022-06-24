@@ -57,7 +57,7 @@ combineLatest([chainIdø, appConfigø])
       const forkProvider = appConfig.defaultForkMap.get(chainId)!();
       provider$.next(forkProvider!);
       console.log('FORK BLOCK NUMBER > ', (await forkProvider?.getBlockNumber())?.toString());
-      sendMsg({ message: 'Using forked Environment.', timeoutOverride: Infinity, id:'forkedEnv' });
+      sendMsg({ message: 'Using forked Environment.', timeoutOverride: Infinity, id:'FORKED_ENV' });
     } else if (appConfig.defaultProviderMap.has(chainId)) {
       provider$.next(appConfig.defaultProviderMap.get(chainId)!() as ethers.providers.BaseProvider);
     } else {

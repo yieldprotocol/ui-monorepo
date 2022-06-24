@@ -18,11 +18,11 @@ export const buildVaultMap = async (
 ): Promise<Map<string, IVaultRoot>> => {
   const { cauldron, seriesRootMap, assetRootMap } = protocol;
 
-  /* Check for cached assets or start with empty array */
-  const cachedVaults: any[] = (appConfig.browserCaching && getBrowserCachedValue(`${chainId}_vaults#${account}`)) || [];
+  /* Check for cached assets or start with empty array - note: ignore if not using browser cahcing or a forked env*/
+  const cachedVaults: any[] = (!appConfig.useFork && appConfig.browserCaching && getBrowserCachedValue(`${chainId}_vaults#${account}`)) || [];
   /* Check the last time the assets were fetched */
   const lastVaultUpdate =
-    (appConfig.browserCaching && getBrowserCachedValue(`${chainId}_lastVaultUpdate#${account}`)) || 'earliest';
+    (!appConfig.useFork && appConfig.browserCaching && getBrowserCachedValue(`${chainId}_lastVaultUpdate#${account}`)) || 'earliest';
 
   /** vaults can either be 'built' or 'given by a third party, so both events neded to be checked */
   const vaultsBuiltFilter = cauldron.filters.VaultBuilt(null, account, null);

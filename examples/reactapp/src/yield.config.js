@@ -6,8 +6,8 @@ export default {
   defaultChainId: 1,
   ignoreSeries: [ '0x303230340000', '0x303130340000' ],
   useFork: true,
-  // defaultForkMap : new Map([
-  //   [1, () => new ethers.providers.JsonRpcProvider('https://rpc.tenderly.co/fork/f8730f17-bd41-41ff-bd59-2f1be4a144f1') ],
-  // ]),
-  // suppressEventLogQueries: true,
+  defaultForkMap : new Map([
+    [1, () => new ethers.providers.JsonRpcProvider('https://rpc.tenderly.co/fork/f8730f17-bd41-41ff-bd59-2f1be4a144f1') ],
+  ]),
+  suppressEventLogQueries: true,
 };

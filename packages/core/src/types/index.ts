@@ -448,7 +448,7 @@ export enum MessageType {
   INFO,
   WARNING,
   ERROR,
-  INTERNAL,
+  INTERNAL
 }
 
 export interface IMessage {

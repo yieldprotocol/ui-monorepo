@@ -9,12 +9,13 @@ const assetConstants = tslib_1.__importStar(require("./config/assets"));
 const actions_1 = require("./actions");
 const observables_1 = require("./observables");
 const input_1 = require("./viewObservables/input");
-const messages_1 = require("./observables/messages");
-const borrowView_1 = require("./viewObservables/borrowView");
-const collateralView_1 = require("./viewObservables/collateralView");
 const rxjs_1 = require("rxjs");
 const buildProtocol_1 = require("./initProtocol/buildProtocol");
 const appConfig_1 = require("./observables/appConfig");
+const yieldObservables = tslib_1.__importStar(require("./observables"));
+exports.yieldObservables = yieldObservables;
+const viewObservables = tslib_1.__importStar(require("./viewObservables"));
+exports.viewObservables = viewObservables;
 /**
  * On app start (or provider change ) (and on providerø, chainId$ or appConfig$ observed changes ),
  * appConfig gathers all the required information from env etc.
@@ -24,37 +25,35 @@ const appConfig_1 = require("./observables/appConfig");
     (0, observables_1.updateProtocol)(yield (0, buildProtocol_1.buildProtocol)(provider, chainId, config));
 }));
 /* Expose the observables */
-const yieldObservables = {
-    protocolø: observables_1.protocolø,
-    seriesø: observables_1.seriesø,
-    assetsø: observables_1.assetsø,
-    vaultsø: observables_1.vaultsø,
-    strategiesø: observables_1.strategiesø,
-    providerø: observables_1.providerø,
-    accountø: observables_1.accountø,
-    accountProviderø: observables_1.accountProviderø,
-    selectedø: observables_1.selectedø,
-    transactionsø: observables_1.transactionsø,
-    assetPairsø: observables_1.assetPairsø,
-    userSettingsø: observables_1.userSettingsø,
-    messagesø: messages_1.messagesø,
-};
-exports.yieldObservables = yieldObservables;
-const viewObservables = {
-    // borrow section */
-    borrowInputø: input_1.borrowInputø,
-    collateralInputø: input_1.collateralInputø,
-    isBorrowPossibleø: borrowView_1.isBorrowPossibleø,
-    isRollVaultPossibleø: borrowView_1.isRollVaultPossibleø,
-    maxDebtLimitø: borrowView_1.maxDebtLimitø,
-    minDebtLimitø: borrowView_1.minDebtLimitø,
-    maximumRepayø: borrowView_1.maximumRepayø,
-    minimumRepayø: borrowView_1.minimumRepayø,
-    // with collateral
-    collateralizationPercentø: collateralView_1.collateralizationPercentø,
-    collateralizationRatioø: collateralView_1.collateralizationRatioø,
-};
-exports.viewObservables = viewObservables;
+// const yieldObservables: IYieldObservables = {
+//   protocolø,
+//   seriesø,
+//   assetsø,
+//   vaultsø,
+//   strategiesø,
+//   providerø,
+//   accountø,
+//   accountProviderø,
+//   selectedø,
+//   transactionsø,
+//   assetPairsø,
+//   userSettingsø,
+//   messagesø,
+// };
+// const viewObservables: any = {
+//   // borrow section */
+//   borrowInputø,
+//   collateralInputø,
+//   isBorrowPossibleø,
+//   isRollVaultPossibleø,
+//   maxDebtLimitø,
+//   minDebtLimitø,
+//   maximumRepayø,
+//   minimumRepayø,
+//   // with collateral
+//   collateralizationPercentø,
+//   collateralizationRatioø,
+// };
 const viewFunctions = {
     updateBorrowInput: input_1.updateBorrowInput,
     updateCollateralInput: input_1.updateCollateralInput,

@@ -1,6 +1,6 @@
-import { IYieldObservables, IYieldFunctions } from './types';
-declare const yieldObservables: IYieldObservables;
-declare const viewObservables: any;
+import { IYieldFunctions } from './types';
+import * as yieldObservables from './observables';
+import * as viewObservables from './viewObservables';
 declare const viewFunctions: any;
 declare const yieldFunctions: IYieldFunctions;
 declare const yieldConstants: {

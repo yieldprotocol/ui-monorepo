@@ -55,7 +55,7 @@ exports.updateProvider = updateProvider;
         const forkProvider = appConfig.defaultForkMap.get(chainId)();
         provider$.next(forkProvider);
         console.log('FORK BLOCK NUMBER > ', (_a = (yield (forkProvider === null || forkProvider === void 0 ? void 0 : forkProvider.getBlockNumber()))) === null || _a === void 0 ? void 0 : _a.toString());
-        (0, messages_1.sendMsg)({ message: 'Using forked Environment.', timeoutOverride: Infinity, id: 'forkedEnv' });
+        (0, messages_1.sendMsg)({ message: 'Using forked Environment.', timeoutOverride: Infinity, id: 'FORKED_ENV' });
     }
     else if (appConfig.defaultProviderMap.has(chainId)) {
         provider$.next(appConfig.defaultProviderMap.get(chainId)());

@@ -11,10 +11,10 @@ const yieldUtils_1 = require("../utils/yieldUtils");
  * */
 const buildVaultMap = (protocol, provider, account, chainId, appConfig) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const { cauldron, seriesRootMap, assetRootMap } = protocol;
-    /* Check for cached assets or start with empty array */
-    const cachedVaults = (appConfig.browserCaching && (0, appUtils_1.getBrowserCachedValue)(`${chainId}_vaults#${account}`)) || [];
+    /* Check for cached assets or start with empty array - note: ignore if not using browser cahcing or a forked env*/
+    const cachedVaults = (!appConfig.useFork && appConfig.browserCaching && (0, appUtils_1.getBrowserCachedValue)(`${chainId}_vaults#${account}`)) || [];
     /* Check the last time the assets were fetched */
-    const lastVaultUpdate = (appConfig.browserCaching && (0, appUtils_1.getBrowserCachedValue)(`${chainId}_lastVaultUpdate#${account}`)) || 'earliest';
+    const lastVaultUpdate = (!appConfig.useFork && appConfig.browserCaching && (0, appUtils_1.getBrowserCachedValue)(`${chainId}_lastVaultUpdate#${account}`)) || 'earliest';
     /** vaults can either be 'built' or 'given by a third party, so both events neded to be checked */
     const vaultsBuiltFilter = cauldron.filters.VaultBuilt(null, account, null);
     const vaultsReceivedfilter = cauldron.filters.VaultGiven(null, account);

@@ -56,6 +56,10 @@ import { buildProtocol } from './initProtocol/buildProtocol';
 import { appConfigø } from './observables/appConfig';
 import { IYieldObservables, IYieldFunctions } from './types';
 
+
+import * as yieldObservables from './observables';
+import * as viewObservables from './viewObservables';
+
 /**
  * On app start (or provider change ) (and on providerø, chainId$ or appConfig$ observed changes ),
  * appConfig gathers all the required information from env etc.
@@ -65,40 +69,42 @@ combineLatest([providerø, appConfigø, chainIdø]).subscribe(async ([provider, 
   updateProtocol(await buildProtocol(provider, chainId, config));
 });
 
+
+
 /* Expose the observables */
-const yieldObservables: IYieldObservables = {
-  protocolø,
-  seriesø,
-  assetsø,
-  vaultsø,
-  strategiesø,
-  providerø,
-  accountø,
-  accountProviderø,
-  selectedø,
-  transactionsø,
-  assetPairsø,
-  userSettingsø,
-  messagesø,
-};
+// const yieldObservables: IYieldObservables = {
+//   protocolø,
+//   seriesø,
+//   assetsø,
+//   vaultsø,
+//   strategiesø,
+//   providerø,
+//   accountø,
+//   accountProviderø,
+//   selectedø,
+//   transactionsø,
+//   assetPairsø,
+//   userSettingsø,
+//   messagesø,
+// };
 
-const viewObservables: any = {
-  // borrow section */
-  borrowInputø,
-  collateralInputø,
+// const viewObservables: any = {
+//   // borrow section */
+//   borrowInputø,
+//   collateralInputø,
 
-  isBorrowPossibleø,
-  isRollVaultPossibleø,
+//   isBorrowPossibleø,
+//   isRollVaultPossibleø,
 
-  maxDebtLimitø,
-  minDebtLimitø,
-  maximumRepayø,
-  minimumRepayø,
+//   maxDebtLimitø,
+//   minDebtLimitø,
+//   maximumRepayø,
+//   minimumRepayø,
 
-  // with collateral
-  collateralizationPercentø,
-  collateralizationRatioø,
-};
+//   // with collateral
+//   collateralizationPercentø,
+//   collateralizationRatioø,
+// };
 
 const viewFunctions: any = {
   updateBorrowInput,

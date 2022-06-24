@@ -1,4 +1,4 @@
-import { filter, map, Observable, reduce, scan, share, shareReplay, Subject, tap } from 'rxjs';
+import { filter, Observable, scan, share, shareReplay, Subject, tap } from 'rxjs';
 import { IMessage, MessageType } from '../types';
 
 // TODO: implement this better, handle multiple messages here . also custom timer esetting?
@@ -19,6 +19,7 @@ export const messagesø: Observable<Map<string,IMessage>> = messages$.pipe(
 );
 
 export const sendMsg = (message: IMessage) => {
+  console.log(message)
   /* Push next message with default origin, type, and randomaise id if required. */
   messages$.next({
     origin: 'app',

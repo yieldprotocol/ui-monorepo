@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { useObservable, YieldContext } from "@yield-protocol/ui-react";
 
 import config from "../yield.config";
-import { ethers } from "ethers";
+import { ethers, providers } from "ethers";
 
 const YieldExampleComponent = () => {
   const {
@@ -17,6 +17,7 @@ const YieldExampleComponent = () => {
     messages,
     transactions,
     selected,
+    provider,
 
     yieldFunctions,
     yieldConstants,
@@ -84,18 +85,42 @@ const YieldExampleComponent = () => {
         overflow: "auto",
       }}
     >
-      {messages &&
-        !Array.from(messages.values()).includes((x) => x.id === "forkedEnv") && (
+      { messages?.has('FORKED_ENV') && (
             <div
               style={{
                 position:'absolute',
-                top:'10px',
-                right:'10px',
-                backgroundColor: "red",
-                padding: "10px",
+                right:'8px',
+                backgroundColor: "pink",
+                padding: "8px",
               }}
             >
-              Using a forked environment
+              Using a forked environment: 
+              { console.log(provider)  }
+            </div>
+        )}
+
+        { transactions?.size > 0 && (
+            <div
+              style={{
+                position:'absolute',
+                top:'10%',
+                right:'8px',
+                backgroundColor: "pink",
+                padding: "8px",
+              }}
+            >
+
+
+             { Array.from(transactions.values()).map((tx) => {
+
+              return (
+                <div>
+                    {tx.processCode}
+                    {tx.stage}
+                  </div>
+              )
+             })}
+
             </div>
         )}
 
@@ -270,7 +295,7 @@ const YieldExampleComponent = () => {
         style={{
           backgroundColor: "lightgrey",
           position: "absolute",
-          top: "10%",
+          top: "20%",
           right: "10px",
           padding: "10px",
         }}
@@ -320,7 +345,7 @@ const YieldExampleComponent = () => {
           }}
         >
           {Array.from(messages.values())
-            .filter((msg) => !msg.expired)
+            .filter((msg) => !msg.expired && msg.timeoutOverride !== Infinity )
             .map((msg) => (
               <div
                 key={msg.id}

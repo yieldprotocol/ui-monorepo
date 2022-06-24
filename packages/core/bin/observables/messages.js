@@ -18,6 +18,7 @@ exports.messagesø = messages$.pipe((0, rxjs_1.filter)((msg) => !!msg && msg.typ
 /* update and return new map */
 (0, rxjs_1.scan)((acc, curr) => new Map(acc.set(curr.id, curr)), new Map([])), (0, rxjs_1.share)());
 const sendMsg = (message) => {
+    console.log(message);
     /* Push next message with default origin, type, and randomaise id if required. */
     messages$.next(Object.assign({ origin: 'app', type: types_1.MessageType.INFO, id: Math.random().toString(26).slice(2), expired: false }, message));
 };
