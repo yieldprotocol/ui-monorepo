@@ -4,7 +4,7 @@ import { buyBase, calculateSlippage, ONE_BN, ZERO_BN } from '@yield-protocol/ui-
 import { ETH_BASED_ASSETS, CONVEX_BASED_ASSETS } from '../config/assets';
 import { ConvexLadleModule } from '../contracts';
 
-import { accountø, assetsø, chainIdø, protocolø, seriesø, vaultsø, selectedø, userSettingsø } from '../observables';
+import { accountø, assetsø,  protocolø, seriesø, vaultsø, selectedø, userSettingsø, updateVaults } from '../observables';
 import { sign, transact } from '../chainActions';
 
 import { IVault, ActionCodes, ISeries, IAsset, ICallData, LadleActions } from '../types';
@@ -17,8 +17,6 @@ import { getProcessCode, BLANK_VAULT } from '../utils';
 import { MessageType, sendMsg } from '../observables/messages';
 import { inputToTokenValue } from '../utils/yieldUtils';
 import { combineLatest, take } from 'rxjs';
-
-
 
 
 export const borrow = async (
@@ -194,8 +192,8 @@ export const borrow = async (
           ...removeEthCallData,
         ];
 
-        /* finally, handle the transaction */
-        await transact(calls, processCode);
+        /* finally, handle the transaction and update vaults as the callback */
+        transact(calls, processCode, ()=> updateVaults());
       }
     );
 };

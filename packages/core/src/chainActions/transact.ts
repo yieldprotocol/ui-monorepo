@@ -4,7 +4,7 @@ import { accountProviderø, accountø, protocolø } from '../observables/';
 import { ICallData, LadleActions, ProcessStage, TxState } from '../types';
 import { ZERO_BN } from '../utils/constants';
 import { resetProcess, updateProcess } from '../observables/transactions';
-import { combineLatest, take } from 'rxjs';
+import { combineLatest, concatMap, finalize, take } from 'rxjs';
 import { appConfigø } from '../observables/appConfig';
 
 /* Encode the calls: */ // TODO: this could probably be refactored to look better
@@ -35,28 +35,6 @@ const _totalBatchValue = (calls: ICallData[]) =>
     return sum.add(call.overrides?.value ? BigNumber.from(call?.overrides?.value) : ZERO_BN);
   }, ZERO_BN);
 
-/* Handle the transaction error */
-const _handleTxError = () => {};
-
-/* Handle the case where the transaction will inevitably fail */
-// const _handleTxWillFail = () => { console.log( 'transaction will fail')};
-const _handleTxWillFail = (error: any, processCode: string, transaction?: any) => {
-  /* simply toggles the txWillFail txState */
-
-  // updateState({ type: TxStateItem.TX_WILL_FAIL, payload: true });
-  updateProcess({
-    processCode,
-    stage: ProcessStage.PROCESS_INACTIVE,
-    error: { error, message: 'Transaction Aborted (expected to fail)' },
-    tx: transaction,
-  });
-
-  // // updateState({ type: TxStateItem.TX_WILL_FAIL_INFO, payload: { error, transaction } });
-  // updateProcess({ processCode: processCode!, stage: 0, error: { error, message: 'ad'}, tx: transaction });
-  resetProcess(processCode);
-  // txCode && updateState({ type: TxStateItem.RESET_PROCESS, payload: txCode });
-};
-
 /* handle case when user or wallet rejects the tx (before submission) */
 const _handleTxRejection = (err: any, processCode: string) => {
   resetProcess(processCode);
@@ -79,69 +57,109 @@ const _handleTxRejection = (err: any, processCode: string) => {
   }
 };
 
-export const transact = async (calls: ICallData[], processCode: string) => {
+/* Handle the case where the transaction will inevitably fail */
+const _handleTxWillFail = (error: any, processCode: string, transaction?: any) => {
+  /* simply toggles the txWillFail txState */
+  updateProcess({
+    processCode,
+    stage: ProcessStage.PROCESS_INACTIVE,
+    error: { error, message: 'Transaction Aborted (expected to fail)' },
+    tx: transaction,
+  });
+
+  resetProcess(processCode);
+};
+
+/* Handle the transaction completed > either fail or pass */
+const _handleTxError = (error: any, processCode: string) => {
+  // /* update process list > Tx Complete + status */
+  // updateProcess({
+  //   processCode,
+  //   stage: ProcessStage.PROCESS_COMPLETE,
+  //   tx: { ...transaction!, status: TxState.FAILED },
+  // });
+
+  /* simply toggles the txWillFail txState */
+  console.log(error);
+  resetProcess(processCode);
+};
+
+export const transact = async (
+  calls: ICallData[],
+  processCode: string,
+  callback: () => void = () => console.log('transaction done.')
+) => {
   /* Subscribe to observables */
   combineLatest([protocolø, accountø, accountProviderø, appConfigø])
-    .pipe(take(1)) // take one and then unsubscribe
-    .subscribe(async ([{ ladle }, account, provider, { forceTransactions }]) => {
-      updateProcess({ processCode, stage: ProcessStage.TRANSACTION_REQUESTED });
+    .pipe(
+      take(1), // take one and then unsubscribe
+      concatMap(async ([{ ladle }, account, provider, { forceTransactions }]) => {
+        updateProcess({ processCode, stage: ProcessStage.TRANSACTION_REQUESTED });
+        /* Get the signer */
+        const signer = account ? provider.getSigner(account) : provider.getSigner(0);
+        /* Set the connected contract instance, ladle by default */
+        const ladleContract = ladle.connect(signer) as Ladle;
+        /* Filter out ignored calls */
+        const filteredCalls = calls.filter((call: ICallData) => call.ignoreIf !== true);
+        /* Encode the calls */
+        const encodedCalls = _encodeCalls(filteredCalls, ladleContract);
+        /* Get the total value of all the calls */
+        const batchValue = _totalBatchValue(filteredCalls);
 
-      /* Get the signer */
-      const signer = account ? provider.getSigner(account) : provider.getSigner(0);
-      /* Set the connected contract instance, ladle by default */
-      const ladleContract = ladle.connect(signer) as Ladle;
-      /* Filter out ignored calls */
-      const filteredCalls = calls.filter((call: ICallData) => call.ignoreIf !== true);
-      /* Encode the calls */
-      const encodedCalls = _encodeCalls(filteredCalls, ladleContract);
-      /* Get the total value of all the calls */
-      const batchValue = _totalBatchValue(filteredCalls);
+        let gasEst: BigNumber;
 
-      let gasEst: BigNumber;
-      try {
-        console.log('getting gas estimate');
-        gasEst = await ladleContract.estimateGas.batch(encodedCalls, { value: batchValue } as PayableOverrides);
-        console.log('Auto Gas estimate: ', gasEst.mul(120).div(100).toString());
-      } catch (e: any) {
-        /* handle if the tx if going to fail and transactions aren't forced */
-        gasEst = BigNumber.from(1000000);
-        if (!forceTransactions) _handleTxWillFail(e.error, processCode, e.transaction);
-      }
+        try {
+          console.log('getting gas estimate');
+          gasEst = await ladleContract.estimateGas.batch(encodedCalls, { value: batchValue } as PayableOverrides);
+          console.log('Auto Gas estimate: ', gasEst.mul(120).div(100).toString());
+        } catch (e: any) {
+          /* handle if the tx if going to fail and transactions aren't forced */
+          gasEst = BigNumber.from(1000000);
+          if (!forceTransactions) {
+            _handleTxWillFail(e.error, processCode, e.transaction);
+            /* and simply exit process silently */
+            return;
+          }
+          /* if transactions are forced, simply catch the error and move on */
+        }
 
-      let tx: ContractTransaction;
-      /* first try the transaction with connected wallet and catch any 'pre-chain'/'pre-tx' errors */
-      try {
-        tx = await ladleContract.batch(encodedCalls, {
-          value: batchValue,
-          gasLimit: gasEst.mul(120).div(100),
-        } as PayableOverrides);
-        /* update process list > Tx Pending */
-        updateProcess({
-          processCode,
-          stage: ProcessStage.TRANSACTION_PENDING,
-          tx: { ...tx, receipt: null, status: TxState.PENDING },
-        });
-      } catch (e) {
-        /* this case is when user rejects tx OR wallet rejects tx */
-        _handleTxRejection(e, processCode);
-      }
+        let tx: ContractTransaction;
+        /* first try the transaction with connected wallet and catch any 'pre-chain'/'pre-tx' errors */
+        try {
+          tx = await ladleContract.batch(encodedCalls, {
+            value: batchValue,
+            gasLimit: gasEst.mul(120).div(100),
+          } as PayableOverrides);
+          /* update process list > Tx Pending */
+          updateProcess({
+            processCode,
+            stage: ProcessStage.TRANSACTION_PENDING,
+            tx: { ...tx, receipt: null, status: TxState.PENDING },
+          });
+        } catch (e) {
+          /* This case is when user rejects tx OR Wallet rejects tx */
+          _handleTxRejection(e, processCode);
+          /* return out of the function silently */
+          return;
+        }
 
-      /* wait for the tx to complete */
-      const res = await tx!.wait();
-
-      /* check the tx status ( failed/success ) */
-      const txSuccess: boolean = res.status === 1 || false;
-      /* update process list > Tx Complete + status */
-      updateProcess({
-        processCode,
-        stage: ProcessStage.PROCESS_COMPLETE,
-        tx: { ...tx!, receipt: res, status: txSuccess ? TxState.SUCCESSFUL : TxState.FAILED },
-      });
-
-      // } catch (e: any) {
-      //   /* catch tx errors */
-      //   //  _handleTxError('Transaction failed', e.transaction, processCode);
-      //   console.log(' Error', e, processCode);
-      // }
-    });
+        /* wait for the tx to complete */
+        try {
+          const res = await tx.wait();
+          /* check the tx status ( failed/success ) */
+          const txSuccess: boolean = res.status === 1 || false;
+          /* update process list > Tx Complete + status */
+          updateProcess({
+            processCode,
+            stage: ProcessStage.PROCESS_COMPLETE,
+            tx: { ...tx!, receipt: res, status: txSuccess ? TxState.SUCCESSFUL : TxState.FAILED },
+          });
+        } catch (e) {
+          // TODO: handle error on forced tx
+          _handleTxError(e, processCode);
+        }
+      }),
+      finalize(() => callback())
+    )
+    .subscribe();
 };

@@ -32,24 +32,6 @@ const _totalBatchValue = (calls) => calls.reduce((sum, call) => {
     var _a, _b;
     return sum.add(((_a = call.overrides) === null || _a === void 0 ? void 0 : _a.value) ? ethers_1.BigNumber.from((_b = call === null || call === void 0 ? void 0 : call.overrides) === null || _b === void 0 ? void 0 : _b.value) : constants_1.ZERO_BN);
 }, constants_1.ZERO_BN);
-/* Handle the transaction error */
-const _handleTxError = () => { };
-/* Handle the case where the transaction will inevitably fail */
-// const _handleTxWillFail = () => { console.log( 'transaction will fail')};
-const _handleTxWillFail = (error, processCode, transaction) => {
-    /* simply toggles the txWillFail txState */
-    // updateState({ type: TxStateItem.TX_WILL_FAIL, payload: true });
-    (0, transactions_1.updateProcess)({
-        processCode,
-        stage: types_1.ProcessStage.PROCESS_INACTIVE,
-        error: { error, message: 'Transaction Aborted (expected to fail)' },
-        tx: transaction,
-    });
-    // // updateState({ type: TxStateItem.TX_WILL_FAIL_INFO, payload: { error, transaction } });
-    // updateProcess({ processCode: processCode!, stage: 0, error: { error, message: 'ad'}, tx: transaction });
-    (0, transactions_1.resetProcess)(processCode);
-    // txCode && updateState({ type: TxStateItem.RESET_PROCESS, payload: txCode });
-};
 /* handle case when user or wallet rejects the tx (before submission) */
 const _handleTxRejection = (err, processCode) => {
     (0, transactions_1.resetProcess)(processCode);
@@ -72,11 +54,34 @@ const _handleTxRejection = (err, processCode) => {
         console.log('here', err);
     }
 };
-const transact = (calls, processCode) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+/* Handle the case where the transaction will inevitably fail */
+const _handleTxWillFail = (error, processCode, transaction) => {
+    /* simply toggles the txWillFail txState */
+    (0, transactions_1.updateProcess)({
+        processCode,
+        stage: types_1.ProcessStage.PROCESS_INACTIVE,
+        error: { error, message: 'Transaction Aborted (expected to fail)' },
+        tx: transaction,
+    });
+    (0, transactions_1.resetProcess)(processCode);
+};
+/* Handle the transaction completed > either fail or pass */
+const _handleTxError = (error, processCode) => {
+    // /* update process list > Tx Complete + status */
+    // updateProcess({
+    //   processCode,
+    //   stage: ProcessStage.PROCESS_COMPLETE,
+    //   tx: { ...transaction!, status: TxState.FAILED },
+    // });
+    /* simply toggles the txWillFail txState */
+    console.log(error);
+    (0, transactions_1.resetProcess)(processCode);
+};
+const transact = (calls, processCode, callback = () => console.log('transaction done.')) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Subscribe to observables */
     (0, rxjs_1.combineLatest)([observables_1.protocolø, observables_1.accountø, observables_1.accountProviderø, appConfig_1.appConfigø])
-        .pipe((0, rxjs_1.take)(1)) // take one and then unsubscribe
-        .subscribe(([{ ladle }, account, provider, { forceTransactions }]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+        .pipe((0, rxjs_1.take)(1), // take one and then unsubscribe
+    (0, rxjs_1.concatMap)(([{ ladle }, account, provider, { forceTransactions }]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         (0, transactions_1.updateProcess)({ processCode, stage: types_1.ProcessStage.TRANSACTION_REQUESTED });
         /* Get the signer */
         const signer = account ? provider.getSigner(account) : provider.getSigner(0);
@@ -97,8 +102,12 @@ const transact = (calls, processCode) => tslib_1.__awaiter(void 0, void 0, void 
         catch (e) {
             /* handle if the tx if going to fail and transactions aren't forced */
             gasEst = ethers_1.BigNumber.from(1000000);
-            if (!forceTransactions)
+            if (!forceTransactions) {
                 _handleTxWillFail(e.error, processCode, e.transaction);
+                /* and simply exit process silently */
+                return;
+            }
+            /* if transactions are forced, simply catch the error and move on */
         }
         let tx;
         /* first try the transaction with connected wallet and catch any 'pre-chain'/'pre-tx' errors */
@@ -115,25 +124,29 @@ const transact = (calls, processCode) => tslib_1.__awaiter(void 0, void 0, void 
             });
         }
         catch (e) {
-            /* this case is when user rejects tx OR wallet rejects tx */
+            /* This case is when user rejects tx OR Wallet rejects tx */
             _handleTxRejection(e, processCode);
+            /* return out of the function silently */
+            return;
         }
         /* wait for the tx to complete */
-        const res = yield tx.wait();
-        /* check the tx status ( failed/success ) */
-        const txSuccess = res.status === 1 || false;
-        /* update process list > Tx Complete + status */
-        (0, transactions_1.updateProcess)({
-            processCode,
-            stage: types_1.ProcessStage.PROCESS_COMPLETE,
-            tx: Object.assign(Object.assign({}, tx), { receipt: res, status: txSuccess ? types_1.TxState.SUCCESSFUL : types_1.TxState.FAILED }),
-        });
-        // } catch (e: any) {
-        //   /* catch tx errors */
-        //   //  _handleTxError('Transaction failed', e.transaction, processCode);
-        //   console.log(' Error', e, processCode);
-        // }
-    }));
+        try {
+            const res = yield tx.wait();
+            /* check the tx status ( failed/success ) */
+            const txSuccess = res.status === 1 || false;
+            /* update process list > Tx Complete + status */
+            (0, transactions_1.updateProcess)({
+                processCode,
+                stage: types_1.ProcessStage.PROCESS_COMPLETE,
+                tx: Object.assign(Object.assign({}, tx), { receipt: res, status: txSuccess ? types_1.TxState.SUCCESSFUL : types_1.TxState.FAILED }),
+            });
+        }
+        catch (e) {
+            // TODO: handle error on forced tx
+            _handleTxError(e, processCode);
+        }
+    })), (0, rxjs_1.finalize)(() => callback()))
+        .subscribe();
 });
 exports.transact = transact;
 //# sourceMappingURL=transact.js.map

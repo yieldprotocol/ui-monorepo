@@ -39,10 +39,10 @@ export const updateSeries = async (seriesList?: ISeries[], account?: string, acc
 /**
  * Observe protocolø changes, if protocol changes in any way, update series map accordingly
  * */
-combineLatest([ protocolø, providerø ])
+combineLatest([protocolø, providerø])
   .pipe(
     filter(([protocol]) => protocol.seriesRootMap.size > 0),
-    withLatestFrom( accountø)
+    withLatestFrom(accountø)
   )
   .subscribe(async ([[_protocol, _provider], _account]) => {
     /* 'Charge' all the series (using the current provider) */
@@ -65,6 +65,22 @@ accountø.pipe(withLatestFrom(seriesø)).subscribe(async ([account, seriesMap]) 
     sendMsg({ message: 'Series account info updated.', type: MessageType.INTERNAL, origin: 'seriesMap' });
   }
 });
+
+// /**
+//  * Set some event listeners on the fytoken contract for the account
+//  * */
+//  combineLatest([protocolø, accountø ]).subscribe(([protocol, account] ) => {
+//   if ( account ) {
+//     /* subscribe for updates */ 
+//       console.log( 'Adding in lisneter here', protocol.seriesRootMap )
+//   // } else if ( seriesMap.size > 0  ) {
+//   //   /* unsubscribe */
+//   //   console.log( 'removing lisneter here ')
+//   } else {
+//     console.log( 'asdasd')
+//   }
+//  })
+
 
 /**
  * Internal Functions
@@ -141,10 +157,13 @@ const _updateAccountInfo = async (series: ISeries, account: string): Promise<ISe
     series.fyTokenContract.balanceOf(account),
   ]);
   const poolPercent = mulDecimal(divDecimal(poolTokens, series.totalSupply.bn), '100');
+
   return {
     ...series,
     poolTokens: bnToW3Number(poolTokens, series.decimals),
-    fyTokenBalance:  bnToW3Number(fyTokenBalance, series.decimals),
+    fyTokenBalance: bnToW3Number(fyTokenBalance, series.decimals),
     poolPercent,
   };
 };
+
+

@@ -26,7 +26,7 @@ exports.default = {
     /* debugging, testing and develpoment */
     mockUser: false,
     diagnostics: true,
-    forceTransactions: false,
+    forceTransactions: true,
     useFork: false,
     defaultForkMap: defaultproviders_1.defaultForkMap,
     suppressEventLogQueries: false, // don't try to fetch 'historical' data from previous events

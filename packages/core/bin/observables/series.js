@@ -51,6 +51,20 @@ connection_1.accountø.pipe((0, rxjs_1.withLatestFrom)(exports.seriesø)).subscr
         (0, messages_1.sendMsg)({ message: 'Series account info updated.', type: types_1.MessageType.INTERNAL, origin: 'seriesMap' });
     }
 }));
+// /**
+//  * Set some event listeners on the fytoken contract for the account
+//  * */
+//  combineLatest([protocolø, accountø ]).subscribe(([protocol, account] ) => {
+//   if ( account ) {
+//     /* subscribe for updates */ 
+//       console.log( 'Adding in lisneter here', protocol.seriesRootMap )
+//   // } else if ( seriesMap.size > 0  ) {
+//   //   /* unsubscribe */
+//   //   console.log( 'removing lisneter here ')
+//   } else {
+//     console.log( 'asdasd')
+//   }
+//  })
 /**
  * Internal Functions
  * */

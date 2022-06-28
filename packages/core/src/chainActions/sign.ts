@@ -202,7 +202,6 @@ export const sign = async (requestedSignatures: ISignData[], processCode: string
 
       /* Approval transaction complete: return a dummy ICalldata ( which will ALWAYS get ignored )*/
       return IGNORED_CALLDATA;
-
     }
   });
 

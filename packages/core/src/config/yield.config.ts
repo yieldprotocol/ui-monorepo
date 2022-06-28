@@ -31,7 +31,7 @@ export default {
   /* debugging, testing and develpoment */
   mockUser: false, // mock the user
   diagnostics: true, // show app diagnostics in the console
-  forceTransactions: false, // don't throw an error if the transaction is likely to fail.
+  forceTransactions: true, // don't throw an error if the transaction is likely to fail.
   useFork: false,
   defaultForkMap,
   suppressEventLogQueries: false, // don't try to fetch 'historical' data from previous events

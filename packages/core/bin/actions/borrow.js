@@ -152,8 +152,8 @@ const borrow = (amount, collateralAmount, vault, getValuesFromNetwork = true // 
             },
             ...removeEthCallData,
         ];
-        /* finally, handle the transaction */
-        yield (0, chainActions_1.transact)(calls, processCode);
+        /* finally, handle the transaction and update vaults as the callback */
+        (0, chainActions_1.transact)(calls, processCode, () => (0, observables_1.updateVaults)());
     }));
 });
 exports.borrow = borrow;

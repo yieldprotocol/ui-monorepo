@@ -20,6 +20,7 @@ import {
   seriesø,
   userSettingsø,
   protocolø,
+  updateSeries,
 } from '../observables';
 import { combineLatest, take } from 'rxjs';
 
@@ -208,6 +209,7 @@ export const repayDebt = async (amount: string | undefined, vault: IVault, recla
         ...unwrapAssetCallData,
       ];
 
-      transact(calls, txCode);
+      /* finally transact, and send in update series as a callback */
+      transact(calls, txCode, () => updateSeries([series]) );
     });
 };
