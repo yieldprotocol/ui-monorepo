@@ -24,7 +24,8 @@ const rxjs_1 = require("rxjs");
 const repayDebt = (amount, vault, reclaimCollateral = true) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Subscribe to and get the values from the observables:  */
     (0, rxjs_1.combineLatest)([observables_1.protocolø, observables_1.chainIdø, observables_1.assetsø, observables_1.seriesø, observables_1.accountø, observables_1.userSettingsø, observables_1.providerø])
-        .pipe((0, rxjs_1.take)(1)) // only take one and then finish.
+        .pipe((0, rxjs_1.filter)(() => !!vault), (0, rxjs_1.take)(1) // only take one and then finish.
+    )
         .subscribe(([{ ladle }, chainId, assetMap, seriesMap, account, { slippageTolerance }, provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         const txCode = (0, yieldUtils_1.getProcessCode)(types_1.ActionCodes.REPAY, vault.id);
         const ladleAddress = ladle.address;

@@ -22,7 +22,7 @@ import {
   protocolø,
   updateSeries,
 } from '../observables';
-import { combineLatest, take } from 'rxjs';
+import { combineLatest, filter, map, take } from 'rxjs';
 
 /**
  * REPAY FN
@@ -33,7 +33,10 @@ import { combineLatest, take } from 'rxjs';
 export const repayDebt = async (amount: string | undefined, vault: IVault, reclaimCollateral: boolean = true) => {
   /* Subscribe to and get the values from the observables:  */
   combineLatest([protocolø, chainIdø, assetsø, seriesø, accountø, userSettingsø, providerø])
-    .pipe(take(1)) // only take one and then finish.
+    .pipe(
+      filter(() => !!vault ),
+      take(1) // only take one and then finish.
+    ) 
     .subscribe(async ([{ ladle }, chainId, assetMap, seriesMap, account, { slippageTolerance }, provider]) => {
       
       const txCode = getProcessCode(ActionCodes.REPAY, vault.id);

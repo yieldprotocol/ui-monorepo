@@ -21,7 +21,7 @@ const _handleSignError = (err, processCode) => {
     /* End the process on signature rejection or sign failure */
     (0, transactions_1.resetProcess)(processCode);
     console.log(err);
-    return Promise.reject(err);
+    return Promise.reject();
 };
 /**
  *
