@@ -1,6 +1,6 @@
 {
   "name": "@yield-protocol/ui-react",
-  "version": "1.0.2-alpha.0",
+  "version": "1.0.3-alpha.0",
   "main": "./bin/index.js",
   "repository": {
     "url": "git+https://github.com/yieldprotocol/ui-monorepo.git",
@@ -16,7 +16,7 @@
     "watch": " tsc -b -w"
   },
   "dependencies": {
-    "@yield-protocol/ui-core": "^1.0.2-alpha.0",
+    "@yield-protocol/ui-core": "^1.0.3-alpha.0",
     "react": "^17.0.2"
   },
   "devDependencies": {
