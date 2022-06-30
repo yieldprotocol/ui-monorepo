@@ -1,6 +1,6 @@
 {
   "name": "@yield-protocol/ui-cli",
-  "version": "1.0.0",
+  "version": "1.0.1-alpha.0",
   "main": "./bin/index.js",
   "repository": "https://github.com/yieldprotocol/ui-monorepo",
   "publishConfig": {
@@ -14,8 +14,8 @@
     "watch": " tsc -b -w"
   },
   "dependencies": {
-    "@yield-protocol/ui-core": "1.0.0",
-    "@yield-protocol/ui-redux": "1.0.0",
+    "@yield-protocol/ui-core": "^1.0.1-alpha.0",
+    "@yield-protocol/ui-redux": "^1.0.1-alpha.0",
     "commander": "^9.2.0",
     "rxjs": "^7.5.5"
   }

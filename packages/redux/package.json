@@ -1,11 +1,10 @@
 {
   "name": "@yield-protocol/ui-redux",
-  "version": "1.0.0",
+  "version": "1.0.1-alpha.0",
   "repository": "https://github.com/yieldprotocol/ui-monorepo",
   "publishConfig": {
     "access": "restricted"
   },
-
   "private": true,
   "description": "redux wrapper",
   "main": "./bin/index.js",
@@ -13,8 +12,8 @@
   "license": "MIT",
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.2",
-    "react-redux": "^8.0.2",
-    "@yield-protocol/ui-core": "1.0.0"
+    "@yield-protocol/ui-core": "^1.0.1-alpha.0",
+    "react-redux": "^8.0.2"
   },
   "scripts": {
     "compile": "tsc -b",
