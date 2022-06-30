@@ -1,6 +1,6 @@
 {
   "name": "@yield-protocol/ui-math",
-  "version": "1.0.3-alpha.0",
+  "version": "1.0.3-alpha.3",
   "main": "./bin/index.js",
   "repository": {
     "url": "git+https://github.com/yieldprotocol/ui-monorepo.git",
@@ -12,7 +12,14 @@
   "author": "Yield Inc.",
   "license": "MIT",
   "scripts": {
-    "compile": "tsc -b",
-    "watch": " tsc -b -w"
+    "compile": "tsc -b --force",
+    "watch": " tsc -b -w",
+    "test": "jest --watch"
+  },
+  "dependencies": {
+    "chai": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.1"
   }
 }

@@ -15,6 +15,11 @@ export declare const WAD_BN: ethers.BigNumber;
 export declare const SECONDS_PER_YEAR: number;
 export declare const secondsInOneYear: ethers.BigNumber;
 export declare const secondsInTenYears: ethers.BigNumber;
+export declare const k: Decimal;
+export declare const g1_DEFAULT: Decimal;
+export declare const g2_DEFAULT: Decimal;
+export declare const c_DEFAULT = "0x10000000000000000";
+export declare const mu_DEFAULT = "0x10000000000000000";
 /** *************************
  Support functions
  *************************** */
@@ -33,6 +38,7 @@ export declare const decimalNToDecimal18: (x: BigNumber, decimals: number) => Bi
  */
 export declare const decimal18ToDecimalN: (x: BigNumber, decimals: number) => BigNumber;
 /**
+ * TODO: maybe move this out to gerneral yieldUtils
  * Convert bytesX to bytes32 (BigEndian?)
  * @param x string to convert.
  * @param n current bytes value eg. bytes6 or bytes12
@@ -40,7 +46,24 @@ export declare const decimal18ToDecimalN: (x: BigNumber, decimals: number) => Bi
  */
 export declare function bytesToBytes32(x: string, n: number): string;
 /**
- * Calculate the baseId from the series nae
+ * TODO: Possibily move this out to general yieldUtils?
+ * @param { BigNumber | string } to unix time
+ * @param { BigNumber | string } from  unix time *optional* default: now
+ * @returns { string } as number seconds 'from' -> 'to'
+ */
+export declare const secondsToFrom: (to: BigNumber | string, from?: BigNumber | string) => string;
+/**
+ * @param { BigNumber | string } value
+ * @returns { string }
+ */
+export declare const floorDecimal: (value: BigNumber | string) => string;
+/**
+ * @param { Decimal } value
+ * @returns { BigNumber }
+ */
+export declare const toBn: (value: Decimal) => BigNumber;
+/**
+ * Calculate the baseId from the series name
  * @param seriesId seriesID.
  * @returns string bytes32
  */
@@ -59,22 +82,6 @@ export declare const mulDecimal: (multiplicant: BigNumber | string, multiplier: 
  * @returns { string } in decimal precision of the numerator
  */
 export declare const divDecimal: (numerator: BigNumber | string, divisor: BigNumber | string, precisionDifference?: string) => string;
-/**
- * @param { BigNumber | string } value
- * @returns { string }
- */
-export declare const floorDecimal: (value: BigNumber | string) => string;
-/**
- * @param { Decimal } value
- * @returns { BigNumber }
- */
-export declare const toBn: (value: Decimal) => BigNumber;
-/**
- * @param { BigNumber | string } to unix time
- * @param { BigNumber | string } from  unix time *optional* default: now
- * @returns { string } as number seconds 'from' -> 'to'
- */
-export declare const secondsToFrom: (to: BigNumber | string, from?: BigNumber | string) => string;
 /**
  * Converts c from 64 bit to a decimal like 1.1
  * @param c
@@ -357,8 +364,6 @@ export declare function maxFyTokenOut(sharesReserves: BigNumber, fyTokenReserves
  */
 export declare function fyTokenForMint(sharesReserves: BigNumber, fyTokenRealReserves: BigNumber, fyTokenVirtualReserves: BigNumber, shares: BigNumber | string, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g1: BigNumber | string, decimals: number, slippage?: number, // 1% default
 c?: BigNumber | string, mu?: BigNumber | string, precision?: number): [BigNumber, BigNumber];
-export declare function fyTokenForMintOld(sharesReserves: BigNumber | string, fyTokenRealReserves: BigNumber | string, fyTokenVirtualReserves: BigNumber | string, shares: BigNumber | string, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g1: BigNumber | string, decimals: number, slippage?: number, // 1% default
-c?: BigNumber | string, mu?: BigNumber | string): BigNumber;
 /**
  * Split a certain amount of X liquidity into its two components (eg. shares and fyToken)
  * @param { BigNumber } xReserves // eg. shares reserves
@@ -396,7 +401,7 @@ export declare const calculateAPR: (tradeValue: BigNumber | string, amount: BigN
  */
 export declare const calculateCollateralizationRatio: (collateralAmount: BigNumber | string, basePrice: BigNumber | string, baseAmount: BigNumber | string, asPercent?: boolean) => number | undefined;
 /**
- * Calculates the collateralization ratio
+ * Calculates the min collateralization ratio
  * based on the collat amount and value and debt value.
  * @param { BigNumber | string } basePrice bases per unit collateral (in wei)
  * @param { BigNumber | string } baseAmount amount of bases / debt (in wei)
@@ -404,9 +409,9 @@ export declare const calculateCollateralizationRatio: (collateralAmount: BigNumb
  * @param {BigNumber | string} existingCollateral  0 as default (as wei)
  * @param {Boolean} asBigNumber return as big number? in wei
  *
- * @returns { string | undefined }
+ * @returns BigNumber
  */
-export declare const calculateMinCollateral: (basePrice: BigNumber | string, baseAmount: BigNumber | string, liquidationRatio: string, existingCollateral?: BigNumber | string, asBigNumber?: boolean) => string | BigNumber;
+export declare const calculateMinCollateral: (basePrice: BigNumber | string, baseAmount: BigNumber | string, liquidationRatio: string, existingCollateral?: BigNumber | string) => BigNumber;
 /**
  * Calcualtes the amount (base, or other variant) that can be borrowed based on
  * an amount of collateral (ETH, or other), and collateral price.

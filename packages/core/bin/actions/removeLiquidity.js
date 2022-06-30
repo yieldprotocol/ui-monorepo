@@ -52,7 +52,7 @@ const removeLiquidity = (amount, series, matchingVault, tradeFyToken = true) => 
         const lpReceived = (0, ui_math_1.burnFromStrategy)(_strategy.poolTotalSupply, _strategy.strategyTotalSupply, _amount);
         const [_baseTokenReceived, _fyTokenReceived] = (0, ui_math_1.burn)(series.baseReserves.bn, series.fyTokenRealReserves.bn, series.totalSupply.bn, lpReceived);
         const _newPool = (0, ui_math_1.newPoolState)(_baseTokenReceived.mul(-1), _fyTokenReceived.mul(-1), series.baseReserves.bn, series.fyTokenRealReserves.bn, series.totalSupply.bn);
-        const fyTokenTrade = (0, ui_math_1.sellFYToken)(_newPool.baseReserves, _newPool.fyTokenVirtualReserves, _fyTokenReceived, series.getTimeTillMaturity(), series.ts, series.g2, series.decimals);
+        const fyTokenTrade = (0, ui_math_1.sellFYToken)(_newPool.sharesReserves, _newPool.fyTokenVirtualReserves, _fyTokenReceived, series.getTimeTillMaturity(), series.ts, series.g2, series.decimals);
         // diagnostics && console.log('fyTokenTrade value: ', fyTokenTrade.toString());
         const fyTokenTradeSupported = fyTokenTrade.gt(ethers_1.ethers.constants.Zero);
         const matchingVaultId = matchingVault === null || matchingVault === void 0 ? void 0 : matchingVault.id;

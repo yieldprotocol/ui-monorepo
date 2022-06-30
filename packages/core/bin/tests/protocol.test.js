@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
-const buildProtocol_1 = require("../initProtocol/buildProtocol");
+const buildProtocol_1 = require("../init/buildProtocol");
 const observables_1 = require("../observables");
 const ethers_1 = require("ethers");
 const yObservables = tslib_1.__importStar(require("../observables"));

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPoolPercent = exports.strategyTokenValue = exports.newPoolState = exports.calcLiquidationPrice = exports.calculateBorrowingPower = exports.calculateMinCollateral = exports.calculateCollateralizationRatio = exports.calculateAPR = exports.calculateSlippage = exports.splitLiquidity = exports.fyTokenForMintOld = exports.fyTokenForMint = exports.maxFyTokenOut = exports.maxFyTokenIn = exports.maxBaseOut = exports.maxBaseIn = exports.buyFYToken = exports.buyBase = exports.sellFYToken = exports.sellBase = exports.burnForBase = exports.mintWithBase = exports.burnFromStrategy = exports.burn = exports.mint = exports._getC = exports.secondsToFrom = exports.toBn = exports.floorDecimal = exports.divDecimal = exports.mulDecimal = exports.baseIdFromSeriesId = exports.bytesToBytes32 = exports.decimal18ToDecimalN = exports.decimalNToDecimal18 = exports.secondsInTenYears = exports.secondsInOneYear = exports.SECONDS_PER_YEAR = exports.WAD_BN = exports.WAD_RAY_BN = exports.MINUS_ONE_BN = exports.ONE_BN = exports.ZERO_BN = exports.RAY_DEC = exports.MAX_DEC = exports.TWO_DEC = exports.ONE_DEC = exports.ZERO_DEC = exports.MAX_128 = exports.MAX_256 = void 0;
-exports.calcAccruedDebt = exports.calcPoolRatios = void 0;
+exports.calculateBorrowingPower = exports.calculateMinCollateral = exports.calculateCollateralizationRatio = exports.calculateAPR = exports.calculateSlippage = exports.splitLiquidity = exports.fyTokenForMint = exports.maxFyTokenOut = exports.maxFyTokenIn = exports.maxBaseOut = exports.maxBaseIn = exports.buyFYToken = exports.buyBase = exports.sellFYToken = exports.sellBase = exports.burnForBase = exports.mintWithBase = exports.burnFromStrategy = exports.burn = exports.mint = exports._getC = exports.divDecimal = exports.mulDecimal = exports.baseIdFromSeriesId = exports.toBn = exports.floorDecimal = exports.secondsToFrom = exports.bytesToBytes32 = exports.decimal18ToDecimalN = exports.decimalNToDecimal18 = exports.mu_DEFAULT = exports.c_DEFAULT = exports.g2_DEFAULT = exports.g1_DEFAULT = exports.k = exports.secondsInTenYears = exports.secondsInOneYear = exports.SECONDS_PER_YEAR = exports.WAD_BN = exports.WAD_RAY_BN = exports.MINUS_ONE_BN = exports.ONE_BN = exports.ZERO_BN = exports.RAY_DEC = exports.MAX_DEC = exports.TWO_DEC = exports.ONE_DEC = exports.ZERO_DEC = exports.MAX_128 = exports.MAX_256 = void 0;
+exports.calcAccruedDebt = exports.calcPoolRatios = exports.getPoolPercent = exports.strategyTokenValue = exports.newPoolState = exports.calcLiquidationPrice = void 0;
 /* eslint-disable @typescript-eslint/naming-convention */
 const ethers_1 = require("ethers");
 const decimal_js_1 = require("decimal.js");
@@ -28,11 +28,11 @@ const ONE = exports.ONE_DEC;
 const TWO = exports.TWO_DEC;
 const MAX = exports.MAX_DEC;
 /* Protocol Specific Constants */
-const k_default = new decimal_js_1.Decimal(1 / exports.secondsInTenYears.toNumber()).mul(Math.pow(2, 64)); // inv of seconds in 10 years
-const g1_default = new decimal_js_1.Decimal(950 / 1000).mul(Math.pow(2, 64));
-const g2_default = new decimal_js_1.Decimal(1000 / 950).mul(Math.pow(2, 64));
-const c_default = '0x10000000000000000'; // 1 in 64 bit
-const mu_default = '0x10000000000000000'; // 1 in 64 bit
+exports.k = new decimal_js_1.Decimal(1 / ethers_1.BigNumber.from(exports.SECONDS_PER_YEAR).mul(10).toNumber()).mul(Math.pow(2, 64)); // inv of seconds in 10 years
+exports.g1_DEFAULT = new decimal_js_1.Decimal(950 / 1000).mul(Math.pow(2, 64));
+exports.g2_DEFAULT = new decimal_js_1.Decimal(1000 / 950).mul(Math.pow(2, 64));
+exports.c_DEFAULT = '0x10000000000000000'; // 1 in 64 bit
+exports.mu_DEFAULT = '0x10000000000000000'; // 1 in 64 bit
 const precisionFee = new decimal_js_1.Decimal(1000000000000);
 /** *************************
  Support functions
@@ -43,7 +43,9 @@ const precisionFee = new decimal_js_1.Decimal(1000000000000);
  * @param decimals of the current bignumber
  * @returns BigNumber
  */
-const decimalNToDecimal18 = (x, decimals) => ethers_1.BigNumber.from(x.toString() + '0'.repeat(18 - decimals));
+const decimalNToDecimal18 = (x, decimals) => 
+// BigNumber.from(x.toString() + '0'.repeat(18 - decimals));
+ethers_1.BigNumber.from(x).mul(ethers_1.BigNumber.from('10').pow(18 - decimals));
 exports.decimalNToDecimal18 = decimalNToDecimal18;
 /**
  * Convert a decimal18 to a bn of any decimal
@@ -58,6 +60,7 @@ const decimal18ToDecimalN = (x, decimals) => {
 };
 exports.decimal18ToDecimalN = decimal18ToDecimalN;
 /**
+ * TODO: maybe move this out to gerneral yieldUtils
  * Convert bytesX to bytes32 (BigEndian?)
  * @param x string to convert.
  * @param n current bytes value eg. bytes6 or bytes12
@@ -68,7 +71,32 @@ function bytesToBytes32(x, n) {
 }
 exports.bytesToBytes32 = bytesToBytes32;
 /**
- * Calculate the baseId from the series nae
+ * TODO: Possibily move this out to general yieldUtils?
+ * @param { BigNumber | string } to unix time
+ * @param { BigNumber | string } from  unix time *optional* default: now
+ * @returns { string } as number seconds 'from' -> 'to'
+ */
+const secondsToFrom = (to, from = ethers_1.BigNumber.from(Math.round(new Date().getTime() / 1000)) // OPTIONAL: FROM defaults to current time if omitted
+) => {
+    const to_ = ethers_1.ethers.BigNumber.isBigNumber(to) ? to : ethers_1.BigNumber.from(to);
+    const from_ = ethers_1.ethers.BigNumber.isBigNumber(from) ? from : ethers_1.BigNumber.from(from);
+    return to_.sub(from_).toString();
+};
+exports.secondsToFrom = secondsToFrom;
+/**
+ * @param { BigNumber | string } value
+ * @returns { string }
+ */
+const floorDecimal = (value) => decimal_js_1.Decimal.floor(value.toString()).toFixed();
+exports.floorDecimal = floorDecimal;
+/**
+ * @param { Decimal } value
+ * @returns { BigNumber }
+ */
+const toBn = (value) => ethers_1.BigNumber.from((0, exports.floorDecimal)(value.toFixed()));
+exports.toBn = toBn;
+/**
+ * Calculate the baseId from the series name
  * @param seriesId seriesID.
  * @returns string bytes32
  */
@@ -107,30 +135,6 @@ const divDecimal = (numerator, divisor, precisionDifference = '1' // DEFAULT = 1
 };
 exports.divDecimal = divDecimal;
 /**
- * @param { BigNumber | string } value
- * @returns { string }
- */
-const floorDecimal = (value) => decimal_js_1.Decimal.floor(value.toString()).toFixed();
-exports.floorDecimal = floorDecimal;
-/**
- * @param { Decimal } value
- * @returns { BigNumber }
- */
-const toBn = (value) => ethers_1.BigNumber.from((0, exports.floorDecimal)(value.toFixed()));
-exports.toBn = toBn;
-/**
- * @param { BigNumber | string } to unix time
- * @param { BigNumber | string } from  unix time *optional* default: now
- * @returns { string } as number seconds 'from' -> 'to'
- */
-const secondsToFrom = (to, from = ethers_1.BigNumber.from(Math.round(new Date().getTime() / 1000)) // OPTIONAL: FROM defaults to current time if omitted
-) => {
-    const to_ = ethers_1.ethers.BigNumber.isBigNumber(to) ? to : ethers_1.BigNumber.from(to);
-    const from_ = ethers_1.ethers.BigNumber.isBigNumber(from) ? from : ethers_1.BigNumber.from(from);
-    return to_.sub(from_).toString();
-};
-exports.secondsToFrom = secondsToFrom;
-/**
  * specific Yieldspace helper functions
  * */
 const _computeA = (timeToMaturity, ts, g) => {
@@ -144,6 +148,18 @@ const _computeA = (timeToMaturity, ts, g) => {
     const a = ONE.sub(_g.mul(t));
     const invA = ONE.div(a);
     return [a, invA]; /* returns a and inverse of a */
+};
+/** remove _computeB*/
+const _computeB = (timeToMaturity, ts, g) => {
+    const timeTillMaturity_ = new decimal_js_1.Decimal(timeToMaturity.toString());
+    const _g = new decimal_js_1.Decimal(ethers_1.BigNumber.from(g).toString()).div(Math.pow(2, 64));
+    const _ts = new decimal_js_1.Decimal(ethers_1.BigNumber.from(ts).toString()).div(Math.pow(2, 64));
+    // t = ts * timeTillMaturity
+    const t = _ts.mul(timeTillMaturity_);
+    // b = (1 - t/g)
+    const b = ONE.sub(t.div(_g));
+    const invB = ONE.div(b);
+    return [b, invB]; /* returns b and inverse of b */
 };
 /**
  * Converts c from 64 bit to a decimal like 1.1
@@ -230,7 +246,7 @@ exports.burnFromStrategy = burnFromStrategy;
  *
  * @returns {[BigNumber, BigNumber]}
  */
-function mintWithBase(sharesReserves, fyTokenReservesVirtual, fyTokenReservesReal, fyToken, timeTillMaturity, ts, g1, decimals, c = c_default, mu = mu_default) {
+function mintWithBase(sharesReserves, fyTokenReservesVirtual, fyTokenReservesReal, fyToken, timeTillMaturity, ts, g1, decimals, c = exports.c_DEFAULT, mu = exports.mu_DEFAULT) {
     const Z = new decimal_js_1.Decimal(sharesReserves.toString());
     const YR = new decimal_js_1.Decimal(fyTokenReservesReal.toString());
     const supply = fyTokenReservesVirtual.sub(fyTokenReservesReal);
@@ -258,7 +274,7 @@ exports.mintWithBase = mintWithBase;
  *
  * @returns { BigNumber }
  */
-function burnForBase(sharesReserves, fyTokenReservesVirtual, fyTokenReservesReal, lpTokens, timeTillMaturity, ts, g2, decimals, c = c_default, mu = mu_default) {
+function burnForBase(sharesReserves, fyTokenReservesVirtual, fyTokenReservesReal, lpTokens, timeTillMaturity, ts, g2, decimals, c = exports.c_DEFAULT, mu = exports.mu_DEFAULT) {
     const supply = fyTokenReservesVirtual.sub(fyTokenReservesReal);
     // Burn FyToken
     const [z1, y] = burn(sharesReserves, fyTokenReservesReal, supply, lpTokens);
@@ -293,7 +309,7 @@ exports.burnForBase = burnForBase;
  *      y - ( (    Za        ) + (  Ya  ) - (       Zxa          ) )^(   invA   )
  * Δy = y - ( c/μ * (μz)^(1-t) +  y^(1-t) -  c/μ * (μz + μx)^(1-t) )^(1 / (1 - t)
  */
-function sellBase(sharesReserves, fyTokenReserves, sharesIn, timeTillMaturity, ts, g1, decimals, c = c_default, mu = mu_default) {
+function sellBase(sharesReserves, fyTokenReserves, sharesIn, timeTillMaturity, ts, g1, decimals, c = exports.c_DEFAULT, mu = exports.mu_DEFAULT) {
     /* convert to 18 decimals, if required */
     const sharesReserves18 = (0, exports.decimalNToDecimal18)(ethers_1.BigNumber.from(sharesReserves), decimals);
     const fyTokenReserves18 = (0, exports.decimalNToDecimal18)(ethers_1.BigNumber.from(fyTokenReserves), decimals);
@@ -337,7 +353,7 @@ exports.sellBase = sellBase;
  *      z - 1/μ * ( (       Za           ) + ( Ya  ) - (    Yxa    )  ) / (c / μ) )^(   invA    )
  * Δz = z - 1/μ * ( ( (c / μ) * (μz)^(1-t) + y^(1-t) - (y + x)^(1-t)  ) / (c / μ) )^(1 / (1 - t))
  */
-function sellFYToken(sharesReserves, fyTokenReserves, fyTokenIn, timeTillMaturity, ts, g2, decimals, c = c_default, mu = mu_default) {
+function sellFYToken(sharesReserves, fyTokenReserves, fyTokenIn, timeTillMaturity, ts, g2, decimals, c = exports.c_DEFAULT, mu = exports.mu_DEFAULT) {
     /* convert to 18 decimals, if required */
     const sharesReserves18 = (0, exports.decimalNToDecimal18)(ethers_1.BigNumber.from(sharesReserves), decimals);
     const fyTokenReserves18 = (0, exports.decimalNToDecimal18)(ethers_1.BigNumber.from(fyTokenReserves), decimals);
@@ -381,7 +397,7 @@ exports.sellFYToken = sellFYToken;
  *      ( (    Za        ) + ( Ya  ) - (      Zxa            )^(   invA   )  - y
  * Δy = ( c/μ * (μz)^(1-t) + y^(1-t) - c/μ * (μz - μx)^(1-t) )^(1 / (1 - t)) - y
  */
-function buyBase(sharesReserves, fyTokenReserves, sharesOut, timeTillMaturity, ts, g2, decimals, c = c_default, mu = mu_default) {
+function buyBase(sharesReserves, fyTokenReserves, sharesOut, timeTillMaturity, ts, g2, decimals, c = exports.c_DEFAULT, mu = exports.mu_DEFAULT) {
     /* convert to 18 decimals, if required */
     const sharesReserves18 = (0, exports.decimalNToDecimal18)(ethers_1.BigNumber.from(sharesReserves), decimals);
     const fyTokenReserves18 = (0, exports.decimalNToDecimal18)(ethers_1.BigNumber.from(fyTokenReserves), decimals);
@@ -427,7 +443,7 @@ exports.buyBase = buyBase;
  */
 function buyFYToken(sharesReserves, // z
 fyTokenReserves, // y
-fyTokenOut, timeTillMaturity, ts, g1, decimals, c = c_default, mu = mu_default) {
+fyTokenOut, timeTillMaturity, ts, g1, decimals, c = exports.c_DEFAULT, mu = exports.mu_DEFAULT) {
     /* convert to 18 decimals, if required */
     const sharesReserves18 = (0, exports.decimalNToDecimal18)(ethers_1.BigNumber.from(sharesReserves), decimals);
     const fyTokenReserves18 = (0, exports.decimalNToDecimal18)(ethers_1.BigNumber.from(fyTokenReserves), decimals);
@@ -470,7 +486,7 @@ exports.buyFYToken = buyFYToken;
  * Δz = 1/μ * ( ( ( cμ^(a-1) * z^a + y^a) / c/μ + 1 )^(1 / (1 - t)) - z
  *
  */
-function maxBaseIn(sharesReserves, fyTokenReserves, timeTillMaturity, ts, g1, decimals, c = c_default, mu = mu_default) {
+function maxBaseIn(sharesReserves, fyTokenReserves, timeTillMaturity, ts, g1, decimals, c = exports.c_DEFAULT, mu = exports.mu_DEFAULT) {
     /* convert to 18 decimals, if required */
     const sharesReserves18 = (0, exports.decimalNToDecimal18)(sharesReserves, decimals);
     const fyTokenReserves18 = (0, exports.decimalNToDecimal18)(fyTokenReserves, decimals);
@@ -534,7 +550,7 @@ exports.maxBaseOut = maxBaseOut;
  *
  * @returns { BigNumber }
  */
-function maxFyTokenIn(sharesReserves, fyTokenReserves, timeTillMaturity, ts, g2, decimals, c = c_default, mu = mu_default) {
+function maxFyTokenIn(sharesReserves, fyTokenReserves, timeTillMaturity, ts, g2, decimals, c = exports.c_DEFAULT, mu = exports.mu_DEFAULT) {
     /* convert to 18 decimals, if required */
     const sharesReserves18 = (0, exports.decimalNToDecimal18)(sharesReserves, decimals);
     const fyTokenReserves18 = (0, exports.decimalNToDecimal18)(fyTokenReserves, decimals);
@@ -577,7 +593,7 @@ exports.maxFyTokenIn = maxFyTokenIn;
  *
  * @returns { BigNumber }
  */
-function maxFyTokenOut(sharesReserves, fyTokenReserves, timeTillMaturity, ts, g1, decimals, c = c_default, mu = mu_default) {
+function maxFyTokenOut(sharesReserves, fyTokenReserves, timeTillMaturity, ts, g1, decimals, c = exports.c_DEFAULT, mu = exports.mu_DEFAULT) {
     /* convert to 18 decimals, if required */
     const sharesReserves18 = (0, exports.decimalNToDecimal18)(sharesReserves, decimals);
     const fyTokenReserves18 = (0, exports.decimalNToDecimal18)(fyTokenReserves, decimals);
@@ -620,7 +636,7 @@ exports.maxFyTokenOut = maxFyTokenOut;
  * @returns fyTokenToBuy, surplus
  */
 function fyTokenForMint(sharesReserves, fyTokenRealReserves, fyTokenVirtualReserves, shares, timeTillMaturity, ts, g1, decimals, slippage = 0.01, // 1% default
-c = c_default, mu = mu_default, precision = 0.0001 // 0.01% default
+c = exports.c_DEFAULT, mu = exports.mu_DEFAULT, precision = 0.0001 // 0.01% default
 ) {
     const shares_ = new decimal_js_1.Decimal(shares.toString());
     const minSurplus = shares_.mul(slippage);
@@ -660,61 +676,6 @@ c = c_default, mu = mu_default, precision = 0.0001 // 0.01% default
     }
 }
 exports.fyTokenForMint = fyTokenForMint;
-function fyTokenForMintOld(sharesReserves, fyTokenRealReserves, fyTokenVirtualReserves, shares, timeTillMaturity, ts, g1, decimals, slippage = 0.01, // 1% default
-c = c_default, mu = mu_default) {
-    /* convert to 18 decimals */
-    const sharesReserves18 = (0, exports.decimalNToDecimal18)(ethers_1.BigNumber.from(sharesReserves), decimals);
-    const fyTokenRealReserves18 = (0, exports.decimalNToDecimal18)(ethers_1.BigNumber.from(fyTokenRealReserves), decimals);
-    const fyTokenVirtualReserves18 = (0, exports.decimalNToDecimal18)(ethers_1.BigNumber.from(fyTokenVirtualReserves), decimals);
-    const shares18 = (0, exports.decimalNToDecimal18)(ethers_1.BigNumber.from(shares), decimals);
-    const sharesReserves_ = new decimal_js_1.Decimal(sharesReserves18.toString());
-    const fyDaiRealReserves_ = new decimal_js_1.Decimal(fyTokenRealReserves18.toString());
-    const shares_ = new decimal_js_1.Decimal(shares18.toString());
-    const timeTillMaturity_ = new decimal_js_1.Decimal(timeTillMaturity.toString());
-    const slippage_ = new decimal_js_1.Decimal(slippage); // .mul(new Decimal(10)); /* multiply the user slippage by 10 */
-    let min = ZERO;
-    let max = shares_.mul(TWO);
-    let yOut = min.add(max).div(TWO).floor();
-    let zIn;
-    let i = 0;
-    while (true) {
-        /* NB return ZERO when not converging > not mintable */
-        // eslint-disable-next-line no-plusplus
-        if (i++ > 100)
-            return exports.ZERO_BN;
-        // if (i++ > 100)  throw 'Not converging'
-        zIn = new decimal_js_1.Decimal(buyFYToken(sharesReserves18, fyTokenVirtualReserves18, ethers_1.BigNumber.from(yOut.floor().toFixed()), timeTillMaturity_.toString(), ts, g1, 18, c, mu).toString());
-        const Z_1 = sharesReserves_.add(zIn); // New base balance
-        const z_1 = shares_.sub(zIn); // My remaining base
-        const Y_1 = fyDaiRealReserves_.sub(yOut); // New fyToken balance
-        const y_1 = yOut; // My fyToken
-        const pz = z_1.div(z_1.add(y_1)); // base proportion in my assets
-        const PZ = Z_1.div(Z_1.add(Y_1)); // base proportion in the balances
-        const slippageAllowance = PZ.mul(slippage_); // PZ with slippage
-        const PZ_min = PZ.add(slippageAllowance); // should be 100% (PZ) + slippage
-        const PZ_max = PZ.add(slippageAllowance).mul(new decimal_js_1.Decimal(1.00001)); // should be 100.01% () + slippage
-        // The base proportion in my assets needs to be higher than but very close to the
-        // base proportion in the balances, to make sure all the fyToken is used.
-        // eslint-disable-next-line no-plusplus
-        if (PZ_max > pz && PZ_min < pz) {
-            break; // Too many iterations, or found the result
-        }
-        else if (PZ_max <= pz) {
-            min = yOut;
-            yOut = yOut.add(max).div(TWO); // bought too little fyToken, buy some more
-        }
-        else {
-            max = yOut;
-            yOut = yOut.add(min).div(TWO); // bought too much fyToken, buy a bit less
-        }
-    }
-    //  console.log( 'yOut : ', yOut.toFixed());
-    //  console.log( 'buyFyTOKEN: ', zIn.toString() );
-    return (0, exports.decimal18ToDecimalN)(
-    // (converted back to original decimals)
-    ethers_1.BigNumber.from(yOut.floor().toFixed()), decimals);
-}
-exports.fyTokenForMintOld = fyTokenForMintOld;
 /**
  * Split a certain amount of X liquidity into its two components (eg. shares and fyToken)
  * @param { BigNumber } xReserves // eg. shares reserves
@@ -776,33 +737,6 @@ const calculateAPR = (tradeValue, amount, maturity, fromDate = Math.round(new Da
     return undefined;
 };
 exports.calculateAPR = calculateAPR;
-// /**
-//  * Calculates the collateralization ratio
-//  * based on the collat amount and value and debt value.
-//  * @param { BigNumber | string } collateralAmount  amount of collateral (in wei)
-//  * @param { BigNumber | string } basePrice bases per unit of collateral (in wei)
-//  * @param { BigNumber | string } baseAmount amount base debt (in wei)
-//  * @param {boolean} asPercent OPTIONAL: flag to return ratio as a percentage
-//  * @returns { string | undefined }
-//  */
-// export const calculateCollateralizationRatio = (
-//   collateralAmount: BigNumber | string,
-//   basePrice: BigNumber | string,
-//   baseAmount: BigNumber | string,
-//   asPercent: boolean = false // OPTIONAL:  flag to return as percentage
-// ): string | undefined => {
-//   if (ethers.BigNumber.isBigNumber(baseAmount) ? baseAmount.isZero() : baseAmount === '0') {
-//     return undefined;
-//   }
-//   const _baseUnitPrice = divDecimal(basePrice, WAD_BN);
-//   // const _baseUnitPrice = divDecimal(basePrice, decimal18ToDecimalN(WAD_BN, decimals).toString());
-//   const _baseVal = divDecimal(baseAmount, _baseUnitPrice); // base/debt value in terms of collateral
-//   const _ratio = divDecimal(collateralAmount, _baseVal); // collateralValue divide by debtValue
-//   if (asPercent) {
-//     return mulDecimal('100', _ratio);
-//   }
-//   return _ratio;
-// };
 /**
  * Calculates the collateralization ratio
  * based on the collat amount and value and debt value.
@@ -827,7 +761,7 @@ const calculateCollateralizationRatio = (collateralAmount, basePrice, baseAmount
 };
 exports.calculateCollateralizationRatio = calculateCollateralizationRatio;
 /**
- * Calculates the collateralization ratio
+ * Calculates the min collateralization ratio
  * based on the collat amount and value and debt value.
  * @param { BigNumber | string } basePrice bases per unit collateral (in wei)
  * @param { BigNumber | string } baseAmount amount of bases / debt (in wei)
@@ -835,10 +769,10 @@ exports.calculateCollateralizationRatio = calculateCollateralizationRatio;
  * @param {BigNumber | string} existingCollateral  0 as default (as wei)
  * @param {Boolean} asBigNumber return as big number? in wei
  *
- * @returns { string | undefined }
+ * @returns BigNumber
  */
-const calculateMinCollateral = (basePrice, baseAmount, liquidationRatio, existingCollateral = '0', // OPTIONAL add in
-asBigNumber = false) => {
+const calculateMinCollateral = (basePrice, baseAmount, liquidationRatio, existingCollateral = '0' // OPTIONAL add in
+) => {
     const _baseUnitPrice = (0, exports.divDecimal)(basePrice, exports.WAD_BN);
     const _baseVal = (0, exports.divDecimal)(baseAmount, _baseUnitPrice);
     const _existingCollateralValue = new decimal_js_1.Decimal(ethers_1.ethers.utils.formatUnits(existingCollateral, 18));
@@ -846,7 +780,7 @@ asBigNumber = false) => {
     const requiredCollateral = _existingCollateralValue.gt(_minCollatValue)
         ? new decimal_js_1.Decimal('0')
         : _minCollatValue.sub(_existingCollateralValue); // .add('1'); // hmm, i had to add one check
-    return asBigNumber ? (0, exports.toBn)(requiredCollateral) : requiredCollateral.toFixed(0);
+    return (0, exports.toBn)(requiredCollateral);
 };
 exports.calculateMinCollateral = calculateMinCollateral;
 /**
@@ -927,7 +861,7 @@ exports.newPoolState = newPoolState;
  *
  * @returns {BigNumber} [fyToken sold to shares, shares received]
  */
-const strategyTokenValue = (strategyTokenAmount, strategyTotalSupply, strategyPoolBalance, poolSharesReserves, poolFyTokenReserves, poolTotalSupply, poolTimeToMaturity, ts, g2, decimals, c = c_default, mu = mu_default) => {
+const strategyTokenValue = (strategyTokenAmount, strategyTotalSupply, strategyPoolBalance, poolSharesReserves, poolFyTokenReserves, poolTotalSupply, poolTimeToMaturity, ts, g2, decimals, c = exports.c_DEFAULT, mu = exports.mu_DEFAULT) => {
     // 0. Calc amount of lpTokens from strat token burn
     // 1. calc amount shares/fyToken recieved from burn
     // 2. calculate new reserves (sharesReserves and fyTokenReserves)

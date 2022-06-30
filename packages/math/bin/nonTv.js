@@ -653,7 +653,7 @@ exports.calculateAPR = calculateAPR;
  * @param { BigNumber | string } basePrice bases per unit of collateral (in wei)
  * @param { BigNumber | string } baseAmount amount base debt (in wei)
  * @param {boolean} asPercent OPTIONAL: flag to return ratio as a percentage
- * @returns { string | undefined } // can be undefined because of 0 baseAmount as a denominator.
+ * @returns { number | undefined } // can be undefined because of 0 baseAmount as a denominator.
  */
 const calculateCollateralizationRatio = (collateralAmount, basePrice, baseAmount, asPercent = false // OPTIONAL:  flag to return as percentage
 ) => {
@@ -678,9 +678,10 @@ exports.calculateCollateralizationRatio = calculateCollateralizationRatio;
  * @param {BigNumber | string} existingCollateral  0 as default (as wei)
  * @param {Boolean} asBigNumber return as big number? in wei
  *
- * @returns { string | undefined }
+ * @returns BigNumber
  */
-const calculateMinCollateral = (basePrice, baseAmount, liquidationRatio, existingCollateral = '0') => {
+const calculateMinCollateral = (basePrice, baseAmount, liquidationRatio, existingCollateral = '0' // OPTIONAL add in
+) => {
     const _baseUnitPrice = (0, exports.divDecimal)(basePrice, exports.WAD_BN);
     const _baseVal = (0, exports.divDecimal)(baseAmount, _baseUnitPrice);
     const _existingCollateralValue = new decimal_js_1.Decimal(ethers_1.ethers.utils.formatUnits(existingCollateral, 18));

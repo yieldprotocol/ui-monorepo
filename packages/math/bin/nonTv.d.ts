@@ -294,7 +294,7 @@ export declare const calculateAPR: (tradeValue: BigNumber | string, amount: BigN
  * @param { BigNumber | string } basePrice bases per unit of collateral (in wei)
  * @param { BigNumber | string } baseAmount amount base debt (in wei)
  * @param {boolean} asPercent OPTIONAL: flag to return ratio as a percentage
- * @returns { string | undefined } // can be undefined because of 0 baseAmount as a denominator.
+ * @returns { number | undefined } // can be undefined because of 0 baseAmount as a denominator.
  */
 export declare const calculateCollateralizationRatio: (collateralAmount: BigNumber | string, basePrice: BigNumber | string, baseAmount: BigNumber | string, asPercent?: boolean) => number | undefined;
 /**
@@ -306,7 +306,7 @@ export declare const calculateCollateralizationRatio: (collateralAmount: BigNumb
  * @param {BigNumber | string} existingCollateral  0 as default (as wei)
  * @param {Boolean} asBigNumber return as big number? in wei
  *
- * @returns { string | undefined }
+ * @returns BigNumber
  */
 export declare const calculateMinCollateral: (basePrice: BigNumber | string, baseAmount: BigNumber | string, liquidationRatio: string, existingCollateral?: BigNumber | string) => BigNumber;
 /**
