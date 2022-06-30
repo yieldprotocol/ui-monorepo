@@ -33,7 +33,6 @@ export declare const decimalNToDecimal18: (x: BigNumber, decimals: number) => Bi
  */
 export declare const decimal18ToDecimalN: (x: BigNumber, decimals: number) => BigNumber;
 /**
- * TODO: maybe move this out to gerneral yieldUtils
  * Convert bytesX to bytes32 (BigEndian?)
  * @param x string to convert.
  * @param n current bytes value eg. bytes6 or bytes12
@@ -41,22 +40,11 @@ export declare const decimal18ToDecimalN: (x: BigNumber, decimals: number) => Bi
  */
 export declare function bytesToBytes32(x: string, n: number): string;
 /**
- * TODO: Possibily move this out to general yieldUtils?
- * @param { BigNumber | string } to unix time
- * @param { BigNumber | string } from  unix time *optional* default: now
- * @returns { string } as number seconds 'from' -> 'to'
+ * Calculate the baseId from the series nae
+ * @param seriesId seriesID.
+ * @returns string bytes32
  */
-export declare const secondsToFrom: (to: BigNumber | string, from?: BigNumber | string) => string;
-/**
- * @param { BigNumber | string } value
- * @returns { string }
- */
-export declare const floorDecimal: (value: BigNumber | string) => string;
-/**
- * @param { Decimal } value
- * @returns { BigNumber }
- */
-export declare const toBn: (value: Decimal) => BigNumber;
+export declare function baseIdFromSeriesId(seriesId: string): string;
 /**
  * @param { BigNumber | string } multiplicant
  * @param { BigNumber | string } multiplier
@@ -71,29 +59,51 @@ export declare const mulDecimal: (multiplicant: BigNumber | string, multiplier: 
  * @returns { string } in decimal precision of the numerator
  */
 export declare const divDecimal: (numerator: BigNumber | string, divisor: BigNumber | string, precisionDifference?: string) => string;
+/**
+ * @param { BigNumber | string } value
+ * @returns { string }
+ */
+export declare const floorDecimal: (value: BigNumber | string) => string;
+/**
+ * @param { Decimal } value
+ * @returns { BigNumber }
+ */
+export declare const toBn: (value: Decimal) => BigNumber;
+/**
+ * @param { BigNumber | string } to unix time
+ * @param { BigNumber | string } from  unix time *optional* default: now
+ * @returns { string } as number seconds 'from' -> 'to'
+ */
+export declare const secondsToFrom: (to: BigNumber | string, from?: BigNumber | string) => string;
+/**
+ * Converts c from 64 bit to a decimal like 1.1
+ * @param c
+ * @returns
+ */
+export declare const _getC: (c: BigNumber | string) => Decimal;
 /** ************************
  YieldSpace functions
  *************************** */
 /**
- * @param { BigNumber | string } baseReserves
+ * @param { BigNumber | string } sharesReserves
  * @param { BigNumber | string } fyTokenReserves
  * @param { BigNumber | string } totalSupply
- * @param { BigNumber | string } base
+ * @param { BigNumber | string } shares
  * @returns {[BigNumber, BigNumber]}
  *
  * https://www.desmos.com/calculator/mllhtohxfx
  */
-export declare function mint(baseReserves: BigNumber | string, fyTokenReserves: BigNumber | string, totalSupply: BigNumber | string, base: BigNumber | string, fromBase?: boolean): [BigNumber, BigNumber];
+export declare function mint(sharesReserves: BigNumber | string, fyTokenReserves: BigNumber | string, totalSupply: BigNumber | string, shares: BigNumber | string, fromBase?: boolean): [BigNumber, BigNumber];
 /**
- * @param { BigNumber | string } baseReserves
- * @param { BigNumber | string } fyTokenReserves
+ * @param { BigNumber | string } sharesReserves
+ * @param { BigNumber | string } fyTokenRealReserves
  * @param { BigNumber | string } totalSupply
  * @param { BigNumber | string } lpTokens
  * @returns {[BigNumber, BigNumber]}
  *
  * https://www.desmos.com/calculator/ubsalzunpo
  */
-export declare function burn(baseReserves: BigNumber | string, fyTokenReserves: BigNumber | string, totalSupply: BigNumber | string, lpTokens: BigNumber | string): [BigNumber, BigNumber];
+export declare function burn(sharesReserves: BigNumber | string, fyTokenRealReserves: BigNumber | string, totalSupply: BigNumber | string, lpTokens: BigNumber | string): [BigNumber, BigNumber];
 /**
  *
  * @param { BigNumber | string } poolTotalSupply
@@ -105,7 +115,7 @@ export declare function burn(baseReserves: BigNumber | string, fyTokenReserves: 
  */
 export declare function burnFromStrategy(poolTotalSupply: BigNumber | string, strategyTotalsupply: BigNumber | string, strategyTokensToBurn: BigNumber | string): BigNumber;
 /**
- * @param { BigNumber } baseReserves
+ * @param { BigNumber } sharesReserves
  * @param { BigNumber } fyTokenReservesVirtual
  * @param { BigNumber } fyTokenReservesReal
  * @param { BigNumber | string } fyToken
@@ -113,161 +123,249 @@ export declare function burnFromStrategy(poolTotalSupply: BigNumber | string, st
  * @param { BigNumber | string } ts
  * @param { BigNumber | string } g1
  * @param { number } decimals
+ * @param { BigNumber | string } c
+ * @param { BigNumber | string } mu
  *
  * @returns {[BigNumber, BigNumber]}
  */
-export declare function mintWithBase(baseReserves: BigNumber, fyTokenReservesVirtual: BigNumber, fyTokenReservesReal: BigNumber, fyToken: BigNumber | string, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g1: BigNumber | string, decimals: number): [BigNumber, BigNumber];
+export declare function mintWithBase(sharesReserves: BigNumber, fyTokenReservesVirtual: BigNumber, fyTokenReservesReal: BigNumber, fyToken: BigNumber | string, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g1: BigNumber | string, decimals: number, c?: BigNumber | string, mu?: BigNumber | string): [BigNumber, BigNumber];
 /**
- * @param { BigNumber | string } baseReserves
+ * @param { BigNumber | string } sharesReserves
  * @param { BigNumber | string } fyTokenReservesVirtual
  * @param { BigNumber | string } fyTokenReservesReal
- * @param { BigNumber | string } totalSupply
  * @param { BigNumber | string } lpTokens
  * @param { BigNumber | string } timeTillMaturity
  * @param { BigNumber | string } ts
  * @param { BigNumber | string } g2
  * @param { number } decimals
+ * @param { BigNumber | string } c
+ * @param { BigNumber | string } mu
  *
  * @returns { BigNumber }
  */
-export declare function burnForBase(baseReserves: BigNumber, fyTokenReservesVirtual: BigNumber, fyTokenReservesReal: BigNumber, lpTokens: BigNumber, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g2: BigNumber | string, decimals: number): BigNumber;
+export declare function burnForBase(sharesReserves: BigNumber, fyTokenReservesVirtual: BigNumber, fyTokenReservesReal: BigNumber, lpTokens: BigNumber, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g2: BigNumber | string, decimals: number, c?: BigNumber | string, mu?: BigNumber | string): BigNumber;
 /**
- * Calculate the amount of fyToken a user would get for given amount of Base.
- * fyTokenOutForBaseIn
- * @param { BigNumber | string } baseReserves
- * @param { BigNumber | string } fyTokenReserves
- * @param { BigNumber | string } base
- * @param { BigNumber | string } timeTillMaturity
- * @param { BigNumber | string } ts
- * @param { BigNumber | string } g1
- * @param { number } decimals
+ * Calculates the amount of fyToken a user would get for given amount of shares.
+ * fyTokenOutForSharesIn
+ * https://www.desmos.com/calculator/bdplcpol2y
+ * @param { BigNumber | string } sharesReserves yield bearing vault shares reserve amount
+ * @param { BigNumber | string } fyTokenReserves fyToken reserves amount
+ * @param { BigNumber | string } sharesIn shares amount to be traded
+ * @param { BigNumber | string } timeTillMaturity time till maturity in seconds
+ * @param { BigNumber | string } ts time stretch
+ * @param { BigNumber | string } g1 fee coefficient
+ * @param { number } decimals pool decimals
+ * @param { BigNumber | string } c price of shares in terms of their base in 64 bit
+ * @param { BigNumber | string } mu (μ) Normalization factor -- starts as c at initialization in 64 bit
  *
- * @returns { BigNumber }
+ * @returns { BigNumber } fyTokenOut: the amount of fyToken a user would get for given amount of shares
+ *
+ * y = fyToken reserves
+ * z = base reserves
+ * x = Δz (sharesIn)
+ *
+ *      y - (                         sum                          )^(   invA   )
+ *      y - ( (    Za        ) + (  Ya  ) - (       Zxa          ) )^(   invA   )
+ * Δy = y - ( c/μ * (μz)^(1-t) +  y^(1-t) -  c/μ * (μz + μx)^(1-t) )^(1 / (1 - t)
  */
-export declare function sellBase(baseReserves: BigNumber | string, fyTokenReserves: BigNumber | string, base: BigNumber | string, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g1: BigNumber | string, decimals: number): BigNumber;
+export declare function sellBase(sharesReserves: BigNumber | string, fyTokenReserves: BigNumber | string, sharesIn: BigNumber | string, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g1: BigNumber | string, decimals: number, c?: BigNumber | string, mu?: BigNumber | string): BigNumber;
 /**
- * Calculate the amount of base a user would get for certain amount of fyToken.
- * baseOutForFYTokenIn
- * @param { BigNumber | string } baseReserves
+ * Calculates the amount of shares a user would get for certain amount of fyToken.
+ * sharesOutForFYTokenIn
+ * https://www.desmos.com/calculator/mjzqajjsq6
+ * @param { BigNumber | string } sharesReserves sharesReserves shares reserves amount
+ * @param { BigNumber | string } fyTokenReserves fyTokenReserves fyToken reserves amount
+ * @param { BigNumber | string } fyTokenIn fyToken amount to be traded
+ * @param { BigNumber | string } timeTillMaturity time till maturity in seconds
+ * @param { BigNumber | string } ts time stretch
+ * @param { BigNumber | string } g2 fee coefficient
+ * @param { number } decimals pool decimals
+ * @param { BigNumber | string } c price of shares in terms of their base in 64 bit
+ * @param { BigNumber | string } mu (μ) Normalization factor -- starts as c at initialization in 64 bit
+ *
+ * @returns { BigNumber } sharesOut: amount of shares a user would get for given amount of fyToken
+ *
+ * y = fyToken
+ * z = vyToken
+ * x = Δy
+ *
+ *      z - 1/μ * (                      sum                                      )^(   invA    )
+ *      z - 1/μ * ( (       Za           ) + ( Ya  ) - (    Yxa    )  ) / (c / μ) )^(   invA    )
+ * Δz = z - 1/μ * ( ( (c / μ) * (μz)^(1-t) + y^(1-t) - (y + x)^(1-t)  ) / (c / μ) )^(1 / (1 - t))
+ */
+export declare function sellFYToken(sharesReserves: BigNumber | string, fyTokenReserves: BigNumber | string, fyTokenIn: BigNumber | string, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g2: BigNumber | string, decimals: number, c?: BigNumber | string, mu?: BigNumber | string): BigNumber;
+/**
+ * Calculates the amount of fyToken a user could sell for given amount of shares.
+ * fyTokenInForSharesOut
+ * https://www.desmos.com/calculator/8dgux6slgq
+ * @param { BigNumber | string } sharesReserves shares reserves amount
+ * @param { BigNumber | string } fyTokenReserves fyToken reserves amount
+ * @param { BigNumber | string } sharesOut shares amount to be traded
+ * @param { BigNumber | string } timeTillMaturity time till maturity in seconds
+ * @param { BigNumber | string } ts time stretch
+ * @param { BigNumber | string } g2 fee coefficient
+ * @param { number } decimals pool decimals
+ * @param { BigNumber | string } c price of shares in terms of their base in 64 bit
+ * @param { BigNumber | string } mu (μ) Normalization factor -- starts as c at initialization in 64 bit
+ *
+ * @returns { BigNumber } fyTokenIn: the amount of fyToken a user could sell for given amount of shares
+ *
+ * y = fyToken reserves
+ * z = shares reserves
+ * x = Δz (sharesOut)
+ *
+ *      (                  sum                               )^(   invA   )  - y
+ *      ( (    Za        ) + ( Ya  ) - (      Zxa            )^(   invA   )  - y
+ * Δy = ( c/μ * (μz)^(1-t) + y^(1-t) - c/μ * (μz - μx)^(1-t) )^(1 / (1 - t)) - y
+ */
+export declare function buyBase(sharesReserves: BigNumber | string, fyTokenReserves: BigNumber | string, sharesOut: BigNumber | string, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g2: BigNumber | string, decimals: number, c?: BigNumber | string, mu?: BigNumber | string): BigNumber;
+/**
+ * Calculates the amount of fyToken a user could buy for given amount of shares.
+ * sharesInForFYTokenOut
+ * https://www.desmos.com/calculator/oyj2qzevzs
+ * @param { BigNumber | string } sharesReserves yield bearing vault shares reserve amount
+ * @param { BigNumber | string } fyTokenReserves fyToken reserves amount
+ * @param { BigNumber | string } fyTokenOut fyToken amount to be traded
+ * @param { BigNumber | string } timeTillMaturity time till maturity in seconds
+ * @param { BigNumber | string } ts time stretch
+ * @param { BigNumber | string } g1 fee coefficient
+ * @param { number } decimals pool decimals
+ * @param { BigNumber | string } c price of shares in terms of their base in 64 bit
+ * @param { BigNumber | string } mu (μ) Normalization factor -- starts as c at initialization in 64 bit
+ *
+ * @returns { BigNumber } sharesIn: result the amount of shares a user would have to pay for given amount of fyToken
+ *
+ * y = fyToken
+ * z = vyToken
+ * x = Δy
+ *
+ *      ( 1/μ * (                         sum                           ) )^(   invA    ) - z
+ *      ( 1/μ * ( (     Za       ) + ( Ya   ) - (    Yxa    ) ) / (c/μ) ) )^(   invA    ) - z
+ * Δz = ( 1/μ * ( ( c/μ * μz^(1-t) + y^(1-t)  - (y - x)^(1-t) ) / (c/μ) ) )^(1 / (1 - t)) - z
+ */
+export declare function buyFYToken(sharesReserves: BigNumber | string, // z
+fyTokenReserves: BigNumber | string, // y
+fyTokenOut: BigNumber | string, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g1: BigNumber | string, decimals: number, c?: BigNumber | string, mu?: BigNumber | string): BigNumber;
+/**
+ * Calculate the max amount of shares that can be sold to into the pool without making the interest rate negative.
+ *
+ * @param { BigNumber | string } sharesReserves yield bearing vault shares reserve amount
+ * @param { BigNumber | string } fyTokenReserves fyToken reserves amount
+ * @param { BigNumber | string } timeTillMaturity time till maturity in seconds
+ * @param { BigNumber | string } ts time stretch
+ * @param { BigNumber | string } g1 fee coefficient
+ * @param { number } decimals pool decimals
+ * @param { BigNumber | string } c price of shares in terms of their base in 64 bit
+ * @param { BigNumber | string } mu (μ) Normalization factor -- starts as c at initialization in 64 bit
+ *
+ * @returns { BigNumber } max amount of shares that can be bought from the pool
+ *
+ * y = fyToken
+ * z = vyToken
+ * x = Δy
+ *
+ *      1/μ * ( (               sum                 )^(   invA    ) - z
+ *      1/μ * ( ( (  cua   ) * Za  + Ya ) / c/μ + 1 )^(   invA    ) - z
+ * Δz = 1/μ * ( ( ( cμ^(a-1) * z^a + y^a) / c/μ + 1 )^(1 / (1 - t)) - z
+ *
+ */
+export declare function maxBaseIn(sharesReserves: BigNumber, fyTokenReserves: BigNumber, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g1: BigNumber | string, decimals: number, c?: BigNumber | string, mu?: BigNumber | string): BigNumber;
+/**
+ * Calculate the max amount of shares that can be bought from the pool.
+ * Since the amount of shares that can be purchased is not bounded, maxSharesOut is equivalent to the toal amount of shares in the pool.
+ *
+ * @param { BigNumber | string } sharesReserves
  * @param { BigNumber | string } fyTokenReserves
- * @param { BigNumber | string } fyToken
  * @param { BigNumber | string } timeTillMaturity
  * @param { BigNumber | string } ts
  * @param { BigNumber | string } g2
  * @param { number } decimals
+ * @param { BigNumber | string } c
+ * @param { BigNumber | string } mu
  *
- * @returns { BigNumber }
- */
-export declare function sellFYToken(baseReserves: BigNumber | string, fyTokenReserves: BigNumber | string, fyToken: BigNumber | string, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g2: BigNumber | string, decimals: number): BigNumber;
-/**
- * Calculate the amount of fyToken a user could sell for given amount of Base.
- * fyTokenInForBaseOut
- * @param { BigNumber | string } baseReserves
- * @param { BigNumber | string } fyTokenReserves
- * @param { BigNumber | string } base
- * @param { BigNumber | string } timeTillMaturity
- * @param { BigNumber | string } ts
- * @param { BigNumber | string } g2
- * @param { number } decimals
- *
- * @returns { BigNumber }
- */
-export declare function buyBase(baseReserves: BigNumber | string, fyTokenReserves: BigNumber | string, base: BigNumber | string, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g2: BigNumber | string, decimals: number): BigNumber;
-/**
- * Calculate the amount of base a user would have to pay for certain amount of fyToken.
- * baseInForFYTokenOut
- * @param { BigNumber | string } baseReserves
- * @param { BigNumber | string } fyTokenReserves
- * @param { BigNumber | string } fyToken
- * @param { BigNumber | string } timeTillMaturity
- * @param { BigNumber | string } ts
- * @param { BigNumber | string } g1
- * @param { number } decimals
- *
- * @returns { BigNumber }
- */
-export declare function buyFYToken(baseReserves: BigNumber | string, fyTokenReserves: BigNumber | string, fyToken: BigNumber | string, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g1: BigNumber | string, decimals: number): BigNumber;
-/**
- * Calculate the max amount of base that can be sold to into the pool without making the interest rate negative.
- *
- * @param { BigNumber | string } baseReserves
- * @param { BigNumber | string } fyTokenReserves
- * @param { BigNumber | string } timeTillMaturity
- * @param { BigNumber | string } ts
- * @param { BigNumber | string } g1
- * @param { number } decimals
- *
- * @returns { BigNumber } max amount of base that can be bought from the pool
+ * @returns { BigNumber } max amount of shares that can be bought from the pool
  *
  */
-export declare function maxBaseIn(baseReserves: BigNumber, fyTokenReserves: BigNumber, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g1: BigNumber | string, decimals: number): BigNumber;
-/**
- * Calculate the max amount of base that can be bought from the pool.
- *
- * @param { BigNumber | string } baseReserves
- * @param { BigNumber | string } fyTokenReserves
- * @param { BigNumber | string } timeTillMaturity
- * @param { BigNumber | string } ts
- * @param { BigNumber | string } g2
- * @param { number } decimals
- *
- * @returns { BigNumber } max amount of base that can be bought from the pool
- *
- */
-export declare function maxBaseOut(baseReserves: BigNumber, fyTokenReserves: BigNumber, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g2: BigNumber | string, decimals: number): BigNumber;
+export declare function maxBaseOut(sharesReserves: BigNumber): BigNumber;
 /**
  * Calculate the max amount of fyTokens that can be sold to into the pool.
  *
- * @param { BigNumber | string } baseReserves
+ * y = maxFyTokenOut
+ * Y = fyTokenReserves (virtual)
+ * Z = sharesReserves
+ *
+ *     (       sum           )^(invA) - y
+ *     ( (    Za      ) + Ya )^(invA) - y
+ * y = ( (c/μ) * (μZ)^a + Y^a)^(1/a)  - y
+ *
+ * @param { BigNumber | string } sharesReserves
  * @param { BigNumber | string } fyTokenReserves
  * @param { BigNumber | string } timeTillMaturity
  * @param { BigNumber | string } ts
  * @param { BigNumber | string } g2
  * @param { number } decimals
+ * @param { BigNumber | string } c
+ * @param { BigNumber | string } mu
  *
  * @returns { BigNumber }
  */
-export declare function maxFyTokenIn(baseReserves: BigNumber, fyTokenReserves: BigNumber, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g2: BigNumber | string, decimals: number): BigNumber;
+export declare function maxFyTokenIn(sharesReserves: BigNumber, fyTokenReserves: BigNumber, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g2: BigNumber | string, decimals: number, c?: BigNumber | string, mu?: BigNumber | string): BigNumber;
 /**
  * Calculate the max amount of fyTokens that can be bought from the pool without making the interest rate negative.
- * See section 6.3 of the YieldSpace White paper
+ * https://docs.google.com/spreadsheets/d/14K_McZhlgSXQfi6nFGwDvDh4BmOu6_Hczi_sFreFfOE/edit#gid=0 (maxFyTokenOut)
  *
- * @param { BigNumber | string } baseReserves
+ * y = maxFyTokenOut
+ * Y = fyTokenReserves (virtual)
+ * Z = sharesReserves
+ * cmu = cμ^a
+ *
+ *         ( (       sum                 ) / (  denominator  ) )^invA
+ *         ( ( (    Za      ) + (  Ya  ) ) / (  denominator  ) )^invA
+ * y = Y - ( ( ( cμ^a * Z^a ) + ( μY^a ) ) / (    c/μ + 1    ) )^(1/a)
+ *
+ * @param { BigNumber | string } sharesReserves
  * @param { BigNumber | string } fyTokenReserves
  * @param { BigNumber | string } timeTillMaturity
  * @param { BigNumber | string } ts
  * @param { BigNumber | string } g1
  * @param { number } decimals
+ * @param { BigNumber | string } c
+ * @param { BigNumber | string } mu
  *
  * @returns { BigNumber }
  */
-export declare function maxFyTokenOut(baseReserves: BigNumber, fyTokenReserves: BigNumber, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g1: BigNumber | string, decimals: number): BigNumber;
+export declare function maxFyTokenOut(sharesReserves: BigNumber, fyTokenReserves: BigNumber, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g1: BigNumber | string, decimals: number, c?: BigNumber | string, mu?: BigNumber | string): BigNumber;
 /**
  * Calculate the amount of fyToken that should be bought when providing liquidity with only underlying.
  * The amount bought leaves a bit of unused underlying, to allow for the pool reserves to change between
  * the calculation and the mint. The pool returns any unused underlying.
  *
- * @param baseReserves
+ * @param sharesReserves
  * @param fyTokenRealReserves
  * @param fyTokenVirtualReserves
- * @param base
+ * @param shares
  * @param timeTillMaturity
  * @param ts
  * @param g1
  * @param decimals
  * @param slippage How far from the optimum we want to be
  * @param precision How wide the range in which we will accept a value
+ * @param c
+ * @param mu
+ *
  * @returns fyTokenToBuy, surplus
  */
-export declare function fyTokenForMint(baseReserves: BigNumber, fyTokenRealReserves: BigNumber, fyTokenVirtualReserves: BigNumber, base: BigNumber | string, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g1: BigNumber | string, decimals: number, slippage?: number, // 1% default
-precision?: number): [BigNumber, BigNumber];
+export declare function fyTokenForMint(sharesReserves: BigNumber, fyTokenRealReserves: BigNumber, fyTokenVirtualReserves: BigNumber, shares: BigNumber | string, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g1: BigNumber | string, decimals: number, slippage?: number, // 1% default
+c?: BigNumber | string, mu?: BigNumber | string, precision?: number): [BigNumber, BigNumber];
+export declare function fyTokenForMintOld(sharesReserves: BigNumber | string, fyTokenRealReserves: BigNumber | string, fyTokenVirtualReserves: BigNumber | string, shares: BigNumber | string, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g1: BigNumber | string, decimals: number, slippage?: number, // 1% default
+c?: BigNumber | string, mu?: BigNumber | string): BigNumber;
 /**
- * Split a certain amount of X liquidity into its two components (eg. base and fyToken)
- * @param { BigNumber } xReserves // eg. base reserves
+ * Split a certain amount of X liquidity into its two components (eg. shares and fyToken)
+ * @param { BigNumber } xReserves // eg. shares reserves
  * @param { BigNumber } yReserves // eg. fyToken reservers
  * @param {BigNumber} xAmount // amount to split in wei
  * @param {BigNumber} asBn
- * @returns  [ BigNumber, BigNumber ] returns an array of [base, fyToken]
+ * @returns  [ BigNumber, BigNumber ] returns an array of [shares, fyToken]
  */
 export declare const splitLiquidity: (xReserves: BigNumber | string, yReserves: BigNumber | string, xAmount: BigNumber | string, asBn?: boolean) => [BigNumberish, BigNumberish];
 /**
@@ -294,11 +392,11 @@ export declare const calculateAPR: (tradeValue: BigNumber | string, amount: BigN
  * @param { BigNumber | string } basePrice bases per unit of collateral (in wei)
  * @param { BigNumber | string } baseAmount amount base debt (in wei)
  * @param {boolean} asPercent OPTIONAL: flag to return ratio as a percentage
- * @returns { string | undefined } // can be undefined because of 0 baseAmount as a denominator.
+ * @returns { number | undefined } // can be undefined because of 0 baseAmount as a denominator.
  */
 export declare const calculateCollateralizationRatio: (collateralAmount: BigNumber | string, basePrice: BigNumber | string, baseAmount: BigNumber | string, asPercent?: boolean) => number | undefined;
 /**
- * Calculates the min collateralization ratio
+ * Calculates the collateralization ratio
  * based on the collat amount and value and debt value.
  * @param { BigNumber | string } basePrice bases per unit collateral (in wei)
  * @param { BigNumber | string } baseAmount amount of bases / debt (in wei)
@@ -308,7 +406,7 @@ export declare const calculateCollateralizationRatio: (collateralAmount: BigNumb
  *
  * @returns { string | undefined }
  */
-export declare const calculateMinCollateral: (basePrice: BigNumber | string, baseAmount: BigNumber | string, liquidationRatio: string, existingCollateral?: BigNumber | string) => BigNumber;
+export declare const calculateMinCollateral: (basePrice: BigNumber | string, baseAmount: BigNumber | string, liquidationRatio: string, existingCollateral?: BigNumber | string, asBigNumber?: boolean) => string | BigNumber;
 /**
  * Calcualtes the amount (base, or other variant) that can be borrowed based on
  * an amount of collateral (ETH, or other), and collateral price.
@@ -333,36 +431,37 @@ export declare const calculateBorrowingPower: (collateralAmount: BigNumber | str
  */
 export declare const calcLiquidationPrice: (collateralAmount: string, debtAmount: string, liquidationRatio: number) => string;
 /**
- *  @param {BigNumber}  baseChange
- * @param {BigNumber}  fyTokenChange
- * @param {BigNumber}  poolBaseReserves
- * @param {BigNumber}  poolFyTokenRealReserves
- * @param {BigNumber}  poolTotalSupply
+ *  @param {BigNumber} sharesChange change in shares
+ * @param {BigNumber} fyTokenChange change in fyToken
+ * @param {BigNumber} poolSharesReserves pool shares reserves
+ * @param {BigNumber} poolFyTokenReserves pool fyToken reserves
+ * @param {BigNumber} poolTotalSupply pool total supply
  *
- * @returns {BigNumber[]} [newBaseReserves, newFyTokenRealReserves, newTotalSupply, newFyTokenVirtualReserves]
+ * @returns {BigNumber[]} [newSharesReserves, newFyTokenRealReserves, newTotalSupply, newFyTokenVirtualReserves]
  */
-export declare const newPoolState: (baseChange: BigNumber, fyTokenChange: BigNumber, poolBaseReserves: BigNumber, poolFyTokenRealReserves: BigNumber, poolTotalSupply: BigNumber) => {
-    baseReserves: BigNumber;
+export declare const newPoolState: (sharesChange: BigNumber, fyTokenChange: BigNumber, poolSharesReserves: BigNumber, poolFyTokenReserves: BigNumber, poolTotalSupply: BigNumber) => {
+    sharesReserves: BigNumber;
     fyTokenRealReserves: BigNumber;
     totalSupply: BigNumber;
     fyTokenVirtualReserves: BigNumber;
 };
 /**
- *  @param {BigNumber}  strategyTokenAmount
- * @param {BigNumber}  strategyTotalSupply
- * @param {BigNumber}  poolStrategyBalance
- * @param {BigNumber}  poolBaseReserves
- * @param {BigNumber}  poolFyTokenReserves
- * @param {BigNumber}  poolTotalSupply
- * @param {number}  poolTimeToMaturity
- *
- * @param { BigNumber | string } ts
- * @param { BigNumber | string } g2
+ *  @param {BigNumber | string} strategyTokenAmount
+ * @param {BigNumber} strategyTotalSupply
+ * @param {BigNumber} strategyPoolBalance
+ * @param {BigNumber} poolSharesReserves
+ * @param {BigNumber} poolFyTokenRealReserves
+ * @param {BigNumber} poolTotalSupply
+ * @param {BigNumber | string} poolTimeToMaturity
+ * @param {BigNumber | string} ts
+ * @param {BigNumber | string} g2
  * @param { number } decimals
+ * @param {BigNumber | string} c
+ * @param {BigNumber | string} mu
  *
- * @returns {BigNumber} [soldValue, totalValue]
+ * @returns {BigNumber} [fyToken sold to shares, shares received]
  */
-export declare const strategyTokenValue: (strategyTokenAmount: BigNumber | string, strategyTotalSupply: BigNumber, strategyPoolBalance: BigNumber, poolBaseReserves: BigNumber, poolFyTokenRealReserves: BigNumber, poolTotalSupply: BigNumber, poolTimeToMaturity: string | BigNumber, ts: BigNumber | string, g2: BigNumber | string, decimals: number) => [BigNumber, BigNumber];
+export declare const strategyTokenValue: (strategyTokenAmount: BigNumber | string, strategyTotalSupply: BigNumber, strategyPoolBalance: BigNumber, poolSharesReserves: BigNumber, poolFyTokenReserves: BigNumber, poolTotalSupply: BigNumber, poolTimeToMaturity: string | BigNumber, ts: BigNumber | string, g2: BigNumber | string, decimals: number, c?: BigNumber | string, mu?: BigNumber | string) => [BigNumber, BigNumber];
 /**
  * Calculates the estimated percentage of the pool given an inputted base amount.
  *
@@ -375,13 +474,13 @@ export declare const getPoolPercent: (input: BigNumber, strategyTotalSupply: Big
 /**
  * Calcualtes the MIN and MAX reserve ratios of a pool for a given slippage value
  *
- * @param {BigNumber} baseReserves
- * @param {BigNumber} fyTokenReserves
+ * @param {BigNumber} sharesReserves
+ * @param {BigNumber} fyTokenReserves // real reserves
  * @param {number} slippage
  *
  * @returns {[BigNumber, BigNumber] }
  */
-export declare const calcPoolRatios: (baseReserves: BigNumber, fyTokenReserves: BigNumber, slippage?: number) => [BigNumber, BigNumber];
+export declare const calcPoolRatios: (sharesReserves: BigNumber, fyTokenReserves: BigNumber, slippage?: number) => [BigNumber, BigNumber];
 /**
  * Calculate accrued debt value after maturity
  *

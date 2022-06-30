@@ -28,7 +28,7 @@ import {
   updateRepayInput,
 } from './viewObservables/input';
 import { combineLatest } from 'rxjs';
-import { buildProtocol } from './initProtocol/buildProtocol';
+import { buildProtocol } from './init/buildProtocol';
 import { IYieldFunctions } from './types';
 
 import * as yieldObservables from './observables';

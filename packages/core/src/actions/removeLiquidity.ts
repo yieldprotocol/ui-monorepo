@@ -81,7 +81,7 @@ export const removeLiquidity = async (
       );
 
       const fyTokenTrade = sellFYToken(
-        _newPool.baseReserves,
+        _newPool.sharesReserves,
         _newPool.fyTokenVirtualReserves,
         _fyTokenReceived,
         series.getTimeTillMaturity(),

@@ -2,7 +2,7 @@ import { bytesToBytes32, calcAccruedDebt } from "@yield-protocol/ui-math";
 import { format } from "date-fns";
 import { ethers, BigNumber } from "ethers";
 import { BehaviorSubject, Observable, shareReplay, lastValueFrom, first, combineLatest, filter, withLatestFrom } from "rxjs";
-import { buildVaultMap } from "../initProtocol/buildVaultsRoot";
+import { buildVaultMap } from "../init/buildVaultsRoot";
 import { IVault, IVaultRoot, MessageType, IYieldProtocol, ISeries } from "../types";
 import { ZERO_BN } from "../utils";
 import { bnToW3Number } from "../utils/yieldUtils";
