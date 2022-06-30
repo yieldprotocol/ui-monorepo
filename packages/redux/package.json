@@ -1,6 +1,12 @@
 {
   "name": "@yield-protocol/ui-redux",
   "version": "1.0.0",
+  "repository": "https://github.com/yieldprotocol/ui-monorepo",
+  "publishConfig": {
+    "access": "restricted"
+  },
+
+  "private": true,
   "description": "redux wrapper",
   "main": "./bin/index.js",
   "author": "bruce donovan",

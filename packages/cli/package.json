@@ -2,6 +2,10 @@
   "name": "@yield-protocol/ui-cli",
   "version": "1.0.0",
   "main": "./bin/index.js",
+  "repository": "https://github.com/yieldprotocol/ui-monorepo",
+  "publishConfig": {
+    "access": "restricted"
+  },
   "author": "brucedonovan",
   "license": "MIT",
   "private": true,

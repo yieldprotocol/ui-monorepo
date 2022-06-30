@@ -17,7 +17,8 @@
   "dependencies": {
     "@yield-protocol/ui-core": "1.0.0",
     "@yield-protocol/ui-react": "1.0.0",
-    "@yield-protocol/ui-redux": "1.0.0"
+    "@yield-protocol/ui-math": "1.0.0",
+    "@yield-protocol/ui-cli": "1.0.0"
   },
   "devDependencies": {
     "esbuild-serve": "^1.0.1",
