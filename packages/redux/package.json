@@ -1,14 +1,18 @@
 {
   "name": "@yield-protocol/ui-redux",
   "version": "1.0.2-alpha.0",
-  "repository": "https://github.com/yieldprotocol/ui-monorepo",
+  "repository": {
+    "url": "git+https://github.com/yieldprotocol/ui-monorepo.git",
+    "type": "git"
+  },
   "publishConfig": {
+    "registry": " ",
     "access": "restricted"
   },
   "private": true,
   "description": "redux wrapper",
   "main": "./bin/index.js",
-  "author": "bruce donovan",
+  "author": "Yield Inc.",
   "license": "MIT",
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.2",

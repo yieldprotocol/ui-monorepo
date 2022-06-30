@@ -1,7 +1,13 @@
 {
   "name": "yield-ui",
   "packageManager": "yarn@3.1.1",
-  "private": true,
+  "author": "Yield Inc.",
+  "repository": {
+    "url": "git+https://github.com/yieldprotocol/ui-monorepo.git",
+    "type": "git"
+  },
+  "private": "true",
+
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "clean": "lerna clean --yes",
