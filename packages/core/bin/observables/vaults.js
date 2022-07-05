@@ -67,7 +67,9 @@ const _updateVault = (vault, account, protocol, suppressEventLogQueries) => tsli
     ] = yield Promise.all([
         cauldron.balances(vault.id),
         cauldron.vaults(vault.id),
-        suppressEventLogQueries ? [] : witch.queryFilter(witch.filters.Auctioned((0, ui_math_1.bytesToBytes32)(vault.id, 12), null), 'earliest', 'latest'),
+        suppressEventLogQueries
+            ? []
+            : witch.queryFilter(witch.filters.Auctioned((0, ui_math_1.bytesToBytes32)(vault.id, 12), null), 'earliest', 'latest'),
     ]);
     /* Check for liquidation event date */
     const liquidationDate = liquidations.length ? liquidations[0].args.start.toNumber() : undefined;

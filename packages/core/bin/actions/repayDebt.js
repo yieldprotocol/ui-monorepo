@@ -151,7 +151,7 @@ const repayDebt = (amount, vault, reclaimCollateral = true) => tslib_1.__awaiter
             ...unwrapAssetCallData,
         ];
         /* finally transact, and send in update series as a callback */
-        (0, transact_1.transact)(calls, txCode, () => (0, observables_1.updateSeries)([series]));
+        (0, transact_1.transact)(calls, txCode, () => { (0, observables_1.updateVaults)([vault]); (0, observables_1.updateSeries)([series]); });
     }));
 });
 exports.repayDebt = repayDebt;

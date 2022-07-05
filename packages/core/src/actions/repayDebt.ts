@@ -21,6 +21,7 @@ import {
   userSettingsø,
   protocolø,
   updateSeries,
+  updateVaults,
 } from '../observables';
 import { combineLatest, filter, map, take } from 'rxjs';
 
@@ -213,6 +214,6 @@ export const repayDebt = async (amount: string | undefined, vault: IVault, recla
       ];
 
       /* finally transact, and send in update series as a callback */
-      transact(calls, txCode, () => updateSeries([series]) );
+      transact(calls, txCode, () => { updateVaults([vault]); updateSeries([series])}  );
     });
 };
