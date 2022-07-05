@@ -18,7 +18,6 @@ import { MessageType, sendMsg } from '../observables/messages';
 import { inputToTokenValue } from '../utils/yieldUtils';
 import { combineLatest, take } from 'rxjs';
 
-
 export const borrow = async (
   amount?: string,
   collateralAmount?: string,

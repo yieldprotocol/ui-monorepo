@@ -15,7 +15,7 @@ const config = {
     // defaultForkMap: new Map([
     //   [
     //     1,
-    //     () => new ethers.providers.JsonRpcProvider('https://rpc.tenderly.co/fork/f8730f17-bd41-41ff-bd59-2f1be4a144f1'),
+    //     () => new ethers.providers.JsonRpcProvider('https://rpc.tenderly.co/fork/62a98f8a-3297-409f-a5f2-bda4012d84cf'),
     //   ],
     // ]),
     suppressEventLogQueries: false, // may be needed for tenderly forks.
@@ -34,13 +34,9 @@ beforeAll((done) => {
     observables_1.internalMessagesø
         .pipe((0, rxjs_1.finalize)(() => done()), (0, rxjs_1.takeWhile)((val) => !val.has('protocolReady'), true))
         .subscribe();
-    /* set a max timelimit of 10s for loading, and running tests -> any longer is likely a network issue loading the protocol */
+    /* set a max timelimit of 10s for loading, and running tests -> any longer is likely a network issue */
 }, 10000);
 test('Liquidity can be added to all pools, with Borrow and Pool method', (done) => {
-    (0, rxjs_1.combineLatest)([providerø, appConfigø, chainIdø]).subscribe(([provider, config, chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const protocol = yield (0, buildProtocol_1.buildProtocol)(provider, chainId, config);
-        updateProtocol(protocol);
-    }));
     seriesø.subscribe({
         next: (seriesMap) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
             yield Promise.all([...seriesMap.values()].map((series) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {

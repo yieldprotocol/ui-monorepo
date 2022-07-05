@@ -18,9 +18,14 @@ const vaultMap$ = new rxjs_1.BehaviorSubject(new Map([]));
 exports.vaultsø = vaultMap$.pipe((0, rxjs_1.shareReplay)(1));
 /* Update vaults function */
 const updateVaults = (vaultList, suppressEventLogQueries = false) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    const list = vaultList !== undefined ? vaultList : Array.from(vaultMap$.value.values());
     const account = yield (0, rxjs_1.lastValueFrom)(connection_1.accountø.pipe((0, rxjs_1.first)()));
     const protocol = yield (0, rxjs_1.lastValueFrom)(protocol_1.protocolø.pipe((0, rxjs_1.first)()));
+    const appConfig = yield (0, rxjs_1.lastValueFrom)(appConfig_1.appConfigø.pipe((0, rxjs_1.first)()));
+    const provider = yield (0, rxjs_1.lastValueFrom)(connection_1.providerø.pipe((0, rxjs_1.first)()));
+    const chainId = yield (0, rxjs_1.lastValueFrom)(connection_1.chainIdø.pipe((0, rxjs_1.first)()));
+    const list = vaultList !== undefined
+        ? vaultList
+        : Array.from((yield (0, buildVaultsRoot_1.buildVaultMap)(protocol, provider, account, chainId, appConfig)).values()); // : Array.from(vaultMap$.value.values());
     /* if there are some vaults: */
     if (list.length && account) {
         yield Promise.all(list.map((_vault) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
@@ -57,8 +62,8 @@ const _updateVault = (vault, account, protocol, suppressEventLogQueries) => tsli
     const { seriesRootMap, cauldron, witch, oracleMap } = protocol;
     const RateOracle = oracleMap.get('RateOracle');
     /* Get dynamic vault data */
-    const [{ ink, art }, { owner, seriesId, ilkId }, // update balance and series (series - because a vault can have been rolled to another series) */
-    liquidations, // get the list of liquidations on this vault - unless supressed
+    const [{ ink, art }, { owner, seriesId, ilkId }, // Update balance and series (series - because a vault can have been rolled to another series) */
+    liquidations, // Get the list of liquidations on this vault - unless supressed
     ] = yield Promise.all([
         cauldron.balances(vault.id),
         cauldron.vaults(vault.id),

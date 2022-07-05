@@ -71,7 +71,7 @@
   },
   "jest": {
     "verbose": true,
-    "silent": true,
+    "silent": false,
     "modulePathIgnorePatterns": [
       "<rootDir>/src/"
     ]

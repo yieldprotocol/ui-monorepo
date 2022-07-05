@@ -1,12 +1,13 @@
-import { combineLatest, finalize, takeWhile, take, subscribeOn, first, lastValueFrom, withLatestFrom } from 'rxjs';
+import { combineLatest, finalize, takeWhile } from 'rxjs';
+import { ethers } from 'ethers';
+
 import { buildProtocol } from '../init/buildProtocol';
 import { internalMessagesø, updateAppConfig } from '../observables';
-import { ethers } from 'ethers';
 
 import * as yObservables from '../observables';
 import * as yActions from '../actions';
-import { IAsset, ISeries, TokenType } from '../types';
 import { WETH } from '../config/assets';
+
 
 const config = {
   defaultChainId: 1,
@@ -16,7 +17,7 @@ const config = {
   // defaultForkMap: new Map([
   //   [
   //     1,
-  //     () => new ethers.providers.JsonRpcProvider('https://rpc.tenderly.co/fork/f8730f17-bd41-41ff-bd59-2f1be4a144f1'),
+  //     () => new ethers.providers.JsonRpcProvider('https://rpc.tenderly.co/fork/62a98f8a-3297-409f-a5f2-bda4012d84cf'),
   //   ],
   // ]),
   suppressEventLogQueries: false, // may be needed for tenderly forks.
@@ -40,16 +41,11 @@ beforeAll((done) => {
       takeWhile((val) => !val.has('protocolReady'), true)
     )
     .subscribe();
-  /* set a max timelimit of 10s for loading, and running tests -> any longer is likely a network issue loading the protocol */
+  /* set a max timelimit of 10s for loading, and running tests -> any longer is likely a network issue */
 }, 10000);
 
 
 test('Liquidity can be added to all pools, with Borrow and Pool method', (done) => {
-
-  combineLatest([providerø, appConfigø, chainIdø]).subscribe(async ([provider, config, chainId]) => {
-    const protocol = await buildProtocol(provider, chainId, config);
-    updateProtocol(protocol);
-  });
 
   seriesø.subscribe({
     next: async ( seriesMap ) => {
@@ -85,10 +81,6 @@ test('Liquidity can be added to all pools, with Buy and Pool method', (done) => 
  test('Debt can be repay from any vault', (done) => {
   done();
  });
-
-
- 
-
 
 // afterAll( async () => {
 //   const provider = await lastValueFrom(providerø.pipe(first()))
