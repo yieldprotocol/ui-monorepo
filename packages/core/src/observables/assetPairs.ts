@@ -94,7 +94,7 @@ export const updatePair = async (baseId: string, ilkId: string, chainId: number)
 
     /* update the assetPairMap */
     assetPairMap$.next(assetPairMap$.value.set(pairId, newPair));
-    console.log('New Asset Pair Info: ', newPair);
+    // console.log('New Asset Pair Info: ', newPair);
 
     /* return the new pair so we don't have to go looking for it again after assetpairMap has been updated */
     return newPair;

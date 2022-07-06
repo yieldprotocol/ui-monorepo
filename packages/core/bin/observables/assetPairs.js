@@ -77,7 +77,7 @@ const updatePair = (baseId, ilkId, chainId) => tslib_1.__awaiter(void 0, void 0,
         };
         /* update the assetPairMap */
         assetPairMap$.next(assetPairMap$.value.set(pairId, newPair));
-        console.log('New Asset Pair Info: ', newPair);
+        // console.log('New Asset Pair Info: ', newPair);
         /* return the new pair so we don't have to go looking for it again after assetpairMap has been updated */
         return newPair;
     }

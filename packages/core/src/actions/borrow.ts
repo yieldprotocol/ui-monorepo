@@ -192,7 +192,7 @@ export const borrow = async (
         ];
 
         /* finally, handle the transaction and update vaults as the callback */
-        transact(calls, processCode, ()=> updateVaults());
+        transact(calls, processCode, () => updateVaults());
       }
     );
 };
