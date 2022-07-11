@@ -53,7 +53,7 @@ test('Base can be borrowed from all , with Borrow and Pool method', (done) => {
         [...seriesMap.values()].map(async ( series ) => {
 
 
-          // return setTimeout(()=>{ console.log('timer done:', series.name)}, 5000)
+          return setTimeout(()=>{ console.log('timer done:', series.name), done()}, 5000)
           // if ( !series.isMature() ) {
           //   console.log(series.name)
           //   yObservables.selectIlk(WETH);
@@ -77,11 +77,10 @@ test('Liquidity can be added to ETH pools, with Buy and Pool method', (done) => 
           if ( strategy.baseId === WETH  ) {
             await addLiquidity( '100', strategy, AddLiquidityType.BORROW ); 
 
-            
+
             done() 
           }
-          
-
+        
           // return setTimeout(()=>{ console.log('timer done:', series.name)}, 5000)
           // if ( !series.isMature() ) {
           //   console.log(series.name)

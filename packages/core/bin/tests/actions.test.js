@@ -7,6 +7,7 @@ const observables_1 = require("../observables");
 const yObservables = tslib_1.__importStar(require("../observables"));
 const yActions = tslib_1.__importStar(require("../actions"));
 const assets_1 = require("../config/assets");
+const types_1 = require("../types");
 const config = {
     defaultChainId: 1,
     ignoreSeries: ['0x303230340000', '0x303130340000'],
@@ -36,24 +37,42 @@ beforeAll((done) => {
         .subscribe();
     /* set a max timelimit of 10s for loading, and running tests -> any longer is likely a network issue */
 }, 10000);
-test('Liquidity can be added to all pools, with Borrow and Pool method', (done) => {
+test('Base can be borrowed from all , with Borrow and Pool method', (done) => {
     seriesø.subscribe({
         next: (seriesMap) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
             return Promise.all([...seriesMap.values()].map((series) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-                // return setTimeout(()=>{ done(); console.log('timer done:', series.name)}, 5000)
-                if (!series.isMature()) {
-                    console.log(series.name);
-                    yObservables.selectIlk(assets_1.WETH);
-                    yObservables.selectSeries(series);
-                    return borrow('5000', '10', undefined, false);
-                    // false is to not get preview from netwrok
-                }
-            }))).then(() => done());
+                return setTimeout(() => { console.log('timer done:', series.name), done(); }, 5000);
+                // if ( !series.isMature() ) {
+                //   console.log(series.name)
+                //   yObservables.selectIlk(WETH);
+                //   yObservables.selectSeries(series);
+                //   return borrow('5000', '10', undefined, false )
+                //    // false is to not get preview from netwrok
+                // }
+            })));
         })
     });
-}, 50000);
-test('Liquidity can be added to all pools, with Buy and Pool method', (done) => {
-    done();
+}, 20000);
+test('Liquidity can be added to ETH pools, with Buy and Pool method', (done) => {
+    strategiesø.subscribe({
+        next: (strategyMap) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+            return Promise.all([...strategyMap.values()].map((strategy) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+                // strategy.strategyContract.
+                if (strategy.baseId === assets_1.WETH) {
+                    yield addLiquidity('100', strategy, types_1.AddLiquidityType.BORROW);
+                    done();
+                }
+                // return setTimeout(()=>{ console.log('timer done:', series.name)}, 5000)
+                // if ( !series.isMature() ) {
+                //   console.log(series.name)
+                //   yObservables.selectIlk(WETH);
+                //   yObservables.selectSeries(series);
+                //   return borrow('5000', '10', undefined, false )
+                //    // false is to not get preview from netwrok
+                // }
+            })));
+        })
+    });
 });
 test('Minimum debt can be borrowed from all series - new vault', (done) => {
     done();

@@ -143,7 +143,8 @@ const addLiquidity = (amount, strategy, method = types_1.AddLiquidityType.BUY, m
                 ignoreIf: !strategy,
             },
         ];
-        (0, chainActions_1.transact)(calls, txCode);
+        console.log(txCode);
+        (0, chainActions_1.transact)(calls, txCode, () => (0, observables_1.updateStrategies)([]));
     }));
 });
 exports.addLiquidity = addLiquidity;

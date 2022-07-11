@@ -15,12 +15,14 @@ const yieldUtils_1 = require("../utils/yieldUtils");
 const strategyMap$ = new rxjs_1.BehaviorSubject(new Map([]));
 exports.strategiesø = strategyMap$.pipe((0, rxjs_1.shareReplay)(1));
 /* Update strategies function */
-const updateStrategies = (provider, strategyList, account, accountDataOnly = false) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+const updateStrategies = (
+// provider: ethers.providers.BaseProvider,
+strategyList, account, accountDataOnly = false) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* If strategyList parameter is empty/undefined, update all the straetegies in the strategyMap */
     const list = (strategyList === null || strategyList === void 0 ? void 0 : strategyList.length) ? strategyList : Array.from(strategyMap$.value.values());
     yield Promise.all(list.map((strategy) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         /* if account data only, just return the strategy */
-        const strategyUpdate = accountDataOnly ? strategy : yield _updateInfo(strategy, provider);
+        const strategyUpdate = accountDataOnly ? strategy : yield _updateInfo(strategy);
         /* if account provided, append account data */
         const strategyUpdateAll = account ? yield _updateAccountInfo(strategyUpdate, account) : strategyUpdate;
         strategyMap$.next(new Map(strategyMap$.value.set(strategy.id, strategyUpdateAll))); // note: new Map to enforce ref update
@@ -34,16 +36,16 @@ protocol_1.protocolø
     /* 'Charge' all the assets (using the current provider) */
     const chargedList = Array.from(_protocol.strategyRootMap.values()).map((st) => _chargeStrategy(st, _provider));
     /* Update the assets with dynamic/user data */
-    yield (0, exports.updateStrategies)(_provider, chargedList, _account);
+    yield (0, exports.updateStrategies)(chargedList, _account);
     console.log('Strategy loading complete.');
     (0, messages_1.sendMsg)({ message: 'Strategies Loaded.', type: types_1.MessageType.INTERNAL, id: 'strategiesLoaded' });
 }));
 /**
  * Observe Account$ changes ('update dynamic/User Data')
  * */
-connection_1.accountø.pipe((0, rxjs_1.withLatestFrom)(exports.strategiesø, connection_1.providerø)).subscribe(([account, stratMap, provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+connection_1.accountø.pipe((0, rxjs_1.withLatestFrom)(exports.strategiesø)).subscribe(([account, stratMap]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (account && stratMap.size) {
-        yield (0, exports.updateStrategies)(provider, Array.from(stratMap.values()), account, true);
+        yield (0, exports.updateStrategies)(Array.from(stratMap.values()), account, true);
         console.log('Strategies updated with new account info.');
     }
 }));
@@ -52,8 +54,9 @@ const _chargeStrategy = (strategy, provider) => {
     const _strategy = contracts.Strategy__factory.connect(strategy.address, provider);
     return Object.assign(Object.assign({}, strategy), { strategyContract: _strategy, getAllowance: (acc, spender) => tslib_1.__awaiter(void 0, void 0, void 0, function* () { return _strategy.allowance(acc, spender); }) });
 };
-const _updateInfo = (strategy, provider // TODO: this provider is a pimple, but required :(
-) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+const _updateInfo = (strategy) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    // TODO: this provider is a bit of a pimple pimple, but required :(
+    const provider = yield (0, rxjs_1.lastValueFrom)(connection_1.providerø.pipe((0, rxjs_1.first)()));
     /**
      * Dynamic strategy info ( not related to a user )
      * */
