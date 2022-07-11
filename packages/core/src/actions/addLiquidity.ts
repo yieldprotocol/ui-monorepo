@@ -12,6 +12,7 @@ import {
   userSettingsø,
   vaultsø,
   protocolø,
+  updateStrategies,
 } from '../observables';
 import {
   IStrategy,
@@ -231,6 +232,8 @@ export const addLiquidity = async (
         },
       ];
 
-      transact(calls, txCode);
+      console.log( txCode )
+
+      transact(calls, txCode, ()=>updateStrategies([]) );
     });
 };

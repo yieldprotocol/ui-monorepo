@@ -39,16 +39,19 @@ beforeAll((done) => {
 test('Liquidity can be added to all pools, with Borrow and Pool method', (done) => {
     seriesø.subscribe({
         next: (seriesMap) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-            yield Promise.all([...seriesMap.values()].map((series) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-                yObservables.selectSeries(series);
-                yObservables.selectIlk(assets_1.WETH);
-                yield borrow('5000', '10', undefined);
-                console.log('done');
-            })));
-            done();
-        }),
+            return Promise.all([...seriesMap.values()].map((series) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+                // return setTimeout(()=>{ done(); console.log('timer done:', series.name)}, 5000)
+                if (!series.isMature()) {
+                    console.log(series.name);
+                    yObservables.selectIlk(assets_1.WETH);
+                    yObservables.selectSeries(series);
+                    return borrow('5000', '10', undefined, false);
+                    // false is to not get preview from netwrok
+                }
+            }))).then(() => done());
+        })
     });
-});
+}, 50000);
 test('Liquidity can be added to all pools, with Buy and Pool method', (done) => {
     done();
 });

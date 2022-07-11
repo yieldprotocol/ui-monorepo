@@ -91,7 +91,7 @@ export const borrow = async (
         console.log('vault? ', vaultId);
 
         /* Calculate expected debt (fytokens) from EITHER network or calculated : default = Network */
-        const _expectedFyToken = getValuesFromNetwork
+        const _expectedFyToken = getValuesFromNetwork 
           ? await series.poolContract.buyBasePreview(_amount)
           : buyBase(
               series.baseReserves.bn,

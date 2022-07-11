@@ -5,6 +5,8 @@ import {
   withLatestFrom,
   filter,
   shareReplay,
+  first,
+  lastValueFrom,
 } from 'rxjs';
 import { BigNumber, ethers } from 'ethers';
 import { mulDecimal, divDecimal } from '@yield-protocol/ui-math';
@@ -24,7 +26,7 @@ export const strategiesø: Observable<Map<string, IStrategy>> = strategyMap$.pip
 
 /* Update strategies function */
 export const updateStrategies = async (
-  provider: ethers.providers.BaseProvider,
+  // provider: ethers.providers.BaseProvider,
   strategyList?: IStrategy[],
   account?: string,
   accountDataOnly: boolean = false
@@ -35,7 +37,7 @@ export const updateStrategies = async (
   await Promise.all(
     list.map(async (strategy: IStrategy) => {
       /* if account data only, just return the strategy */
-      const strategyUpdate = accountDataOnly ? strategy : await _updateInfo(strategy, provider);
+      const strategyUpdate = accountDataOnly ? strategy : await _updateInfo(strategy);
       /* if account provided, append account data */
       const strategyUpdateAll = account ? await _updateAccountInfo(strategyUpdate, account) : strategyUpdate;
       strategyMap$.next(new Map(strategyMap$.value.set(strategy.id, strategyUpdateAll))); // note: new Map to enforce ref update
@@ -55,7 +57,7 @@ protocolø
       _chargeStrategy(st, _provider)
     );
     /* Update the assets with dynamic/user data */
-    await updateStrategies(_provider, chargedList, _account);
+    await updateStrategies(chargedList, _account);
     console.log('Strategy loading complete.');
     sendMsg({ message: 'Strategies Loaded.', type: MessageType.INTERNAL, id: 'strategiesLoaded' });
   });
@@ -63,9 +65,9 @@ protocolø
 /**
  * Observe Account$ changes ('update dynamic/User Data')
  * */
-accountø.pipe(withLatestFrom(strategiesø, providerø)).subscribe(async ([account, stratMap, provider]) => {
+accountø.pipe(withLatestFrom(strategiesø)).subscribe(async ([account, stratMap]) => {
   if (account && stratMap.size) {
-    await updateStrategies(provider, Array.from(stratMap.values()), account, true);
+    await updateStrategies(Array.from(stratMap.values()), account, true);
     console.log('Strategies updated with new account info.');
   }
 });
@@ -82,8 +84,12 @@ const _chargeStrategy = (strategy: any, provider: ethers.providers.BaseProvider)
 
 const _updateInfo = async (
   strategy: IStrategy,
-  provider: ethers.providers.BaseProvider // TODO: this provider is a pimple, but required :(
+  // provider: ethers.providers.BaseProvider // TODO: this provider is a pimple, but required :(
 ): Promise<IStrategy> => {
+
+  // TODO: this provider is a bit of a pimple pimple, but required :(
+  const provider = await lastValueFrom(providerø.pipe(first()));
+  
   /**
    * Dynamic strategy info ( not related to a user )
    * */

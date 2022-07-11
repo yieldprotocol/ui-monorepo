@@ -7,6 +7,7 @@ import { internalMessagesø, updateAppConfig } from '../observables';
 import * as yObservables from '../observables';
 import * as yActions from '../actions';
 import { WETH } from '../config/assets';
+import { AddLiquidityType } from '../types';
 
 
 const config = {
@@ -45,25 +46,54 @@ beforeAll((done) => {
 }, 10000);
 
 
-test('Liquidity can be added to all pools, with Borrow and Pool method', (done) => {
+test('Base can be borrowed from all , with Borrow and Pool method', (done) => {
 
   seriesø.subscribe({
-    next: async ( seriesMap ) => {
-      await Promise.all(
+    next: async ( seriesMap ) => Promise.all(
         [...seriesMap.values()].map(async ( series ) => {
-          yObservables.selectSeries(series);
-          yObservables.selectIlk(WETH);
-          await borrow('5000', '10', undefined ); 
-          console.log( 'done')
-        })
-      );
-      done();
-    },
-  });
-});
 
-test('Liquidity can be added to all pools, with Buy and Pool method', (done) => {
-  done();
+
+          // return setTimeout(()=>{ console.log('timer done:', series.name)}, 5000)
+          // if ( !series.isMature() ) {
+          //   console.log(series.name)
+          //   yObservables.selectIlk(WETH);
+          //   yObservables.selectSeries(series);
+          //   return borrow('5000', '10', undefined, false )
+          //    // false is to not get preview from netwrok
+          // }
+        })
+      )
+  });
+
+}, 20000);
+
+test('Liquidity can be added to ETH pools, with Buy and Pool method', (done) => {
+
+  strategiesø.subscribe({
+    next: async ( strategyMap ) => Promise.all(
+        [...strategyMap.values()].map(async ( strategy ) => {
+
+          // strategy.strategyContract.
+          if ( strategy.baseId === WETH  ) {
+            await addLiquidity( '100', strategy, AddLiquidityType.BORROW ); 
+
+            
+            done() 
+          }
+          
+
+          // return setTimeout(()=>{ console.log('timer done:', series.name)}, 5000)
+          // if ( !series.isMature() ) {
+          //   console.log(series.name)
+          //   yObservables.selectIlk(WETH);
+          //   yObservables.selectSeries(series);
+          //   return borrow('5000', '10', undefined, false )
+          //    // false is to not get preview from netwrok
+          // }
+        })
+      )
+  });
+
  });
 
  test('Minimum debt can be borrowed from all series - new vault', (done) => {
