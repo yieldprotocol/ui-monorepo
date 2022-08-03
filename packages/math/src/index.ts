@@ -172,7 +172,7 @@ const _computeA = (
   return [a, invA]; /* returns a and inverse of a */
 };
 
-/** remove _computeB*/
+/** remove _computeB */
 const _computeB = (
   timeToMaturity: BigNumber | string,
   ts: BigNumber | string,
@@ -1182,23 +1182,23 @@ export const getPoolPercent = (input: BigNumber, strategyTotalSupply: BigNumber)
  * Calcualtes the MIN and MAX reserve ratios of a pool for a given slippage value
  *
  * @param {BigNumber} sharesReserves
- * @param {BigNumber} fyTokenReserves // real reserves
+ * @param {BigNumber} fyTokenRealReserves
  * @param {number} slippage
  *
  * @returns {[BigNumber, BigNumber] }
  */
 export const calcPoolRatios = (
   sharesReserves: BigNumber,
-  fyTokenReserves: BigNumber,
+  fyTokenRealReserves: BigNumber,
   slippage: number = 0.1
 ): [BigNumber, BigNumber] => {
   const sharesReserves_ = new Decimal(sharesReserves.toString());
-  const fyTokenReserves_ = new Decimal(fyTokenReserves.toString());
+  const fyTokenRealReserves_ = new Decimal(fyTokenRealReserves.toString());
 
   const slippage_ = new Decimal(slippage.toString());
   const wad = new Decimal(WAD_BN.toString());
 
-  const ratio = sharesReserves_.div(fyTokenReserves_).mul(wad);
+  const ratio = sharesReserves_.div(fyTokenRealReserves_).mul(wad);
   const ratioSlippage = ratio.mul(slippage_);
 
   const min = toBn(ratio.sub(ratioSlippage));
