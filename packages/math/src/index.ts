@@ -1185,7 +1185,7 @@ export const getPoolPercent = (input: BigNumber, strategyTotalSupply: BigNumber)
  * @param {BigNumber} fyTokenRealReserves
  * @param {number} slippage
  *
- * @returns {[BigNumber, BigNumber] }
+ * @returns {[BigNumber, BigNumber] } [minRatio with slippage, maxRatio with slippage]
  */
 export const calcPoolRatios = (
   sharesReserves: BigNumber,
@@ -1194,6 +1194,9 @@ export const calcPoolRatios = (
 ): [BigNumber, BigNumber] => {
   const sharesReserves_ = new Decimal(sharesReserves.toString());
   const fyTokenRealReserves_ = new Decimal(fyTokenRealReserves.toString());
+
+  // use min/max values when real reserves are very close to (or) zero, due to difficulty estimating precise min/max ratios
+  if (fyTokenRealReserves_.lte(ONE_DEC)) return [toBn(ZERO_DEC), toBn(MAX_DEC)];
 
   const slippage_ = new Decimal(slippage.toString());
   const wad = new Decimal(WAD_BN.toString());
