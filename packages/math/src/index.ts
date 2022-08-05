@@ -172,7 +172,7 @@ const _computeA = (
   return [a, invA]; /* returns a and inverse of a */
 };
 
-/** remove _computeB*/
+/** remove _computeB */
 const _computeB = (
   timeToMaturity: BigNumber | string,
   ts: BigNumber | string,
@@ -1047,16 +1047,18 @@ export const calculateBorrowingPower = (
  * @param {string} debtAmount amount of debt in human readable decimals
  * @param {number} liquidationRatio  OPTIONAL: 1.5 (150%) as default
  *
- * @returns {string}
+ * @returns {string | undefined} returns price or undefined if can't calculate
  */
 export const calcLiquidationPrice = (
-  collateralAmount: string, //
+  collateralAmount: string,
   debtAmount: string,
   liquidationRatio: number
-): string => {
+): string | undefined => {
+  if (parseFloat(debtAmount) === 0) return undefined;
+
   const _collateralAmount = parseFloat(collateralAmount);
   const _debtAmount = parseFloat(debtAmount);
-  // condition/logic: collAmount*price > debtAmount*ratio
+  // condition/logic: collAmount * price > debtAmount * ratio
   const liquidationPoint = _debtAmount * liquidationRatio;
   const price = (liquidationPoint / _collateralAmount).toString();
   return price;
