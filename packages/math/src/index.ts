@@ -1054,7 +1054,7 @@ export const calcLiquidationPrice = (
   debtAmount: string,
   liquidationRatio: number
 ): string | undefined => {
-  if (parseFloat(debtAmount) === 0) return undefined;
+  if (parseFloat(debtAmount) === 0 || parseFloat(collateralAmount) === 0) return undefined;
 
   const _collateralAmount = parseFloat(collateralAmount);
   const _debtAmount = parseFloat(debtAmount);
