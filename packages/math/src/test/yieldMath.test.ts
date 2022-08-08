@@ -313,10 +313,10 @@ describe('Shares YieldMath', () => {
     });
 
     describe('maxFyTokenOut', () => {
-      // https://www.desmos.com/calculator/sjdvxpa3vy
+      // https://www.desmos.com/calculator/msohzeucu5
       it('should output a specific number with a specific input', () => {
-        c = BigNumber.from('0x1199999999999999a');
-        mu = BigNumber.from('0x10000000000000000');
+        c = BigNumber.from('0x1199999999999999a'); // 1.1
+        mu = BigNumber.from('0x10ccccccccccccccd'); // 1.05
         ts = toBn(
           new Decimal(
             1 /
@@ -330,7 +330,8 @@ describe('Shares YieldMath', () => {
         timeTillMaturity = (77760000).toString();
 
         const result = maxFyTokenOut(sharesReserves, fyTokenReserves, timeTillMaturity, ts, g1, decimals, c, mu);
-        expect(result).to.be.closeTo(parseUnits('209668.563', decimals), comparePrecision); // 209,668.563642
+        console.log('🦄 ~ file: yieldMath.test.ts ~ line 333 ~ it ~ result', result);
+        expect(result).to.be.closeTo(parseUnits('176616.991', decimals), comparePrecision); // 176,616.991033
       });
     });
 

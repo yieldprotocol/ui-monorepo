@@ -730,7 +730,6 @@ export function maxFyTokenIn(
 
 /**
  * Calculate the max amount of fyTokens that can be bought from the pool without making the interest rate negative.
- * https://docs.google.com/spreadsheets/d/14K_McZhlgSXQfi6nFGwDvDh4BmOu6_Hczi_sFreFfOE/edit#gid=0 (maxFyTokenOut)
  *
  * y = maxFyTokenOut
  * Y = fyTokenReserves (virtual)
@@ -739,7 +738,7 @@ export function maxFyTokenIn(
  *
  *         ( (       sum                 ) / (  denominator  ) )^invA
  *         ( ( (    Za      ) + (  Ya  ) ) / (  denominator  ) )^invA
- * y = Y - ( ( ( cμ^a * Z^a ) + ( μY^a ) ) / (    c/μ + 1    ) )^(1/a)
+ * y = Y - ( ( ( cμ^a * Z^a ) + ( μY^a ) ) / (    c + μ    ) )^(1/a)
  *
  * @param { BigNumber | string } sharesReserves
  * @param { BigNumber | string } fyTokenReserves
@@ -777,9 +776,9 @@ export function maxFyTokenOut(
   const cmu = c_.mul(mu_.pow(a));
 
   const Za = cmu.mul(sharesReserves_.pow(a));
-  const Ya = fyTokenReserves_.pow(a);
+  const Ya = mu_.mul(fyTokenReserves_.pow(a));
   const sum = Za.add(Ya);
-  const denominator = c_.div(mu_).add(ONE);
+  const denominator = c_.add(mu_);
 
   const res = fyTokenReserves_.sub(sum.div(denominator).pow(invA));
 
