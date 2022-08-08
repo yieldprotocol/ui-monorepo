@@ -675,7 +675,7 @@ export function maxBaseOut(sharesReserves: BigNumber): BigNumber {
 /**
  * Calculate the max amount of fyTokens that can be sold to into the pool.
  *
- * y = maxFyTokenOut
+ * y = maxFyTokenIn
  * Y = fyTokenReserves (virtual)
  * Z = sharesReserves
  *
