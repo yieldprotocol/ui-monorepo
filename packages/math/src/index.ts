@@ -657,13 +657,6 @@ export function maxBaseIn(
  * Since the amount of shares that can be purchased is not bounded, maxSharesOut is equivalent to the toal amount of shares in the pool.
  *
  * @param { BigNumber | string } sharesReserves
- * @param { BigNumber | string } fyTokenReserves
- * @param { BigNumber | string } timeTillMaturity
- * @param { BigNumber | string } ts
- * @param { BigNumber | string } g2
- * @param { number } decimals
- * @param { BigNumber | string } c
- * @param { BigNumber | string } mu
  *
  * @returns { BigNumber } max amount of shares that can be bought from the pool
  *
