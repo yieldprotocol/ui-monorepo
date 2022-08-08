@@ -1,7 +1,7 @@
 import chai, { expect } from 'chai';
 import { Decimal } from 'decimal.js';
 import { solidity } from 'ethereum-waffle';
-import { BigNumber, ethers, utils } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import { formatUnits } from 'ethers/lib/utils';
 import {
   buyBase,
