@@ -611,8 +611,8 @@ export function buyFYToken(
  * x = Δy
  *
  *      1/μ * ( (               sum                 )^(   invA    ) - z
- *      1/μ * ( ( (  cua   ) * Za  + Ya ) / c/μ + 1 )^(   invA    ) - z
- * Δz = 1/μ * ( ( ( cμ^(a-1) * z^a + y^a) / c/μ + 1 )^(1 / (1 - t)) - z
+ *      1/μ * ( ( (  cua   ) * Za  + Ya ) / (c/μ + 1) )^(   invA    ) - z
+ * Δz = 1/μ * ( ( ( cμ^a * z^a + μy^a) / (c + μ) )^(1 / (1 - t)) - z
  *
  */
 export function maxBaseIn(
@@ -636,11 +636,11 @@ export function maxBaseIn(
   const c_ = _getC(c);
   const mu_ = _getMu(mu);
 
-  const cua = c_.mul(mu_.pow(a.sub(ONE)));
+  const cua = c_.mul(mu_.pow(a));
   const Za = sharesReserves_.pow(a);
-  const Ya = fyTokenReserves_.pow(a);
-  const top = cua.add(Za).add(Ya);
-  const bottom = c_.div(mu_).add(ONE);
+  const Ya = mu_.mul(fyTokenReserves_.pow(a));
+  const top = cua.mul(Za).add(Ya);
+  const bottom = c_.add(mu_);
   const sum = top.div(bottom);
 
   const res = ONE.div(mu_).mul(sum.pow(invA)).sub(sharesReserves_);
@@ -657,13 +657,6 @@ export function maxBaseIn(
  * Since the amount of shares that can be purchased is not bounded, maxSharesOut is equivalent to the toal amount of shares in the pool.
  *
  * @param { BigNumber | string } sharesReserves
- * @param { BigNumber | string } fyTokenReserves
- * @param { BigNumber | string } timeTillMaturity
- * @param { BigNumber | string } ts
- * @param { BigNumber | string } g2
- * @param { number } decimals
- * @param { BigNumber | string } c
- * @param { BigNumber | string } mu
  *
  * @returns { BigNumber } max amount of shares that can be bought from the pool
  *
@@ -675,7 +668,7 @@ export function maxBaseOut(sharesReserves: BigNumber): BigNumber {
 /**
  * Calculate the max amount of fyTokens that can be sold to into the pool.
  *
- * y = maxFyTokenOut
+ * y = maxFyTokenIn
  * Y = fyTokenReserves (virtual)
  * Z = sharesReserves
  *
@@ -730,7 +723,6 @@ export function maxFyTokenIn(
 
 /**
  * Calculate the max amount of fyTokens that can be bought from the pool without making the interest rate negative.
- * https://docs.google.com/spreadsheets/d/14K_McZhlgSXQfi6nFGwDvDh4BmOu6_Hczi_sFreFfOE/edit#gid=0 (maxFyTokenOut)
  *
  * y = maxFyTokenOut
  * Y = fyTokenReserves (virtual)
@@ -739,7 +731,7 @@ export function maxFyTokenIn(
  *
  *         ( (       sum                 ) / (  denominator  ) )^invA
  *         ( ( (    Za      ) + (  Ya  ) ) / (  denominator  ) )^invA
- * y = Y - ( ( ( cμ^a * Z^a ) + ( μY^a ) ) / (    c/μ + 1    ) )^(1/a)
+ * y = Y - ( ( ( cμ^a * Z^a ) + ( μY^a ) ) / (    c + μ    ) )^(1/a)
  *
  * @param { BigNumber | string } sharesReserves
  * @param { BigNumber | string } fyTokenReserves
@@ -777,9 +769,9 @@ export function maxFyTokenOut(
   const cmu = c_.mul(mu_.pow(a));
 
   const Za = cmu.mul(sharesReserves_.pow(a));
-  const Ya = fyTokenReserves_.pow(a);
+  const Ya = mu_.mul(fyTokenReserves_.pow(a));
   const sum = Za.add(Ya);
-  const denominator = c_.div(mu_).add(ONE);
+  const denominator = c_.add(mu_);
 
   const res = fyTokenReserves_.sub(sum.div(denominator).pow(invA));
 
