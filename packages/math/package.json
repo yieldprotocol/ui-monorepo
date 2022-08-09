@@ -1,6 +1,6 @@
 {
   "name": "@yield-protocol/ui-math",
-  "version": "1.0.3-alpha.3",
+  "version": "1.0.3",
   "main": "./bin/index.js",
   "repository": {
     "url": "git+https://github.com/yieldprotocol/ui-monorepo.git",
