@@ -1226,3 +1226,93 @@ export const calcAccruedDebt = (rate: BigNumber, rateAtMaturity: BigNumber, debt
 
   return [toBn(accruedDebt), toBn(debtLessAccrued)];
 };
+
+/**
+ * Calculates the amount of base needed to adjust a pool to a desired interest rate
+ *
+ * @param {BigNumber} sharesReserves base reserves of the pool
+ * @param {BigNumber} fyTokenReserves virtual fyToken of the pool
+ * @param {number} timeTillMaturity fyToken of the pool
+ * @param {BigNumber} ts time stretch
+ * @param {BigNumber} g1 fee
+ * @param {BigNumber} g2 fee
+ * @param {number} desiredInterestRate desired interest rate for the pool, in decimal format (i.e.: .1 for 10%)
+ *
+ * @returns {{string, BigNumber}} funcNameToUse - trade func name to use with resulting input to trade to desired rate; input - trade func input to use to trade to the desired rate
+ */
+
+export const tradeToRate = (
+  sharesReserves: BigNumber,
+  fyTokenReserves: BigNumber,
+  timeTillMaturity: string,
+  ts: BigNumber,
+  g1: BigNumber,
+  g2: BigNumber,
+  decimals: number,
+  desiredInterestRate: number // in decimal format (i.e.: .1 is 10%)
+): { funcNameToUse: string; input: BigNumber } => {
+  const sharesReserves18 = decimalNToDecimal18(BigNumber.from(sharesReserves), decimals);
+  const fyTokenReserves18 = decimalNToDecimal18(BigNumber.from(fyTokenReserves), decimals);
+
+  const sharesReserves_ = new Decimal(sharesReserves18.toString());
+  const fyTokenReserves_ = new Decimal(fyTokenReserves18.toString());
+
+  const u = getTimeStretchYears(ts);
+
+  // calculate current rate
+  const currRate = calculateRate(fyTokenReserves_, sharesReserves_, u);
+  const desiredRate = new Decimal(desiredInterestRate.toString());
+
+  // assess which g to use: decrease rates means sellBase, so g1; otherwise, sellFYToken, so g2
+  const g = desiredRate.gt(currRate) ? g1 : g2;
+  const [a, invA] = _computeA(timeTillMaturity, ts, g);
+
+  const top = sharesReserves_.pow(a).add(fyTokenReserves_.pow(a));
+  const bottom = ONE.add(ONE.add(desiredRate).pow(u.mul(a)));
+
+  const sharesReservesNew = top.div(bottom).pow(invA);
+  const sharesDiff = sharesReservesNew.sub(sharesReserves_);
+
+  const fyTokenReservesNew = sharesReservesNew.mul(ONE.add(desiredRate).pow(u));
+  const fyTokenDiff = fyTokenReservesNew.sub(fyTokenReserves_);
+
+  const decreasingRates = desiredRate.lt(currRate);
+
+  return {
+    // funcName: sellBase (decrease rates {base goes in}) or sellFyToken (increase rates {base comes out})
+    funcNameToUse: decreasingRates ? 'sellBase' : 'sellFYToken',
+    // input: input into trade func is the base diff if decreasing rates, and the fyToken diff if increasing rates
+    input: decreasingRates ? toBn(sharesDiff.abs()) : toBn(fyTokenDiff.abs()),
+  };
+};
+
+/**
+ * Calculates the current market interest rate
+ *
+ * @param {BigNumber} sharesReserves base reserves of the pool
+ * @param {BigNumber} fyTokenReserves virtual fyToken of the pool
+ * @param {Decimal} timeStretchYears years associated with time stretch
+ *
+ * @returns {Decimal} // market rate in number format (i.e.: 10% is .10)
+ */
+
+export const calculateRate = (
+  fyTokenReserves: BigNumber | Decimal,
+  sharesReserves: BigNumber | Decimal,
+  timeStretchYears: Decimal
+) => {
+  const _sharesReserves = new Decimal(sharesReserves.toString());
+  const _fyTokenReserves = new Decimal(fyTokenReserves.toString());
+  return _fyTokenReserves.div(_sharesReserves).pow(ONE.div(timeStretchYears)).sub(ONE);
+};
+
+/**
+ * @param ts time stretch associated with series (i.e.: 10 years)
+ * @returns {Decimal} num years in decimals
+ */
+export const getTimeStretchYears = (ts: BigNumber): Decimal => {
+  const _ts = new Decimal(BigNumber.from(ts).toString()).div(2 ** 64);
+  const _secondsInOneYear = new Decimal(secondsInOneYear.toString());
+  const invTs = ONE.div(_ts);
+  return invTs.div(_secondsInOneYear);
+};
