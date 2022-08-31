@@ -727,11 +727,10 @@ export function maxFyTokenIn(
  * y = maxFyTokenOut
  * Y = fyTokenReserves (virtual)
  * Z = sharesReserves
- * cmu = cμ^a
  *
- *         ( (       sum                 ) / (  denominator  ) )^invA
- *         ( ( (    Za      ) + (  Ya  ) ) / (  denominator  ) )^invA
- * y = Y - ( ( ( cμ^a * Z^a ) + ( μY^a ) ) / (    c + μ    ) )^(1/a)
+ * y = Y - ( (       numerator           ) / (  denominator  ) )^invA
+ * y = Y - ( ( (    Za      ) + (  Ya  ) ) / (  denominator  ) )^invA
+ * y = Y - ( (   c/μ * (μZ)^a +    Y^a   ) / (    c/μ + 1    ) )^(1/a)
  *
  * @param { BigNumber | string } sharesReserves
  * @param { BigNumber | string } fyTokenReserves
@@ -766,14 +765,12 @@ export function maxFyTokenOut(
 
   const [a, invA] = _computeA(timeTillMaturity, ts, g1);
 
-  const cmu = c_.mul(mu_.pow(a));
+  const Za = c_.div(mu_).mul(mu_.mul(sharesReserves_).pow(a));
+  const Ya = fyTokenReserves_.pow(a);
+  const numerator = Za.add(Ya);
+  const denominator = c_.div(mu_).add(ONE);
 
-  const Za = cmu.mul(sharesReserves_.pow(a));
-  const Ya = mu_.mul(fyTokenReserves_.pow(a));
-  const sum = Za.add(Ya);
-  const denominator = c_.add(mu_);
-
-  const res = fyTokenReserves_.sub(sum.div(denominator).pow(invA));
+  const res = fyTokenReserves_.sub(numerator.div(denominator).pow(invA));
 
   /* Handle precision variations */
   const safeRes = res.gt(MAX.sub(precisionFee)) ? MAX : res.add(precisionFee);
