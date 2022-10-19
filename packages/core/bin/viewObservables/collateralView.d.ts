@@ -63,10 +63,10 @@ export declare const maxRemovableCollateralø: Observable<W3Number>;
  * Price at which the vault will get liquidated
  * @category Borrow | Collateral
  * */
-export declare const vaultLiquidatePriceø: Observable<String>;
+export declare const vaultLiquidatePriceø: Observable<String | undefined>;
 /**
  * Pre Transaction estimated Price at which a vault / pair  will get liquidated
  * based on collateral and debt INPUT ( and existing colalteral and debt)
  * @category Borrow | Collateral
  * */
-export declare const estimatedLiquidatePriceø: Observable<String>;
+export declare const estimatedLiquidatePriceø: Observable<String | undefined>;

@@ -28,21 +28,21 @@ import {
   updateRepayInput,
 } from './viewObservables/input';
 import { combineLatest } from 'rxjs';
-import { buildProtocol } from './init/buildProtocol';
+import { buildProtocol } from './buildProtocol';
 import { IYieldFunctions } from './types';
 
 import * as yieldObservables from './observables';
 import * as viewObservables from './viewObservables';
 
 /**
- * On app start (or provider change ) (and on providerø, chainId$ or appConfig$ observed changes ),
+ * On app start (and on providerø, chainId$ or appConfig$ observed changes ),
  * appConfig gathers all the required information from env etc.
  * sets things up, and then the stream finishes indicating that everything is ready to go.
  */
 combineLatest([yieldObservables.providerø, yieldObservables.appConfigø, yieldObservables.chainIdø]).subscribe(
   async ([provider, config, chainId]) => {
     console.log( provider )
-    updateProtocol(await buildProtocol(provider, chainId, config));
+    updateProtocol( await buildProtocol(provider, chainId, config) );
   }
 );
 

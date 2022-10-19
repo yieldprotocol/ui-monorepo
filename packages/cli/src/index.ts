@@ -4,8 +4,8 @@ import { store } from '@yield-protocol/ui-redux';
 const program = new Command();
 
 program
-  .name('string-util')
-  .description('CLI to some JavaScript string utilities')
+  .name('yield')
+  .description('CLI to Yield Protocol')
   .version('0.8.0');
 
 program.command('inspect')

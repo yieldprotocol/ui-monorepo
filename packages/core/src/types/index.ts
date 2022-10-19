@@ -312,7 +312,7 @@ export interface ISeries extends ISeriesRoot {
   getFyTokenAllowance: (acc: string, spender: string) => Promise<BigNumber>;
   getPoolAllowance: (acc: string, spender: string) => Promise<BigNumber>;
 
-  /*  User speccific  */
+  /* User speccific  */
   poolTokens?: W3Number | undefined;
   fyTokenBalance?: W3Number | undefined;
   poolPercent?: string | undefined;

@@ -267,7 +267,7 @@ export const maxRemovableCollateralø: Observable<W3Number> = combineLatest([
  * Price at which the vault will get liquidated
  * @category Borrow | Collateral
  * */
-export const vaultLiquidatePriceø: Observable<String> = combineLatest([selectedø, _selectedPairø]).pipe(
+export const vaultLiquidatePriceø: Observable<String|undefined> = combineLatest([selectedø, _selectedPairø]).pipe(
   filter(([selected, pairInfo]) => !!selected.vault && !!pairInfo),
   map(([selected, pairInfo]) =>
     calcLiquidationPrice(selected.vault!.ink.hStr, selected.vault!.accruedArt.hStr, pairInfo!.minRatio)
@@ -280,7 +280,7 @@ export const vaultLiquidatePriceø: Observable<String> = combineLatest([selected
  * based on collateral and debt INPUT ( and existing colalteral and debt)
  * @category Borrow | Collateral
  * */
-export const estimatedLiquidatePriceø: Observable<String> = combineLatest([
+export const estimatedLiquidatePriceø: Observable<String|undefined> = combineLatest([
   _totalDebtWithInputø,
   _totalCollateralWithInputø,
   _selectedPairø,

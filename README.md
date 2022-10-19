@@ -6,10 +6,12 @@
 - redux adaptor
 - (cli)
 - (history)
+- (utils)
+- (contracts)
 
 ## Included Examples
 - basic react app 
-- ( cli ) 
+- ( cli )
 
 ## How to use:
 ### 1. Clean and build ALL packages in the monorepo ( in root dir ): 
@@ -23,3 +25,8 @@
 
 ### 3. Start the examples on localhost ( in examples/* dir ): 
 > `yarn start`
+
+
+### 4. Publish changes  ( in root dir ):  ###
+
+> `lerna publish`

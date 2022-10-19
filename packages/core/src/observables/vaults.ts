@@ -11,7 +11,7 @@ import {
   filter,
   withLatestFrom,
 } from 'rxjs';
-import { buildVaultMap } from '../init/buildVaultsRoot';
+import { buildVaultMap } from '../buildProtocol/buildVaultsRoot';
 import { IVault, IVaultRoot, MessageType, IYieldProtocol, ISeries } from '../types';
 import { ZERO_BN } from '../utils';
 import { bnToW3Number } from '../utils/yieldUtils';

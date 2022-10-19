@@ -1,7 +1,7 @@
 import { combineLatest, finalize, takeWhile } from 'rxjs';
 import { ethers } from 'ethers';
 
-import { buildProtocol } from '../init/buildProtocol';
+import { buildProtocol } from '../buildProtocol';
 import { internalMessagesø, updateAppConfig } from '../observables';
 
 import * as yObservables from '../observables';

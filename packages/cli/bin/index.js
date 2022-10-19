@@ -4,8 +4,8 @@ const tslib_1 = require("tslib");
 const commander_1 = require("commander");
 const program = new commander_1.Command();
 program
-    .name('string-util')
-    .description('CLI to some JavaScript string utilities')
+    .name('yield')
+    .description('CLI to Yield Protocol')
     .version('0.8.0');
 program.command('inspect')
     .description('Inspect the Yield Protocol')

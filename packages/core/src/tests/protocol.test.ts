@@ -1,5 +1,5 @@
 import { combineLatest, finalize, takeWhile, take, subscribeOn, first, lastValueFrom, withLatestFrom } from 'rxjs';
-import { buildProtocol } from '../init/buildProtocol';
+import { buildProtocol } from '../buildProtocol';
 import { internalMessagesø, updateAppConfig } from '../observables';
 import { ethers } from 'ethers';
 
