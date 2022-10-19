@@ -10,13 +10,13 @@ const actions_1 = require("./actions");
 const observables_1 = require("./observables");
 const input_1 = require("./viewObservables/input");
 const rxjs_1 = require("rxjs");
-const buildProtocol_1 = require("./init/buildProtocol");
+const buildProtocol_1 = require("./buildProtocol");
 const yieldObservables = tslib_1.__importStar(require("./observables"));
 exports.yieldObservables = yieldObservables;
 const viewObservables = tslib_1.__importStar(require("./viewObservables"));
 exports.viewObservables = viewObservables;
 /**
- * On app start (or provider change ) (and on providerø, chainId$ or appConfig$ observed changes ),
+ * On app start (and on providerø, chainId$ or appConfig$ observed changes ),
  * appConfig gathers all the required information from env etc.
  * sets things up, and then the stream finishes indicating that everything is ready to go.
  */
@@ -24,36 +24,6 @@ exports.viewObservables = viewObservables;
     console.log(provider);
     (0, observables_1.updateProtocol)(yield (0, buildProtocol_1.buildProtocol)(provider, chainId, config));
 }));
-/* Expose the observables */
-// const yieldObservables: IYieldObservables = {
-//   protocolø,
-//   seriesø,
-//   assetsø,
-//   vaultsø,
-//   strategiesø,
-//   providerø,
-//   accountø,
-//   accountProviderø,
-//   selectedø,
-//   transactionsø,
-//   assetPairsø,
-//   userSettingsø,
-//   messagesø,
-// };
-// const viewObservables: any = {
-//   // borrow section */
-//   borrowInputø,
-//   collateralInputø,
-//   isBorrowPossibleø,
-//   isRollVaultPossibleø,
-//   maxDebtLimitø,
-//   minDebtLimitø,
-//   maximumRepayø,
-//   minimumRepayø,
-//   // with collateral
-//   collateralizationPercentø,
-//   collateralizationRatioø,
-// };
 const viewFunctions = {
     updateBorrowInput: input_1.updateBorrowInput,
     updateCollateralInput: input_1.updateCollateralInput,

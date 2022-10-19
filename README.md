@@ -3,6 +3,7 @@
 ## Included Packages
 - core | _[Documentation](https://silver-engine-e5b67cb1.pages.github.io/)_
 - react adaptor
+- math 
 - redux adaptor
 - (cli)
 - (history)

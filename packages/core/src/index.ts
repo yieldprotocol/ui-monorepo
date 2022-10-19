@@ -27,6 +27,7 @@ import {
   updateRemoveLiqInput,
   updateRepayInput,
 } from './viewObservables/input';
+
 import { combineLatest } from 'rxjs';
 import { buildProtocol } from './buildProtocol';
 import { IYieldFunctions } from './types';
@@ -46,49 +47,12 @@ combineLatest([yieldObservables.providerø, yieldObservables.appConfigø, yieldO
   }
 );
 
-/* Expose the observables */
-// const yieldObservables: IYieldObservables = {
-//   protocolø,
-//   seriesø,
-//   assetsø,
-//   vaultsø,
-//   strategiesø,
-//   providerø,
-//   accountø,
-//   accountProviderø,
-//   selectedø,
-//   transactionsø,
-//   assetPairsø,
-//   userSettingsø,
-//   messagesø,
-// };
-
-// const viewObservables: any = {
-//   // borrow section */
-//   borrowInputø,
-//   collateralInputø,
-
-//   isBorrowPossibleø,
-//   isRollVaultPossibleø,
-
-//   maxDebtLimitø,
-//   minDebtLimitø,
-//   maximumRepayø,
-//   minimumRepayø,
-
-//   // with collateral
-//   collateralizationPercentø,
-//   collateralizationRatioø,
-// };
-
 const viewFunctions: any = {
   updateBorrowInput,
   updateCollateralInput,
   updateRepayInput,
-
   updateLendInput,
   updateCloseInput,
-
   updateAddLiqInput,
   updateRemoveLiqInput,
 };

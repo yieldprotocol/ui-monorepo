@@ -4165,22 +4165,12 @@
   resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
   integrity sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==
 
-"@yield-protocol/ui-core@^1.0.2-alpha.0":
-  version "1.0.3-alpha.0"
+"@yield-protocol/ui-math@1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@yield-protocol/ui-math/-/ui-math-1.0.3.tgz#adc80bc237bd2c8ca94594845c869746d804f7b3"
+  integrity sha512-by8NRa8YeUK38ab1r96nZfTFJVNcGHrNIB80Cx/piR6iDHMcvSXiZlyn09EK5QYowfsB9DOJD9V4q4CQPx3DPQ==
   dependencies:
-    "@yield-protocol/ui-math" "^1.0.3-alpha.0"
-    date-fns "^2.24.0"
-    eslint-config-next "^12.1.3"
-    eth-permit "^0.2.1"
-    ethers "^5.5.4"
-    rxjs "^7.5.5"
-    unique-names-generator "^4.6.0"
-
-"@yield-protocol/ui-react@^1.0.2-alpha.0":
-  version "1.0.3-alpha.0"
-  dependencies:
-    "@yield-protocol/ui-core" "^1.0.3-alpha.0"
-    react "^17.0.2"
+    chai "^4.3.6"
 
 JSONStream@^1.0.4:
   version "1.3.5"
