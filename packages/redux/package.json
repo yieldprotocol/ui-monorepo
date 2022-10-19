@@ -6,7 +6,6 @@
     "type": "git"
   },
   "publishConfig": {
-    "registry": " ",
     "access": "restricted"
   },
   "private": true,
