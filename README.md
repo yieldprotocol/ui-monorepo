@@ -28,6 +28,9 @@
 > `yarn start`
 
 
-### 4. Publish changes  ( in root dir ):  ###
-
+### 4. Publish global changes  ( in root dir ):  ###
 > `lerna publish`
+
+### 4. Publish indivdual packages changes  (in packages/* dir ):  ###
+> `yarn version --patch`
+> `yarn publish`
