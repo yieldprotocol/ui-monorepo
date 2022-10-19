@@ -1,0 +1,20 @@
+{
+  "name": "@yield-protocol/ui-multicall",
+  "version": "1.0.0",
+  "main": "./bin/index.js",
+  "repository": {
+    "url": "git+https://github.com/yieldprotocol/ui-monorepo.git",
+    "type": "git"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "author": "Yield Inc.",
+  "license": "MIT",
+  "scripts": {
+    "compile": "tsc -b --force",
+    "type-contracts": "typechain --target=ethers-v5 './src/contracts/abis/*.json' --out-dir './src/contracts/'"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
