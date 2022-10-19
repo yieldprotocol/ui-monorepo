@@ -21,10 +21,9 @@
     "startdev": "lerna run watch"
   },
   "dependencies": {
-    "@yield-protocol/ui-core": "1.0.0",
-    "@yield-protocol/ui-react": "1.0.0",
-    "@yield-protocol/ui-math": "1.0.0",
-    "@yield-protocol/ui-cli": "1.0.0"
+    "@yield-protocol/ui-core": "1.0.3",
+    "@yield-protocol/ui-react": "1.0.3",
+    "@yield-protocol/ui-math": "1.0.3"
   },
   "devDependencies": {
     "esbuild-serve": "^1.0.1",

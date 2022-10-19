@@ -5,7 +5,6 @@ const chai_1 = tslib_1.__importStar(require("chai"));
 const decimal_js_1 = require("decimal.js");
 const ethereum_waffle_1 = require("ethereum-waffle");
 const ethers_1 = require("ethers");
-const utils_1 = require("ethers/lib/utils");
 const index_1 = require("../index");
 chai_1.default.use(ethereum_waffle_1.solidity);
 const { parseUnits } = ethers_1.utils;
@@ -155,10 +154,10 @@ describe('Shares YieldMath', () => {
             });
         });
         describe('maxFyTokenOut', () => {
-            // https://www.desmos.com/calculator/sjdvxpa3vy
+            // https://www.desmos.com/calculator/msohzeucu5
             it('should output a specific number with a specific input', () => {
-                c = ethers_1.BigNumber.from('0x1199999999999999a');
-                mu = ethers_1.BigNumber.from('0x10000000000000000');
+                c = ethers_1.BigNumber.from('0x1199999999999999a'); // 1.1
+                mu = ethers_1.BigNumber.from('0x10ccccccccccccccd'); // 1.05
                 ts = (0, index_1.toBn)(new decimal_js_1.Decimal(1 /
                     ethers_1.BigNumber.from(index_1.SECONDS_PER_YEAR)
                         .mul(10 * 25)
@@ -167,7 +166,7 @@ describe('Shares YieldMath', () => {
                 fyTokenReserves = parseUnits('1500000', decimals);
                 timeTillMaturity = (77760000).toString();
                 const result = (0, index_1.maxFyTokenOut)(sharesReserves, fyTokenReserves, timeTillMaturity, ts, g1, decimals, c, mu);
-                (0, chai_1.expect)(result).to.be.closeTo(parseUnits('209668.563', decimals), comparePrecision); // 209,668.563642
+                (0, chai_1.expect)(result).to.be.closeTo(parseUnits('176616.991', decimals), comparePrecision); // 176,616.991033
             });
         });
         describe('maxFyTokenIn', () => {
@@ -184,6 +183,22 @@ describe('Shares YieldMath', () => {
                 timeTillMaturity = (77760000).toString();
                 const result = (0, index_1.maxFyTokenIn)(sharesReserves, fyTokenReserves, timeTillMaturity, ts, g2, decimals, c, mu);
                 (0, chai_1.expect)(result).to.be.closeTo(parseUnits('1230211.594', decimals), comparePrecision); // 1,230,211.59495
+            });
+        });
+        describe('maxBaseIn', () => {
+            // https://www.desmos.com/calculator/q0vu2axmji
+            it('should output a specific number with a specific input', () => {
+                c = ethers_1.BigNumber.from('0x1199999999999999a');
+                mu = ethers_1.BigNumber.from('0x10ccccccccccccccd');
+                ts = (0, index_1.toBn)(new decimal_js_1.Decimal(1 /
+                    ethers_1.BigNumber.from(index_1.SECONDS_PER_YEAR)
+                        .mul(10 * 25)
+                        .toNumber()).mul(Math.pow(2, 64))); // inv of seconds in 10 years
+                sharesReserves = parseUnits('1100000', decimals);
+                fyTokenReserves = parseUnits('1500000', decimals);
+                timeTillMaturity = (77760000).toString();
+                const result = (0, index_1.maxBaseIn)(sharesReserves, fyTokenReserves, timeTillMaturity, ts, g1, decimals, c, mu);
+                (0, chai_1.expect)(result).to.be.closeTo(parseUnits('160364.770', decimals), comparePrecision); // 160,364.770445
             });
         });
     });
@@ -339,9 +354,8 @@ describe('Shares YieldMath', () => {
         });
         it('should match maxBaseIn desmos', () => {
             const maxSharesIn = (0, index_1.maxBaseIn)(sharesReserves, fyTokenReserves, timeTillMaturity, ts, g1, decimals, c, mu);
-            console.log('🦄 ~ file: yieldMath.test.ts ~ line 688 ~ it ~ maxSharesIn', (0, utils_1.formatUnits)(maxSharesIn, decimals));
             // desmos output
-            (0, chai_1.expect)(maxSharesIn).to.be.closeTo(parseUnits('-52633.304', decimals), comparePrecision); // −52,633.304
+            (0, chai_1.expect)(maxSharesIn).to.be.closeTo(parseUnits('-26317.890', decimals), comparePrecision); // −26,317.8905585
         });
         it('should match maxFyTokenIn desmos', () => {
             const _maxFyTokenIn = (0, index_1.maxFyTokenIn)(sharesReserves, fyTokenReserves, timeTillMaturity, ts, g2, decimals, c, mu);
@@ -351,7 +365,7 @@ describe('Shares YieldMath', () => {
         it('should match maxFyTokenOut desmos', () => {
             const _maxFyTokenOut = (0, index_1.maxFyTokenOut)(sharesReserves, fyTokenReserves, timeTillMaturity, ts, g1, decimals, c, mu);
             // desmos output
-            (0, chai_1.expect)(_maxFyTokenOut).to.be.closeTo(parseUnits('-54127.343', decimals), comparePrecision); // -54,127.343
+            (0, chai_1.expect)(_maxFyTokenOut).to.be.closeTo(parseUnits('-26727.444', decimals), comparePrecision); // -26,727.4447095
         });
         it('should match maxBaseOut desmos', () => {
             const _maxBaseOut = (0, index_1.maxBaseOut)(sharesReserves);

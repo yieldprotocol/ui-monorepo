@@ -272,8 +272,8 @@ fyTokenOut: BigNumber | string, timeTillMaturity: BigNumber | string, ts: BigNum
  * x = Δy
  *
  *      1/μ * ( (               sum                 )^(   invA    ) - z
- *      1/μ * ( ( (  cua   ) * Za  + Ya ) / c/μ + 1 )^(   invA    ) - z
- * Δz = 1/μ * ( ( ( cμ^(a-1) * z^a + y^a) / c/μ + 1 )^(1 / (1 - t)) - z
+ *      1/μ * ( ( (  cua   ) * Za  + Ya ) / (c/μ + 1) )^(   invA    ) - z
+ * Δz = 1/μ * ( ( ( cμ^a * z^a + μy^a) / (c + μ) )^(1 / (1 - t)) - z
  *
  */
 export declare function maxBaseIn(sharesReserves: BigNumber, fyTokenReserves: BigNumber, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g1: BigNumber | string, decimals: number, c?: BigNumber | string, mu?: BigNumber | string): BigNumber;
@@ -282,13 +282,6 @@ export declare function maxBaseIn(sharesReserves: BigNumber, fyTokenReserves: Bi
  * Since the amount of shares that can be purchased is not bounded, maxSharesOut is equivalent to the toal amount of shares in the pool.
  *
  * @param { BigNumber | string } sharesReserves
- * @param { BigNumber | string } fyTokenReserves
- * @param { BigNumber | string } timeTillMaturity
- * @param { BigNumber | string } ts
- * @param { BigNumber | string } g2
- * @param { number } decimals
- * @param { BigNumber | string } c
- * @param { BigNumber | string } mu
  *
  * @returns { BigNumber } max amount of shares that can be bought from the pool
  *
@@ -297,7 +290,7 @@ export declare function maxBaseOut(sharesReserves: BigNumber): BigNumber;
 /**
  * Calculate the max amount of fyTokens that can be sold to into the pool.
  *
- * y = maxFyTokenOut
+ * y = maxFyTokenIn
  * Y = fyTokenReserves (virtual)
  * Z = sharesReserves
  *
@@ -319,7 +312,6 @@ export declare function maxBaseOut(sharesReserves: BigNumber): BigNumber;
 export declare function maxFyTokenIn(sharesReserves: BigNumber, fyTokenReserves: BigNumber, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g2: BigNumber | string, decimals: number, c?: BigNumber | string, mu?: BigNumber | string): BigNumber;
 /**
  * Calculate the max amount of fyTokens that can be bought from the pool without making the interest rate negative.
- * https://docs.google.com/spreadsheets/d/14K_McZhlgSXQfi6nFGwDvDh4BmOu6_Hczi_sFreFfOE/edit#gid=0 (maxFyTokenOut)
  *
  * y = maxFyTokenOut
  * Y = fyTokenReserves (virtual)
@@ -328,7 +320,7 @@ export declare function maxFyTokenIn(sharesReserves: BigNumber, fyTokenReserves:
  *
  *         ( (       sum                 ) / (  denominator  ) )^invA
  *         ( ( (    Za      ) + (  Ya  ) ) / (  denominator  ) )^invA
- * y = Y - ( ( ( cμ^a * Z^a ) + ( μY^a ) ) / (    c/μ + 1    ) )^(1/a)
+ * y = Y - ( ( ( cμ^a * Z^a ) + ( μY^a ) ) / (    c + μ    ) )^(1/a)
  *
  * @param { BigNumber | string } sharesReserves
  * @param { BigNumber | string } fyTokenReserves
@@ -432,9 +424,9 @@ export declare const calculateBorrowingPower: (collateralAmount: BigNumber | str
  * @param {string} debtAmount amount of debt in human readable decimals
  * @param {number} liquidationRatio  OPTIONAL: 1.5 (150%) as default
  *
- * @returns {string}
+ * @returns {string | undefined} returns price or undefined if can't calculate
  */
-export declare const calcLiquidationPrice: (collateralAmount: string, debtAmount: string, liquidationRatio: number) => string;
+export declare const calcLiquidationPrice: (collateralAmount: string, debtAmount: string, liquidationRatio: number) => string | undefined;
 /**
  *  @param {BigNumber} sharesChange change in shares
  * @param {BigNumber} fyTokenChange change in fyToken
@@ -480,12 +472,12 @@ export declare const getPoolPercent: (input: BigNumber, strategyTotalSupply: Big
  * Calcualtes the MIN and MAX reserve ratios of a pool for a given slippage value
  *
  * @param {BigNumber} sharesReserves
- * @param {BigNumber} fyTokenReserves // real reserves
+ * @param {BigNumber} fyTokenRealReserves
  * @param {number} slippage
  *
- * @returns {[BigNumber, BigNumber] }
+ * @returns {[BigNumber, BigNumber] } [minRatio with slippage, maxRatio with slippage]
  */
-export declare const calcPoolRatios: (sharesReserves: BigNumber, fyTokenReserves: BigNumber, slippage?: number) => [BigNumber, BigNumber];
+export declare const calcPoolRatios: (sharesReserves: BigNumber, fyTokenRealReserves: BigNumber, slippage?: number) => [BigNumber, BigNumber];
 /**
  * Calculate accrued debt value after maturity
  *
