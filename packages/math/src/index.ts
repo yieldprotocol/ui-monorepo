@@ -783,6 +783,70 @@ export function maxFyTokenOut(
 }
 
 /**
+ * Calculates the total supply invariant.
+ *
+ *  y = invariant
+ *  Y = fyTokenReserves (virtual)
+ *  Z = sharesReserves
+ *  s = total supply
+ *
+ *      c/μ ( (       numerator           ) / (  denominator  ) )^invA  / s
+ *      c/μ ( ( (    Za      ) + (  Ya  ) ) / (  denominator  ) )^invA  / s
+ *  y = c/μ ( ( c/μ * (μZ)^a   +    Y^a   ) / (     c/u + 1   ) )^(1/a) / s
+ *
+ * @param { BigNumber | string } sharesReserves
+ * @param { BigNumber | string } fyTokenReserves
+ * @param { BigNumber | string } totalSupply
+ * @param { BigNumber | string } timeTillMaturity
+ * @param { BigNumber | string } ts
+ * @param { BigNumber | string } g2
+ * @param { number } decimals
+ * @param { BigNumber | string } c
+ * @param { BigNumber | string } mu
+ *
+ * @returns { BigNumber }
+ */
+export function invariant(
+  sharesReserves: BigNumber,
+  fyTokenReserves: BigNumber,
+  totalSupply: BigNumber,
+  timeTillMaturity: BigNumber | string,
+  ts: BigNumber | string,
+  g2: BigNumber | string,
+  decimals: number,
+  c: BigNumber | string = c_DEFAULT,
+  mu: BigNumber | string = mu_DEFAULT
+): BigNumber {
+  /* convert to 18 decimals, if required */
+  const sharesReserves18 = decimalNToDecimal18(sharesReserves, decimals);
+  const fyTokenReserves18 = decimalNToDecimal18(fyTokenReserves, decimals);
+  const totalSupply18 = decimalNToDecimal18(totalSupply, decimals);
+
+  /* convert to decimal for the math */
+  const sharesReserves_ = new Decimal(sharesReserves18.toString());
+  const fyTokenReserves_ = new Decimal(fyTokenReserves18.toString());
+  const totalSupply_ = new Decimal(totalSupply18.toString());
+  const c_ = _getC(c);
+  const mu_ = _getMu(mu);
+
+  const [a, invA] = _computeA(timeTillMaturity, ts, g2);
+
+  const Za = c_.div(mu_).mul(mu_.mul(sharesReserves_).pow(a));
+  const Ya = fyTokenReserves_.pow(a);
+  const numerator = Za.add(Ya);
+  const denominator = c_.div(mu_).add(ONE);
+
+  const topTerm = c_.div(mu_).mul(numerator.div(denominator).pow(invA));
+  const res = topTerm.div(totalSupply_);
+
+  /* Handle precision variations */
+  const safeRes = res.gt(MAX.sub(precisionFee)) ? MAX : res.add(precisionFee);
+
+  /* convert to back to token native decimals, if required */
+  return decimal18ToDecimalN(toBn(safeRes), decimals);
+}
+
+/**
  * Calculate the amount of fyToken that should be bought when providing liquidity with only underlying.
  * The amount bought leaves a bit of unused underlying, to allow for the pool reserves to change between
  * the calculation and the mint. The pool returns any unused underlying.
