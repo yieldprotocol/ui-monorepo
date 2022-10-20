@@ -2,17 +2,14 @@ import { ethers } from 'ethers';
 import { format } from 'date-fns';
 
 import { IAssetRoot, ISeriesRoot, IYieldConfig } from '../types';
-import * as contracts from '@yield-protocol/ui-contracts';
-
-import { PoolAddedEvent } from '@yield-protocol/ui-contracts/Ladle';
-import { SeriesAddedEvent } from '@yield-protocol/ui-contracts/Cauldron';
+import { Ladle, Cauldron, Pool__factory, FYToken__factory } from '@yield-protocol/ui-contracts';
 
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils/appUtils';
 import { nameFromMaturity } from '../utils/yieldUtils';
 
 export const buildSeriesMap = async (
-  cauldron: contracts.Cauldron,
-  ladle: contracts.Ladle,
+  cauldron: Cauldron,
+  ladle: Ladle,
   assetRootMap: Map<string, IAssetRoot>,
   provider: ethers.providers.BaseProvider,
   chainId: number,
@@ -37,9 +34,9 @@ export const buildSeriesMap = async (
     : [[], []];
 
   /* Create a array from the seriesAdded event data or hardcoded series data if available */
-  const seriesAdded = seriesAddedEvents.map((evnt: SeriesAddedEvent) => evnt);
+  const seriesAdded = seriesAddedEvents.map((evnt: Cauldron.SeriesAddedEvent) => evnt);
   /* Create a map from the poolAdded event data or hardcoded pool data if available */
-  const poolMap = new Map(poolAddedEvents.map((e: PoolAddedEvent) => e.args)); // event values);
+  const poolMap = new Map(poolAddedEvents.map((e: Ladle.PoolAddedEvent) => e.args)); // event values);
 
   /* Add in any extra static series */
   try {
@@ -54,8 +51,8 @@ export const buildSeriesMap = async (
           if (poolMap.has(id)) {
             // only add series if it has a pool
             const poolAddress = poolMap.get(id);
-            const poolContract = contracts.Pool__factory.connect(poolAddress as string, provider);
-            const fyTokenContract = contracts.FYToken__factory.connect(fyToken, provider);
+            const poolContract = Pool__factory.connect(poolAddress as string, provider);
+            const fyTokenContract = FYToken__factory.connect(fyToken, provider);
             const [name, symbol, version, decimals, poolName, poolVersion, poolSymbol, ts, g1, g2] = await Promise.all([
               fyTokenContract.name(),
               fyTokenContract.symbol(),

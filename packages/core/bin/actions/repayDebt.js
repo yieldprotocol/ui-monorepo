@@ -5,7 +5,7 @@ const tslib_1 = require("tslib");
 const ui_math_1 = require("@yield-protocol/ui-math");
 const ethers_1 = require("ethers");
 const assets_1 = require("../config/assets");
-const contracts_1 = require("../contracts");
+const ui_contracts_1 = require("@yield-protocol/ui-contracts");
 const types_1 = require("../types");
 const constants_1 = require("../utils/constants");
 const yieldUtils_1 = require("../utils/yieldUtils");
@@ -37,7 +37,7 @@ const repayDebt = (amount, vault, reclaimCollateral = true) => tslib_1.__awaiter
         /* is convex-type collateral */
         const isConvexCollateral = assets_1.CONVEX_BASED_ASSETS.includes(ilk.proxyId);
         // TODO: this is a bit of an anti-pattern ?? 
-        const convexJoinContract = contracts_1.ConvexJoin__factory.connect(ilk.joinAddress, provider);
+        const convexJoinContract = ui_contracts_1.ConvexJoin__factory.connect(ilk.joinAddress, provider);
         /* Parse amounts */
         const _amount = (0, yieldUtils_1.inputToTokenValue)(amount, base.decimals);
         const _maxBaseIn = (0, ui_math_1.maxBaseIn)(series.baseReserves.bn, series.fyTokenReserves.bn, series.getTimeTillMaturity(), series.ts, series.g1, series.decimals);

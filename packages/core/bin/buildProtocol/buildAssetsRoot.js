@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildAssetMap = void 0;
 const tslib_1 = require("tslib");
 const types_1 = require("../types");
-const contracts = tslib_1.__importStar(require("../contracts"));
+const contracts = tslib_1.__importStar(require("@yield-protocol/ui-contracts"));
 const assets_1 = require("../config/assets");
 const appUtils_1 = require("../utils/appUtils");
 const buildAssetMap = (cauldron, ladle, provider, chainId, appConfig) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {

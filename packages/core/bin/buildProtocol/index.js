@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildProtocol = void 0;
 const tslib_1 = require("tslib");
-const contracts = tslib_1.__importStar(require("../contracts"));
+const contracts = tslib_1.__importStar(require("@yield-protocol/ui-contracts"));
 const protocol_1 = require("../config/protocol");
 const buildOracles_1 = require("./buildOracles");
 const buildModules_1 = require("./buildModules");

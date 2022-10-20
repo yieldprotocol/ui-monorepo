@@ -1,6 +1,6 @@
 import { IVaultRoot, IYieldConfig, IYieldProtocol } from '../types';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils/appUtils';
-import { VaultBuiltEvent, VaultGivenEvent } from '@yield-protocol/ui-contracts/Cauldron';
+import { Cauldron } from '@yield-protocol/ui-contracts';
 import { generateVaultName } from '../utils/yieldUtils';
 import { ethers } from 'ethers';
 
@@ -36,7 +36,7 @@ export const buildVaultMap = async (
       ])
     : [[], []]; // this is when eventlogQueries are suppressed
 
-  const builtVaults = vaultsBuilt.map((_evnt: VaultBuiltEvent): IVaultRoot => {
+  const builtVaults = vaultsBuilt.map((_evnt: Cauldron.VaultBuiltEvent): IVaultRoot => {
     const { vaultId, ilkId, seriesId } = _evnt.args;
     const series = seriesRootMap.get(seriesId);
     const ilk = assetRootMap.get(ilkId);
@@ -54,7 +54,7 @@ export const buildVaultMap = async (
   });
 
   const recievedVaults = await Promise.all(
-    vaultsReceived.map(async (_evnt: VaultGivenEvent): Promise<IVaultRoot> => {
+    vaultsReceived.map(async (_evnt: Cauldron.VaultGivenEvent): Promise<IVaultRoot> => {
       const { vaultId: id } = _evnt.args;
       const { ilkId, seriesId } = await cauldron.vaults(id);
       const series = seriesRootMap.get(seriesId);

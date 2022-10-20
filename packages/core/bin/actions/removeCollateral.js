@@ -5,7 +5,7 @@ const tslib_1 = require("tslib");
 const chainActions_1 = require("../chainActions");
 const assets_1 = require("../config/assets");
 const rxjs_1 = require("rxjs");
-const contracts_1 = require("../contracts");
+const ui_contracts_1 = require("@yield-protocol/ui-contracts");
 const observables_1 = require("../observables");
 const types_1 = require("../types");
 const utils_1 = require("../utils");
@@ -34,7 +34,7 @@ const removeCollateral = (amount, vault, unwrapOnRemove = true) => tslib_1.__awa
         const removeEthCallData = isEthCollateral ? yield (0, _addRemoveEth_1.removeEth)(utils_1.ONE_BN) : []; // (exit_ether sweeps all the eth out the ladle, so exact amount is not importnat -> just greater than zero)
         /* is convex-type collateral */
         const isConvexCollateral = assets_1.CONVEX_BASED_ASSETS.includes(ilk.proxyId);
-        const convexJoinContract = contracts_1.ConvexJoin__factory.connect(ilk.joinAddress, provider);
+        const convexJoinContract = ui_contracts_1.ConvexJoin__factory.connect(ilk.joinAddress, provider);
         /* pour destination based on ilk/asset is an eth asset variety ( or unwrapHadnler address if unwrapping) */
         const pourToAddress = () => {
             console.log('Requires unwrapping? ', unwrapCallData.length);
