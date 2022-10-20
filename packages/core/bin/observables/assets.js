@@ -100,7 +100,7 @@ const _chargeAsset = (asset, provider) => {
 const _updateAccountInfo = (asset, account) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Setup users asset info  */
     const balance_ = asset.name !== 'UNKNOWN' && account ? yield asset.getBalance(account) : constants_1.ZERO_BN;
-    return Object.assign(Object.assign({}, asset), { balance: (0, yieldUtils_1.bnToW3Number)(balance_, asset.decimals, 2) // asset.digitFormat ) 
+    return Object.assign(Object.assign({}, asset), { balance: (0, yieldUtils_1.bnToW3bNumber)(balance_, asset.decimals, 2) // asset.digitFormat ) 
      });
 });
 //# sourceMappingURL=assets.js.map

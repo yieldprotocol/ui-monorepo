@@ -90,7 +90,7 @@ const _updateVault = (vault, account, protocol, suppressEventLogQueries) => tsli
     }
     return Object.assign(Object.assign({}, vault), { owner, isActive: owner === account, // refreshed in case owner has been updated
         seriesId,
-        ilkId, ink: (0, yieldUtils_1.bnToW3Number)(ink, vault.ilkDecimals), art: (0, yieldUtils_1.bnToW3Number)(art, vault.baseDecimals), accruedArt: (0, yieldUtils_1.bnToW3Number)(accruedArt, vault.baseDecimals), underLiquidation: witch.address === owner, hasBeenLiquidated: !!liquidationDate, // TODO redundant ??
-        liquidationDate, liquidationDate_: liquidationDate ? (0, date_fns_1.format)(new Date(liquidationDate * 1000), 'dd MMMM yyyy') : undefined, rateAtMaturity: (0, yieldUtils_1.bnToW3Number)(rateAtMaturity, 18, 2), rate: (0, yieldUtils_1.bnToW3Number)(rate, 18, 2) });
+        ilkId, ink: (0, yieldUtils_1.bnToW3bNumber)(ink, vault.ilkDecimals), art: (0, yieldUtils_1.bnToW3bNumber)(art, vault.baseDecimals), accruedArt: (0, yieldUtils_1.bnToW3bNumber)(accruedArt, vault.baseDecimals), underLiquidation: witch.address === owner, hasBeenLiquidated: !!liquidationDate, // TODO redundant ??
+        liquidationDate, liquidationDate_: liquidationDate ? (0, date_fns_1.format)(new Date(liquidationDate * 1000), 'dd MMMM yyyy') : undefined, rateAtMaturity: (0, yieldUtils_1.bnToW3bNumber)(rateAtMaturity, 18, 2), rate: (0, yieldUtils_1.bnToW3bNumber)(rate, 18, 2) });
 });
 //# sourceMappingURL=vaults.js.map

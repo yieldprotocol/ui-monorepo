@@ -40,20 +40,20 @@ const repayDebt = (amount, vault, reclaimCollateral = true) => tslib_1.__awaiter
         const convexJoinContract = ui_contracts_1.ConvexJoin__factory.connect(ilk.joinAddress, provider);
         /* Parse amounts */
         const _amount = (0, yieldUtils_1.inputToTokenValue)(amount, base.decimals);
-        const _maxBaseIn = (0, ui_math_1.maxBaseIn)(series.baseReserves.bn, series.fyTokenReserves.bn, series.getTimeTillMaturity(), series.ts, series.g1, series.decimals);
+        const _maxBaseIn = (0, ui_math_1.maxBaseIn)(series.baseReserves.big, series.fyTokenReserves.big, series.getTimeTillMaturity(), series.ts, series.g1, series.decimals);
         /* Check the max amount of the trade that the pool can handle */
         const tradeIsNotPossible = _amount.gt(_maxBaseIn);
         const _amountAsFyToken = series.isMature()
             ? _amount
-            : (0, ui_math_1.sellBase)(series.baseReserves.bn, series.fyTokenReserves.bn, _amount, (0, ui_math_1.secondsToFrom)(series.maturity.toString()), series.ts, series.g1, series.decimals);
+            : (0, ui_math_1.sellBase)(series.baseReserves.big, series.fyTokenReserves.big, _amount, (0, ui_math_1.secondsToFrom)(series.maturity.toString()), series.ts, series.g1, series.decimals);
         const _amountAsFyTokenWithSlippage = (0, ui_math_1.calculateSlippage)(_amountAsFyToken, slippageTolerance.toString(), true // minimize
         );
         /* Check if amount is more than the debt */
-        const amountGreaterThanEqualDebt = ethers_1.ethers.BigNumber.from(_amountAsFyToken).gte(vault.accruedArt.bn);
+        const amountGreaterThanEqualDebt = ethers_1.ethers.BigNumber.from(_amountAsFyToken).gte(vault.accruedArt.big);
         /* If requested, and all debt will be repaid, automatically remove collateral */
-        const _collateralToRemove = reclaimCollateral && amountGreaterThanEqualDebt ? vault.ink.bn.mul(-1) : ethers_1.ethers.constants.Zero;
+        const _collateralToRemove = reclaimCollateral && amountGreaterThanEqualDebt ? vault.ink.big.mul(-1) : ethers_1.ethers.constants.Zero;
         /* Cap the amount to transfer: check that if amount is greater than debt, used after maturity only repay the max debt (or accrued debt) */
-        const _amountCappedAtArt = vault.art.bn.gt(constants_1.ZERO_BN) && vault.art.bn.lte(_amount) ? vault.art.bn : _amount;
+        const _amountCappedAtArt = vault.art.big.gt(constants_1.ZERO_BN) && vault.art.big.lte(_amount) ? vault.art.big : _amount;
         /* Set the amount to transfer ( + 0.1% after maturity ) */
         const amountToTransfer = series.isMature() ? _amount.mul(10001).div(10000) : _amount; // After maturity + 0.1% for increases during tx time
         /* In low liq situations/or mature,  send repay funds to join not pool */

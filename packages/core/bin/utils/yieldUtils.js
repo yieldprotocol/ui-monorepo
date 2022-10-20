@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.inputToTokenValue = exports.bnToW3Number = exports.truncateValue = exports.ratioToPercent = exports.getStrategySymbol = exports.formatStrategyName = exports.getStrategyAddrFromReceipt = exports.getSeriesAfterRollPosition = exports.getVaultIdFromReceipt = exports.getPositionPath = exports.nameFromMaturity = exports.baseIdFromSeriesId = exports.getSignId = exports.getAssetPairId = exports.getProcessCode = exports.generateVaultName = void 0;
+exports.inputToTokenValue = exports.bnToW3bNumber = exports.truncateValue = exports.ratioToPercent = exports.getStrategySymbol = exports.formatStrategyName = exports.getStrategyAddrFromReceipt = exports.getSeriesAfterRollPosition = exports.getVaultIdFromReceipt = exports.nameFromMaturity = exports.baseIdFromSeriesId = exports.getSignId = exports.getAssetPairId = exports.getProcessCode = exports.generateVaultName = void 0;
+const tslib_1 = require("tslib");
 const date_fns_1 = require("date-fns");
 const ethers_1 = require("ethers");
 const unique_names_generator_1 = require("unique-names-generator");
-// TODO: maybe remove type dependence in this file? 
-const types_1 = require("../types");
+tslib_1.__exportStar(require("./constants"), exports);
 const generateVaultName = (id) => {
     const vaultNameConfig = {
         dictionaries: [unique_names_generator_1.adjectives, unique_names_generator_1.animals],
@@ -41,37 +41,6 @@ exports.baseIdFromSeriesId = baseIdFromSeriesId;
  * */
 const nameFromMaturity = (maturity, style = 'MMMM yyyy') => (0, date_fns_1.format)((0, date_fns_1.subDays)(new Date(maturity * 1000), 2), style);
 exports.nameFromMaturity = nameFromMaturity;
-const getPositionPath = (processCode, receipt, contractMap, seriesMap) => {
-    // console.log('🦄 ~ file: appUtils.ts ~ line 188 ~ getPositionPath ~ receipt', receipt);
-    const action = processCode.split('_')[0];
-    const positionId = processCode.split('_')[1];
-    switch (action) {
-        // BORROW
-        case types_1.ActionCodes.BORROW:
-        case types_1.ActionCodes.ADD_COLLATERAL:
-        case types_1.ActionCodes.REMOVE_COLLATERAL:
-        case types_1.ActionCodes.REPAY:
-        case types_1.ActionCodes.ROLL_DEBT:
-        case types_1.ActionCodes.TRANSFER_VAULT:
-        case types_1.ActionCodes.MERGE_VAULT:
-            return `/vaultposition/${(0, exports.getVaultIdFromReceipt)(receipt, contractMap)}`;
-        // LEND
-        case types_1.ActionCodes.LEND:
-        case types_1.ActionCodes.CLOSE_POSITION:
-        case types_1.ActionCodes.REDEEM:
-            return `/lendposition/${positionId}`;
-        case types_1.ActionCodes.ROLL_POSITION:
-            return `/lendposition/${(0, exports.getSeriesAfterRollPosition)(receipt, seriesMap)}`;
-        // POOL
-        case types_1.ActionCodes.ADD_LIQUIDITY:
-        case types_1.ActionCodes.REMOVE_LIQUIDITY:
-        case types_1.ActionCodes.ROLL_LIQUIDITY:
-            return `/poolposition/${(0, exports.getStrategyAddrFromReceipt)(receipt)}`;
-        default:
-            return '/';
-    }
-};
-exports.getPositionPath = getPositionPath;
 const getVaultIdFromReceipt = (receipt, contractMap) => {
     var _a, _b;
     if (!receipt)
@@ -110,8 +79,8 @@ const ratioToPercent = (ratio, decimals = 2) => {
 exports.ratioToPercent = ratioToPercent;
 /**
  * TRUNCATE a string value to a certain number of 'decimal' points
- * @param input
- * @param decimals
+ * @param input <string | undefined>
+ * @param decimals <number>
  * @returns
  */
 const truncateValue = (input, decimals) => {
@@ -128,30 +97,43 @@ const truncateValue = (input, decimals) => {
 };
 exports.truncateValue = truncateValue;
 /**
- * Convert a bignumber to a W3Number
+ * Convert a bignumber to a W3bNumber
  * (which packages the bn together with a display value)
- * @param bigNumber
- * @param tokenDecimals
- * @param digitFormat
- * @returns W3Number
+ * @param value [ BigNumber|string ]
+ * @param decimals [number] default 18
+ * @param displayDecimals [number] default 6
+ * @returns [W3bNumber]
  */
-const bnToW3Number = (bigNumber, tokenDecimals, digitFormat = 2) => {
-    const bn = bigNumber;
-    const hStr = ethers_1.ethers.utils.formatUnits(bigNumber, tokenDecimals);
-    const dsp = (0, exports.truncateValue)(hStr, digitFormat);
-    return { bn, hStr, dsp };
+const bnToW3bNumber = (value, decimals = 18, displayDecimals = 6) => {
+    const input_hstr = ethers_1.ethers.utils.formatUnits(value, decimals); // hStr wil be the same as dsp because it is what the user is entereing.
+    const input_dsp = displayDecimals
+        ? Number(Math.round(Number(parseFloat(input_hstr) + 'e' + displayDecimals.toString())) +
+            'e-' +
+            displayDecimals.toString())
+        : parseFloat(input_hstr);
+    return {
+        dsp: input_dsp,
+        hStr: input_hstr,
+        big: value,
+    };
 };
-exports.bnToW3Number = bnToW3Number;
+exports.bnToW3bNumber = bnToW3bNumber;
+// export const bnToW3bNumber = (bigNumber: BigNumber, tokenDecimals: number, digitFormat:number = 2): W3bNumber => {
+//   const big = bigNumber;
+//   const hStr =  ethers.utils.formatUnits(bigNumber, tokenDecimals)
+//   const dsp = truncateValue(hStr, digitFormat )
+//   return { big, hStr, dsp }
+// }
 /**
  * Convert a human readbale string input to a BN (respecting the token decimals )
  * @param input
  * @param decimals
  * @returns
  */
-const inputToTokenValue = (input, tokenDecimals) => {
+const inputToTokenValue = (input, decimals) => {
     if (input) {
-        const _cleaned = (0, exports.truncateValue)(input, tokenDecimals);
-        return ethers_1.ethers.utils.parseUnits(_cleaned, tokenDecimals);
+        const _cleaned = (0, exports.truncateValue)(input, decimals);
+        return ethers_1.ethers.utils.parseUnits(_cleaned, decimals);
     }
     return ethers_1.ethers.constants.Zero;
 };

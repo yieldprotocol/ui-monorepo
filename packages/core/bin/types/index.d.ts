@@ -2,6 +2,11 @@ import { ethers, BigNumber, BigNumberish, ContractTransaction, Contract } from '
 import { Observable } from 'rxjs';
 import { Cauldron, FYToken, Ladle, Pool, Strategy, Witch } from '@yield-protocol/ui-contracts';
 export { LadleActions, RoutedActions } from './operations';
+export interface W3bNumber {
+    big: BigNumber;
+    hStr: string;
+    dsp: number;
+}
 export interface IHistoryList {
     lastBlock: number;
     items: any[];
@@ -22,11 +27,6 @@ export interface IPriceContextActions {
 export interface IPriceContext {
     priceState: IPriceContextState;
     priceActions: IPriceContextActions;
-}
-export interface W3Number {
-    bn: BigNumber;
-    hStr: string;
-    dsp: string;
 }
 export interface IUserSettings {
     slippageTolerance: number;
@@ -197,11 +197,11 @@ export interface IAssetPair {
     baseDecimals: number;
     ilkDecimals: number;
     minRatio: number;
-    minDebtLimit: W3Number;
-    maxDebtLimit: W3Number;
+    minDebtLimit: W3bNumber;
+    maxDebtLimit: W3bNumber;
     limitDecimals: number;
-    pairPrice: W3Number;
-    pairTotalDebt: W3Number;
+    pairPrice: W3bNumber;
+    pairTotalDebt: W3bNumber;
     pairUpdating?: boolean;
     lastUpdate?: number;
 }
@@ -223,18 +223,18 @@ export interface IVaultRoot {
 }
 export interface ISeries extends ISeriesRoot {
     apr: string;
-    baseReserves: W3Number;
-    fyTokenReserves: W3Number;
-    fyTokenRealReserves: W3Number;
-    totalSupply: W3Number;
+    baseReserves: W3bNumber;
+    fyTokenReserves: W3bNumber;
+    fyTokenRealReserves: W3bNumber;
+    totalSupply: W3bNumber;
     fyTokenContract: FYToken;
     poolContract: Pool;
     getTimeTillMaturity: () => string;
     isMature: () => boolean;
     getFyTokenAllowance: (acc: string, spender: string) => Promise<BigNumber>;
     getPoolAllowance: (acc: string, spender: string) => Promise<BigNumber>;
-    poolTokens?: W3Number | undefined;
-    fyTokenBalance?: W3Number | undefined;
+    poolTokens?: W3bNumber | undefined;
+    fyTokenBalance?: W3bNumber | undefined;
     poolPercent?: string | undefined;
     color?: string;
     textColor?: string;
@@ -251,7 +251,7 @@ export interface IAsset extends IAssetRoot {
     getBalance: (account: string) => Promise<BigNumber>;
     getAllowance: (account: string, spender: string) => Promise<BigNumber>;
     setAllowance?: (spender: string) => Promise<BigNumber | void>;
-    balance: W3Number;
+    balance: W3bNumber;
 }
 export interface IDummyVault extends IVaultRoot {
 }
@@ -262,11 +262,11 @@ export interface IVault extends IVaultRoot {
     liquidationDate?: number;
     liquidationDate_?: string;
     isActive: boolean;
-    ink: W3Number;
-    art: W3Number;
-    accruedArt: W3Number;
-    rateAtMaturity: W3Number;
-    rate: W3Number;
+    ink: W3bNumber;
+    art: W3bNumber;
+    accruedArt: W3bNumber;
+    rateAtMaturity: W3bNumber;
+    rate: W3bNumber;
 }
 export interface IStrategy extends IStrategyRoot {
     strategyContract: Strategy;
@@ -276,15 +276,15 @@ export interface IStrategy extends IStrategyRoot {
     active: boolean;
     initInvariant?: BigNumber;
     currentInvariant?: BigNumber;
-    returnRate?: W3Number;
-    strategyTotalSupply?: W3Number;
-    accountBalance?: W3Number;
+    returnRate?: W3bNumber;
+    strategyTotalSupply?: W3bNumber;
+    accountBalance?: W3bNumber;
     accountStrategyPercent?: string | undefined;
     strategyPoolContract?: Pool;
-    poolTotalSupply?: W3Number;
-    strategyPoolBalance?: W3Number;
+    poolTotalSupply?: W3bNumber;
+    strategyPoolBalance?: W3bNumber;
     strategyPoolPercent?: string;
-    accountPoolBalance?: W3Number;
+    accountPoolBalance?: W3bNumber;
     accountPoolPercent?: string | undefined;
     getAllowance: (acc: string, spender: string) => Promise<BigNumber>;
 }

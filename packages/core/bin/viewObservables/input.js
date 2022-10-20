@@ -21,10 +21,10 @@ exports.borrowInput$ = new rxjs_1.BehaviorSubject('0');
 exports.borrowInputø = (0, rxjs_1.combineLatest)([exports.borrowInput$, observables_1.selectedø]).pipe((0, rxjs_1.distinctUntilChanged)(), (0, rxjs_1.map)(([inp, { base }]) => {
     if (inp) {
         const tokenValue = (0, yieldUtils_1.inputToTokenValue)(inp, base === null || base === void 0 ? void 0 : base.decimals);
-        return (0, yieldUtils_1.bnToW3Number)(tokenValue, base === null || base === void 0 ? void 0 : base.decimals, base === null || base === void 0 ? void 0 : base.digitFormat);
+        return (0, yieldUtils_1.bnToW3bNumber)(tokenValue, base === null || base === void 0 ? void 0 : base.decimals, base === null || base === void 0 ? void 0 : base.digitFormat);
     }
     ;
-    return constants_1.ZERO_W3NUMBER;
+    return constants_1.ZERO_W3B;
 }), (0, rxjs_1.share)());
 /* Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
 const updateBorrowInput = (input) => exports.borrowInput$.next(input);
@@ -38,10 +38,10 @@ exports.collateralInput$ = new rxjs_1.BehaviorSubject('0');
 exports.collateralInputø = (0, rxjs_1.combineLatest)([exports.collateralInput$, observables_1.selectedø]).pipe((0, rxjs_1.map)(([inp, { ilk }]) => {
     if (inp) {
         const tokenValue = (0, yieldUtils_1.inputToTokenValue)(inp, ilk === null || ilk === void 0 ? void 0 : ilk.decimals);
-        return (0, yieldUtils_1.bnToW3Number)(tokenValue, ilk === null || ilk === void 0 ? void 0 : ilk.decimals, ilk === null || ilk === void 0 ? void 0 : ilk.digitFormat);
+        return (0, yieldUtils_1.bnToW3bNumber)(tokenValue, ilk === null || ilk === void 0 ? void 0 : ilk.decimals, ilk === null || ilk === void 0 ? void 0 : ilk.digitFormat);
     }
     ;
-    return constants_1.ZERO_W3NUMBER;
+    return constants_1.ZERO_W3B;
 }), (0, rxjs_1.share)());
 /* Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
 const updateCollateralInput = (input) => exports.collateralInput$.next(input);
@@ -55,10 +55,10 @@ exports.repayInput$ = new rxjs_1.Subject();
 exports.repayInputø = (0, rxjs_1.combineLatest)([exports.repayInput$, observables_1.selectedø]).pipe((0, rxjs_1.map)(([inp, { base }]) => {
     if (inp) {
         const tokenValue = (0, yieldUtils_1.inputToTokenValue)(inp, base === null || base === void 0 ? void 0 : base.decimals);
-        return (0, yieldUtils_1.bnToW3Number)(tokenValue, base === null || base === void 0 ? void 0 : base.decimals, base === null || base === void 0 ? void 0 : base.digitFormat);
+        return (0, yieldUtils_1.bnToW3bNumber)(tokenValue, base === null || base === void 0 ? void 0 : base.decimals, base === null || base === void 0 ? void 0 : base.digitFormat);
     }
     ;
-    return constants_1.ZERO_W3NUMBER;
+    return constants_1.ZERO_W3B;
 }));
 /* Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
 const updateRepayInput = (input) => exports.repayInput$.next(input);
@@ -72,10 +72,10 @@ exports.lendInput$ = new rxjs_1.BehaviorSubject('');
 exports.lendInputø = (0, rxjs_1.combineLatest)([exports.lendInput$, observables_1.selectedø]).pipe((0, rxjs_1.map)(([inp, { base }]) => {
     if (inp) {
         const tokenValue = (0, yieldUtils_1.inputToTokenValue)(inp, base === null || base === void 0 ? void 0 : base.decimals);
-        return (0, yieldUtils_1.bnToW3Number)(tokenValue, base === null || base === void 0 ? void 0 : base.decimals, base === null || base === void 0 ? void 0 : base.digitFormat);
+        return (0, yieldUtils_1.bnToW3bNumber)(tokenValue, base === null || base === void 0 ? void 0 : base.decimals, base === null || base === void 0 ? void 0 : base.digitFormat);
     }
     ;
-    return constants_1.ZERO_W3NUMBER;
+    return constants_1.ZERO_W3B;
 }));
 /* Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
 const updateLendInput = (input) => exports.lendInput$.next(input);
@@ -89,10 +89,10 @@ exports.closeInput$ = new rxjs_1.BehaviorSubject('');
 exports.closeInputø = (0, rxjs_1.combineLatest)([exports.closeInput$, observables_1.selectedø]).pipe((0, rxjs_1.map)(([inp, { base }]) => {
     if (inp) {
         const tokenValue = (0, yieldUtils_1.inputToTokenValue)(inp, base === null || base === void 0 ? void 0 : base.decimals);
-        return (0, yieldUtils_1.bnToW3Number)(tokenValue, base === null || base === void 0 ? void 0 : base.decimals, base === null || base === void 0 ? void 0 : base.digitFormat);
+        return (0, yieldUtils_1.bnToW3bNumber)(tokenValue, base === null || base === void 0 ? void 0 : base.decimals, base === null || base === void 0 ? void 0 : base.digitFormat);
     }
     ;
-    return constants_1.ZERO_W3NUMBER;
+    return constants_1.ZERO_W3B;
 }));
 /* Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
 const updateCloseInput = (input) => exports.closeInput$.next(input);
@@ -106,10 +106,10 @@ exports.addLiquidityInput$ = new rxjs_1.BehaviorSubject('');
 exports.addLiquidityInputø = (0, rxjs_1.combineLatest)([exports.addLiquidityInput$, observables_1.selectedø]).pipe((0, rxjs_1.map)(([inp, { base }]) => {
     if (inp) {
         const tokenValue = (0, yieldUtils_1.inputToTokenValue)(inp, base === null || base === void 0 ? void 0 : base.decimals);
-        return (0, yieldUtils_1.bnToW3Number)(tokenValue, base === null || base === void 0 ? void 0 : base.decimals, base === null || base === void 0 ? void 0 : base.digitFormat);
+        return (0, yieldUtils_1.bnToW3bNumber)(tokenValue, base === null || base === void 0 ? void 0 : base.decimals, base === null || base === void 0 ? void 0 : base.digitFormat);
     }
     ;
-    return constants_1.ZERO_W3NUMBER;
+    return constants_1.ZERO_W3B;
 }));
 /** Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
 const updateAddLiqInput = (input) => exports.addLiquidityInput$.next(input);
@@ -123,10 +123,10 @@ exports.removeLiquidityInput$ = new rxjs_1.BehaviorSubject('');
 exports.removeLiquidityInputø = (0, rxjs_1.combineLatest)([exports.removeLiquidityInput$, observables_1.selectedø]).pipe((0, rxjs_1.map)(([inp, { base }]) => {
     if (inp) {
         const tokenValue = (0, yieldUtils_1.inputToTokenValue)(inp, base === null || base === void 0 ? void 0 : base.decimals);
-        return (0, yieldUtils_1.bnToW3Number)(tokenValue, base === null || base === void 0 ? void 0 : base.decimals, base === null || base === void 0 ? void 0 : base.digitFormat);
+        return (0, yieldUtils_1.bnToW3bNumber)(tokenValue, base === null || base === void 0 ? void 0 : base.decimals, base === null || base === void 0 ? void 0 : base.digitFormat);
     }
     ;
-    return constants_1.ZERO_W3NUMBER;
+    return constants_1.ZERO_W3B;
 }));
 /** Manual input update escape hatch (for example, when using react that doesn't have direct DOM access) */
 const updateRemoveLiqInput = (input) => exports.removeLiquidityInput$.next(input);

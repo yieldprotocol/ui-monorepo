@@ -205,7 +205,7 @@ export const minCollateralRequiredø: Observable<W3bNumber> = combineLatest([
   map(([assetPair, minCollatRatio, totalDebt, totalCollat]) => {
     const _pairPriceInWei = decimalNToDecimal18(assetPair!.pairPrice.big, assetPair!.baseDecimals);
     const _calcMin = calculateMinCollateral(_pairPriceInWei, totalDebt[0], minCollatRatio!.toString(), totalCollat[1])
-    return bigToW3bNumber(_calcMin, assetPair?.baseDecimals! );
+    return bnToW3bNumber(_calcMin, assetPair?.baseDecimals! );
   }),
   share()
 );

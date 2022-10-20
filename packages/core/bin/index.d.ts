@@ -31,10 +31,10 @@ declare const yieldConstants: {
     MAX_256: "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
     MAX_128: "0xffffffffffffffffffffffffffffffff";
     ZERO_BN: import("ethers").BigNumber;
-    ZERO_W3NUMBER: {
-        bn: import("ethers").BigNumber;
+    ZERO_W3B: {
+        big: import("ethers").BigNumber;
         hStr: string;
-        dsp: string;
+        dsp: number;
     };
     ONE_BN: import("ethers").BigNumber;
     MINUS_ONE_BN: import("ethers").BigNumber;

@@ -78,7 +78,7 @@ const borrow = (amount, collateralAmount, vault, getValuesFromNetwork = true // 
         /* Calculate expected debt (fytokens) from EITHER network or calculated : default = Network */
         const _expectedFyToken = getValuesFromNetwork
             ? yield series.poolContract.buyBasePreview(_amount)
-            : (0, ui_math_1.buyBase)(series.baseReserves.bn, series.fyTokenReserves.bn, _amount, series.getTimeTillMaturity(), series.ts, series.g2, series.decimals);
+            : (0, ui_math_1.buyBase)(series.baseReserves.big, series.fyTokenReserves.big, _amount, series.getTimeTillMaturity(), series.ts, series.g2, series.decimals);
         const _expectedFyTokenWithSlippage = (0, ui_math_1.calculateSlippage)(_expectedFyToken, slippageTolerance.toString()); // TODO check this tolereance typing
         /* if approveMAx, check if signature is required : note: getAllowance may return FALSE if ERC1155 */
         const _allowance = yield ilk.getAllowance(account, ilk.joinAddress);

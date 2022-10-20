@@ -77,9 +77,9 @@ const _updateInfo = (strategy) => tslib_1.__awaiter(void 0, void 0, void 0, func
     // [currentInvariant, initInvariant] = currentSeries.isMature() ? [ZERO_BN, ZERO_BN] : [ZERO_BN, ZERO_BN];
     // strategyPoolPercent = mulDecimal(divDecimal(strategyPoolBalance, poolTotalSupply), '100');
     const returnRate = currentInvariant && currentInvariant.sub(initInvariant);
-    return Object.assign(Object.assign({}, strategy), { strategyTotalSupply: (0, yieldUtils_1.bnToW3Number)(strategyTotalSupply, strategy.decimals), strategyPoolContract, strategyPoolBalance: (0, yieldUtils_1.bnToW3Number)(strategyPoolBalance, strategy.decimals), currentSeriesId,
+    return Object.assign(Object.assign({}, strategy), { strategyTotalSupply: (0, yieldUtils_1.bnToW3bNumber)(strategyTotalSupply, strategy.decimals), strategyPoolContract, strategyPoolBalance: (0, yieldUtils_1.bnToW3bNumber)(strategyPoolBalance, strategy.decimals), currentSeriesId,
         currentPoolAddr,
-        nextSeriesId, initInvariant: initInvariant || ethers_1.BigNumber.from('0'), currentInvariant: currentInvariant || ethers_1.BigNumber.from('0'), returnRate: (0, yieldUtils_1.bnToW3Number)(returnRate, strategy.decimals), active: true });
+        nextSeriesId, initInvariant: initInvariant || ethers_1.BigNumber.from('0'), currentInvariant: currentInvariant || ethers_1.BigNumber.from('0'), returnRate: (0, yieldUtils_1.bnToW3bNumber)(returnRate, strategy.decimals), active: true });
 });
 /**
  *
@@ -93,7 +93,7 @@ const _updateAccountInfo = (strategy, account) => tslib_1.__awaiter(void 0, void
         strategy.strategyContract.balanceOf(account),
         ((_a = strategy.strategyPoolContract) === null || _a === void 0 ? void 0 : _a.balanceOf(account)) || constants_1.ZERO_BN,
     ]);
-    const accountStrategyPercent = (0, ui_math_1.mulDecimal)((0, ui_math_1.divDecimal)(accountBalance, ((_b = strategy.strategyTotalSupply) === null || _b === void 0 ? void 0 : _b.bn) || '0'), '100');
-    return Object.assign(Object.assign({}, strategy), { accountBalance: (0, yieldUtils_1.bnToW3Number)(accountBalance, strategy.decimals), accountPoolBalance: (0, yieldUtils_1.bnToW3Number)(accountPoolBalance, strategy.decimals), accountStrategyPercent });
+    const accountStrategyPercent = (0, ui_math_1.mulDecimal)((0, ui_math_1.divDecimal)(accountBalance, ((_b = strategy.strategyTotalSupply) === null || _b === void 0 ? void 0 : _b.big) || '0'), '100');
+    return Object.assign(Object.assign({}, strategy), { accountBalance: (0, yieldUtils_1.bnToW3bNumber)(accountBalance, strategy.decimals), accountPoolBalance: (0, yieldUtils_1.bnToW3bNumber)(accountPoolBalance, strategy.decimals), accountStrategyPercent });
 });
 //# sourceMappingURL=strategies.js.map

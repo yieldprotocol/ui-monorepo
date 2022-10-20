@@ -2,10 +2,10 @@ import { ethers } from 'ethers';
 export declare const MAX_256 = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
 export declare const MAX_128 = "0xffffffffffffffffffffffffffffffff";
 export declare const ZERO_BN: ethers.BigNumber;
-export declare const ZERO_W3NUMBER: {
-    bn: ethers.BigNumber;
+export declare const ZERO_W3B: {
+    big: ethers.BigNumber;
     hStr: string;
-    dsp: string;
+    dsp: number;
 };
 export declare const ONE_BN: ethers.BigNumber;
 export declare const MINUS_ONE_BN: ethers.BigNumber;
