@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.calculateBorrowingPower = exports.calculateMinCollateral = exports.calculateCollateralizationRatio = exports.calculateAPR = exports.calculateSlippage = exports.splitLiquidity = exports.fyTokenForMint = exports.maxFyTokenOut = exports.maxFyTokenIn = exports.maxBaseOut = exports.maxBaseIn = exports.buyFYToken = exports.buyBase = exports.sellFYToken = exports.sellBase = exports.burnForBase = exports.mintWithBase = exports.burnFromStrategy = exports.burn = exports.mint = exports._getC = exports.divDecimal = exports.mulDecimal = exports.baseIdFromSeriesId = exports.toBn = exports.floorDecimal = exports.secondsToFrom = exports.bytesToBytes32 = exports.decimal18ToDecimalN = exports.decimalNToDecimal18 = exports.mu_DEFAULT = exports.c_DEFAULT = exports.g2_DEFAULT = exports.g1_DEFAULT = exports.k = exports.secondsInTenYears = exports.secondsInOneYear = exports.SECONDS_PER_YEAR = exports.WAD_BN = exports.WAD_RAY_BN = exports.MINUS_ONE_BN = exports.ONE_BN = exports.ZERO_BN = exports.RAY_DEC = exports.MAX_DEC = exports.TWO_DEC = exports.ONE_DEC = exports.ZERO_DEC = exports.MAX_128 = exports.MAX_256 = void 0;
-exports.calcAccruedDebt = exports.calcPoolRatios = exports.getPoolPercent = exports.strategyTokenValue = exports.newPoolState = exports.calcLiquidationPrice = void 0;
+exports.calculateMinCollateral = exports.calculateCollateralizationRatio = exports.calculateAPR = exports.calculateSlippage = exports.splitLiquidity = exports.fyTokenForMint = exports.invariant = exports.maxFyTokenOut = exports.maxFyTokenIn = exports.maxBaseOut = exports.maxBaseIn = exports.buyFYToken = exports.buyBase = exports.sellFYToken = exports.sellBase = exports.burnForBase = exports.mintWithBase = exports.burnFromStrategy = exports.burn = exports.mint = exports._getC = exports.divDecimal = exports.mulDecimal = exports.baseIdFromSeriesId = exports.toBn = exports.floorDecimal = exports.secondsToFrom = exports.bytesToBytes32 = exports.decimal18ToDecimalN = exports.decimalNToDecimal18 = exports.mu_DEFAULT = exports.c_DEFAULT = exports.g2_DEFAULT = exports.g1_DEFAULT = exports.k = exports.secondsInTenYears = exports.secondsInOneYear = exports.SECONDS_PER_YEAR = exports.WAD_BN = exports.WAD_RAY_BN = exports.MINUS_ONE_BN = exports.ONE_BN = exports.ZERO_BN = exports.RAY_DEC = exports.MAX_DEC = exports.TWO_DEC = exports.ONE_DEC = exports.ZERO_DEC = exports.MAX_128 = exports.MAX_256 = void 0;
+exports.calcAccruedDebt = exports.calcPoolRatios = exports.getPoolPercent = exports.strategyTokenValue = exports.newPoolState = exports.calcLiquidationPrice = exports.calculateBorrowingPower = void 0;
 /* eslint-disable @typescript-eslint/naming-convention */
 const ethers_1 = require("ethers");
 const decimal_js_1 = require("decimal.js");
@@ -607,6 +607,54 @@ function maxFyTokenOut(sharesReserves, fyTokenReserves, timeTillMaturity, ts, g1
     return (0, exports.decimal18ToDecimalN)((0, exports.toBn)(safeRes), decimals);
 }
 exports.maxFyTokenOut = maxFyTokenOut;
+/**
+ * Calculates the total supply invariant.
+ *
+ *  y = invariant
+ *  Y = fyTokenReserves (virtual)
+ *  Z = sharesReserves
+ *  s = total supply
+ *
+ *      c/μ ( (       numerator           ) / (  denominator  ) )^invA  / s
+ *      c/μ ( ( (    Za      ) + (  Ya  ) ) / (  denominator  ) )^invA  / s
+ *  y = c/μ ( ( c/μ * (μZ)^a   +    Y^a   ) / (     c/u + 1   ) )^(1/a) / s
+ *
+ * @param { BigNumber | string } sharesReserves
+ * @param { BigNumber | string } fyTokenReserves
+ * @param { BigNumber | string } totalSupply
+ * @param { BigNumber | string } timeTillMaturity
+ * @param { BigNumber | string } ts
+ * @param { BigNumber | string } g2
+ * @param { number } decimals
+ * @param { BigNumber | string } c
+ * @param { BigNumber | string } mu
+ *
+ * @returns { BigNumber }
+ */
+function invariant(sharesReserves, fyTokenReserves, totalSupply, timeTillMaturity, ts, g2, decimals, c = exports.c_DEFAULT, mu = exports.mu_DEFAULT) {
+    /* convert to 18 decimals, if required */
+    const sharesReserves18 = (0, exports.decimalNToDecimal18)(sharesReserves, decimals);
+    const fyTokenReserves18 = (0, exports.decimalNToDecimal18)(fyTokenReserves, decimals);
+    const totalSupply18 = (0, exports.decimalNToDecimal18)(totalSupply, decimals);
+    /* convert to decimal for the math */
+    const sharesReserves_ = new decimal_js_1.Decimal(sharesReserves18.toString());
+    const fyTokenReserves_ = new decimal_js_1.Decimal(fyTokenReserves18.toString());
+    const totalSupply_ = new decimal_js_1.Decimal(totalSupply18.toString());
+    const c_ = (0, exports._getC)(c);
+    const mu_ = _getMu(mu);
+    const [a, invA] = _computeA(timeTillMaturity, ts, g2);
+    const Za = c_.div(mu_).mul(mu_.mul(sharesReserves_).pow(a));
+    const Ya = fyTokenReserves_.pow(a);
+    const numerator = Za.add(Ya);
+    const denominator = c_.div(mu_).add(ONE);
+    const topTerm = c_.div(mu_).mul(numerator.div(denominator).pow(invA));
+    const res = topTerm.div(totalSupply_);
+    /* Handle precision variations */
+    const safeRes = res.gt(MAX.sub(precisionFee)) ? MAX : res.add(precisionFee);
+    /* convert to back to token native decimals, if required */
+    return (0, exports.decimal18ToDecimalN)((0, exports.toBn)(safeRes), decimals);
+}
+exports.invariant = invariant;
 /**
  * Calculate the amount of fyToken that should be bought when providing liquidity with only underlying.
  * The amount bought leaves a bit of unused underlying, to allow for the pool reserves to change between

@@ -335,6 +335,31 @@ export declare function maxFyTokenIn(sharesReserves: BigNumber, fyTokenReserves:
  */
 export declare function maxFyTokenOut(sharesReserves: BigNumber, fyTokenReserves: BigNumber, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g1: BigNumber | string, decimals: number, c?: BigNumber | string, mu?: BigNumber | string): BigNumber;
 /**
+ * Calculates the total supply invariant.
+ *
+ *  y = invariant
+ *  Y = fyTokenReserves (virtual)
+ *  Z = sharesReserves
+ *  s = total supply
+ *
+ *      c/μ ( (       numerator           ) / (  denominator  ) )^invA  / s
+ *      c/μ ( ( (    Za      ) + (  Ya  ) ) / (  denominator  ) )^invA  / s
+ *  y = c/μ ( ( c/μ * (μZ)^a   +    Y^a   ) / (     c/u + 1   ) )^(1/a) / s
+ *
+ * @param { BigNumber | string } sharesReserves
+ * @param { BigNumber | string } fyTokenReserves
+ * @param { BigNumber | string } totalSupply
+ * @param { BigNumber | string } timeTillMaturity
+ * @param { BigNumber | string } ts
+ * @param { BigNumber | string } g2
+ * @param { number } decimals
+ * @param { BigNumber | string } c
+ * @param { BigNumber | string } mu
+ *
+ * @returns { BigNumber }
+ */
+export declare function invariant(sharesReserves: BigNumber, fyTokenReserves: BigNumber, totalSupply: BigNumber, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g2: BigNumber | string, decimals: number, c?: BigNumber | string, mu?: BigNumber | string): BigNumber;
+/**
  * Calculate the amount of fyToken that should be bought when providing liquidity with only underlying.
  * The amount bought leaves a bit of unused underlying, to allow for the pool reserves to change between
  * the calculation and the mint. The pool returns any unused underlying.
