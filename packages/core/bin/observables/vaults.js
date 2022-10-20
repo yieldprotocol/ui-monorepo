@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateVaults = exports.vaultsø = void 0;
 const tslib_1 = require("tslib");
 const ui_math_1 = require("@yield-protocol/ui-math");
-const date_fns_1 = require("date-fns");
 const ethers_1 = require("ethers");
 const rxjs_1 = require("rxjs");
 const buildVaultsRoot_1 = require("../buildProtocol/buildVaultsRoot");
@@ -91,6 +90,6 @@ const _updateVault = (vault, account, protocol, suppressEventLogQueries) => tsli
     return Object.assign(Object.assign({}, vault), { owner, isActive: owner === account, // refreshed in case owner has been updated
         seriesId,
         ilkId, ink: (0, yieldUtils_1.bnToW3bNumber)(ink, vault.ilkDecimals), art: (0, yieldUtils_1.bnToW3bNumber)(art, vault.baseDecimals), accruedArt: (0, yieldUtils_1.bnToW3bNumber)(accruedArt, vault.baseDecimals), underLiquidation: witch.address === owner, hasBeenLiquidated: !!liquidationDate, // TODO redundant ??
-        liquidationDate, liquidationDate_: liquidationDate ? (0, date_fns_1.format)(new Date(liquidationDate * 1000), 'dd MMMM yyyy') : undefined, rateAtMaturity: (0, yieldUtils_1.bnToW3bNumber)(rateAtMaturity, 18, 2), rate: (0, yieldUtils_1.bnToW3bNumber)(rate, 18, 2) });
+        liquidationDate, liquidationDate_: liquidationDate ? (0, yieldUtils_1.dateFromMaturity)(liquidationDate, 'dd MMMM yyyy').display : undefined, rateAtMaturity: (0, yieldUtils_1.bnToW3bNumber)(rateAtMaturity, 18, 2), rate: (0, yieldUtils_1.bnToW3bNumber)(rate, 18, 2) });
 });
 //# sourceMappingURL=vaults.js.map
