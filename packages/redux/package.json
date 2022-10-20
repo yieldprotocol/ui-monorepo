@@ -1,6 +1,6 @@
 {
   "name": "@yield-protocol/ui-redux",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "repository": {
     "url": "git+https://github.com/yieldprotocol/ui-monorepo.git",
     "type": "git"
@@ -15,7 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.2",
-    "@yield-protocol/ui-core": "^1.0.6",
+    "@yield-protocol/ui-core": "^1.0.7",
     "react-redux": "^8.0.2"
   },
   "scripts": {
