@@ -4,7 +4,6 @@ import { Cauldron, FYToken, Ladle, Pool, Strategy, Witch } from '@yield-protocol
 
 export { LadleActions, RoutedActions } from './operations';
 
-
 export interface W3bNumber {
   big: BigNumber; // 'BigNumber' representation in wei (or equivalent) terms( eg. 1000000000000000023 Wei ).
   hStr: string; // 'Human String' understandable value ( eg. 1.000000000000000023 ETH ) - takes into account token specific decimals ( no precision loss )
@@ -319,14 +318,14 @@ export interface ISeries extends ISeriesRoot {
   poolPercent?: string | undefined;
 
   /* Extra visual stuff */
-  color?: string;
-  textColor?: string;
-  startColor?: string;
-  endColor?: string;
-  oppositeColor?: string;
-  oppStartColor?: string;
-  oppEndColor?: string;
-  seriesMark?: any; // image
+  // color?: string;
+  // textColor?: string;
+  // startColor?: string;
+  // endColor?: string;
+  // oppositeColor?: string;
+  // oppStartColor?: string;
+  // oppEndColor?: string;
+  // seriesMark?: any; // image
 }
 
 export interface IAsset extends IAssetRoot {
@@ -502,11 +501,11 @@ export interface IYieldProcess {
   // positionPath?: string | undefined;
 }
 
-export enum MenuView {
-  account = 'ACCOUNT',
-  settings = 'SETTINGS',
-  vaults = 'VAULTS',
-}
+// export enum MenuView {
+//   account = 'ACCOUNT',
+//   settings = 'SETTINGS',
+//   vaults = 'VAULTS',
+// }
 
 export enum TradeType {
   BUY = 'BUY',
@@ -557,40 +556,30 @@ export enum ActionCodes {
   MERGE_VAULT = 'Merge Vault',
 }
 
-export interface IBaseHistItem {
-  blockNumber: number;
-  date: number;
-  transactionHash: string;
-  series: ISeries;
-  actionCode: ActionCodes;
-  date_: string;
-  primaryInfo: string;
-  secondaryInfo?: string;
-}
+// export interface IBaseHistItem {
+//   blockNumber: number;
+//   date: number;
+//   transactionHash: string;
+//   series: ISeries;
+//   actionCode: ActionCodes;
+//   date_: string;
+//   primaryInfo: string;
+//   secondaryInfo?: string;
+// }
 
-export interface IHistItemVault extends IBaseHistItem {
-  ilkId: string;
-  ink: BigNumber;
-  art: BigNumber;
-  ink_: String;
-  art_: String;
-}
+// export interface IHistItemVault extends IBaseHistItem {
+//   ilkId: string;
+//   ink: BigNumber;
+//   art: BigNumber;
+//   ink_: String;
+//   art_: String;
+// }
 
-export interface IHistItemPosition extends IBaseHistItem {
-  bases: BigNumber;
-  fyTokens: BigNumber;
-  bases_: string;
-  fyTokens_: string;
-  poolTokens?: BigNumber;
-  poolTokens_?: string;
-}
-
-export interface IDashSettings {
-  hideEmptyVaults: boolean;
-  showInactiveVaults: boolean;
-  hideInactiveVaults: boolean;
-  hideVaultPositions: boolean;
-  hideLendPositions: boolean;
-  hidePoolPositions: boolean;
-  currencySetting: string;
-}
+// export interface IHistItemPosition extends IBaseHistItem {
+//   bases: BigNumber;
+//   fyTokens: BigNumber;
+//   bases_: string;
+//   fyTokens_: string;
+//   poolTokens?: BigNumber;
+//   poolTokens_?: string;
+// }

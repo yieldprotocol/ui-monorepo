@@ -236,14 +236,6 @@ export interface ISeries extends ISeriesRoot {
     poolTokens?: W3bNumber | undefined;
     fyTokenBalance?: W3bNumber | undefined;
     poolPercent?: string | undefined;
-    color?: string;
-    textColor?: string;
-    startColor?: string;
-    endColor?: string;
-    oppositeColor?: string;
-    oppStartColor?: string;
-    oppEndColor?: string;
-    seriesMark?: any;
 }
 export interface IAsset extends IAssetRoot {
     assetContract: Contract;
@@ -378,11 +370,6 @@ export interface IYieldProcess {
         message: string;
     };
 }
-export declare enum MenuView {
-    account = "ACCOUNT",
-    settings = "SETTINGS",
-    vaults = "VAULTS"
-}
 export declare enum TradeType {
     BUY = "BUY",
     SELL = "SELL"
@@ -421,38 +408,4 @@ export declare enum ActionCodes {
     DELETE_VAULT = "Delete Vault",
     TRANSFER_VAULT = "Transfer Vault",
     MERGE_VAULT = "Merge Vault"
-}
-export interface IBaseHistItem {
-    blockNumber: number;
-    date: number;
-    transactionHash: string;
-    series: ISeries;
-    actionCode: ActionCodes;
-    date_: string;
-    primaryInfo: string;
-    secondaryInfo?: string;
-}
-export interface IHistItemVault extends IBaseHistItem {
-    ilkId: string;
-    ink: BigNumber;
-    art: BigNumber;
-    ink_: String;
-    art_: String;
-}
-export interface IHistItemPosition extends IBaseHistItem {
-    bases: BigNumber;
-    fyTokens: BigNumber;
-    bases_: string;
-    fyTokens_: string;
-    poolTokens?: BigNumber;
-    poolTokens_?: string;
-}
-export interface IDashSettings {
-    hideEmptyVaults: boolean;
-    showInactiveVaults: boolean;
-    hideInactiveVaults: boolean;
-    hideVaultPositions: boolean;
-    hideLendPositions: boolean;
-    hidePoolPositions: boolean;
-    currencySetting: string;
 }
