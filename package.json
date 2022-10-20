@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@yield-protocol/ui-core": "1.0.3",
-    "@yield-protocol/ui-math": "1.0.3",
+    "@yield-protocol/ui-math": "latest",
     "@yield-protocol/ui-react": "1.0.3"
   },
   "devDependencies": {

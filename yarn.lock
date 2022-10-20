@@ -5672,7 +5672,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@yield-protocol/ui-core@^1.0.4, @yield-protocol/ui-core@workspace:packages/core":
+"@yield-protocol/ui-core@^1.0.3, @yield-protocol/ui-core@^1.0.4, @yield-protocol/ui-core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@yield-protocol/ui-core@workspace:packages/core"
   dependencies:
@@ -5719,7 +5719,22 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@yield-protocol/ui-math@^1.0.5, @yield-protocol/ui-math@workspace:packages/math":
+"@yield-protocol/ui-core@npm:1.0.3":
+  version: 1.0.3
+  resolution: "@yield-protocol/ui-core@npm:1.0.3"
+  dependencies:
+    "@yield-protocol/ui-math": ^1.0.3
+    date-fns: ^2.24.0
+    eslint-config-next: ^12.1.3
+    eth-permit: ^0.2.1
+    ethers: ^5.5.4
+    rxjs: ^7.5.5
+    unique-names-generator: ^4.6.0
+  checksum: bfd977f1477a09937e44e72e37d0e33e52af4c1db69b5a77fc7696d7a58fab1da82ca76d97289ae070e67e57215e742b063052ba27755dce5cba0b608b902b7f
+  languageName: node
+  linkType: hard
+
+"@yield-protocol/ui-math@^1.0.3, @yield-protocol/ui-math@^1.0.5, @yield-protocol/ui-math@workspace:packages/math":
   version: 0.0.0-use.local
   resolution: "@yield-protocol/ui-math@workspace:packages/math"
   dependencies:
@@ -5746,6 +5761,16 @@ __metadata:
     react: ^17.0.2
   languageName: unknown
   linkType: soft
+
+"@yield-protocol/ui-react@npm:1.0.3":
+  version: 1.0.3
+  resolution: "@yield-protocol/ui-react@npm:1.0.3"
+  dependencies:
+    "@yield-protocol/ui-core": ^1.0.3
+    react: ^17.0.2
+  checksum: 2417d8bf823cee8e99f456ad56d4f5e530f21cade9c6ac5ceeb3294fe21bad452d3237afd09329eaaeddfc4f11b8a1c5bf47d748f9dc7400684bb7f59bd20cff
+  languageName: node
+  linkType: hard
 
 "@yield-protocol/ui-redux@^1.0.2, @yield-protocol/ui-redux@workspace:packages/redux":
   version: 0.0.0-use.local
@@ -26493,7 +26518,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "yield-ui@workspace:."
   dependencies:
+    "@yield-protocol/ui-core": 1.0.3
     "@yield-protocol/ui-math": latest
+    "@yield-protocol/ui-react": 1.0.3
     esbuild-serve: ^1.0.1
     lerna: ^4.0.0
     typedoc: ^0.22.17
