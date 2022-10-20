@@ -2,10 +2,10 @@ import { ethers } from 'ethers';
 import { format } from 'date-fns';
 
 import { IAssetRoot, ISeriesRoot, IYieldConfig } from '../types';
-import * as contracts from '../contracts';
+import * as contracts from '@yield-protocol/ui-contracts';
 
-import { PoolAddedEvent } from '../contracts/Ladle';
-import { SeriesAddedEvent } from '../contracts/Cauldron';
+import { PoolAddedEvent } from '@yield-protocol/ui-contracts/Ladle';
+import { SeriesAddedEvent } from '@yield-protocol/ui-contracts/Cauldron';
 
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils/appUtils';
 import { nameFromMaturity } from '../utils/yieldUtils';

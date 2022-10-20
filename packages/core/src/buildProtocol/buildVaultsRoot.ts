@@ -1,6 +1,6 @@
 import { IVaultRoot, IYieldConfig, IYieldProtocol } from '../types';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils/appUtils';
-import { VaultBuiltEvent, VaultGivenEvent } from '../contracts/Cauldron';
+import { VaultBuiltEvent, VaultGivenEvent } from '@yield-protocol/ui-contracts/Cauldron';
 import { generateVaultName } from '../utils/yieldUtils';
 import { ethers } from 'ethers';
 

@@ -5,7 +5,7 @@ import { IAsset, IAssetRoot, TokenType, IYieldProtocol } from '../types';
 import { accountø, providerø } from './connection';
 import { protocolø } from './protocol';
 
-import * as contracts from '../contracts';
+import * as contracts from '@yield-protocol/ui-contracts';
 import { ASSETS, ETH_BASED_ASSETS } from '../config/assets';
 import { ZERO_BN } from '../utils/constants';
 import { truncateValue } from '../utils';

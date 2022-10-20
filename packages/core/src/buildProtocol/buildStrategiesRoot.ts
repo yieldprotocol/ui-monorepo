@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import { IStrategyRoot, IYieldConfig } from '../types';
-import * as contracts from '../contracts';
+import * as contracts from '@yield-protocol/ui-contracts';
 
 import { strategyAddresses } from '../config/protocol';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils/appUtils';

@@ -1,6 +1,6 @@
 import { ethers, BigNumber, BigNumberish, ContractTransaction, Contract } from 'ethers';
 import { Observable } from 'rxjs';
-import { Cauldron, FYToken, Ladle, Pool, Strategy, Witch } from '../contracts';
+import { Cauldron, FYToken, Ladle, Pool, Strategy, Witch } from '@yield-protocol/ui-contracts';
 
 export { LadleActions, RoutedActions } from './operations';
 

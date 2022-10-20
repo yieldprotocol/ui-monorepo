@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { IAssetRoot, IYieldConfig, IYieldProtocol } from '../types';
 
-import * as contracts from '../contracts';
+import * as contracts from '@yield-protocol/ui-contracts';
 
 import { baseAddresses } from '../config/protocol';
 

@@ -1,10 +1,8 @@
 import { ethers } from 'ethers';
 import { IAssetInfo, IAssetRoot, IYieldConfig, TokenType } from '../types';
-import * as contracts from '../contracts';
+import * as contracts from '@yield-protocol/ui-contracts';
 
 import { ASSETS, UNKNOWN } from '../config/assets';
-import { JoinAddedEvent } from '../contracts/Ladle';
-import { AssetAddedEvent } from '../contracts/Cauldron';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils/appUtils';
 
 export const buildAssetMap = async (
@@ -33,9 +31,9 @@ export const buildAssetMap = async (
     : [[], []];
 
   /* Create a map from the joinAdded event data or hardcoded join data if available */
-  const joinMap = new Map(joinAddedEvents.map((e: JoinAddedEvent) => e.args)); // event values);
+  const joinMap = new Map(joinAddedEvents.map((e: contracts.Ladle.JoinAddedEvent) => e.args)); // event values);
   /* Create a array from the assetAdded event data or hardcoded asset data if available */
-  const assetsAdded = assetAddedEvents.map((evnt: AssetAddedEvent) => evnt);
+  const assetsAdded = assetAddedEvents.map((evnt: contracts.Cauldron.AssetAddedEvent) => evnt);
 
   try {
     await Promise.all(
