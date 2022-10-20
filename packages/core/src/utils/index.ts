@@ -42,7 +42,6 @@ export {
 	generateVaultName,
 	getSignId,
 	nameFromMaturity,
-	getPositionPath,
 	getVaultIdFromReceipt,
 	getSeriesAfterRollPosition,
 	getStrategyAddrFromReceipt,

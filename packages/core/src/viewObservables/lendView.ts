@@ -1,10 +1,10 @@
 import { maxBaseIn, sellBase, sellFYToken } from '@yield-protocol/ui-math';
 import { combineLatest, filter, map, Observable } from 'rxjs';
 import { selectedø } from '../observables';
-import { W3Number } from '../types';
+import { W3bNumber } from '../types';
 import { ZERO_BN } from '../utils';
-import { ZERO_W3NUMBER } from '../utils/constants';
-import { bnToW3Number } from '../utils/yieldUtils';
+import { ZERO_W3B } from '../utils/constants';
+import { bnToW3bNumber } from '../utils/yieldUtils';
 import { closeInputø, lendInputø } from './input';
 
 // TODO: apy,
@@ -13,24 +13,24 @@ import { closeInputø, lendInputø } from './input';
  * Get the maximum lendable to the protocol based on selected series
  * @category Lend
  * */
-export const maximumLendø: Observable<W3Number> = selectedø.pipe(
+export const maximumLendø: Observable<W3bNumber> = selectedø.pipe(
   map(({ series, base }) => {
     if (!!series) {
       /* checks the protocol limits  (max Base allowed in ) */
       const _maxBaseIn = maxBaseIn(
-        series.baseReserves.bn,
-        series.fyTokenReserves.bn,
+        series.baseReserves.big,
+        series.fyTokenReserves.big,
         series.getTimeTillMaturity(),
         series.ts,
         series.g1,
         series.decimals
       );
-      return base?.balance.bn.lt(_maxBaseIn)
+      return base?.balance.big.lt(_maxBaseIn)
         ? base.balance
-        : bnToW3Number(_maxBaseIn, base?.decimals!, base?.digitFormat);
+        : bnToW3bNumber(_maxBaseIn, base?.decimals!, base?.digitFormat);
     }
     /* In the odd case that no series is selected, the return zero as max lend */
-    return ZERO_W3NUMBER;
+    return ZERO_W3B;
   })
 );
 
@@ -41,7 +41,7 @@ export const maximumLendø: Observable<W3Number> = selectedø.pipe(
 export const isLendingLimitedø: Observable<boolean> = combineLatest([maximumLendø, selectedø]).pipe(
   map(([maxLend, { base }]) => {
     // if (input.gt(maxLend)) return true;
-    if (base?.balance.bn.gt(maxLend.bn)) return true;
+    if (base?.balance.big.gt(maxLend.big)) return true;
     return false;
   })
 );
@@ -50,28 +50,28 @@ export const isLendingLimitedø: Observable<boolean> = combineLatest([maximumLen
  * Maximum allowable when closing a lending posiiton
  * @category Lend | Close
  * */
-export const maximumCloseø: Observable<W3Number> = selectedø.pipe(
+export const maximumCloseø: Observable<W3bNumber> = selectedø.pipe(
   map(({ series }) => {
     /* If the series is mature, simply sned back the fyToken value (always closable) */
     if (series && series.isMature()) return series.fyTokenBalance!;
     /* else process */
     const value = sellFYToken(
-      series!.baseReserves.bn,
-      series!.fyTokenReserves.bn,
-      series!.fyTokenBalance?.bn || ZERO_BN,
+      series!.baseReserves.big,
+      series!.fyTokenReserves.big,
+      series!.fyTokenBalance?.big || ZERO_BN,
       series!.getTimeTillMaturity(),
       series!.ts,
       series!.g2,
       series!.decimals
     );
-    const baseReservesWithMargin = series!.baseReserves.bn.mul(9999).div(10000); // TODO: figure out why we can't use the base reserves exactly (margin added to facilitate transaction)
+    const baseReservesWithMargin = series!.baseReserves.big.mul(9999).div(10000); // TODO: figure out why we can't use the base reserves exactly (margin added to facilitate transaction)
 
     /* If the trade isn't possible, set the max close as total base reserves */
-    if (value.lte(ZERO_BN) && series!.fyTokenBalance?.bn.gt(series!.baseReserves.bn))
-      return bnToW3Number(baseReservesWithMargin, series?.decimals!);
-    if (value.lte(ZERO_BN)) return ZERO_W3NUMBER;
+    if (value.lte(ZERO_BN) && series!.fyTokenBalance?.big.gt(series!.baseReserves.big))
+      return bnToW3bNumber(baseReservesWithMargin, series?.decimals!);
+    if (value.lte(ZERO_BN)) return ZERO_W3B;
     /* else, closing is not limited so return the trade value */
-    return bnToW3Number(value, series?.decimals!);
+    return bnToW3bNumber(value, series?.decimals!);
   })
 );
 
@@ -79,19 +79,19 @@ export const maximumCloseø: Observable<W3Number> = selectedø.pipe(
  * Predicted Base Value at maturity based on the [[input]] provided.
  * @category Lend
  * */
-export const lendValueAtMaturityø: Observable<W3Number> = combineLatest([lendInputø, selectedø]).pipe(
+export const lendValueAtMaturityø: Observable<W3bNumber> = combineLatest([lendInputø, selectedø]).pipe(
   map(([input, { series }]) => {
     const { baseReserves, fyTokenReserves } = series!;
     const valueAtMaturity = sellBase(
-      baseReserves.bn,
-      fyTokenReserves.bn,
-      input.bn,
+      baseReserves.big,
+      fyTokenReserves.big,
+      input.big,
       series!.getTimeTillMaturity(),
       series!.ts,
       series!.g1,
       series!.decimals
     );
-    return  bnToW3Number(valueAtMaturity, series?.decimals!);
+    return  bnToW3bNumber(valueAtMaturity, series?.decimals!);
   })
 );
 
@@ -99,22 +99,22 @@ export const lendValueAtMaturityø: Observable<W3Number> = combineLatest([lendIn
  * Get the base value of the existing lending position. i.e. the CURRENT base value of the fyTokens held by the user
  * @category Lend
  * */
-export const lendPostionValueø: Observable<W3Number> = selectedø.pipe(
+export const lendPostionValueø: Observable<W3bNumber> = selectedø.pipe(
   map(({ series }) => {
     /* If the series is mature, simply send back the fyToken value (always closable) */
     if (series && series.isMature()) return series.fyTokenBalance!;
     /* else process */
     const value = sellFYToken(
-      series!.baseReserves.bn,
-      series!.fyTokenReserves.bn,
-      series!.fyTokenBalance?.bn || ZERO_BN,
+      series!.baseReserves.big,
+      series!.fyTokenReserves.big,
+      series!.fyTokenBalance?.big || ZERO_BN,
       series!.getTimeTillMaturity(),
       series!.ts,
       series!.g2,
       series!.decimals
     );
     // TODO: check this flow... shoudl we return ZERO. I think so, because if a trade is not possible the value IS 0.
-    return value.lte(ZERO_BN) ? ZERO_W3NUMBER : bnToW3Number(value, series?.decimals!);
+    return value.lte(ZERO_BN) ? ZERO_W3B : bnToW3bNumber(value, series?.decimals!);
   })
 );
 
@@ -122,13 +122,13 @@ export const lendPostionValueø: Observable<W3Number> = selectedø.pipe(
  * Maximum rollable base
  * @category Lend | Roll
  * */
-export const maximumLendRollø: Observable<W3Number> = selectedø.pipe(
+export const maximumLendRollø: Observable<W3bNumber> = selectedø.pipe(
   /* only do calcs if there is a future series selected */
   filter((selected) => !!selected.futureSeries && !!selected.series),
   map(({ futureSeries, series }) => {
     const _maxBaseIn = maxBaseIn(
-      futureSeries!.baseReserves.bn,
-      futureSeries!.fyTokenReserves.bn,
+      futureSeries!.baseReserves.big,
+      futureSeries!.fyTokenReserves.big,
       futureSeries!.getTimeTillMaturity(),
       futureSeries!.ts,
       futureSeries!.g1,
@@ -136,11 +136,11 @@ export const maximumLendRollø: Observable<W3Number> = selectedø.pipe(
     );
 
     const _fyTokenValue = series!.isMature()
-      ? series!.fyTokenBalance?.bn || ZERO_BN
+      ? series!.fyTokenBalance?.big || ZERO_BN
       : sellFYToken(
-          series!.baseReserves.bn,
-          series!.fyTokenReserves.bn,
-          series!.fyTokenBalance?.bn || ZERO_BN,
+          series!.baseReserves.big,
+          series!.fyTokenReserves.big,
+          series!.fyTokenBalance?.big || ZERO_BN,
           series!.getTimeTillMaturity(),
           series!.ts,
           series!.g2,
@@ -148,8 +148,8 @@ export const maximumLendRollø: Observable<W3Number> = selectedø.pipe(
         );
 
     /* if the protocol is limited return the max rollab as the max base in */
-    if (_maxBaseIn.lte(_fyTokenValue)) return bnToW3Number(_maxBaseIn, series?.decimals!);
+    if (_maxBaseIn.lte(_fyTokenValue)) return bnToW3bNumber(_maxBaseIn, series?.decimals!);
     /* else */
-    return bnToW3Number( _fyTokenValue, series?.decimals!);
+    return bnToW3bNumber( _fyTokenValue, series?.decimals!);
   })
 );

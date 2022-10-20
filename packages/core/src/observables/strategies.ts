@@ -18,7 +18,7 @@ import { accountø, providerø } from './connection';
 import { protocolø } from './protocol';
 import { ZERO_BN } from '../utils/constants';
 import { sendMsg } from './messages';
-import { bnToW3Number } from '../utils/yieldUtils';
+import { bnToW3bNumber } from '../utils/yieldUtils';
 
 
 const strategyMap$: BehaviorSubject<Map<string, IStrategy>> = new BehaviorSubject(new Map([]));
@@ -118,15 +118,15 @@ const _updateInfo = async (
 
   return {
     ...strategy,
-    strategyTotalSupply: bnToW3Number(strategyTotalSupply, strategy.decimals),
+    strategyTotalSupply: bnToW3bNumber(strategyTotalSupply, strategy.decimals),
     strategyPoolContract,
-    strategyPoolBalance: bnToW3Number(strategyPoolBalance, strategy.decimals),
+    strategyPoolBalance: bnToW3bNumber(strategyPoolBalance, strategy.decimals),
     currentSeriesId,
     currentPoolAddr,
     nextSeriesId,
     initInvariant: initInvariant || BigNumber.from('0'),
     currentInvariant: currentInvariant || BigNumber.from('0'),
-    returnRate: bnToW3Number(returnRate, strategy.decimals),
+    returnRate: bnToW3bNumber(returnRate, strategy.decimals),
     active: true,
   };
 };
@@ -142,11 +142,11 @@ const _updateAccountInfo = async (strategy: IStrategy, account: string): Promise
     strategy.strategyContract.balanceOf(account),
     strategy.strategyPoolContract?.balanceOf(account) || ZERO_BN,
   ]);
-  const accountStrategyPercent = mulDecimal(divDecimal(accountBalance, strategy.strategyTotalSupply?.bn || '0'), '100');
+  const accountStrategyPercent = mulDecimal(divDecimal(accountBalance, strategy.strategyTotalSupply?.big || '0'), '100');
   return {
     ...strategy,
-    accountBalance: bnToW3Number(accountBalance, strategy.decimals),
-    accountPoolBalance: bnToW3Number(accountPoolBalance, strategy.decimals),
+    accountBalance: bnToW3bNumber(accountBalance, strategy.decimals),
+    accountPoolBalance: bnToW3bNumber(accountPoolBalance, strategy.decimals),
     accountStrategyPercent,
   };
 };

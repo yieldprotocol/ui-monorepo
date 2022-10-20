@@ -34,8 +34,8 @@ export const lend = async (amount: string, series: ISeries) => {
         const _amount = inputToTokenValue(amount, base?.decimals);
 
         const _inputAsFyToken = sellBase(
-          series.baseReserves.bn,
-          series.fyTokenReserves.bn,
+          series.baseReserves.big,
+          series.fyTokenReserves.big,
           _amount,
           series.getTimeTillMaturity(),
           series.ts,

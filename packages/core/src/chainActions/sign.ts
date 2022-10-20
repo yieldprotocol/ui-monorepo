@@ -187,7 +187,7 @@ export const sign = async (requestedSignatures: ISignData[], processCode: string
 
     } else {
 
-      console.log( 'Approval via transaction: ERC20')
+      console.log('Approval via transaction: ERC20')
       /* else use a regular approval */
       const connectedERC20 = ERC20Permit__factory.connect(reqSig.target.address, signer);
       await connectedERC20

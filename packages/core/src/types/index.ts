@@ -4,6 +4,13 @@ import { Cauldron, FYToken, Ladle, Pool, Strategy, Witch } from '@yield-protocol
 
 export { LadleActions, RoutedActions } from './operations';
 
+
+export interface W3bNumber {
+  big: BigNumber; // 'BigNumber' representation in wei (or equivalent) terms( eg. 1000000000000000023 Wei ).
+  hStr: string; // 'Human String' understandable value ( eg. 1.000000000000000023 ETH ) - takes into account token specific decimals ( no precision loss )
+  dsp: number; // 'Display' number used only for display purposes ( eg. 1.00 DAI ) ( precision loss );
+}
+
 export interface IHistoryList {
   lastBlock: number;
   items: any[];
@@ -28,12 +35,6 @@ export interface IPriceContextActions {
 export interface IPriceContext {
   priceState: IPriceContextState;
   priceActions: IPriceContextActions;
-}
-
-export interface W3Number {
-  bn: BigNumber; // 'BigNumber' representation in wei (or equivalent) terms( eg. 1000000000000000023 Wei ).
-  hStr: string; // 'Human String' understandable value ( eg. 1.000000000000000023 ETH ) - takes into account token specific decimals ( no precision loss )
-  dsp: string; // 'Display' String used only for display purposes ( eg. 1.00 DAI ) ( precision loss );
 }
 
 export interface IUserSettings {
@@ -262,12 +263,12 @@ export interface IAssetPair {
 
   minRatio: number;
 
-  minDebtLimit: W3Number;
-  maxDebtLimit: W3Number;
+  minDebtLimit: W3bNumber;
+  maxDebtLimit: W3bNumber;
   limitDecimals: number;
 
-  pairPrice: W3Number;
-  pairTotalDebt: W3Number;
+  pairPrice: W3bNumber;
+  pairTotalDebt: W3bNumber;
 
   pairUpdating?: boolean;
   lastUpdate?: number;
@@ -296,11 +297,11 @@ export interface IVaultRoot {
 
 export interface ISeries extends ISeriesRoot {
   apr: string;
-  baseReserves: W3Number;
+  baseReserves: W3bNumber;
 
-  fyTokenReserves: W3Number;
-  fyTokenRealReserves: W3Number;
-  totalSupply: W3Number;
+  fyTokenReserves: W3bNumber;
+  fyTokenRealReserves: W3bNumber;
+  totalSupply: W3bNumber;
 
   /* live Contracts */
   fyTokenContract: FYToken;
@@ -313,8 +314,8 @@ export interface ISeries extends ISeriesRoot {
   getPoolAllowance: (acc: string, spender: string) => Promise<BigNumber>;
 
   /* User speccific  */
-  poolTokens?: W3Number | undefined;
-  fyTokenBalance?: W3Number | undefined;
+  poolTokens?: W3bNumber | undefined;
+  fyTokenBalance?: W3bNumber | undefined;
   poolPercent?: string | undefined;
 
   /* Extra visual stuff */
@@ -339,7 +340,7 @@ export interface IAsset extends IAssetRoot {
   setAllowance?: (spender: string) => Promise<BigNumber | void>;
 
   /* User specific */
-  balance: W3Number;
+  balance: W3bNumber;
 }
 
 export interface IDummyVault extends IVaultRoot {}
@@ -353,12 +354,12 @@ export interface IVault extends IVaultRoot {
 
   isActive: boolean;
 
-  ink: W3Number;
-  art: W3Number;
-  accruedArt: W3Number;
+  ink: W3bNumber;
+  art: W3bNumber;
+  accruedArt: W3bNumber;
 
-  rateAtMaturity: W3Number;
-  rate: W3Number;
+  rateAtMaturity: W3bNumber;
+  rate: W3bNumber;
   // liquidationPrice_: string;
 }
 
@@ -374,20 +375,20 @@ export interface IStrategy extends IStrategyRoot {
 
   initInvariant?: BigNumber;
   currentInvariant?: BigNumber;
-  returnRate?: W3Number;
+  returnRate?: W3bNumber;
 
-  strategyTotalSupply?: W3Number;
+  strategyTotalSupply?: W3bNumber;
 
-  accountBalance?: W3Number;
+  accountBalance?: W3bNumber;
   accountStrategyPercent?: string | undefined;
 
   strategyPoolContract?: Pool;
-  poolTotalSupply?: W3Number;
+  poolTotalSupply?: W3bNumber;
 
-  strategyPoolBalance?: W3Number;
+  strategyPoolBalance?: W3bNumber;
   strategyPoolPercent?: string;
 
-  accountPoolBalance?: W3Number;
+  accountPoolBalance?: W3bNumber;
   accountPoolPercent?: string | undefined;
 
   /* Baked in functions  */

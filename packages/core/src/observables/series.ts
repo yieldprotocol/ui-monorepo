@@ -16,7 +16,7 @@ import { accountø, providerø } from './connection';
 import { protocolø } from './protocol';
 import { ETH_BASED_ASSETS } from '../config/assets';
 import { sendMsg } from './messages';
-import { bnToW3Number } from '../utils/yieldUtils';
+import { bnToW3bNumber } from '../utils/yieldUtils';
 
 const seriesMap$: BehaviorSubject<Map<string, ISeries>> = new BehaviorSubject(new Map([]));
 /**
@@ -137,10 +137,10 @@ const _updateDynamicInfo = async (series: ISeries): Promise<ISeries> => {
 
   return {
     ...series,
-    baseReserves: bnToW3Number(baseReserves, series.decimals),
-    fyTokenReserves: bnToW3Number(fyTokenReserves, series.decimals),
-    fyTokenRealReserves: bnToW3Number(fyTokenRealReserves, series.decimals),
-    totalSupply: bnToW3Number(totalSupply, series.decimals),
+    baseReserves: bnToW3bNumber(baseReserves, series.decimals),
+    fyTokenReserves: bnToW3bNumber(fyTokenReserves, series.decimals),
+    fyTokenRealReserves: bnToW3bNumber(fyTokenRealReserves, series.decimals),
+    totalSupply: bnToW3bNumber(totalSupply, series.decimals),
     apr: `${Number(apr).toFixed(2)}`,
   };
 };
@@ -156,12 +156,12 @@ const _updateAccountInfo = async (series: ISeries, account: string): Promise<ISe
     series.poolContract.balanceOf(account),
     series.fyTokenContract.balanceOf(account),
   ]);
-  const poolPercent = mulDecimal(divDecimal(poolTokens, series.totalSupply.bn), '100');
+  const poolPercent = mulDecimal(divDecimal(poolTokens, series.totalSupply.big), '100');
 
   return {
     ...series,
-    poolTokens: bnToW3Number(poolTokens, series.decimals),
-    fyTokenBalance: bnToW3Number(fyTokenBalance, series.decimals),
+    poolTokens: bnToW3bNumber(poolTokens, series.decimals),
+    fyTokenBalance: bnToW3bNumber(fyTokenBalance, series.decimals),
     poolPercent,
   };
 };

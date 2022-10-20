@@ -11,10 +11,10 @@ import {
 import { BigNumber, ethers } from 'ethers';
 import { combineLatest, filter, map, Observable } from 'rxjs';
 import { selectedø, userSettingsø, vaultsø } from '../observables';
-import { IStrategy, IVault, W3Number } from '../types';
+import { IStrategy, IVault, W3bNumber } from '../types';
 import { ZERO_BN } from '../utils';
-import { ZERO_W3NUMBER } from '../utils/constants';
-import { bnToW3Number } from '../utils/yieldUtils';
+import { ZERO_W3B } from '../utils/constants';
+import { bnToW3bNumber } from '../utils/yieldUtils';
 import { addLiquidityInputø, removeLiquidityInputø } from './input';
 
 // maxRemoveNoVault,
@@ -30,9 +30,9 @@ import { addLiquidityInputø, removeLiquidityInputø } from './input';
 /**
  * @category Pool | Add Liquidity
  */
-export const maximumAddLiquidityø: Observable<W3Number> = selectedø.pipe(
+export const maximumAddLiquidityø: Observable<W3bNumber> = selectedø.pipe(
   map(({ base }) => {
-    return base?.balance || ZERO_W3NUMBER;
+    return base?.balance || ZERO_W3B;
   })
 );
 
@@ -46,14 +46,14 @@ export const isBuyAndPoolPossibleø: Observable<boolean> = combineLatest([
   userSettingsø,
 ]).pipe(
   /* don't emit if input is zero or there isn't a strategy selected */
-  filter(([input, selected]) => input.bn.gt(ZERO_BN) && !!selected.series),
+  filter(([input, selected]) => input.big.gt(ZERO_BN) && !!selected.series),
   map(([input, { series }, { slippageTolerance }]) => {
     const strategySeries = series!; // filtered, we can safetly assume current series defined.
 
     let _fyTokenToBuy = ZERO_BN;
     const _maxFyTokenOut = maxFyTokenOut(
-      strategySeries.baseReserves.bn,
-      strategySeries.fyTokenReserves.bn,
+      strategySeries.baseReserves.big,
+      strategySeries.fyTokenReserves.big,
       strategySeries.getTimeTillMaturity(),
       strategySeries.ts,
       strategySeries.g1,
@@ -61,10 +61,10 @@ export const isBuyAndPoolPossibleø: Observable<boolean> = combineLatest([
     );
 
     [_fyTokenToBuy] = fyTokenForMint(
-      strategySeries.baseReserves.bn,
-      strategySeries.fyTokenRealReserves.bn,
-      strategySeries.fyTokenReserves.bn,
-      calculateSlippage(input.bn, slippageTolerance.toString(), true),
+      strategySeries.baseReserves.big,
+      strategySeries.fyTokenRealReserves.big,
+      strategySeries.fyTokenReserves.big,
+      calculateSlippage(input.big, slippageTolerance.toString(), true),
       strategySeries.getTimeTillMaturity(),
       strategySeries.ts,
       strategySeries.g1,
@@ -89,8 +89,8 @@ export const isBuyAndPoolPossibleø: Observable<boolean> = combineLatest([
  *
  * @category Pool | Remove Liquidity
  */
-export const maximumRemoveLiquidityø: Observable<W3Number> = selectedø.pipe(
-  map(({ strategy }) => strategy?.accountBalance || ZERO_W3NUMBER)
+export const maximumRemoveLiquidityø: Observable<W3bNumber> = selectedø.pipe(
+  map(({ strategy }) => strategy?.accountBalance || ZERO_W3B)
 );
 
 /**
@@ -104,7 +104,7 @@ export const borrowAndPoolVaultø: Observable<IVault | undefined> = combineLates
     const arr: IVault[] = Array.from(vaultMap.values()) as IVault[];
     const _matchingVault = arr
       .sort((vaultA: IVault, vaultB: IVault) => (vaultA.id > vaultB.id ? 1 : -1))
-      .sort((vaultA: IVault, vaultB: IVault) => (vaultA.art.bn.lt(vaultB.art.bn) ? 1 : -1))
+      .sort((vaultA: IVault, vaultB: IVault) => (vaultA.art.big.lt(vaultB.art.big) ? 1 : -1))
       .find((v: IVault) => v.ilkId === baseId && v.baseId === baseId && v.seriesId === currentSeriesId && v.isActive);
     // diagnostics && console.log('Matching Vault:', _matchingVault?.id || 'No matching vault.');
     return _matchingVault;
@@ -119,12 +119,12 @@ export const borrowAndPoolVaultø: Observable<IVault | undefined> = combineLates
  * @category Pool | Remove Liquidity
  *
  * */
-export const removeLiquidityReturnø: Observable<W3Number[]> = combineLatest([
+export const removeLiquidityReturnø: Observable<W3bNumber[]> = combineLatest([
   removeLiquidityInputø,
   selectedø,
   borrowAndPoolVaultø,
 ]).pipe(
-  filter(([input, selected]) => input.bn.gt(ZERO_BN) && !!selected.series),
+  filter(([input, selected]) => input.big.gt(ZERO_BN) && !!selected.series),
   map(([input, { strategy, series }, borrowAndPoolVault]) => {
     const strategySeries = series!; // NOTE: filtered, we can safetly assume strategy currentSeries is defined.
 
@@ -134,19 +134,19 @@ export const removeLiquidityReturnø: Observable<W3Number[]> = combineLatest([
        * */
       /* Check the amount of fyTokens potentially recieved */
       const lpReceived = burnFromStrategy(
-        strategy?.strategyPoolBalance?.bn!,
-        strategy?.strategyTotalSupply?.bn!,
-        input.bn
+        strategy?.strategyPoolBalance?.big!,
+        strategy?.strategyTotalSupply?.big!,
+        input.big
       );
       const [_baseReceived, _fyTokenReceived] = burn(
-        strategySeries.baseReserves.bn,
-        strategySeries.fyTokenRealReserves.bn,
-        strategySeries.totalSupply.bn,
+        strategySeries.baseReserves.big,
+        strategySeries.fyTokenRealReserves.big,
+        strategySeries.totalSupply.big,
         lpReceived
       );
       // diagnostics && console.log('burnt (base, fytokens)', _baseReceived.toString(), _fyTokenReceived.toString());
 
-      if (_fyTokenReceived.gt(borrowAndPoolVault?.accruedArt.bn)) {
+      if (_fyTokenReceived.gt(borrowAndPoolVault?.accruedArt.big)) {
         /**
          * Fytoken received greater than debt : USE REMOVE OPTION 2.1 or 2.2
          * */
@@ -154,12 +154,12 @@ export const removeLiquidityReturnø: Observable<W3Number[]> = combineLatest([
         //   console.log(
         //     'FyTokens received will be greater than debt: an extra sellFytoken trade is required: REMOVE OPTION 2.1 or 2.2 '
         //   );
-        const _extraFyTokensToSell = _fyTokenReceived.sub(borrowAndPoolVault.accruedArt.bn);
+        const _extraFyTokensToSell = _fyTokenReceived.sub(borrowAndPoolVault.accruedArt.big);
         // diagnostics && console.log(_extraFyTokensToSell.toString(), 'FyTokens Need to be sold');
 
         const _extraFyTokenValue = sellFYToken(
-          strategySeries!.baseReserves.bn,
-          strategySeries!.fyTokenRealReserves.bn,
+          strategySeries!.baseReserves.big,
+          strategySeries!.fyTokenRealReserves.big,
           _extraFyTokensToSell,
           secondsToFrom(strategySeries!.maturity.toString()),
           strategySeries!.ts,
@@ -172,14 +172,14 @@ export const removeLiquidityReturnø: Observable<W3Number[]> = combineLatest([
            * CASE> extra fyToken TRADE IS POSSIBLE :  USE REMOVE OPTION 2.1
            * */
           const totalValue = _baseReceived.add(_extraFyTokenValue); // .add(_fyTokenReceived);
-          return [bnToW3Number(totalValue, strategySeries.decimals), ZERO_W3NUMBER];
+          return [bnToW3bNumber(totalValue, strategySeries.decimals), ZERO_W3B];
         } else {
           /**
            * CASE> extra fyToken TRADE NOT POSSIBLE ( limited by protocol ): USE REMOVE OPTION 2.2
            * */
-          const _fyTokenVal = _fyTokenReceived.sub(borrowAndPoolVault.accruedArt.bn);
+          const _fyTokenVal = _fyTokenReceived.sub(borrowAndPoolVault.accruedArt.big);
           const _baseVal = _baseReceived; // .add(matchingVault.art);
-          return [bnToW3Number(_baseVal, strategySeries.decimals), bnToW3Number(_fyTokenVal, strategySeries.decimals)];
+          return [bnToW3bNumber(_baseVal, strategySeries.decimals), bnToW3bNumber(_fyTokenVal, strategySeries.decimals)];
         }
       } else {
         /**
@@ -190,7 +190,7 @@ export const removeLiquidityReturnø: Observable<W3Number[]> = combineLatest([
         //   console.log(
         //     'FyTokens received will Less than debt: straight No extra trading is required : USE REMOVE OPTION 1 '
         //   );
-        return [bnToW3Number(_value, strategySeries.decimals), ZERO_W3NUMBER];
+        return [bnToW3bNumber(_value, strategySeries.decimals), ZERO_W3B];
       }
     } else {
       /**
@@ -198,25 +198,25 @@ export const removeLiquidityReturnø: Observable<W3Number[]> = combineLatest([
        * */
       /* Check the amount of fyTokens potentially recieved */
       const lpReceived = burnFromStrategy(
-        strategy!.strategyPoolBalance?.bn!,
-        strategy!.strategyTotalSupply?.bn!,
-        input.bn
+        strategy!.strategyPoolBalance?.big!,
+        strategy!.strategyTotalSupply?.big!,
+        input.big
       );
       const [_baseReceived, _fyTokenReceived] = burn(
-        strategySeries!.baseReserves.bn,
-        strategySeries!.fyTokenRealReserves.bn,
-        strategySeries!.totalSupply.bn,
+        strategySeries!.baseReserves.big,
+        strategySeries!.fyTokenRealReserves.big,
+        strategySeries!.totalSupply.big,
         lpReceived
       );
 
       /* Calculate the token Value */
       const [tokenSellValue, totalTokenValue] = strategyTokenValue(
-        input.bn,
-        strategy?.strategyTotalSupply?.bn!,
-        strategy?.strategyPoolBalance?.bn!,
-        strategySeries!.baseReserves.bn,
-        strategySeries!.fyTokenRealReserves.bn,
-        strategySeries!.totalSupply.bn,
+        input.big,
+        strategy?.strategyTotalSupply?.big!,
+        strategy?.strategyPoolBalance?.big!,
+        strategySeries!.baseReserves.big,
+        strategySeries!.fyTokenRealReserves.big,
+        strategySeries!.totalSupply.big,
         strategySeries!.getTimeTillMaturity(),
         strategySeries!.ts,
         strategySeries!.g2,
@@ -224,11 +224,11 @@ export const removeLiquidityReturnø: Observable<W3Number[]> = combineLatest([
       );
 
       // diagnostics && console.log('NO VAULT : pool trade is possible  : USE REMOVE OPTION 4.1 ');
-      if (tokenSellValue.gt(ZERO_BN)) return [bnToW3Number(totalTokenValue, strategySeries.decimals), ZERO_W3NUMBER];
+      if (tokenSellValue.gt(ZERO_BN)) return [bnToW3bNumber(totalTokenValue, strategySeries.decimals), ZERO_W3B];
       // diagnostics && console.log('NO VAULT : trade not possible : USE REMOVE OPTION 4.2');
       return [
-        bnToW3Number(_baseReceived, strategySeries.decimals),
-        bnToW3Number(_fyTokenReceived, strategySeries.decimals),
+        bnToW3bNumber(_baseReceived, strategySeries.decimals),
+        bnToW3bNumber(_fyTokenReceived, strategySeries.decimals),
       ];
     }
   })
@@ -241,7 +241,7 @@ export const removeLiquidityReturnø: Observable<W3Number[]> = combineLatest([
 export const isPartialRemoveRequiredø: Observable<boolean> = removeLiquidityReturnø.pipe(
   map((removals) => {
     //diagnostics &&  console.log( 'partial removal is required')
-    const areFyTokensReturned = removals[1].bn.gt(ZERO_BN);
+    const areFyTokensReturned = removals[1].big.gt(ZERO_BN);
     return areFyTokensReturned;
   })
 );

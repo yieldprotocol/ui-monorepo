@@ -14,7 +14,7 @@ import {
 import { buildVaultMap } from '../buildProtocol/buildVaultsRoot';
 import { IVault, IVaultRoot, MessageType, IYieldProtocol, ISeries } from '../types';
 import { ZERO_BN } from '../utils';
-import { bnToW3Number } from '../utils/yieldUtils';
+import { bnToW3bNumber } from '../utils/yieldUtils';
 import { appConfigø } from './appConfig';
 import { accountø, chainIdø, providerø } from './connection';
 import { sendMsg } from './messages';
@@ -125,16 +125,16 @@ const _updateVault = async (
     seriesId, // refreshed in case seriesId has been updated
     ilkId, // refreshed in case ilkId has been updated
 
-    ink: bnToW3Number(ink, vault.ilkDecimals),
-    art: bnToW3Number(art, vault.baseDecimals),
-    accruedArt: bnToW3Number(accruedArt, vault.baseDecimals),
+    ink: bnToW3bNumber(ink, vault.ilkDecimals),
+    art: bnToW3bNumber(art, vault.baseDecimals),
+    accruedArt: bnToW3bNumber(accruedArt, vault.baseDecimals),
 
     underLiquidation: witch.address === owner, // check if witch is the owner (in liquidation process)
     hasBeenLiquidated: !!liquidationDate, // TODO redundant ??
     liquidationDate,
     liquidationDate_: liquidationDate ? format(new Date(liquidationDate * 1000), 'dd MMMM yyyy') : undefined,
 
-    rateAtMaturity: bnToW3Number(rateAtMaturity, 18, 2),
-    rate: bnToW3Number(rate, 18, 2),
+    rateAtMaturity: bnToW3bNumber(rateAtMaturity, 18, 2),
+    rate: bnToW3bNumber(rate, 18, 2),
   };
 };

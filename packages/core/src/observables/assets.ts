@@ -10,7 +10,7 @@ import { ASSETS, ETH_BASED_ASSETS } from '../config/assets';
 import { ZERO_BN } from '../utils/constants';
 import { truncateValue } from '../utils';
 import { MessageType, sendMsg } from './messages';
-import { bnToW3Number } from '../utils/yieldUtils';
+import { bnToW3bNumber } from '../utils/yieldUtils';
 
 
 const assetMap$: BehaviorSubject<Map<string, IAsset>> = new BehaviorSubject(new Map([]));
@@ -127,6 +127,6 @@ const _updateAccountInfo = async (asset: IAsset, account: string | undefined): P
   
   return {
     ...asset,
-    balance : bnToW3Number( balance_, asset.decimals, 2 ) // asset.digitFormat ) 
+    balance : bnToW3bNumber( balance_, asset.decimals, 2 ) // asset.digitFormat ) 
   };
 };

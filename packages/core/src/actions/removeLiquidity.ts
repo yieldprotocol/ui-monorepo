@@ -61,23 +61,23 @@ export const removeLiquidity = async (
       const _amount = inputToTokenValue(amount, _base.decimals);
 
       const [cachedBaseReserves, cachedFyTokenReserves] = await series.poolContract.getCache();
-      const cachedRealReserves = cachedFyTokenReserves.sub(series.totalSupply.bn);
+      const cachedRealReserves = cachedFyTokenReserves.sub(series.totalSupply.big);
 
       const lpReceived = burnFromStrategy(_strategy.poolTotalSupply!, _strategy.strategyTotalSupply!, _amount);
 
       const [_baseTokenReceived, _fyTokenReceived] = burn(
-        series.baseReserves.bn,
-        series.fyTokenRealReserves.bn,
-        series.totalSupply.bn,
+        series.baseReserves.big,
+        series.fyTokenRealReserves.big,
+        series.totalSupply.big,
         lpReceived
       );
 
       const _newPool = newPoolState(
         _baseTokenReceived.mul(-1),
         _fyTokenReceived.mul(-1),
-        series.baseReserves.bn,
-        series.fyTokenRealReserves.bn,
-        series.totalSupply.bn
+        series.baseReserves.big,
+        series.fyTokenRealReserves.big,
+        series.totalSupply.big
       );
 
       const fyTokenTrade = sellFYToken(
@@ -94,7 +94,7 @@ export const removeLiquidity = async (
       const fyTokenTradeSupported = fyTokenTrade.gt(ethers.constants.Zero);
 
       const matchingVaultId: string | undefined = matchingVault?.id;
-      const _matchingVaultDebt: BigNumber = matchingVault?.accruedArt.bn || ZERO_BN;
+      const _matchingVaultDebt: BigNumber = matchingVault?.accruedArt.big || ZERO_BN;
 
       // Choose use use matching vault:
       const useMatchingVault: boolean = !!matchingVault && _matchingVaultDebt.gt(ethers.constants.Zero);
@@ -104,8 +104,8 @@ export const removeLiquidity = async (
       const fyTokenReceivedGreaterThanDebt: boolean = _fyTokenReceived.gt(_matchingVaultDebt); // i.e. debt below fytoken
 
       const extrafyTokenTrade: BigNumber = sellFYToken(
-        series.baseReserves.bn,
-        series.fyTokenReserves.bn,
+        series.baseReserves.big,
+        series.fyTokenReserves.big,
         _fyTokenReceived.sub(_matchingVaultDebt),
         series.getTimeTillMaturity(),
         series.ts,
