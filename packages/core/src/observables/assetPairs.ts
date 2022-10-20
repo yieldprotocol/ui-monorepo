@@ -18,7 +18,7 @@ export const assetPairsø: Observable<Map<string, IAssetPair>> = assetPairMap$.p
  *
  * Watch selected elements, on every change if both a base and ilk are selected,
  * and they don't already exist in the assetPairMap, update them.
- *
+ * 
  * */
 selectedø
   .pipe(
