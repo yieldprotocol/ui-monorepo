@@ -1,17 +1,15 @@
-import { BehaviorSubject, Observable, share, combineLatest, withLatestFrom, filter, skip, shareReplay } from 'rxjs';
+import { BehaviorSubject, Observable, withLatestFrom, filter, shareReplay } from 'rxjs';
 import { BigNumber, Contract, ethers } from 'ethers';
 
-import { IAsset, IAssetRoot, TokenType, IYieldProtocol } from '../types';
+import { IAsset, IAssetRoot, TokenType } from '../types';
 import { accountø, providerø } from './connection';
 import { protocolø } from './protocol';
 
 import * as contracts from '@yield-protocol/ui-contracts';
 import { ASSETS, ETH_BASED_ASSETS } from '../config/assets';
 import { ZERO_BN } from '../utils/constants';
-import { truncateValue } from '../utils';
 import { MessageType, sendMsg } from './messages';
 import { bnToW3bNumber } from '../utils/yieldUtils';
-
 
 const assetMap$: BehaviorSubject<Map<string, IAsset>> = new BehaviorSubject(new Map([]));
 /**

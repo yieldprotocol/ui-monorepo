@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildSeriesMap = void 0;
 const tslib_1 = require("tslib");
-const date_fns_1 = require("date-fns");
 const ui_contracts_1 = require("@yield-protocol/ui-contracts");
 const appUtils_1 = require("../utils/appUtils");
 const yieldUtils_1 = require("../utils/yieldUtils");
@@ -72,8 +71,8 @@ const buildSeriesMap = (cauldron, ladle, assetRootMap, provider, chainId, appCon
                     createdBlock: _evnt.blockNumber,
                     createdTxHash: _evnt.transactionHash,
                     /* calc'd and display vals */
-                    maturity_: (0, date_fns_1.format)(new Date(maturity * 1000), 'dd MMMM yyyy'),
-                    displayName: (0, date_fns_1.format)(new Date(maturity * 1000), 'dd MMM yyyy'),
+                    maturity_: (0, yieldUtils_1.dateFromMaturity)(maturity).date,
+                    displayName: (0, yieldUtils_1.dateFromMaturity)(maturity).display,
                     displayNameMobile: `${(0, yieldUtils_1.nameFromMaturity)(maturity, 'MMM yyyy')}`,
                 };
                 seriesList.push(newSeries);

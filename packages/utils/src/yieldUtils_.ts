@@ -2,7 +2,7 @@ import { format, subDays } from 'date-fns';
 import { BigNumber, ethers } from 'ethers';
 import { Config, adjectives, animals, uniqueNamesGenerator } from 'unique-names-generator';
 
-export * from './constants';
+export * from './constants_';
 
 export interface W3bNumber {
   dsp: number;
@@ -46,14 +46,6 @@ export function baseIdFromSeriesId(seriesId: string): string {
  * */
 export const nameFromMaturity = (maturity: number, style: string = 'MMMM yyyy') =>
   format(subDays(new Date(maturity * 1000), 2), style);
-
-export const dateFromMaturity = (maturity: number, style?: string ) : {date: Date , display: string , mobile: string } => {
-  return {
-    date: new Date(maturity * 1000),
-    display: format(new Date(maturity * 1000), style || 'dd MMM yyyy'),
-    mobile: `${nameFromMaturity(maturity, style || 'MMM yyyy')}`,
-  }
-}
 
 export const vaultIdFromReceipt = (receipt: any, contractMap: any) => {
   if (!receipt) return '';

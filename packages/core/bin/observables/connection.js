@@ -5,7 +5,7 @@ const tslib_1 = require("tslib");
 const ethers_1 = require("ethers");
 const rxjs_1 = require("rxjs");
 const defaultproviders_1 = require("../config/defaultproviders");
-const utils_1 = require("../utils");
+const appUtils_1 = require("../utils/appUtils");
 const appConfig_1 = require("./appConfig");
 const messages_1 = require("./messages");
 /** @internal */
@@ -18,7 +18,7 @@ exports.chainIdø = appConfig_1.appConfigø.pipe((0, rxjs_1.mergeMap)((config) =
             console.log('Injected chainId:', injectedId);
             return parseInt(injectedId, 16);
         }
-        const fromCache = (0, utils_1.getBrowserCachedValue)(`lastChainIdUsed`);
+        const fromCache = (0, appUtils_1.getBrowserCachedValue)(`lastChainIdUsed`);
         console.log('ChainId from cache:', fromCache);
         return fromCache; // second, from the last id used in the cache
     }
@@ -33,7 +33,7 @@ exports.chainIdø = appConfig_1.appConfigø.pipe((0, rxjs_1.mergeMap)((config) =
  * */
 const updateChainId = (chainId) => {
     /* Cache the last chain used browser-side  */
-    (0, utils_1.setBrowserCachedValue)(`lastChainIdUsed`, chainId);
+    (0, appUtils_1.setBrowserCachedValue)(`lastChainIdUsed`, chainId);
     location.reload();
 };
 exports.updateChainId = updateChainId;

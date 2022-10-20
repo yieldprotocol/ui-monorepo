@@ -10,7 +10,6 @@ import { selectedø } from './selected';
 import { bnToW3bNumber, getAssetPairId } from '../utils/yieldUtils';
 import { chainIdø } from './connection';
 
-
 const assetPairMap$: BehaviorSubject<Map<string, IAssetPair>> = new BehaviorSubject(new Map([]));
 export const assetPairsø: Observable<Map<string, IAssetPair>> = assetPairMap$.pipe(shareReplay(1));
 

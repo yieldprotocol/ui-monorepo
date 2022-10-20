@@ -2,7 +2,7 @@ import { Web3Provider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
 import { Observable, BehaviorSubject, Subject, shareReplay, mergeMap, combineLatest,share } from 'rxjs';
 import { defaultAccountProvider } from '../config/defaultproviders';
-import { getBrowserCachedValue, setBrowserCachedValue } from '../utils';
+import { getBrowserCachedValue, setBrowserCachedValue } from '../utils/appUtils';
 import { appConfigø } from './appConfig';
 import { MessageType, sendMsg } from './messages';
 declare const window: any;

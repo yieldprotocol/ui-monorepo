@@ -1,5 +1,4 @@
 import { bytesToBytes32, calcAccruedDebt } from '@yield-protocol/ui-math';
-import { format } from 'date-fns';
 import { ethers, BigNumber } from 'ethers';
 import {
   BehaviorSubject,
@@ -14,7 +13,7 @@ import {
 import { buildVaultMap } from '../buildProtocol/buildVaultsRoot';
 import { IVault, IVaultRoot, MessageType, IYieldProtocol, ISeries } from '../types';
 import { ZERO_BN } from '../utils';
-import { bnToW3bNumber } from '../utils/yieldUtils';
+import { bnToW3bNumber, dateFromMaturity } from '../utils/yieldUtils';
 import { appConfigø } from './appConfig';
 import { accountø, chainIdø, providerø } from './connection';
 import { sendMsg } from './messages';
@@ -132,7 +131,7 @@ const _updateVault = async (
     underLiquidation: witch.address === owner, // check if witch is the owner (in liquidation process)
     hasBeenLiquidated: !!liquidationDate, // TODO redundant ??
     liquidationDate,
-    liquidationDate_: liquidationDate ? format(new Date(liquidationDate * 1000), 'dd MMMM yyyy') : undefined,
+    liquidationDate_: liquidationDate ? dateFromMaturity(liquidationDate, 'dd MMMM yyyy').display : undefined,
 
     rateAtMaturity: bnToW3bNumber(rateAtMaturity, 18, 2),
     rate: bnToW3bNumber(rate, 18, 2),

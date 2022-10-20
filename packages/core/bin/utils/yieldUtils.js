@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.inputToTokenValue = exports.bnToW3bNumber = exports.truncateValue = exports.ratioToPercent = exports.getStrategySymbol = exports.formatStrategyName = exports.getStrategyAddrFromReceipt = exports.getSeriesAfterRollPosition = exports.getVaultIdFromReceipt = exports.nameFromMaturity = exports.baseIdFromSeriesId = exports.getSignId = exports.getAssetPairId = exports.getProcessCode = exports.generateVaultName = void 0;
+exports.inputToTokenValue = exports.bnToW3bNumber = exports.ratioToPercent = exports.getStrategySymbol = exports.formatStrategyName = exports.strategyAddrFromReceipt = exports.newSeriesIdFromReceipt = exports.vaultIdFromReceipt = exports.dateFromMaturity = exports.nameFromMaturity = exports.baseIdFromSeriesId = exports.getSignId = exports.getAssetPairId = exports.getProcessCode = exports.generateVaultName = void 0;
 const tslib_1 = require("tslib");
 const date_fns_1 = require("date-fns");
 const ethers_1 = require("ethers");
@@ -41,7 +41,15 @@ exports.baseIdFromSeriesId = baseIdFromSeriesId;
  * */
 const nameFromMaturity = (maturity, style = 'MMMM yyyy') => (0, date_fns_1.format)((0, date_fns_1.subDays)(new Date(maturity * 1000), 2), style);
 exports.nameFromMaturity = nameFromMaturity;
-const getVaultIdFromReceipt = (receipt, contractMap) => {
+const dateFromMaturity = (maturity, style) => {
+    return {
+        date: new Date(maturity * 1000),
+        display: (0, date_fns_1.format)(new Date(maturity * 1000), style || 'dd MMM yyyy'),
+        mobile: `${(0, exports.nameFromMaturity)(maturity, style || 'MMM yyyy')}`,
+    };
+};
+exports.dateFromMaturity = dateFromMaturity;
+const vaultIdFromReceipt = (receipt, contractMap) => {
     var _a, _b;
     if (!receipt)
         return '';
@@ -49,8 +57,8 @@ const getVaultIdFromReceipt = (receipt, contractMap) => {
     const vaultIdHex = (_b = receipt.events.filter((e) => e.address === cauldronAddr)[0]) === null || _b === void 0 ? void 0 : _b.topics[1];
     return (vaultIdHex === null || vaultIdHex === void 0 ? void 0 : vaultIdHex.slice(0, 26)) || '';
 };
-exports.getVaultIdFromReceipt = getVaultIdFromReceipt;
-const getSeriesAfterRollPosition = (receipt, seriesMap) => {
+exports.vaultIdFromReceipt = vaultIdFromReceipt;
+const newSeriesIdFromReceipt = (receipt, seriesMap) => {
     var _a;
     if (!receipt)
         return '';
@@ -58,13 +66,13 @@ const getSeriesAfterRollPosition = (receipt, seriesMap) => {
     const series = [...seriesMap.values()].filter((s) => s.address === contractAddress)[0];
     return (series === null || series === void 0 ? void 0 : series.id) || '';
 };
-exports.getSeriesAfterRollPosition = getSeriesAfterRollPosition;
-const getStrategyAddrFromReceipt = (receipt) => {
+exports.newSeriesIdFromReceipt = newSeriesIdFromReceipt;
+const strategyAddrFromReceipt = (receipt) => {
     if (!receipt)
         return '';
     return receipt.events[0].address;
 };
-exports.getStrategyAddrFromReceipt = getStrategyAddrFromReceipt;
+exports.strategyAddrFromReceipt = strategyAddrFromReceipt;
 const formatStrategyName = (name) => {
     const name_ = name ? `${name.slice(15, 22)} Strategy` : '';
     return `${name_}`;
@@ -72,6 +80,7 @@ const formatStrategyName = (name) => {
 exports.formatStrategyName = formatStrategyName;
 const getStrategySymbol = (name) => name.slice(2).slice(0, -2);
 exports.getStrategySymbol = getStrategySymbol;
+/* convert a ratio value to a percentage with a certain decimal precision */
 const ratioToPercent = (ratio, decimals = 2) => {
     const _multiplier = Math.pow(10, decimals);
     return Math.round((ratio * 100 + Number.EPSILON) * _multiplier) / _multiplier;
@@ -95,7 +104,6 @@ const truncateValue = (input, decimals) => {
     }
     return '0.0';
 };
-exports.truncateValue = truncateValue;
 /**
  * Convert a bignumber to a W3bNumber
  * (which packages the bn together with a display value)
@@ -118,13 +126,8 @@ const bnToW3bNumber = (value, decimals = 18, displayDecimals = 6) => {
     };
 };
 exports.bnToW3bNumber = bnToW3bNumber;
-// export const bnToW3bNumber = (bigNumber: BigNumber, tokenDecimals: number, digitFormat:number = 2): W3bNumber => {
-//   const big = bigNumber;
-//   const hStr =  ethers.utils.formatUnits(bigNumber, tokenDecimals)
-//   const dsp = truncateValue(hStr, digitFormat )
-//   return { big, hStr, dsp }
-// }
 /**
+ *
  * Convert a human readbale string input to a BN (respecting the token decimals )
  * @param input
  * @param decimals
@@ -132,7 +135,7 @@ exports.bnToW3bNumber = bnToW3bNumber;
  */
 const inputToTokenValue = (input, decimals) => {
     if (input) {
-        const _cleaned = (0, exports.truncateValue)(input, decimals);
+        const _cleaned = truncateValue(input, decimals);
         return ethers_1.ethers.utils.parseUnits(_cleaned, decimals);
     }
     return ethers_1.ethers.constants.Zero;
