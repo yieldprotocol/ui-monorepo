@@ -1,6 +1,6 @@
 {
   "name": "@yield-protocol/ui-core",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "main": "./bin/index.js",
   "repository": {
     "url": "git+https://github.com/yieldprotocol/ui-monorepo.git",
@@ -11,7 +11,6 @@
   },
   "description": "",
   "author": "Yield Inc.",
-  
   "dependencies": {
     "@yield-protocol/ui-contracts": "^1.0.4",
     "@yield-protocol/ui-math": "^1.0.10",
@@ -22,7 +21,6 @@
     "rxjs": "^7.5.5",
     "unique-names-generator": "^4.6.0"
   },
-
   "scripts": {
     "compile": "tsc -b --force",
     "docs": "typedoc",
