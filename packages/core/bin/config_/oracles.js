@@ -130,7 +130,7 @@ daiIlkOracle421611.set(assets_1.yvUSDC, YEARNVAULT_MULTI_ORACLE);
 daiIlkOracle421611.set(assets_1.MKR, CHAINLINK_USD_ORACLE);
 daiIlkOracle421611.set(RATE, ACCUMULATOR_MULTI_ORACLE);
 exports.CHAIN_ID_421611_ASSET_ORACLE_INFO.set(assets_1.DAI, daiIlkOracle421611);
-// wETH BASE 
+// wETH BASE
 const ethIlkOracle421611 = new Map();
 ethIlkOracle421611.set(assets_1.WETH, CHAINLINK_USD_ORACLE);
 ethIlkOracle421611.set(assets_1.DAI, CHAINLINK_USD_ORACLE);
@@ -146,4 +146,17 @@ exports.ORACLE_INFO.set(5, exports.CHAIN_ID_1_ASSET_ORACLE_INFO);
 exports.ORACLE_INFO.set(42, exports.CHAIN_ID_1_ASSET_ORACLE_INFO);
 exports.ORACLE_INFO.set(42161, exports.CHAIN_ID_421611_ASSET_ORACLE_INFO);
 exports.ORACLE_INFO.set(421611, exports.CHAIN_ID_421611_ASSET_ORACLE_INFO);
+/** 1
+       "CompoundMultiOracle": "0x53FBa816BD69a7f2a096f58687f87dd3020d0d5c",
+      "ChainlinkMultiOracle": "0xcDCe5C87f691058B61f3A65913f1a3cBCbAd9F52",
+      "CompositeMultiOracle": "0xA81414a544D0bd8a28257F4038D3D24B08Dd9Bb4",
+      "YearnVaultMultiOracle": "0xC597E9cA52Afc13F7F5EDdaC9e53DEF569236016",
+      "NotionalMultiOracle": "0x660bB2F1De01AacA46FCD8004e852234Cf65F3fb",
+      "AccumulatorMultiOracle": "0x95750d6F5fba4ed1cc4Dc42D2c01dFD3DB9a11eC",
+ */
+/** 42161
+"ChainlinkUSDOracle": "0x30e042468e333Fde8E52Dd237673D7412045D2AC",
+"AccumulatorOracle": "0x0ad9Ef93673B6081c0c3b753CcaaBDdd8d2e7848",
+"AccumulatorMultiOracle": "0x0ad9Ef93673B6081c0c3b753CcaaBDdd8d2e7848",
+*/
 //# sourceMappingURL=oracles.js.map

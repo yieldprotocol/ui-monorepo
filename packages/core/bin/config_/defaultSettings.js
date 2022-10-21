@@ -46,6 +46,6 @@ exports.default = {
     forceTransactions: true,
     useFork: false,
     defaultForkMap: exports.defaultForkMap,
-    suppressEventLogQueries: false, // don't try to fetch 'historical' data from previous events
+    suppressEventLogQueries: false, // Don't try to fetch 'historical' data from previous events
 };
 //# sourceMappingURL=defaultSettings.js.map

@@ -25,7 +25,7 @@ const { providerø, appConfigø, chainIdø, updateProtocol, assetsø, seriesø, 
 const { borrow, addLiquidity, repayDebt } = yActions;
 beforeAll((done) => {
     /* update the config to testing specs */
-    (0, observables_1.updateAppConfig)(config);
+    (0, observables_1.updateConfig)(config);
     /* Once provider, config and chainId have resolved, build the protocol */
     (0, rxjs_1.combineLatest)([providerø, appConfigø, chainIdø]).subscribe(([provider, config, chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         const protocol = yield (0, buildProtocol_1.buildProtocol)(provider, chainId, config);

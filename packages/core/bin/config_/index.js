@@ -7,4 +7,5 @@ tslib_1.__exportStar(require("./base"), exports);
 tslib_1.__exportStar(require("./oracles"), exports);
 tslib_1.__exportStar(require("./series"), exports);
 tslib_1.__exportStar(require("./strategies"), exports);
+tslib_1.__exportStar(require("./defaultSettings"), exports);
 //# sourceMappingURL=index.js.map

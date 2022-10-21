@@ -5,4 +5,4 @@ import { IYieldConfig } from '../types';
  * Any appConfig changes AFTER init are handled exclussively by the appConfig$ subject - not via this observable.
  */
 export declare const appConfigø: Observable<IYieldConfig>;
-export declare const updateAppConfig: (appConfig: Partial<IYieldConfig>) => void;
+export declare const updateConfig: (appConfig: Partial<IYieldConfig>) => void;

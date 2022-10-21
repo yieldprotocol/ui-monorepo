@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateAppConfig = exports.appConfigø = void 0;
+exports.updateConfig = exports.appConfigø = void 0;
 const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
 /* Handle configuration */
@@ -17,8 +17,8 @@ exports.appConfigø = appConfig$
     // await ( new Promise(resolve => setTimeout(resolve, 5000)) ) ;
     return config;
 }), (0, rxjs_1.finalize)(() => console.log('App Environment configured.')), (0, rxjs_1.shareReplay)(1));
-const updateAppConfig = (appConfig) => {
+const updateConfig = (appConfig) => {
     appConfig$.next(Object.assign(Object.assign({}, yield_config_1.default), appConfig));
 };
-exports.updateAppConfig = updateAppConfig;
+exports.updateConfig = updateConfig;
 //# sourceMappingURL=appConfig.js.map
