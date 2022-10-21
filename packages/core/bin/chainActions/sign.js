@@ -133,7 +133,7 @@ const sign = (requestedSignatures, processCode) => tslib_1.__awaiter(void 0, voi
          * CASE 3: FALLBACK / DEFAULT CASE: Approval by transaction
          * ( after transaction success,  return blank ICallData value (IGNORED_CALLDATA). )
          * */
-        if (reqSig.target.tokenType === types_1.TokenType.ERC1155_) {
+        if (reqSig.target.tokenType === types_1.TokenType.ERC1155) {
             console.log('Approval via transaction: ERC1155');
             /* if token type is ERC1155 then set approval 'ApprovalForAll' */
             const connectedERC1155 = ui_contracts_1.ERC1155__factory.connect(reqSig.target.address, signer);

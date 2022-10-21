@@ -14,7 +14,7 @@ import {
   selectVault,
   updateAccount,
   updateProvider,
-  updateAppConfig,
+  updateConfig,
   updateProtocol,
 } from './observables';
 
@@ -65,7 +65,7 @@ const yieldFunctions: IYieldFunctions = {
   addLiquidity,
 
   updateProvider,
-  updateAppConfig,
+  updateConfig,
   updateAccount,
 
   /* selector functions */

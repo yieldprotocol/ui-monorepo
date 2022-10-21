@@ -154,12 +154,13 @@ export interface ISeriesRoot extends ISignable {
     createdTxHash: string;
 }
 export declare enum TokenType {
-    ERC20_ = 0,
-    ERC20_Permit = 1,
-    ERC20_DaiPermit = 2,
-    ERC20_MKR = 3,
-    ERC1155_ = 4,
-    ERC720_ = 5
+    Native_Token = 0,
+    ERC20 = 1,
+    ERC20_Permit = 2,
+    ERC20_DaiPermit = 3,
+    ERC20_MKR = 4,
+    ERC1155 = 5,
+    ERC720 = 6
 }
 export interface IAssetInfo {
     tokenType: TokenType;

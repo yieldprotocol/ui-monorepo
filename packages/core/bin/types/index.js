@@ -6,12 +6,13 @@ Object.defineProperty(exports, "LadleActions", { enumerable: true, get: function
 Object.defineProperty(exports, "RoutedActions", { enumerable: true, get: function () { return operations_1.RoutedActions; } });
 var TokenType;
 (function (TokenType) {
-    TokenType[TokenType["ERC20_"] = 0] = "ERC20_";
-    TokenType[TokenType["ERC20_Permit"] = 1] = "ERC20_Permit";
-    TokenType[TokenType["ERC20_DaiPermit"] = 2] = "ERC20_DaiPermit";
-    TokenType[TokenType["ERC20_MKR"] = 3] = "ERC20_MKR";
-    TokenType[TokenType["ERC1155_"] = 4] = "ERC1155_";
-    TokenType[TokenType["ERC720_"] = 5] = "ERC720_";
+    TokenType[TokenType["Native_Token"] = 0] = "Native_Token";
+    TokenType[TokenType["ERC20"] = 1] = "ERC20";
+    TokenType[TokenType["ERC20_Permit"] = 2] = "ERC20_Permit";
+    TokenType[TokenType["ERC20_DaiPermit"] = 3] = "ERC20_DaiPermit";
+    TokenType[TokenType["ERC20_MKR"] = 4] = "ERC20_MKR";
+    TokenType[TokenType["ERC1155"] = 5] = "ERC1155";
+    TokenType[TokenType["ERC720"] = 6] = "ERC720";
 })(TokenType = exports.TokenType || (exports.TokenType = {}));
 var ApprovalMethod;
 (function (ApprovalMethod) {

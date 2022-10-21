@@ -39,7 +39,7 @@ ASSETS.set(UNKNOWN, {
   symbol: 'UNKNOWN',
   showToken: false,
   digitFormat: 2,
-  tokenType: TokenType.ERC20_,
+  tokenType: TokenType.ERC20,
 });
 
 ASSETS.set(DAI, {
@@ -71,7 +71,7 @@ ASSETS.set(WBTC, {
   symbol: 'WBTC',
   showToken: true,
   digitFormat: 6,
-  tokenType: TokenType.ERC20_,
+  tokenType: TokenType.ERC20,
 });
 
 ASSETS.set(ENS, {
@@ -93,7 +93,7 @@ ASSETS.set(WETH, {
   displaySymbol: 'ETH',
   showToken: true,
   digitFormat: 6,
-  tokenType: TokenType.ERC20_,
+  tokenType: TokenType.ERC20,
 });
 
 ASSETS.set(wstETH, {
@@ -137,7 +137,7 @@ ASSETS.set(LINK, {
   symbol: 'LINK',
   showToken: true,
   digitFormat: 2,
-  tokenType: TokenType.ERC20_,
+  tokenType: TokenType.ERC20,
 });
 
 ASSETS.set(yvUSDC, {
@@ -147,7 +147,7 @@ ASSETS.set(yvUSDC, {
   symbol: 'yvUSDC',
   showToken: true,
   digitFormat: 2,
-  tokenType: TokenType.ERC20_,
+  tokenType: TokenType.ERC20,
   limitToSeries: ['0x303230350000', '0x303230360000', '0x303230370000'],
 });
 
@@ -178,7 +178,7 @@ ASSETS.set(FDAI2203, {
   symbol: 'FDAI2203',
   showToken: false,
   digitFormat: 2,
-  tokenType: TokenType.ERC1155_,
+  tokenType: TokenType.ERC1155,
   tokenIdentifier: 563371972493313,
   limitToSeries: ['0x303130350000'],
 });
@@ -190,7 +190,7 @@ ASSETS.set(FUSDC2203, {
   symbol: 'FUSDC2203',
   showToken: false,
   digitFormat: 2,
-  tokenType: TokenType.ERC1155_,
+  tokenType: TokenType.ERC1155,
   tokenIdentifier: 844846949203969,
   limitToSeries: ['0x303230350000'],
 });
@@ -202,7 +202,7 @@ ASSETS.set(FDAI2206, {
   symbol: 'FDAI2206',
   showToken: true,
   digitFormat: 2,
-  tokenType: TokenType.ERC1155_,
+  tokenType: TokenType.ERC1155,
   tokenIdentifier: 563373963149313,
   limitToSeries: ['0x303130360000'],
 });
@@ -214,7 +214,7 @@ ASSETS.set(FUSDC2206, {
   symbol: 'FUSDC2206',
   showToken: true,
   digitFormat: 2,
-  tokenType: TokenType.ERC1155_,
+  tokenType: TokenType.ERC1155,
   tokenIdentifier: 844848939859969,
   limitToSeries: ['0x303230360000'],
 });
@@ -226,7 +226,7 @@ ASSETS.set(FDAI2209, {
   symbol: 'FDAI2209',
   showToken: true,
   digitFormat: 2,
-  tokenType: TokenType.ERC1155_,
+  tokenType: TokenType.ERC1155,
   tokenIdentifier: 563375953805313,
   limitToSeries: ['0x303130370000'],
 });
@@ -238,7 +238,7 @@ ASSETS.set(FUSDC2209, {
   symbol: 'FUSDC2209',
   showToken: true,
   digitFormat: 2,
-  tokenType: TokenType.ERC1155_,
+  tokenType: TokenType.ERC1155,
   tokenIdentifier: 844850930515969,
   limitToSeries: ['0x303230370000'],
 });
@@ -250,7 +250,7 @@ ASSETS.set(CVX3CRV, {
   symbol: 'cvx3crv',
   showToken: false,
   digitFormat: 2,
-  tokenType: TokenType.ERC20_,
+  tokenType: TokenType.ERC20,
   limitToSeries: [
     '0x303130360000', // june dai
     '0x303130370000', // sept dai
@@ -267,6 +267,6 @@ ASSETS.set(FRAX, {
   isYieldBase: true,
   showToken: true,
   digitFormat: 2,
-  tokenType: TokenType.ERC20_,
+  tokenType: TokenType.ERC20,
   limitToSeries: [],
 });

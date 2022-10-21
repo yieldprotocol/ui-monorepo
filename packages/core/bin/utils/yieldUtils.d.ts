@@ -26,7 +26,6 @@ export declare function baseIdFromSeriesId(seriesId: string): string;
  * Examples: full (defualt) : 'MMMM yyyy' ,  apr badge  : 'MMM yy' , mobile: 'MMM yyyy'
  * NOTE: subtraction used to accuount for time zone differences
  * */
-export declare const nameFromMaturity: (maturity: number, style?: string) => string;
 export declare const dateFromMaturity: (maturity: number, style?: string) => {
     date: Date;
     display: string;

@@ -52,7 +52,7 @@ test('The assets load, and each have a correct, connected token contract', (done
         next: (msgMap) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
             yield Promise.all([...msgMap.values()].map((asset) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
                 /* check if contract is connected correctly for non-ERC1155 tokens */
-                if (asset.tokenType === types_1.TokenType.ERC1155_) {
+                if (asset.tokenType === types_1.TokenType.ERC1155) {
                     /* TODO: better check for other token types */
                     return expect(1).toBe(1);
                 }

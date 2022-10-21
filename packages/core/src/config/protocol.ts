@@ -28,14 +28,6 @@ export const baseAddresses = new Map<number, YieldBaseAddresses>([
     },
   ],
   [
-    5,
-    {
-      Cauldron: '0xaD6469F5097dc935e776C78caA7c00566B43A89d',
-      Ladle: '0x16e234Cc77ec3938f0115f636D8bD284a06410cf',
-      Witch: '0xeE2D6a9b17c8B77879A1d05b8dCdb382f31b33d1',
-    },
-  ],
-  [
     42161,
     {
       Cauldron: '0x23cc87FBEBDD67ccE167Fa9Ec6Ad3b7fE3892E30',
@@ -52,14 +44,6 @@ export const moduleAddresses = new Map<number, YieldModuleAddresses>([
       transfer1155Module: '0x97f1d43A217aDD678bB6Dcd3C5D51F40b6729d06',
       WrapEtherModule: '0x22768FCaFe7BB9F03e31cb49823d1Ece30C0b8eA',
       ConvexLadleModule: '0x9Bf195997581C99cef8be95a3a816Ca19Cf1A3e6',
-    },
-  ],
-  [
-    5,
-    {
-      transfer1155Module: '0x532708fdC78C635162F94F65998E5014CAac34fF',
-      WrapEtherModule: '0x6af513D4C6F5313a1499f6d001b9B6e2E39F9F68',
-      ConvexLadleModule: '0x2d45a0925B3B4ac14641A63C2085574AC4E58fD8',
     },
   ],
   [
@@ -82,19 +66,6 @@ export const strategyAddresses = new Map<number, string[]>([
       '0x831dF23f7278575BA0b136296a285600cD75d076',
       '0x47cc34188a2869daa1ce821c8758aa8442715831',
       '0x1565f539e96c4d440c38979dbc86fd711c995dd6',
-    ],
-  ],
-  [
-    5,
-    [
-      '0x4A53F99b2d0e1D47Bfcb3D8244a8Def59d8ee8e4',
-      '0xa61074868c27C6D4C5314bc7dEC46B7d05f53bf5',
-      '0xa21BA96d74647290b0b99f8207C6f02154E6cA05',
-      '0x4503f2496dc535a9D6ed596044A7BC0286a80900',
-      '0xF0F9B3aB84fC910Ea4c005739b65e85051BAfFEE',
-      '0x16E89982150e91dB9eF39267Db068637fE09A752',
-      '0x64ef8090DA1C25d679D5BDfDbeb78E0382Eac7fe',
-      '0xaCAFa65C8B798b3929c27d2E39c16aEB00C20aA3',
     ],
   ],
   [

@@ -4,7 +4,7 @@ import { IAssetRoot, ISeriesRoot, IYieldConfig } from '../types';
 import { Ladle, Cauldron, Pool__factory, FYToken__factory } from '@yield-protocol/ui-contracts';
 
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils/appUtils';
-import { dateFromMaturity, nameFromMaturity } from '../utils/yieldUtils';
+import { dateFromMaturity } from '../utils/yieldUtils';
 
 export const buildSeriesMap = async (
   cauldron: Cauldron,
@@ -87,9 +87,9 @@ export const buildSeriesMap = async (
               createdTxHash: _evnt.transactionHash,
 
               /* calc'd and display vals */
-              maturity_: dateFromMaturity(maturity).date,  // format(new Date(maturity * 1000), 'dd MMMM yyyy'),
+              maturityDate: dateFromMaturity(maturity).date,  // format(new Date(maturity * 1000), 'dd MMMM yyyy'),
               displayName: dateFromMaturity(maturity).display,  // format(new Date(maturity * 1000), 'dd MMM yyyy'),
-              displayNameMobile: `${nameFromMaturity(maturity, 'MMM yyyy')}`,
+              displayNameMobile: dateFromMaturity(maturity).mobile, //`${nameFromMaturity(maturity, 'MMM yyyy')}`,
             };
 
             seriesList.push(newSeries);

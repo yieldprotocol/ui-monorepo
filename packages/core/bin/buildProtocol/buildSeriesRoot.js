@@ -71,9 +71,9 @@ const buildSeriesMap = (cauldron, ladle, assetRootMap, provider, chainId, appCon
                     createdBlock: _evnt.blockNumber,
                     createdTxHash: _evnt.transactionHash,
                     /* calc'd and display vals */
-                    maturity_: (0, yieldUtils_1.dateFromMaturity)(maturity).date,
+                    maturityDate: (0, yieldUtils_1.dateFromMaturity)(maturity).date,
                     displayName: (0, yieldUtils_1.dateFromMaturity)(maturity).display,
-                    displayNameMobile: `${(0, yieldUtils_1.nameFromMaturity)(maturity, 'MMM yyyy')}`,
+                    displayNameMobile: (0, yieldUtils_1.dateFromMaturity)(maturity).mobile, //`${nameFromMaturity(maturity, 'MMM yyyy')}`,
                 };
                 seriesList.push(newSeries);
             }

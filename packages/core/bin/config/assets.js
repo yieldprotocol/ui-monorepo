@@ -38,7 +38,7 @@ exports.ASSETS.set(exports.UNKNOWN, {
     symbol: 'UNKNOWN',
     showToken: false,
     digitFormat: 2,
-    tokenType: types_1.TokenType.ERC20_,
+    tokenType: types_1.TokenType.ERC20,
 });
 exports.ASSETS.set(exports.DAI, {
     version: '1',
@@ -67,7 +67,7 @@ exports.ASSETS.set(exports.WBTC, {
     symbol: 'WBTC',
     showToken: true,
     digitFormat: 6,
-    tokenType: types_1.TokenType.ERC20_,
+    tokenType: types_1.TokenType.ERC20,
 });
 exports.ASSETS.set(exports.ENS, {
     version: '1',
@@ -87,7 +87,7 @@ exports.ASSETS.set(exports.WETH, {
     displaySymbol: 'ETH',
     showToken: true,
     digitFormat: 6,
-    tokenType: types_1.TokenType.ERC20_,
+    tokenType: types_1.TokenType.ERC20,
 });
 exports.ASSETS.set(exports.wstETH, {
     version: '1',
@@ -128,7 +128,7 @@ exports.ASSETS.set(exports.LINK, {
     symbol: 'LINK',
     showToken: true,
     digitFormat: 2,
-    tokenType: types_1.TokenType.ERC20_,
+    tokenType: types_1.TokenType.ERC20,
 });
 exports.ASSETS.set(exports.yvUSDC, {
     version: '1',
@@ -137,7 +137,7 @@ exports.ASSETS.set(exports.yvUSDC, {
     symbol: 'yvUSDC',
     showToken: true,
     digitFormat: 2,
-    tokenType: types_1.TokenType.ERC20_,
+    tokenType: types_1.TokenType.ERC20,
     limitToSeries: ['0x303230350000', '0x303230360000', '0x303230370000'],
 });
 exports.ASSETS.set(exports.UNI, {
@@ -165,7 +165,7 @@ exports.ASSETS.set(exports.FDAI2203, {
     symbol: 'FDAI2203',
     showToken: false,
     digitFormat: 2,
-    tokenType: types_1.TokenType.ERC1155_,
+    tokenType: types_1.TokenType.ERC1155,
     tokenIdentifier: 563371972493313,
     limitToSeries: ['0x303130350000'],
 });
@@ -176,7 +176,7 @@ exports.ASSETS.set(exports.FUSDC2203, {
     symbol: 'FUSDC2203',
     showToken: false,
     digitFormat: 2,
-    tokenType: types_1.TokenType.ERC1155_,
+    tokenType: types_1.TokenType.ERC1155,
     tokenIdentifier: 844846949203969,
     limitToSeries: ['0x303230350000'],
 });
@@ -187,7 +187,7 @@ exports.ASSETS.set(exports.FDAI2206, {
     symbol: 'FDAI2206',
     showToken: true,
     digitFormat: 2,
-    tokenType: types_1.TokenType.ERC1155_,
+    tokenType: types_1.TokenType.ERC1155,
     tokenIdentifier: 563373963149313,
     limitToSeries: ['0x303130360000'],
 });
@@ -198,7 +198,7 @@ exports.ASSETS.set(exports.FUSDC2206, {
     symbol: 'FUSDC2206',
     showToken: true,
     digitFormat: 2,
-    tokenType: types_1.TokenType.ERC1155_,
+    tokenType: types_1.TokenType.ERC1155,
     tokenIdentifier: 844848939859969,
     limitToSeries: ['0x303230360000'],
 });
@@ -209,7 +209,7 @@ exports.ASSETS.set(exports.FDAI2209, {
     symbol: 'FDAI2209',
     showToken: true,
     digitFormat: 2,
-    tokenType: types_1.TokenType.ERC1155_,
+    tokenType: types_1.TokenType.ERC1155,
     tokenIdentifier: 563375953805313,
     limitToSeries: ['0x303130370000'],
 });
@@ -220,7 +220,7 @@ exports.ASSETS.set(exports.FUSDC2209, {
     symbol: 'FUSDC2209',
     showToken: true,
     digitFormat: 2,
-    tokenType: types_1.TokenType.ERC1155_,
+    tokenType: types_1.TokenType.ERC1155,
     tokenIdentifier: 844850930515969,
     limitToSeries: ['0x303230370000'],
 });
@@ -231,7 +231,7 @@ exports.ASSETS.set(exports.CVX3CRV, {
     symbol: 'cvx3crv',
     showToken: false,
     digitFormat: 2,
-    tokenType: types_1.TokenType.ERC20_,
+    tokenType: types_1.TokenType.ERC20,
     limitToSeries: [
         '0x303130360000',
         '0x303130370000',
@@ -247,7 +247,7 @@ exports.ASSETS.set(exports.FRAX, {
     isYieldBase: true,
     showToken: true,
     digitFormat: 2,
-    tokenType: types_1.TokenType.ERC20_,
+    tokenType: types_1.TokenType.ERC20,
     limitToSeries: [],
 });
 //# sourceMappingURL=assets.js.map

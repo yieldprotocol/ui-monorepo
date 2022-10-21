@@ -23,7 +23,7 @@ export const appConfigø: Observable<IYieldConfig> = appConfig$
   shareReplay(1),
 )
 
-export const updateAppConfig = (appConfig: Partial<IYieldConfig>) => {
+export const updateConfig = (appConfig: Partial<IYieldConfig>) => {
   appConfig$.next({ ...defaultConfig, ...appConfig });
 };
 

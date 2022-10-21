@@ -5,6 +5,7 @@ import * as contracts from '@yield-protocol/ui-contracts';
 import { ASSETS, UNKNOWN } from '../config/assets';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils/appUtils';
 
+
 export const buildAssetMap = async (
   cauldron: contracts.Cauldron,
   ladle: contracts.Ladle,
@@ -45,7 +46,7 @@ export const buildAssetMap = async (
 
         /* On first load checks & corrects the ERC20 name/symbol/decimals (if possible ) */
         if (
-          assetInfo.tokenType === TokenType.ERC20_ ||
+          assetInfo.tokenType === TokenType.ERC20 ||
           assetInfo.tokenType === TokenType.ERC20_Permit ||
           assetInfo.tokenType === TokenType.ERC20_DaiPermit
         ) {
@@ -126,8 +127,6 @@ export const buildAssetMap = async (
     setBrowserCachedValue(`${chainId}_lastAssetUpdate`, _blockNum);
   }
   console.log(`Yield Protocol ASSET data updated [Block: ${_blockNum}]`);
-  
-  // console.log( assetRootMap);
 
   return assetRootMap;
 };

@@ -114,7 +114,7 @@ export interface IYieldFunctions {
 
 
   updateProvider: (provider: ethers.providers.BaseProvider) => void;
-  updateAppConfig: (config: IYieldConfig) => void;
+  updateConfig: (config: IYieldConfig) => void;
   updateAccount: (account: string) => void;
   /* selectors */
   selectIlk: (asset: string | IAsset) => void;
@@ -204,12 +204,13 @@ export interface ISeriesRoot extends ISignable {
 }
 
 export enum TokenType {
-  ERC20_,
+  Native_Token,
+  ERC20,
   ERC20_Permit,
   ERC20_DaiPermit,
   ERC20_MKR,
-  ERC1155_,
-  ERC720_,
+  ERC1155,
+  ERC720,
 }
 
 export interface IAssetInfo {

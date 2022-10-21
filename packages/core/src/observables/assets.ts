@@ -79,14 +79,14 @@ const _chargeAsset = (asset: any, provider: ethers.providers.BaseProvider): IAss
 
   // TODO: possibly refactor this?
   switch (asset.tokenType) {
-    case TokenType.ERC20_:
+    case TokenType.ERC20:
       assetContract = contracts.ERC20__factory.connect(asset.address, provider);
       getBalance = async (acc) =>
         ETH_BASED_ASSETS.includes(asset.proxyId) ? provider?.getBalance(acc) : assetContract.balanceOf(acc);
       getAllowance = async (acc: string, spender: string) => assetContract.allowance(acc, spender);
       break;
 
-    case TokenType.ERC1155_:
+    case TokenType.ERC1155:
       assetContract = contracts.ERC1155__factory.connect(asset.address, provider);
       getBalance = async (acc) => assetContract.balanceOf(acc, asset.tokenIdentifier);
       getAllowance = async (acc: string, spender: string) => assetContract.isApprovedForAll(acc, spender);

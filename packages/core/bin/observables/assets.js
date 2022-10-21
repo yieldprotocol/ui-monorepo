@@ -66,12 +66,12 @@ const _chargeAsset = (asset, provider) => {
     let getAllowance;
     // TODO: possibly refactor this?
     switch (asset.tokenType) {
-        case types_1.TokenType.ERC20_:
+        case types_1.TokenType.ERC20:
             assetContract = contracts.ERC20__factory.connect(asset.address, provider);
             getBalance = (acc) => tslib_1.__awaiter(void 0, void 0, void 0, function* () { return assets_1.ETH_BASED_ASSETS.includes(asset.proxyId) ? provider === null || provider === void 0 ? void 0 : provider.getBalance(acc) : assetContract.balanceOf(acc); });
             getAllowance = (acc, spender) => tslib_1.__awaiter(void 0, void 0, void 0, function* () { return assetContract.allowance(acc, spender); });
             break;
-        case types_1.TokenType.ERC1155_:
+        case types_1.TokenType.ERC1155:
             assetContract = contracts.ERC1155__factory.connect(asset.address, provider);
             getBalance = (acc) => tslib_1.__awaiter(void 0, void 0, void 0, function* () { return assetContract.balanceOf(acc, asset.tokenIdentifier); });
             getAllowance = (acc, spender) => tslib_1.__awaiter(void 0, void 0, void 0, function* () { return assetContract.isApprovedForAll(acc, spender); });

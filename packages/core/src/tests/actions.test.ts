@@ -2,7 +2,7 @@ import { combineLatest, finalize, takeWhile } from 'rxjs';
 import { ethers } from 'ethers';
 
 import { buildProtocol } from '../buildProtocol';
-import { internalMessagesø, updateAppConfig } from '../observables';
+import { internalMessagesø, updateConfig } from '../observables';
 
 import * as yObservables from '../observables';
 import * as yActions from '../actions';
@@ -29,7 +29,7 @@ const { borrow, addLiquidity, repayDebt } = yActions;
 
 beforeAll((done) => {
   /* update the config to testing specs */
-  updateAppConfig(config);
+  updateConfig(config);
   /* Once provider, config and chainId have resolved, build the protocol */
   combineLatest([providerø, appConfigø, chainIdø]).subscribe(async ([provider, config, chainId]) => {
     const protocol = await buildProtocol(provider, chainId, config);

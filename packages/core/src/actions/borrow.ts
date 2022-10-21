@@ -24,6 +24,7 @@ export const borrow = async (
   vault?: IVault | string,
   getValuesFromNetwork: boolean = true // Get market values by network call or offline calc (default: NETWORK)
 ) => {
+  
   /* Subscribe to and get the values from the observables:  */
   combineLatest([protocolø, assetsø, seriesø, vaultsø, accountø, selectedø, userSettingsø])
     .pipe(take(1)) // only take one and then finish.
