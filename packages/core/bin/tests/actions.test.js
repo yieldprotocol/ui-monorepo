@@ -6,7 +6,7 @@ const buildProtocol_1 = require("../buildProtocol");
 const observables_1 = require("../observables");
 const yObservables = tslib_1.__importStar(require("../observables"));
 const yActions = tslib_1.__importStar(require("../actions"));
-const assets_1 = require("../config/assets");
+const assetsConfig_1 = require("../config/assetsConfig");
 const types_1 = require("../types");
 const config = {
     defaultChainId: 1,
@@ -58,7 +58,7 @@ test('Liquidity can be added to ETH pools, with Buy and Pool method', (done) => 
         next: (strategyMap) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
             return Promise.all([...strategyMap.values()].map((strategy) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
                 // strategy.strategyContract.
-                if (strategy.baseId === assets_1.WETH) {
+                if (strategy.baseId === assetsConfig_1.WETH) {
                     yield addLiquidity('100', strategy, types_1.AddLiquidityType.BORROW);
                     done();
                 }

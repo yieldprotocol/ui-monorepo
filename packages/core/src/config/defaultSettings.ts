@@ -1,6 +1,30 @@
 declare const window: any;
 import { ethers } from 'ethers';
-import { ApprovalMethod, IYieldConfig } from '../types';
+import { ApprovalMethod, IUserSettings } from '../types';
+
+export interface IYieldConfig {
+  defaultProviderMap: Map<number, ()=>ethers.providers.BaseProvider>;
+  defaultChainId: number;
+  defaultAccountProvider: ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider; // the default provider used for getting the account information and signing/transacting
+  useAccountProviderAsProvider: boolean; // link the default provider to the account provider
+  autoConnectAccountProvider: boolean;
+  supressInjectedListeners: boolean;
+  initialUpdateOnrequest: boolean;
+  defaultUserSettings: IUserSettings;
+  defaultSeriesId: string | undefined;
+  defaultBaseId: string | undefined;
+  ignoreSeries: string[];
+  ignoreStrategies: string[];
+  messageTimeout: number;
+  browserCaching: boolean;
+  mockUser: false,
+  forceTransactions: boolean;
+  useFork: boolean;
+  defaultForkMap: Map<number, () => ethers.providers.JsonRpcProvider>;
+  suppressEventLogQueries: boolean, // don't query historical data 
+  diagnostics: boolean;
+}
+
 
 export const defaultAccountProvider =
   typeof window !== 'undefined'
@@ -23,7 +47,7 @@ export const defaultForkMap: Map<number, () => ethers.providers.JsonRpcProvider>
 ]);
 // hardhat node> https://mainnet.infura.io/v3/2af222f674024a0f84b5f0aad0da72a2
 
-export default {
+export const defaultConfig : IYieldConfig =  {
   defaultProviderMap, // the initial provider, also used as a fallback if required.
   defaultAccountProvider, // the default provider used for getting the account information and signing/transacting
   defaultChainId: 1,
@@ -58,4 +82,4 @@ export default {
   defaultForkMap,
   suppressEventLogQueries: false, // Don't try to fetch 'historical' data from previous events
   
-} as IYieldConfig;
+};

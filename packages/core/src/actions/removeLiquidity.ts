@@ -26,7 +26,7 @@ import { burnFromStrategy, burn, newPoolState, sellFYToken, calcPoolRatios } fro
 import { ethers, BigNumber } from 'ethers';
 import { combineLatest, take } from 'rxjs';
 import { sign, transact } from '../chainActions';
-import { ETH_BASED_ASSETS } from '../config/assets';
+import { ETH_BASED_ASSETS } from '../config/assetsConfig';
 import {
   accountø,
   assetsø,

@@ -1,8 +1,9 @@
 import { BehaviorSubject, finalize, Observable, share, shareReplay, takeWhile, tap } from 'rxjs';
 import { Contract, ethers } from 'ethers';
-import { IAssetRoot, ISeriesRoot, IStrategyRoot, IYieldConfig, IYieldProtocol, MessageType } from '../types';
+import { ISeriesRoot, IStrategyRoot, IYieldConfig, IYieldProtocol, MessageType } from '../types';
 import * as contracts from '@yield-protocol/ui-contracts';
 import { internalMessagesø, sendMsg } from './messages';
+import { IAssetRoot } from '../buildProtocol/initAssets';
 
 // TODO: try to get rid of this init?
 const _blankProtocol = {

@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.selectStrategy = exports.selectVault = exports.selectSeries = exports.selectIlk = exports.selectBase = exports.selectedø = void 0;
 const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
-const assets_1 = require("../config/assets");
+const assetsConfig_1 = require("../config/assetsConfig");
 const appConfig_1 = require("./appConfig");
-const assets_2 = require("./assets");
+const assets_1 = require("./assets");
 const messages_1 = require("./messages");
 const series_1 = require("./series");
 const strategies_1 = require("./strategies");
@@ -40,13 +40,13 @@ messages_1.internalMessagesø
 // withLatestFrom(assetsø, appConfigø)
 )
     .subscribe(([]) => {
-    (0, exports.selectIlk)(assets_1.WETH);
+    (0, exports.selectIlk)(assetsConfig_1.WETH);
 });
 /**
  *  Functions to selecting elements
  */
 const selectBase = (asset) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    const assetMap = yield (0, rxjs_1.lastValueFrom)(assets_2.assetsø.pipe((0, rxjs_1.first)()));
+    const assetMap = yield (0, rxjs_1.lastValueFrom)(assets_1.assetsø.pipe((0, rxjs_1.first)()));
     const seriesMap = yield (0, rxjs_1.lastValueFrom)(series_1.seriesø.pipe((0, rxjs_1.first)()));
     const base = (asset === null || asset === void 0 ? void 0 : asset.id) ? asset : assetMap.get(asset);
     /* only switch the base if the asset in question is a valid YIELD base */
@@ -63,7 +63,7 @@ const selectBase = (asset) => tslib_1.__awaiter(void 0, void 0, void 0, function
 });
 exports.selectBase = selectBase;
 const selectIlk = (asset) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    const assetMap = yield (0, rxjs_1.lastValueFrom)(assets_2.assetsø.pipe((0, rxjs_1.first)()));
+    const assetMap = yield (0, rxjs_1.lastValueFrom)(assets_1.assetsø.pipe((0, rxjs_1.first)()));
     const ilk = (asset === null || asset === void 0 ? void 0 : asset.id) ? asset : assetMap.get(asset);
     /* Update the selected$ */
     selected$.next(Object.assign(Object.assign({}, selected$.value), { ilk: ilk || null }));
@@ -71,7 +71,7 @@ const selectIlk = (asset) => tslib_1.__awaiter(void 0, void 0, void 0, function*
 });
 exports.selectIlk = selectIlk;
 const selectSeries = (series, futureSeries = false) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    const assetMap = yield (0, rxjs_1.lastValueFrom)(assets_2.assetsø.pipe((0, rxjs_1.first)()));
+    const assetMap = yield (0, rxjs_1.lastValueFrom)(assets_1.assetsø.pipe((0, rxjs_1.first)()));
     const seriesMap = yield (0, rxjs_1.lastValueFrom)(series_1.seriesø.pipe((0, rxjs_1.first)()));
     /* Try to get the series if argument is a string */
     const _series = (series === null || series === void 0 ? void 0 : series.id) ? series : seriesMap.get(series);
@@ -88,7 +88,7 @@ const selectSeries = (series, futureSeries = false) => tslib_1.__awaiter(void 0,
 });
 exports.selectSeries = selectSeries;
 const selectVault = (vault) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    const assetMap = yield (0, rxjs_1.lastValueFrom)(assets_2.assetsø.pipe((0, rxjs_1.first)()));
+    const assetMap = yield (0, rxjs_1.lastValueFrom)(assets_1.assetsø.pipe((0, rxjs_1.first)()));
     const seriesMap = yield (0, rxjs_1.lastValueFrom)(series_1.seriesø.pipe((0, rxjs_1.first)()));
     const vaultMap = yield (0, rxjs_1.lastValueFrom)(vaults_1.vaultsø.pipe((0, rxjs_1.first)()));
     if (vault) {
@@ -105,7 +105,7 @@ const selectVault = (vault) => tslib_1.__awaiter(void 0, void 0, void 0, functio
 exports.selectVault = selectVault;
 const selectStrategy = (strategy) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (strategy) {
-        const assetMap = yield (0, rxjs_1.lastValueFrom)(assets_2.assetsø.pipe((0, rxjs_1.first)()));
+        const assetMap = yield (0, rxjs_1.lastValueFrom)(assets_1.assetsø.pipe((0, rxjs_1.first)()));
         const seriesMap = yield (0, rxjs_1.lastValueFrom)(series_1.seriesø.pipe((0, rxjs_1.first)()));
         const strategyMap = yield (0, rxjs_1.lastValueFrom)(strategies_1.strategiesø.pipe((0, rxjs_1.first)()));
         const _strategy = strategy.id ? strategy : strategyMap.get(strategy);

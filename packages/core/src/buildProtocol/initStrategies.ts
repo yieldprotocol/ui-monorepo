@@ -2,7 +2,7 @@ import { ethers } from 'ethers';
 import { IStrategyRoot, IYieldConfig } from '../types';
 import * as contracts from '@yield-protocol/ui-contracts';
 
-import { strategyAddresses } from '../config/protocol';
+import { strategyAddresses } from '../config';
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils/appUtils';
 
 export const buildStrategyMap = async (

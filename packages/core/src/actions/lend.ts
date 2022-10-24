@@ -1,5 +1,5 @@
 import { sellBase, calculateSlippage } from '@yield-protocol/ui-math';
-import { ETH_BASED_ASSETS } from '../config/assets';
+import { ETH_BASED_ASSETS } from '../config/assetsConfig';
 import {
   chainIdø,
   accountø,

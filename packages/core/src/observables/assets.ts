@@ -1,15 +1,15 @@
 import { BehaviorSubject, Observable, withLatestFrom, filter, shareReplay } from 'rxjs';
 import { BigNumber, Contract, ethers } from 'ethers';
 
-import { IAssetRoot, TokenType, W3bNumber } from '../types';
+import { TokenType, W3bNumber } from '../types';
 import { accountø, providerø } from './connection';
 import { protocolø } from './protocol';
 
 import * as contracts from '@yield-protocol/ui-contracts';
-import { ASSETS } from '../config/assets';
 import { ZERO_BN } from '../utils/constants';
 import { MessageType, sendMsg } from './messages';
 import { bnToW3bNumber } from '../utils/yieldUtils';
+import { IAssetRoot } from '../buildProtocol/initAssets';
 
 
 export interface IAsset extends IAssetRoot {
@@ -140,7 +140,7 @@ const _chargeAsset = (asset: any, provider: ethers.providers.BaseProvider): IAss
 
     /* Attach the asset contract */
     assetContract,
-    
+
     /* Attach the various functions required */
     getBalance,
     getAllowance,

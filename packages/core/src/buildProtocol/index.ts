@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { IAssetRoot, IYieldConfig, IYieldProtocol } from '../types';
+import { IYieldConfig, IYieldProtocol } from '../types';
 
 import * as contracts from '@yield-protocol/ui-contracts';
 
@@ -8,7 +8,7 @@ import { baseAddresses } from '../config';
 import { buildOracleMap } from './initOracles';
 import { buildModuleMap } from './initModules';
 
-import { buildAssetMap } from './initAssets';
+import { buildAssetMap, IAssetRoot } from './initAssets';
 import { buildSeriesMap } from './initSeries';
 import { buildStrategyMap } from './initStrategies';
 

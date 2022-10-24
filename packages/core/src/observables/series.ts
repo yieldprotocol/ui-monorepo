@@ -14,7 +14,7 @@ import * as contracts from '@yield-protocol/ui-contracts';
 import { ISeries, ISeriesRoot, MessageType } from '../types';
 import { accountø, providerø } from './connection';
 import { protocolø } from './protocol';
-import { ETH_BASED_ASSETS } from '../config/assets';
+import { ETH_BASED_ASSETS } from '../config/assetsConfig';
 import { sendMsg } from './messages';
 import { bnToW3bNumber } from '../utils/yieldUtils';
 

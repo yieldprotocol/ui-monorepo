@@ -33,7 +33,7 @@ const YieldExampleComponent = () => {
   const {
     updateProvider,
     updateAccount,
-    updateAppConfig,
+    updateConfig,
     selectIlk,
     selectVault,
     selectBase,
@@ -63,7 +63,7 @@ const YieldExampleComponent = () => {
   // Example of using a yieldProtocol config file.
   useEffect(() => {
     console.log("Setting Config: ", config);
-    updateAppConfig(config);
+    updateConfig(config);
   }, []); // empty array to only do this once on load
 
   return (

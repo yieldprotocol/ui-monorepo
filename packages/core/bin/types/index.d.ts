@@ -1,6 +1,7 @@
 import { ethers, BigNumber, BigNumberish, ContractTransaction, Contract } from 'ethers';
 import { Observable } from 'rxjs';
 import { Cauldron, FYToken, Ladle, Pool, Strategy, Witch } from '@yield-protocol/ui-contracts';
+import { IAssetRoot } from '../buildProtocol/initAssets';
 export { LadleActions, RoutedActions } from './operations';
 export interface W3bNumber {
     big: BigNumber;
@@ -161,34 +162,6 @@ export declare enum TokenType {
     ERC20_MKR = 4,
     ERC1155 = 5,
     ERC720 = 6
-}
-export interface IAssetInfo {
-    tokenType: TokenType;
-    tokenIdentifier?: number | string;
-    name: string;
-    version: string;
-    symbol: string;
-    decimals: number;
-    isYieldBase?: boolean;
-    showToken: boolean;
-    digitFormat: number;
-    displaySymbol?: string;
-    limitToSeries?: string[];
-    wrapHandlerAddresses?: Map<number, string>;
-    unwrapHandlerAddresses?: Map<number, string>;
-    proxyId?: string;
-}
-export interface IAssetRoot extends IAssetInfo, ISignable {
-    id: string;
-    image: any;
-    displayName: string;
-    displayNameMobile: string;
-    joinAddress: string;
-    createdBlock: number;
-    createdTxHash: string;
-    isWrappedToken: boolean;
-    wrappingRequired: boolean;
-    proxyId: string;
 }
 export interface IAssetPair {
     id: string;

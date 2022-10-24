@@ -6,7 +6,7 @@ import { internalMessagesø, updateConfig } from '../observables';
 
 import * as yObservables from '../observables';
 import * as yActions from '../actions';
-import { WETH } from '../config/assets';
+import { WETH } from '../config/assetsConfig';
 import { AddLiquidityType } from '../types';
 
 

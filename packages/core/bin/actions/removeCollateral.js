@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.removeCollateral = void 0;
 const tslib_1 = require("tslib");
 const chainActions_1 = require("../chainActions");
-const assets_1 = require("../config/assets");
+const assetsConfig_1 = require("../config/assetsConfig");
 const rxjs_1 = require("rxjs");
 const ui_contracts_1 = require("@yield-protocol/ui-contracts");
 const observables_1 = require("../observables");
@@ -26,14 +26,14 @@ const removeCollateral = (amount, vault, unwrapOnRemove = true) => tslib_1.__awa
         /* get unwrap handler if required */
         const unwrapHandlerAddress = (_a = ilk.unwrapHandlerAddresses) === null || _a === void 0 ? void 0 : _a.get(chainId);
         /* check if the ilk/asset is an eth asset variety OR if it is wrapped token, if so pour to Ladle */
-        const isEthCollateral = assets_1.ETH_BASED_ASSETS.includes(ilk.proxyId);
+        const isEthCollateral = assetsConfig_1.ETH_BASED_ASSETS.includes(ilk.proxyId);
         /* parse inputs to BigNumber in Wei */
         const _amount = (0, yieldUtils_1.inputToTokenValue)(amount, ilk.decimals);
         /* handle wrapped tokens:  */
         const unwrapCallData = unwrapOnRemove ? yield (0, _wrapUnwrapAsset_1.unwrapAsset)(ilk, account) : [];
         const removeEthCallData = isEthCollateral ? yield (0, _addRemoveEth_1.removeEth)(utils_1.ONE_BN) : []; // (exit_ether sweeps all the eth out the ladle, so exact amount is not importnat -> just greater than zero)
         /* is convex-type collateral */
-        const isConvexCollateral = assets_1.CONVEX_BASED_ASSETS.includes(ilk.proxyId);
+        const isConvexCollateral = assetsConfig_1.CONVEX_BASED_ASSETS.includes(ilk.proxyId);
         const convexJoinContract = ui_contracts_1.ConvexJoin__factory.connect(ilk.joinAddress, provider);
         /* pour destination based on ilk/asset is an eth asset variety ( or unwrapHadnler address if unwrapping) */
         const pourToAddress = () => {

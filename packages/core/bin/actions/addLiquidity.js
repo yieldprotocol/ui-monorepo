@@ -6,7 +6,7 @@ const ui_math_1 = require("@yield-protocol/ui-math");
 const ethers_1 = require("ethers");
 const rxjs_1 = require("rxjs");
 const chainActions_1 = require("../chainActions");
-const assets_1 = require("../config/assets");
+const assetsConfig_1 = require("../config/assetsConfig");
 const observables_1 = require("../observables");
 const types_1 = require("../types");
 const utils_1 = require("../utils");
@@ -37,7 +37,7 @@ const addLiquidity = (amount, strategy, method = types_1.AddLiquidityType.BUY, m
         /* if approveMAx, check if signature is still required */
         const alreadyApproved = (yield _base.getAllowance(account, ladleAddress)).gte(_amount);
         /* if ethBase */
-        const isEthBase = assets_1.ETH_BASED_ASSETS.includes(_base.proxyId);
+        const isEthBase = assetsConfig_1.ETH_BASED_ASSETS.includes(_base.proxyId);
         /* DIAGNOSITCS */
         console.log('input: ', _amount.toString(), 'inputLessSlippage: ', _amountLessSlippage.toString(), 'base: ', cachedBaseReserves.toString(), 'real: ', cachedRealReserves.toString(), 'virtual: ', cachedFyTokenReserves.toString(), '>> baseSplit: ', _baseToPool.toString(), '>> fyTokenSplit: ', _baseToFyToken.toString(), '>> baseSplitWithSlippage: ', _baseToPoolWithSlippage.toString(), '>> minRatio', minRatio.toString(), '>> maxRatio', maxRatio.toString(), 'matching vault id', matchingVaultId);
         /**

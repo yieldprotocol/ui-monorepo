@@ -3,8 +3,7 @@ import * as contracts from '@yield-protocol/ui-contracts';
 
 import { ARBITRUM, ETHEREUM } from '../utils/constants';
 
-import { supportedChains } from '../config/protocol';
-import { oracleAddresses } from '../config/oracles';
+import { oracleAddresses } from '../config';
 
 export const buildOracleMap = (provider: ethers.providers.BaseProvider, chainId:number) => {
   /** Get addresses of the oracle contracts */
@@ -14,7 +13,7 @@ export const buildOracleMap = (provider: ethers.providers.BaseProvider, chainId:
   const oracleMap = new Map<string, Contract>([]);
 
   /** Oracle Contracts For Ethereum Chains */
-  if (supportedChains.get(ETHEREUM)!.includes(chainId)) {
+  if (chainId === 1) {
     // Oracles
     oracleMap.set(
       'ChainlinkMultiOracle',
@@ -40,7 +39,7 @@ export const buildOracleMap = (provider: ethers.providers.BaseProvider, chainId:
   }
 
   /** Oracles For Arbitrum Chains */
-  if (supportedChains.get(ARBITRUM)!.includes(chainId)) {
+  if (chainId === 42161) {
     // Oracles
     const AccumulatorOracle: contracts.AccumulatorOracle = contracts.AccumulatorOracle__factory.connect(
       _oracleAddresses!.AccumulatorOracle as string,

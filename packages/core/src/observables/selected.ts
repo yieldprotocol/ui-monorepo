@@ -9,7 +9,7 @@ import {
   first,
   lastValueFrom,
 } from 'rxjs';
-import { WETH } from '../config/assets';
+import { WETH } from '../config/assetsConfig';
 import { IAsset, ISelected, ISeries, IStrategy, IVault } from '../types';
 import { appConfigø } from './appConfig';
 import { assetsø } from './assets';

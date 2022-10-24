@@ -1,5 +1,5 @@
 import * as constants from './utils/constants';
-import * as assetConstants from './config/assets';
+import * as assetConstants from './config/assetsConfig';
 
 // TODO: import all dynamically when things are up and running
 // import * as yieldObservables from './observables';

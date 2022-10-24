@@ -5,7 +5,7 @@ const tslib_1 = require("tslib");
 const ui_math_1 = require("@yield-protocol/ui-math");
 const ethers_1 = require("ethers");
 const rxjs_1 = require("rxjs");
-const buildVaultsRoot_1 = require("../buildProtocol/buildVaultsRoot");
+const initVaults_1 = require("../buildProtocol/initVaults");
 const types_1 = require("../types");
 const utils_1 = require("../utils");
 const yieldUtils_1 = require("../utils/yieldUtils");
@@ -24,7 +24,7 @@ const updateVaults = (vaultList, suppressEventLogQueries = false) => tslib_1.__a
     const chainId = yield (0, rxjs_1.lastValueFrom)(connection_1.chainIdø.pipe((0, rxjs_1.first)()));
     const list = vaultList !== undefined
         ? vaultList
-        : Array.from((yield (0, buildVaultsRoot_1.buildVaultMap)(protocol, provider, account, chainId, appConfig)).values()); // : Array.from(vaultMap$.value.values());
+        : Array.from((yield (0, initVaults_1.buildVaultMap)(protocol, provider, account, chainId, appConfig)).values()); // : Array.from(vaultMap$.value.values());
     /* if there are some vaults: */
     if (list.length && account) {
         yield Promise.all(list.map((_vault) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
@@ -47,7 +47,7 @@ exports.updateVaults = updateVaults;
     .subscribe(([[account, protocol], chainId, appConfig, provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (account !== undefined) {
         console.log('Getting vaults for: ', account);
-        const vaultMap = yield (0, buildVaultsRoot_1.buildVaultMap)(protocol, provider, account, chainId, appConfig);
+        const vaultMap = yield (0, initVaults_1.buildVaultMap)(protocol, provider, account, chainId, appConfig);
         yield (0, exports.updateVaults)(Array.from(vaultMap.values()), appConfig.suppressEventLogQueries);
         console.log('Vaults loading complete.');
         (0, messages_1.sendMsg)({ message: 'Vaults Loaded', type: types_1.MessageType.INTERNAL, id: 'vaultsLoaded' });

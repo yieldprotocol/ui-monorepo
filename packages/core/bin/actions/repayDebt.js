@@ -4,7 +4,7 @@ exports.repayDebt = void 0;
 const tslib_1 = require("tslib");
 const ui_math_1 = require("@yield-protocol/ui-math");
 const ethers_1 = require("ethers");
-const assets_1 = require("../config/assets");
+const assetsConfig_1 = require("../config/assetsConfig");
 const ui_contracts_1 = require("@yield-protocol/ui-contracts");
 const types_1 = require("../types");
 const constants_1 = require("../utils/constants");
@@ -32,10 +32,10 @@ const repayDebt = (amount, vault, reclaimCollateral = true) => tslib_1.__awaiter
         const series = seriesMap.get(vault.seriesId);
         const base = assetMap.get(vault.baseId);
         const ilk = assetMap.get(vault.ilkId);
-        const isEthCollateral = assets_1.ETH_BASED_ASSETS.includes(vault.ilkId);
-        const isEthBase = assets_1.ETH_BASED_ASSETS.includes(series.baseId);
+        const isEthCollateral = assetsConfig_1.ETH_BASED_ASSETS.includes(vault.ilkId);
+        const isEthBase = assetsConfig_1.ETH_BASED_ASSETS.includes(series.baseId);
         /* is convex-type collateral */
-        const isConvexCollateral = assets_1.CONVEX_BASED_ASSETS.includes(ilk.proxyId);
+        const isConvexCollateral = assetsConfig_1.CONVEX_BASED_ASSETS.includes(ilk.proxyId);
         // TODO: this is a bit of an anti-pattern ?? 
         const convexJoinContract = ui_contracts_1.ConvexJoin__factory.connect(ilk.joinAddress, provider);
         /* Parse amounts */

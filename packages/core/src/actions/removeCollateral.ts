@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import { transact } from '../chainActions';
-import { ETH_BASED_ASSETS, CONVEX_BASED_ASSETS } from '../config/assets';
+import { ETH_BASED_ASSETS, CONVEX_BASED_ASSETS } from '../config/assetsConfig';
 import { combineLatest, take } from 'rxjs';
 import { ConvexJoin__factory } from '@yield-protocol/ui-contracts';
 import { protocolø, accountø, assetsø, chainIdø, providerø } from '../observables';

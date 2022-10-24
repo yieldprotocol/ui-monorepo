@@ -2,7 +2,7 @@ import {  finalize, map, Observable,shareReplay, Subject, take } from 'rxjs';
 import { IYieldConfig } from '../types';
 
 /* Handle configuration */
-import defaultConfig from '../config/yield.config';
+import {defaultConfig} from '../config';
 
 
 const appConfig$: Subject<IYieldConfig> = new Subject();
