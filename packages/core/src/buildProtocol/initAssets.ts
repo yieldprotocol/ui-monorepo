@@ -1,8 +1,13 @@
-import { ASSETS_1, ASSETS_42161, IAssetInfo } from '../config';
-import { IAssetRoot, ISignable } from '../types';
+import { ethers } from 'ethers';
+import { ASSETS_1, ASSETS_42161 } from '../config';
+import { IAssetRoot, IYieldConfig } from '../types';
 
 /* This function is declared async, so that we can get assets from external api if reqd. */
-export const buildAssetMap = async (chainId: number): Promise<Map<string, IAssetRoot>> => {
+export const buildAssetMap = async (
+  chainId: number,
+  provider: ethers.providers.BaseProvider,
+  appConfig: IYieldConfig,
+): Promise<Map<string, IAssetRoot>> => {
   const assetRootMap: Map<string, IAssetRoot> = new Map();
 
   // const cacheKey = `assets_${chainId}`;
@@ -38,5 +43,15 @@ export const buildAssetMap = async (chainId: number): Promise<Map<string, IAsset
     assetRootMap.set(key, assetRoot);
   });
 
+  // Log the new assets in the cache
+  const _blockNum = await provider.getBlockNumber();
+  if (appConfig.browserCaching && window) {
+    // console.log( 'add in browser cahcing ')
+    // setBrowserCachedValue(`${chainId}_series`, seriesList);
+    // Set the 'last checked' block
+    // setBrowserCachedValue(`${chainId}_lastSeriesUpdate`, _blockNum);
+  }
+
+  console.log(`Yield Protocol ASSET data updated [Block: ${_blockNum}]`);
   return assetRootMap;
 };

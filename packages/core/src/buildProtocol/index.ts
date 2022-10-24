@@ -29,10 +29,10 @@ export const buildProtocol = async (
   const moduleMap = buildModuleMap(provider, chainId);
 
   /* 4. Build the AssetRootMap - note : async */
-  const assetRootMap:  Map<string, IAssetRoot> = await buildAssetMap(chainId);
+  const assetRootMap = await buildAssetMap(chainId, provider, appConfig);
 
   /* 5. Build the seriesRootMAp - note : async */
-  const seriesRootMap = await buildSeriesMap(cauldron, ladle, assetRootMap, provider, chainId, appConfig);
+  const seriesRootMap  = await buildSeriesMap(cauldron, provider, chainId, appConfig);
 
   /* 6. Build the stategyRootMAp - note : async */
   const strategyRootMap = await buildStrategyMap(provider, chainId, appConfig); // TODO this could be loaded at same time as seriesMap

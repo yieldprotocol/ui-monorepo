@@ -30,14 +30,14 @@ export interface ISignable {
   tokenType: TokenType;
 }
 
-export interface ISeriesRoot extends ISignable{
+export interface ISeriesRoot extends ISignable {
   id: string;
   displayName: string;
   displayNameMobile: string;
   decimals: number;
 
   maturity: number;
-  maturity_: string; // display string
+  maturityDate: Date;
 
   fyTokenAddress: string;
   poolAddress: string;
@@ -51,15 +51,11 @@ export interface ISeriesRoot extends ISignable{
 
   baseId: string;
   baseTokenAddress: string;
-
-  // creation info
-  createdBlock: number;
-  createdTxHash: string;
 }
 
 export interface ISeries extends ISeriesRoot {
-  apr: string;
-  baseReserves: W3bNumber;
+ 
+  sharesReserves: W3bNumber;
 
   fyTokenReserves: W3bNumber;
   fyTokenRealReserves: W3bNumber;
@@ -69,33 +65,35 @@ export interface ISeries extends ISeriesRoot {
   fyTokenContract: FYToken;
   poolContract: Pool;
 
-  /*  Baked in token fns */
+  apr: string;
+  poolAPY: string|undefined;
+
+  seriesIsMature: boolean;
+  showSeries: boolean
+
+  // Yieldspace TV
+  c: BigNumber | undefined;
+  mu: BigNumber | undefined;
+
+  /*  Baked in series fns */
   getTimeTillMaturity: () => string;
   isMature: () => boolean; // note :  -> use this now instead of seriesIsMature
   getFyTokenAllowance: (acc: string, spender: string) => Promise<BigNumber>;
   getPoolAllowance: (acc: string, spender: string) => Promise<BigNumber>;
 
-  /* User speccific  */
-  poolTokens?: W3bNumber | undefined;
-  fyTokenBalance?: W3bNumber | undefined;
-  poolPercent?: string | undefined;
+  getShares: (baseAmount: BigNumber) => BigNumber;
+  getBase: (sharesAmount: BigNumber) => BigNumber;
 
-  /* Extra visual stuff */
-  // color?: string;
-  // textColor?: string;
-  // startColor?: string;
-  // endColor?: string;
-  // oppositeColor?: string;
-  // oppStartColor?: string;
-  // oppEndColor?: string;
-  // seriesMark?: any; // image
+  /* User speccific  */
+  poolTokenBalance?: W3bNumber;
+  fyTokenBalance?: W3bNumber;
+  poolPercentOwned?: string;
 }
 
 export interface IAssetRoot extends ISignable {
-
   tokenType: TokenType;
 
-  /* from ISignable for clarity */ 
+  /* from ISignable for clarity */
   name: string;
   version: string;
   address: string;
@@ -106,11 +104,11 @@ export interface IAssetRoot extends ISignable {
   joinAddress: string;
 
   hideToken: boolean; // Display/hide the token on the UI [ default: false ]
-  digitFormat: number; // this is the 'reasonable' number of digits to show. accuracy equivalent to +- 1 us cent. [ default : 6 ] 
+  digitFormat: number; // this is the 'reasonable' number of digits to show. accuracy equivalent to +- 1 us cent. [ default : 6 ]
 
   // all fixed/static:
   id: string;
-  tokenIdentifier: string | undefined
+  tokenIdentifier: string | undefined;
 
   displayName: string;
   displayNameMobile: string;
@@ -121,18 +119,17 @@ export interface IAssetRoot extends ISignable {
 
   wrapHandlerAddress: string | undefined;
   unwrapHandlerAddress: string | undefined;
-  
+
   isWrappedToken: boolean; // Note: this is if is a token used in wrapped form by the yield protocol (except ETH - which is handled differently)
   wrappingRequired: boolean;
-  
+
   proxyId: string; // id to use throughout app when referencing an asset id; uses the unwrapped asset id when the asset is wrapped (i.e: wstETH is the proxy id for stETH)
 }
 
 export interface IAsset extends IAssetRoot {
-  
   /*  'Charged' items */
   assetContract: Contract;
-  isYieldBase: boolean; // Needs to be re-checked on 'charging' because new series can be added
+  // isYieldBase: boolean; // Needs to be re-checked on 'charging' because new series can be added
 
   /*  Baked in token fns */
   getBalance: (account: string) => Promise<BigNumber>;
@@ -163,7 +160,7 @@ export interface IYieldObservables {
   providerø: Observable<ethers.providers.BaseProvider>;
   accountø: Observable<string | undefined>;
 
-  accountProviderø: Observable<ethers.providers.Web3Provider| ethers.providers.JsonRpcProvider >;
+  accountProviderø: Observable<ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider>;
 
   /* maps */
   seriesø: Observable<Map<string, ISeries>>;
@@ -177,12 +174,10 @@ export interface IYieldObservables {
   selectedø: Observable<ISelected>;
   userSettingsø: Observable<IUserSettings>;
 
-  messagesø: Observable<Map<string,IMessage>>;
+  messagesø: Observable<Map<string, IMessage>>;
 }
 
 export interface IYieldFunctions {
-
-
   updateProvider: (provider: ethers.providers.BaseProvider) => void;
   updateConfig: (config: IYieldConfig) => void;
   updateAccount: (account: string) => void;
@@ -197,11 +192,7 @@ export interface IYieldFunctions {
   borrow: () => Promise<void>;
   repayDebt: any;
   addLiquidity: any;
-
 }
-
-
-
 
 export interface IPriceContextState {
   pairMap: Map<string, IAssetPair>;
@@ -225,7 +216,7 @@ export interface IUserSettings {
 }
 
 export interface IYieldConfig {
-  defaultProviderMap: Map<number, ()=>ethers.providers.BaseProvider>;
+  defaultProviderMap: Map<number, () => ethers.providers.BaseProvider>;
   defaultChainId: number;
 
   defaultAccountProvider: ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider; // the default provider used for getting the account information and signing/transacting
@@ -249,12 +240,10 @@ export interface IYieldConfig {
   forceTransactions: boolean;
   useFork: boolean;
   defaultForkMap: Map<number, () => ethers.providers.JsonRpcProvider>;
-  suppressEventLogQueries: boolean, // don't query historical data 
+  suppressEventLogQueries: boolean; // don't query historical data
 
   diagnostics: boolean;
 }
-
-
 
 export interface ISettingsContext {
   settingsState: ISettingsContextState;
@@ -342,7 +331,7 @@ export interface IStrategy extends IStrategyRoot {
   /* Baked in functions  */
   getAllowance: (acc: string, spender: string) => Promise<BigNumber>;
 }
-/* vaultRoot | vault */ 
+/* vaultRoot | vault */
 export interface IVaultRoot {
   id: string;
   ilkId: string;
@@ -430,7 +419,7 @@ export enum MessageType {
   INFO,
   WARNING,
   ERROR,
-  INTERNAL
+  INTERNAL,
 }
 
 export interface IMessage {
@@ -464,9 +453,9 @@ export enum ProcessStage {
   PROCESS_INACTIVE = 'Process inactive',
   SIGNING_APPROVAL_REQUESTED = 'Signing requested',
   APPROVAL_TRANSACTION_PENDING = 'Approval transaction pending',
-  SIGNING_APPROVAL_COMPLETE= 'Signing/Approval complete',
+  SIGNING_APPROVAL_COMPLETE = 'Signing/Approval complete',
   TRANSACTION_REQUESTED = 'Transaction requested ',
-  TRANSACTION_PENDING= 'Transaction pending',
+  TRANSACTION_PENDING = 'Transaction pending',
   PROCESS_COMPLETE = 'Process complete',
   PROCESS_COMPLETE_TIMEOUT = 'Process complete: timeout',
 }

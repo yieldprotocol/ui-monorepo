@@ -4,7 +4,7 @@ exports.buildAssetMap = void 0;
 const tslib_1 = require("tslib");
 const config_1 = require("../config");
 /* This function is declared async, so that we can get assets from external api if reqd. */
-const buildAssetMap = (chainId) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+const buildAssetMap = (chainId, provider, appConfig) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const assetRootMap = new Map();
     // const cacheKey = `assets_${chainId}`;
     // const cachedValues = appConfig.browserCaching ? JSON.parse(localStorage.getItem(cacheKey)!) : null;
@@ -28,6 +28,15 @@ const buildAssetMap = (chainId) => tslib_1.__awaiter(void 0, void 0, void 0, fun
             proxyId: asset.proxyId || id, displaySymbol: asset.displaySymbol || asset.symbol, hideToken: asset.hideToken || false });
         assetRootMap.set(key, assetRoot);
     });
+    // Log the new assets in the cache
+    const _blockNum = yield provider.getBlockNumber();
+    if (appConfig.browserCaching && window) {
+        // console.log( 'add in browser cahcing ')
+        // setBrowserCachedValue(`${chainId}_series`, seriesList);
+        // Set the 'last checked' block
+        // setBrowserCachedValue(`${chainId}_lastSeriesUpdate`, _blockNum);
+    }
+    console.log(`Yield Protocol ASSET data updated [Block: ${_blockNum}]`);
     return assetRootMap;
 });
 exports.buildAssetMap = buildAssetMap;

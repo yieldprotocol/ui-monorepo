@@ -85,9 +85,6 @@ const _chargeAsset = (asset: IAssetRoot, provider: ethers.providers.BaseProvider
   let getBalance: (acc: string, asset?: string) => Promise<BigNumber>;
   let getAllowance: (acc: string, spender: string, asset?: string) => Promise<BigNumber>;
 
-  console.log( 'symbol: ', asset.symbol, asset.tokenType );
-  // TODO: possibly refactor this?
-
   switch (asset.tokenType) {
 
     case TokenType.Native_Token:
@@ -130,6 +127,8 @@ const _chargeAsset = (asset: IAssetRoot, provider: ethers.providers.BaseProvider
     /* Attach the various functions required */
     getBalance,
     getAllowance,
+
+    /* initialise dynamic data fields */
     balance: ZERO_W3B
   };
 };

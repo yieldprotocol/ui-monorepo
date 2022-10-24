@@ -31,7 +31,7 @@ export interface ISeriesRoot extends ISignable {
     displayNameMobile: string;
     decimals: number;
     maturity: number;
-    maturity_: string;
+    maturityDate: Date;
     fyTokenAddress: string;
     poolAddress: string;
     poolName: string;
@@ -42,8 +42,6 @@ export interface ISeriesRoot extends ISignable {
     g2: BigNumber;
     baseId: string;
     baseTokenAddress: string;
-    createdBlock: number;
-    createdTxHash: string;
 }
 export interface ISeries extends ISeriesRoot {
     apr: string;

@@ -20,9 +20,9 @@ const buildProtocol = (provider, chainId, appConfig) => tslib_1.__awaiter(void 0
     /* 3. Build the moduleMap */
     const moduleMap = (0, initModules_1.buildModuleMap)(provider, chainId);
     /* 4. Build the AssetRootMap - note : async */
-    const assetRootMap = yield (0, initAssets_1.buildAssetMap)(chainId);
+    const assetRootMap = yield (0, initAssets_1.buildAssetMap)(chainId, provider, appConfig);
     /* 5. Build the seriesRootMAp - note : async */
-    const seriesRootMap = yield (0, initSeries_1.buildSeriesMap)(cauldron, ladle, assetRootMap, provider, chainId, appConfig);
+    const seriesRootMap = yield (0, initSeries_1.buildSeriesMap)(cauldron, provider, chainId, appConfig);
     /* 6. Build the stategyRootMAp - note : async */
     const strategyRootMap = yield (0, initStrategies_1.buildStrategyMap)(provider, chainId, appConfig); // TODO this could be loaded at same time as seriesMap
     return {
