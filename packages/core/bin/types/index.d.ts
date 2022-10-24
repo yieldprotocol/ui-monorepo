@@ -8,6 +8,58 @@ export interface W3bNumber {
     hStr: string;
     dsp: number;
 }
+export interface ISignable {
+    name: string;
+    version: string;
+    address: string;
+    symbol: string;
+    tokenType: TokenType;
+}
+export interface ISeriesRoot extends ISignable {
+    id: string;
+    displayName: string;
+    displayNameMobile: string;
+    decimals: number;
+    maturity: number;
+    maturity_: string;
+    fyTokenAddress: string;
+    poolAddress: string;
+    poolName: string;
+    poolVersion: string;
+    poolSymbol: string;
+    ts: BigNumber;
+    g1: BigNumber;
+    g2: BigNumber;
+    baseId: string;
+    baseTokenAddress: string;
+    createdBlock: number;
+    createdTxHash: string;
+}
+export interface ISeries extends ISeriesRoot {
+    apr: string;
+    baseReserves: W3bNumber;
+    fyTokenReserves: W3bNumber;
+    fyTokenRealReserves: W3bNumber;
+    totalSupply: W3bNumber;
+    fyTokenContract: FYToken;
+    poolContract: Pool;
+    getTimeTillMaturity: () => string;
+    isMature: () => boolean;
+    getFyTokenAllowance: (acc: string, spender: string) => Promise<BigNumber>;
+    getPoolAllowance: (acc: string, spender: string) => Promise<BigNumber>;
+    poolTokens?: W3bNumber | undefined;
+    fyTokenBalance?: W3bNumber | undefined;
+    poolPercent?: string | undefined;
+}
+export declare enum TokenType {
+    Native_Token = 0,
+    ERC20 = 1,
+    ERC20_Permit = 2,
+    ERC20_DaiPermit = 3,
+    ERC20_MKR = 4,
+    ERC1155 = 5,
+    ERC720 = 6
+}
 export interface IAssetRoot extends ISignable {
     tokenType: TokenType;
     name: string;
@@ -38,16 +90,6 @@ export interface IAsset extends IAssetRoot {
     getAllowance: (account: string, spender: string) => Promise<BigNumber>;
     setAllowance?: (spender: string) => Promise<BigNumber | void>;
     balance: W3bNumber;
-}
-export interface IHistoryList {
-    lastBlock: number;
-    items: any[];
-}
-export interface IHistoryContextState {
-    historyLoading: boolean;
-    tradeHistory: IHistoryList;
-    poolHistory: IHistoryList;
-    vaultHistory: IHistoryList;
 }
 export interface IPriceContextState {
     pairMap: Map<string, IAssetPair>;
@@ -150,42 +192,6 @@ export interface ISettingsContextState {
     dashHidePoolPositions: boolean;
     dashCurrency: string;
 }
-export interface ISignable {
-    name: string;
-    version: string;
-    address: string;
-    symbol: string;
-    tokenType: TokenType;
-}
-export interface ISeriesRoot extends ISignable {
-    id: string;
-    displayName: string;
-    displayNameMobile: string;
-    decimals: number;
-    maturity: number;
-    maturity_: string;
-    fyTokenAddress: string;
-    poolAddress: string;
-    poolName: string;
-    poolVersion: string;
-    poolSymbol: string;
-    ts: BigNumber;
-    g1: BigNumber;
-    g2: BigNumber;
-    baseId: string;
-    baseTokenAddress: string;
-    createdBlock: number;
-    createdTxHash: string;
-}
-export declare enum TokenType {
-    Native_Token = 0,
-    ERC20 = 1,
-    ERC20_Permit = 2,
-    ERC20_DaiPermit = 3,
-    ERC20_MKR = 4,
-    ERC1155 = 5,
-    ERC720 = 6
-}
 export interface IAssetPair {
     id: string;
     baseId: string;
@@ -217,22 +223,6 @@ export interface IVaultRoot {
     ilkDecimals: number;
     createdBlock: number;
     createdTxHash: string;
-}
-export interface ISeries extends ISeriesRoot {
-    apr: string;
-    baseReserves: W3bNumber;
-    fyTokenReserves: W3bNumber;
-    fyTokenRealReserves: W3bNumber;
-    totalSupply: W3bNumber;
-    fyTokenContract: FYToken;
-    poolContract: Pool;
-    getTimeTillMaturity: () => string;
-    isMature: () => boolean;
-    getFyTokenAllowance: (acc: string, spender: string) => Promise<BigNumber>;
-    getPoolAllowance: (acc: string, spender: string) => Promise<BigNumber>;
-    poolTokens?: W3bNumber | undefined;
-    fyTokenBalance?: W3bNumber | undefined;
-    poolPercent?: string | undefined;
 }
 export interface IDummyVault extends IVaultRoot {
 }

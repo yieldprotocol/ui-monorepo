@@ -2,11 +2,14 @@ import { TokenType } from '../types';
 export interface IAssetInfo {
     tokenType: TokenType;
     name: string;
-    version: string;
     address: string;
     symbol: string;
+    version: string;
     decimals: number;
     joinAddress: string;
+    /**
+     * Optionals
+     *  */
     isYieldBase?: boolean;
     tokenIdentifier?: number | string;
     hideToken?: boolean;

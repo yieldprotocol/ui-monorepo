@@ -7,19 +7,24 @@ export interface IAssetInfo {
 
   /* from ISignable for clarity */ 
   name: string;
-  version: string;
+
   address: string;
   symbol: string;
+
+  version: string;
   decimals: number;
 
   /* required fields + ISignable */
   joinAddress: string;
 
-  /* Optionals () */
+  /**
+   * Optionals 
+   *  */
   isYieldBase?: boolean; // used as a yield base ( borrowable ) asset 
   tokenIdentifier?: number | string; // used for identifying tokens in a multitoken contract
 
-  hideToken? : boolean; // Display/hide the token on the UI [ default: true ]
+  hideToken?: boolean; // Display/hide the token on the UI [ default: true ]
+
   digitFormat?: number; // this is the 'reasonable' number of digits to show. accuracy equivalent to +- 1 us cent. [ default : 6 ] 
   displaySymbol?: string; // override for symbol display [default: token symbol]
   limitToSeries?: string[];
@@ -335,7 +340,6 @@ ASSETS_1.set(FRAX, {
 //   name: 'cvx3crv',
 //   decimals: 18,
 //   symbol: 'cvx3crv',
-//   showToken: false,
 //   digitFormat: 2,
 //   tokenType: TokenType.ERC20_,
 //   limitToSeries: [

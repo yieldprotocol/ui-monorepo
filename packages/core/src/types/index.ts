@@ -11,6 +11,86 @@ export interface W3bNumber {
   dsp: number; // 'Display' number used only for display purposes ( eg. 1.00 DAI ) ( precision loss );
 }
 
+export interface ISignable {
+  name: string;
+  version: string;
+  address: string;
+  symbol: string;
+  tokenType: TokenType;
+}
+
+export interface ISeriesRoot extends ISignable{
+  id: string;
+  displayName: string;
+  displayNameMobile: string;
+  decimals: number;
+
+  maturity: number;
+  maturity_: string; // display string
+
+  fyTokenAddress: string;
+  poolAddress: string;
+  poolName: string;
+  poolVersion: string; // for signing
+  poolSymbol: string; // for signing
+
+  ts: BigNumber;
+  g1: BigNumber;
+  g2: BigNumber;
+
+  baseId: string;
+  baseTokenAddress: string;
+
+  // creation info
+  createdBlock: number;
+  createdTxHash: string;
+}
+
+export interface ISeries extends ISeriesRoot {
+  apr: string;
+  baseReserves: W3bNumber;
+
+  fyTokenReserves: W3bNumber;
+  fyTokenRealReserves: W3bNumber;
+  totalSupply: W3bNumber;
+
+  /* live Contracts */
+  fyTokenContract: FYToken;
+  poolContract: Pool;
+
+  /*  Baked in token fns */
+  getTimeTillMaturity: () => string;
+  isMature: () => boolean; // note :  -> use this now instead of seriesIsMature
+  getFyTokenAllowance: (acc: string, spender: string) => Promise<BigNumber>;
+  getPoolAllowance: (acc: string, spender: string) => Promise<BigNumber>;
+
+  /* User speccific  */
+  poolTokens?: W3bNumber | undefined;
+  fyTokenBalance?: W3bNumber | undefined;
+  poolPercent?: string | undefined;
+
+  /* Extra visual stuff */
+  // color?: string;
+  // textColor?: string;
+  // startColor?: string;
+  // endColor?: string;
+  // oppositeColor?: string;
+  // oppStartColor?: string;
+  // oppEndColor?: string;
+  // seriesMark?: any; // image
+}
+
+export enum TokenType {
+  Native_Token,
+  ERC20,
+  ERC20_Permit,
+  ERC20_DaiPermit,
+  ERC20_MKR,
+  ERC1155,
+  ERC720,
+}
+
+
 export interface IAssetRoot extends ISignable {
 
   tokenType: TokenType;
@@ -30,7 +110,7 @@ export interface IAssetRoot extends ISignable {
 
   // all fixed/static:
   id: string;
-  tokenIdentifier: string|undefined
+  tokenIdentifier: string | undefined
 
   displayName: string;
   displayNameMobile: string;
@@ -49,6 +129,7 @@ export interface IAssetRoot extends ISignable {
 }
 
 export interface IAsset extends IAssetRoot {
+  
   /*  'Charged' items */
   assetContract: Contract;
   isYieldBase: boolean; // Needs to be re-checked on 'charging' because new series can be added
@@ -63,17 +144,7 @@ export interface IAsset extends IAssetRoot {
 }
 
 
-export interface IHistoryList {
-  lastBlock: number;
-  items: any[];
-}
 
-export interface IHistoryContextState {
-  historyLoading: boolean;
-  tradeHistory: IHistoryList;
-  poolHistory: IHistoryList;
-  vaultHistory: IHistoryList;
-}
 
 export interface IPriceContextState {
   pairMap: Map<string, IAssetPair>;
@@ -125,6 +196,7 @@ export interface IYieldConfig {
 
   diagnostics: boolean;
 }
+
 
 export interface IYieldProtocol {
   protocolVersion: string;
@@ -212,52 +284,6 @@ export interface ISettingsContextState {
   dashCurrency: string;
 }
 
-export interface ISignable {
-  name: string;
-  version: string;
-  address: string;
-  symbol: string;
-  tokenType: TokenType;
-}
-
-export interface ISeriesRoot extends ISignable{
-  id: string;
-  displayName: string;
-  displayNameMobile: string;
-  decimals: number;
-
-  maturity: number;
-  maturity_: string; // display string
-
-  fyTokenAddress: string;
-  poolAddress: string;
-  poolName: string;
-  poolVersion: string; // for signing
-  poolSymbol: string; // for signing
-
-  ts: BigNumber;
-  g1: BigNumber;
-  g2: BigNumber;
-
-  baseId: string;
-  baseTokenAddress: string;
-
-  // creation info
-  createdBlock: number;
-  createdTxHash: string;
-}
-
-export enum TokenType {
-  Native_Token,
-  ERC20,
-  ERC20_Permit,
-  ERC20_DaiPermit,
-  ERC20_MKR,
-  ERC1155,
-  ERC720,
-}
-
-
 
 export interface IAssetPair {
   id: string;
@@ -280,96 +306,12 @@ export interface IAssetPair {
   pairUpdating?: boolean;
   lastUpdate?: number;
 }
-
+/* strategyRoot | strategy */
 export interface IStrategyRoot extends ISignable {
   id: string;
   baseId: string;
   decimals: number;
 }
-
-export interface IVaultRoot {
-  id: string;
-  ilkId: string;
-  baseId: string;
-  seriesId: string;
-  displayName: string;
-
-  baseDecimals: number;
-  ilkDecimals: number;
-
-  // creation info
-  createdBlock: number;
-  createdTxHash: string;
-}
-
-export interface ISeries extends ISeriesRoot {
-  apr: string;
-  baseReserves: W3bNumber;
-
-  fyTokenReserves: W3bNumber;
-  fyTokenRealReserves: W3bNumber;
-  totalSupply: W3bNumber;
-
-  /* live Contracts */
-  fyTokenContract: FYToken;
-  poolContract: Pool;
-
-  /*  Baked in token fns */
-  getTimeTillMaturity: () => string;
-  isMature: () => boolean; // note :  -> use this now instead of seriesIsMature
-  getFyTokenAllowance: (acc: string, spender: string) => Promise<BigNumber>;
-  getPoolAllowance: (acc: string, spender: string) => Promise<BigNumber>;
-
-  /* User speccific  */
-  poolTokens?: W3bNumber | undefined;
-  fyTokenBalance?: W3bNumber | undefined;
-  poolPercent?: string | undefined;
-
-  /* Extra visual stuff */
-  // color?: string;
-  // textColor?: string;
-  // startColor?: string;
-  // endColor?: string;
-  // oppositeColor?: string;
-  // oppStartColor?: string;
-  // oppEndColor?: string;
-  // seriesMark?: any; // image
-}
-
-// export interface IAsset extends IAssetRoot {
-//   /*  'Charged' items */
-//   assetContract: Contract;
-//   isYieldBase: boolean; // needs to be checked because new series can be added
-
-//   /*  Baked in token fns */
-//   getBalance: (account: string) => Promise<BigNumber>;
-//   getAllowance: (account: string, spender: string) => Promise<BigNumber>;
-//   setAllowance?: (spender: string) => Promise<BigNumber | void>;
-
-//   /* User specific */
-//   balance: W3bNumber;
-// }
-
-export interface IDummyVault extends IVaultRoot {}
-export interface IVault extends IVaultRoot {
-  owner: string;
-
-  underLiquidation: boolean;
-  hasBeenLiquidated: boolean;
-  liquidationDate?: number;
-  liquidationDate_?: string;
-
-  isActive: boolean;
-
-  ink: W3bNumber;
-  art: W3bNumber;
-  accruedArt: W3bNumber;
-
-  rateAtMaturity: W3bNumber;
-  rate: W3bNumber;
-  // liquidationPrice_: string;
-}
-
 export interface IStrategy extends IStrategyRoot {
   /* live contract */
   strategyContract: Strategy;
@@ -400,6 +342,39 @@ export interface IStrategy extends IStrategyRoot {
 
   /* Baked in functions  */
   getAllowance: (acc: string, spender: string) => Promise<BigNumber>;
+}
+/* vaultRoot | vault */ 
+export interface IVaultRoot {
+  id: string;
+  ilkId: string;
+  baseId: string;
+  seriesId: string;
+  displayName: string;
+
+  baseDecimals: number;
+  ilkDecimals: number;
+
+  // creation info
+  createdBlock: number;
+  createdTxHash: string;
+}
+export interface IVault extends IVaultRoot {
+  owner: string;
+
+  underLiquidation: boolean;
+  hasBeenLiquidated: boolean;
+  liquidationDate?: number;
+  liquidationDate_?: string;
+
+  isActive: boolean;
+
+  ink: W3bNumber;
+  art: W3bNumber;
+  accruedArt: W3bNumber;
+
+  rateAtMaturity: W3bNumber;
+  rate: W3bNumber;
+  // liquidationPrice_: string;
 }
 
 export interface ICallData {
@@ -509,12 +484,6 @@ export interface IYieldProcess {
   // positionPath?: string | undefined;
 }
 
-// export enum MenuView {
-//   account = 'ACCOUNT',
-//   settings = 'SETTINGS',
-//   vaults = 'VAULTS',
-// }
-
 export enum TradeType {
   BUY = 'BUY',
   SELL = 'SELL',
@@ -563,31 +532,3 @@ export enum ActionCodes {
   TRANSFER_VAULT = 'Transfer Vault',
   MERGE_VAULT = 'Merge Vault',
 }
-
-// export interface IBaseHistItem {
-//   blockNumber: number;
-//   date: number;
-//   transactionHash: string;
-//   series: ISeries;
-//   actionCode: ActionCodes;
-//   date_: string;
-//   primaryInfo: string;
-//   secondaryInfo?: string;
-// }
-
-// export interface IHistItemVault extends IBaseHistItem {
-//   ilkId: string;
-//   ink: BigNumber;
-//   art: BigNumber;
-//   ink_: String;
-//   art_: String;
-// }
-
-// export interface IHistItemPosition extends IBaseHistItem {
-//   bases: BigNumber;
-//   fyTokens: BigNumber;
-//   bases_: string;
-//   fyTokens_: string;
-//   poolTokens?: BigNumber;
-//   poolTokens_?: string;
-// }

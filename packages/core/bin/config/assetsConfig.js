@@ -248,7 +248,6 @@ exports.ASSETS_1.set(exports.FRAX, {
 //   name: 'cvx3crv',
 //   decimals: 18,
 //   symbol: 'cvx3crv',
-//   showToken: false,
 //   digitFormat: 2,
 //   tokenType: TokenType.ERC20_,
 //   limitToSeries: [
