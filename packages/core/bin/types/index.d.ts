@@ -1,12 +1,35 @@
 import { ethers, BigNumber, BigNumberish, ContractTransaction, Contract } from 'ethers';
 import { Observable } from 'rxjs';
 import { Cauldron, FYToken, Ladle, Pool, Strategy, Witch } from '@yield-protocol/ui-contracts';
-import { IAssetRoot } from '../buildProtocol/initAssets';
+import { ISelected } from '../observables/selected';
+import { IAssetInfo } from '../config';
 export { LadleActions, RoutedActions } from './operations';
 export interface W3bNumber {
     big: BigNumber;
     hStr: string;
     dsp: number;
+}
+export interface IAssetRoot extends IAssetInfo, ISignable {
+    id: string;
+    tokenIdentifier: string | undefined;
+    displayName: string;
+    displayNameMobile: string;
+    isYieldBase: boolean;
+    displaySymbol: string;
+    limitToSeries: string[];
+    wrapHandlerAddress: string | undefined;
+    unwrapHandlerAddress: string | undefined;
+    isWrappedToken: boolean;
+    wrappingRequired: boolean;
+    proxyId: string;
+}
+export interface IAsset extends IAssetRoot {
+    assetContract: Contract;
+    isYieldBase: boolean;
+    getBalance: (account: string) => Promise<BigNumber>;
+    getAllowance: (account: string, spender: string) => Promise<BigNumber>;
+    setAllowance?: (spender: string) => Promise<BigNumber | void>;
+    balance: W3bNumber;
 }
 export interface IHistoryList {
     lastBlock: number;
@@ -93,14 +116,6 @@ export interface IYieldFunctions {
     borrow: () => Promise<void>;
     repayDebt: any;
     addLiquidity: any;
-}
-export interface ISelected {
-    base: IAsset | null;
-    ilk: IAsset | null;
-    series: ISeries | null;
-    vault: IVault | null;
-    strategy: IStrategy | null;
-    futureSeries: ISeries | null;
 }
 export interface ISettingsContext {
     settingsState: ISettingsContextState;
@@ -210,14 +225,6 @@ export interface ISeries extends ISeriesRoot {
     poolTokens?: W3bNumber | undefined;
     fyTokenBalance?: W3bNumber | undefined;
     poolPercent?: string | undefined;
-}
-export interface IAsset extends IAssetRoot {
-    assetContract: Contract;
-    isYieldBase: boolean;
-    getBalance: (account: string) => Promise<BigNumber>;
-    getAllowance: (account: string, spender: string) => Promise<BigNumber>;
-    setAllowance?: (spender: string) => Promise<BigNumber | void>;
-    balance: W3bNumber;
 }
 export interface IDummyVault extends IVaultRoot {
 }

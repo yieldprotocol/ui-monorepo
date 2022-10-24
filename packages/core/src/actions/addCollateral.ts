@@ -12,7 +12,7 @@ import {
   protocolø,
 } from '../observables';
 import { MessageType, sendMsg } from '../observables/messages';
-import { IVault, IAsset, ActionCodes, ICallData, LadleActions } from '../types';
+import { IVault, ActionCodes, ICallData, LadleActions, IAsset } from '../types';
 import { ModuleActions } from '../types/operations';
 import { BLANK_VAULT, getProcessCode, ZERO_BN } from '../utils';
 import { inputToTokenValue } from '../utils/yieldUtils';

@@ -238,7 +238,7 @@ const YieldExampleComponent = () => {
                 console.table(v, ["value"]);
                 _selectIlk ? selectIlk(v.id) : selectBase(v.id);
               }}
-            >{`${k}: ${v.symbol} -->  ${v.displaySymbol}`}</p>
+            >{`${k}: ${v.symbol}`}</p>
           ))
         ) : (
           <p>Loading...</p>
@@ -255,7 +255,7 @@ const YieldExampleComponent = () => {
                 console.table(v, ["value"]);
                 selectSeries(v.id);
               }}
-            >{`${k}: ${v.maturity_}`}</p>
+            >{`${k}: ${v.maturityDate}`}</p>
           ))
         ) : (
           <p>Loading...</p>

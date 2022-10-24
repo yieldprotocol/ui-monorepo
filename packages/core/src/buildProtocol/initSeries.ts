@@ -1,11 +1,10 @@
 import { ethers } from 'ethers';
 
-import {  ISeriesRoot, IYieldConfig } from '../types';
+import {  IAssetRoot, ISeriesRoot, IYieldConfig } from '../types';
 import { Ladle, Cauldron, Pool__factory, FYToken__factory } from '@yield-protocol/ui-contracts';
 
 import { getBrowserCachedValue, setBrowserCachedValue } from '../utils/appUtils';
 import { dateFromMaturity } from '../utils/yieldUtils';
-import { IAssetRoot } from './initAssets';
 
 export const buildSeriesMap = async (
   cauldron: Cauldron,

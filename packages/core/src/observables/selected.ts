@@ -10,13 +10,22 @@ import {
   lastValueFrom,
 } from 'rxjs';
 import { WETH } from '../config/assetsConfig';
-import { IAsset, ISelected, ISeries, IStrategy, IVault } from '../types';
+import { IAsset, ISeries, IStrategy, IVault } from '../types';
 import { appConfigø } from './appConfig';
 import { assetsø } from './assets';
 import { internalMessagesø, sendMsg } from './messages';
 import { seriesø } from './series';
 import { strategiesø } from './strategies';
 import { vaultsø } from './vaults';
+
+export interface ISelected {
+  base: IAsset | null;
+  ilk: IAsset | null; // collateral
+  series: ISeries | null;
+  vault: IVault | null;
+  strategy: IStrategy | null;
+  futureSeries: ISeries | null; // used for 'rolling' position situations
+}
 
 const initSelection: ISelected = {
   base: null,

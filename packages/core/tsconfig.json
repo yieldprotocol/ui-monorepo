@@ -26,6 +26,8 @@
     "outDir": "./bin",
     // "outFile": "./bin/index.js",
     "composite": true,
+    "watch": true,
+    
   },
   "typedocOptions": {
     "entryPoints": ["src/observables","src/viewObservables", "src/types", "src/actions" ],

@@ -14,8 +14,8 @@ const buildAssetMap = (chainId) => tslib_1.__awaiter(void 0, void 0, void 0, fun
         /* build out the assetInfo > assetRoot (fill in default values etc.) */
         const id = key;
         /* get the wrapping/unwrapping addresses for the particular chainId */
-        const wrapHandlerAddress = asset.unwrapHandlerAddresses.get(chainId);
-        const unwrapHandlerAddress = asset.unwrapHandlerAddresses.get(chainId);
+        const wrapHandlerAddress = asset.wrapHandlerAddresses && asset.wrapHandlerAddresses.get(chainId);
+        const unwrapHandlerAddress = asset.unwrapHandlerAddresses && asset.unwrapHandlerAddresses.get(chainId);
         /* check if an unwrapping handler is provided, if so, the token is considered to be a wrapped token */
         const isWrappedToken = !!unwrapHandlerAddress;
         /* check if a wrapping handler is provided, if so, wrapping is required */
@@ -28,6 +28,7 @@ const buildAssetMap = (chainId) => tslib_1.__awaiter(void 0, void 0, void 0, fun
             proxyId: asset.proxyId || id, displaySymbol: asset.displaySymbol || asset.symbol, showToken: asset.showToken || false });
         assetRootMap.set(key, assetRoot);
     });
+    console.log(assetRootMap);
     return assetRootMap;
 });
 exports.buildAssetMap = buildAssetMap;

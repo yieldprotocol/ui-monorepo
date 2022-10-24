@@ -1,7 +1,8 @@
 import { ethers, BigNumber, BigNumberish, ContractTransaction, Contract } from 'ethers';
 import { Observable } from 'rxjs';
 import { Cauldron, FYToken, Ladle, Pool, Strategy, Witch } from '@yield-protocol/ui-contracts';
-import { IAssetRoot } from '../buildProtocol/initAssets';
+import { ISelected } from '../observables/selected';
+import { IAssetInfo } from '../config';
 
 export { LadleActions, RoutedActions } from './operations';
 
@@ -10,6 +11,45 @@ export interface W3bNumber {
   hStr: string; // 'Human String' understandable value ( eg. 1.000000000000000023 ETH ) - takes into account token specific decimals ( no precision loss )
   dsp: number; // 'Display' number used only for display purposes ( eg. 1.00 DAI ) ( precision loss );
 }
+
+
+export interface IAssetRoot extends IAssetInfo, ISignable {
+  // all fixed/static:
+  id: string;
+  tokenIdentifier: string|undefined
+
+  displayName: string;
+  displayNameMobile: string;
+
+  isYieldBase: boolean;
+  displaySymbol: string;
+  limitToSeries: string[];
+
+  wrapHandlerAddress: string | undefined;
+  unwrapHandlerAddress: string | undefined;
+  isWrappedToken: boolean; // Note: this is if is a token used in wrapped form by the yield protocol (except ETH - which is handled differently)
+  wrappingRequired: boolean;
+  
+  proxyId: string; // id to use throughout app when referencing an asset id; uses the unwrapped asset id when the asset is wrapped (i.e: wstETH is the proxy id for stETH)
+}
+
+export interface IAsset extends IAssetRoot {
+  /*  'Charged' items */
+  assetContract: Contract;
+  isYieldBase: boolean; // Needs to be re-checked on 'charging' because new series can be added
+
+  /*  Baked in token fns */
+  getBalance: (account: string) => Promise<BigNumber>;
+  getAllowance: (account: string, spender: string) => Promise<BigNumber>;
+  setAllowance?: (spender: string) => Promise<BigNumber | void>;
+
+  /* User specific */
+  balance: W3bNumber;
+}
+
+
+
+
 
 export interface IHistoryList {
   lastBlock: number;
@@ -131,15 +171,6 @@ export interface IYieldFunctions {
 
 }
 
-export interface ISelected {
-  base: IAsset | null;
-  ilk: IAsset | null; // collateral
-  series: ISeries | null;
-  vault: IVault | null;
-  strategy: IStrategy | null;
-
-  futureSeries: ISeries | null; // used for 'rolling' position situations
-}
 
 export interface ISettingsContext {
   settingsState: ISettingsContextState;
@@ -293,19 +324,19 @@ export interface ISeries extends ISeriesRoot {
   // seriesMark?: any; // image
 }
 
-export interface IAsset extends IAssetRoot {
-  /*  'Charged' items */
-  assetContract: Contract;
-  isYieldBase: boolean; // needs to be checked because new series can be added
+// export interface IAsset extends IAssetRoot {
+//   /*  'Charged' items */
+//   assetContract: Contract;
+//   isYieldBase: boolean; // needs to be checked because new series can be added
 
-  /*  Baked in token fns */
-  getBalance: (account: string) => Promise<BigNumber>;
-  getAllowance: (account: string, spender: string) => Promise<BigNumber>;
-  setAllowance?: (spender: string) => Promise<BigNumber | void>;
+//   /*  Baked in token fns */
+//   getBalance: (account: string) => Promise<BigNumber>;
+//   getAllowance: (account: string, spender: string) => Promise<BigNumber>;
+//   setAllowance?: (spender: string) => Promise<BigNumber | void>;
 
-  /* User specific */
-  balance: W3bNumber;
-}
+//   /* User specific */
+//   balance: W3bNumber;
+// }
 
 export interface IDummyVault extends IVaultRoot {}
 export interface IVault extends IVaultRoot {

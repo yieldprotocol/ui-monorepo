@@ -3,7 +3,7 @@ import { BigNumber, ethers } from 'ethers';
 import { BehaviorSubject, filter, first, lastValueFrom, map, Observable, share, shareReplay, withLatestFrom } from 'rxjs';
 
 import { ORACLE_INFO} from '../config';
-import { IAssetPair, ISelected } from '../types';
+import { IAssetPair } from '../types';
 import { WAD_BN } from '../utils';
 import { protocolø } from './protocol';
 import { selectedø } from './selected';

@@ -1,30 +1,15 @@
 import { BehaviorSubject, Observable, withLatestFrom, filter, shareReplay } from 'rxjs';
 import { BigNumber, Contract, ethers } from 'ethers';
 
-import { TokenType, W3bNumber } from '../types';
+import { IAsset, IAssetRoot, TokenType, W3bNumber } from '../types';
 import { accountø, providerø } from './connection';
 import { protocolø } from './protocol';
 
 import * as contracts from '@yield-protocol/ui-contracts';
-import { ZERO_BN } from '../utils/constants';
+import { ZERO_BN, ZERO_W3B } from '../utils/constants';
 import { MessageType, sendMsg } from './messages';
 import { bnToW3bNumber } from '../utils/yieldUtils';
-import { IAssetRoot } from '../buildProtocol/initAssets';
 
-
-export interface IAsset extends IAssetRoot {
-  /*  'Charged' items */
-  assetContract: Contract;
-  isYieldBase: boolean; // Needs to be checked on 'charging' because new series can be added
-
-  /*  Baked in token fns */
-  getBalance: (account: string) => Promise<BigNumber>;
-  getAllowance: (account: string, spender: string) => Promise<BigNumber>;
-  setAllowance?: (spender: string) => Promise<BigNumber | void>;
-
-  /* User specific */
-  balance: W3bNumber;
-}
 
 const assetMap$: BehaviorSubject<Map<string, IAsset>> = new BehaviorSubject(new Map([]));
 
@@ -87,13 +72,12 @@ protocolø
   };
 });
 
-
 /**
  * 
  * Add on extra/calculated ASSET info, live contract instances and methods (nb note: NOTHING ASYNC ) + add listners 
  * 
  * */
-const _chargeAsset = (asset: any, provider: ethers.providers.BaseProvider): IAsset => {
+const _chargeAsset = (asset: IAssetRoot, provider: ethers.providers.BaseProvider): IAsset => {
   /* add any asset listeners required */
 
   /* attach either contract, (or contract of the wrappedToken ) */
@@ -101,23 +85,25 @@ const _chargeAsset = (asset: any, provider: ethers.providers.BaseProvider): IAss
   let getBalance: (acc: string, asset?: string) => Promise<BigNumber>;
   let getAllowance: (acc: string, spender: string, asset?: string) => Promise<BigNumber>;
 
+  console.log( 'symbol: ', asset.symbol, asset.tokenType );
   // TODO: possibly refactor this?
+
   switch (asset.tokenType) {
 
     case TokenType.Native_Token:
-      assetContract = contracts.ERC20__factory.connect(asset.assetAddress, provider); // alhtough it doesn't do anything for a native token
+      assetContract = contracts.ERC20__factory.connect(asset.address, provider); // alhtough it doesn't do anything for a native token
       getBalance = async (acc) => provider?.getBalance(acc);
       getAllowance = async (acc) => provider?.getBalance(acc);
       break;
 
     case TokenType.ERC20:
-      assetContract = contracts.ERC20__factory.connect(asset.assetAddress, provider);
+      assetContract = contracts.ERC20__factory.connect(asset.address, provider);
       getBalance = async (acc) => assetContract.balanceOf(acc);
       getAllowance = async (acc: string, spender: string) => assetContract.allowance(acc, spender);
       break;
 
     case TokenType.ERC1155:
-      assetContract = contracts.ERC1155__factory.connect(asset.assetAddress, provider);
+      assetContract = contracts.ERC1155__factory.connect(asset.address, provider);
       getBalance = async (acc) => assetContract.balanceOf(acc, asset.tokenIdentifier);
       getAllowance = async (acc: string, spender: string) => assetContract.isApprovedForAll(acc, spender);
       // setAllowance = async (spender: string) => {
@@ -129,7 +115,7 @@ const _chargeAsset = (asset: any, provider: ethers.providers.BaseProvider): IAss
 
     default:
       // Default is a ERC20Permit;
-      assetContract = contracts.ERC20Permit__factory.connect(asset.assetAddress, provider);
+      assetContract = contracts.ERC20Permit__factory.connect(asset.address, provider);
       getBalance = async (acc) => assetContract.balanceOf(acc);
       getAllowance = async (acc: string, spender: string) => assetContract.allowance(acc, spender);
       break;
@@ -144,5 +130,6 @@ const _chargeAsset = (asset: any, provider: ethers.providers.BaseProvider): IAss
     /* Attach the various functions required */
     getBalance,
     getAllowance,
+    balance: ZERO_W3B
   };
 };

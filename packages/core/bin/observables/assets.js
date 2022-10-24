@@ -71,20 +71,21 @@ const _chargeAsset = (asset, provider) => {
     let assetContract;
     let getBalance;
     let getAllowance;
+    console.log('symbol: ', asset.symbol, asset.tokenType);
     // TODO: possibly refactor this?
     switch (asset.tokenType) {
         case types_1.TokenType.Native_Token:
-            assetContract = contracts.ERC20__factory.connect(asset.assetAddress, provider); // alhtough it doesn't do anything for a native token
+            assetContract = contracts.ERC20__factory.connect(asset.address, provider); // alhtough it doesn't do anything for a native token
             getBalance = (acc) => tslib_1.__awaiter(void 0, void 0, void 0, function* () { return provider === null || provider === void 0 ? void 0 : provider.getBalance(acc); });
             getAllowance = (acc) => tslib_1.__awaiter(void 0, void 0, void 0, function* () { return provider === null || provider === void 0 ? void 0 : provider.getBalance(acc); });
             break;
         case types_1.TokenType.ERC20:
-            assetContract = contracts.ERC20__factory.connect(asset.assetAddress, provider);
+            assetContract = contracts.ERC20__factory.connect(asset.address, provider);
             getBalance = (acc) => tslib_1.__awaiter(void 0, void 0, void 0, function* () { return assetContract.balanceOf(acc); });
             getAllowance = (acc, spender) => tslib_1.__awaiter(void 0, void 0, void 0, function* () { return assetContract.allowance(acc, spender); });
             break;
         case types_1.TokenType.ERC1155:
-            assetContract = contracts.ERC1155__factory.connect(asset.assetAddress, provider);
+            assetContract = contracts.ERC1155__factory.connect(asset.address, provider);
             getBalance = (acc) => tslib_1.__awaiter(void 0, void 0, void 0, function* () { return assetContract.balanceOf(acc, asset.tokenIdentifier); });
             getAllowance = (acc, spender) => tslib_1.__awaiter(void 0, void 0, void 0, function* () { return assetContract.isApprovedForAll(acc, spender); });
             // setAllowance = async (spender: string) => {
@@ -95,7 +96,7 @@ const _chargeAsset = (asset, provider) => {
             break;
         default:
             // Default is a ERC20Permit;
-            assetContract = contracts.ERC20Permit__factory.connect(asset.assetAddress, provider);
+            assetContract = contracts.ERC20Permit__factory.connect(asset.address, provider);
             getBalance = (acc) => tslib_1.__awaiter(void 0, void 0, void 0, function* () { return assetContract.balanceOf(acc); });
             getAllowance = (acc, spender) => tslib_1.__awaiter(void 0, void 0, void 0, function* () { return assetContract.allowance(acc, spender); });
             break;
@@ -105,6 +106,6 @@ const _chargeAsset = (asset, provider) => {
         assetContract,
         /* Attach the various functions required */
         getBalance,
-        getAllowance });
+        getAllowance, balance: constants_1.ZERO_W3B });
 };
 //# sourceMappingURL=assets.js.map
