@@ -10,7 +10,7 @@ import {
   filter,
   withLatestFrom,
 } from 'rxjs';
-import { buildVaultMap } from '../buildProtocol/buildVaultsRoot';
+import { buildVaultMap } from '../buildProtocol/initVaults';
 import { IVault, IVaultRoot, MessageType, IYieldProtocol, ISeries } from '../types';
 import { ZERO_BN } from '../utils';
 import { bnToW3bNumber, dateFromMaturity } from '../utils/yieldUtils';

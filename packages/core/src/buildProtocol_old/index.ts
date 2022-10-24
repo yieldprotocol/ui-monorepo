@@ -3,33 +3,40 @@ import { IAssetRoot, IYieldConfig, IYieldProtocol } from '../types';
 
 import * as contracts from '@yield-protocol/ui-contracts';
 
-import { baseAddresses } from '../config';
+import { baseAddresses } from '../config/protocol';
 
-import { buildOracleMap } from './initOracles';
-import { buildModuleMap } from './initModules';
+import { buildOracleMap } from './buildOracles';
+import { buildModuleMap } from './buildModules';
 
-import { buildAssetMap } from './initAssets';
-import { buildSeriesMap } from './initSeries';
-import { buildStrategyMap } from './initStrategies';
+import { buildAssetMap } from './buildAssetsRoot';
+import { buildSeriesMap } from './buildSeriesRoot';
+import { buildStrategyMap } from './buildStrategiesRoot';
 
 export const buildProtocol = async (
   provider: ethers.providers.BaseProvider,
   chainId: number,
-  appConfig: IYieldConfig
+  appConfig: IYieldConfig,
 ): Promise<IYieldProtocol> => {
+
   /* 1. build the base protocol components */
   const _baseAddresses = baseAddresses.get(chainId);
   const cauldron = contracts.Cauldron__factory.connect(_baseAddresses!.Cauldron, provider) as contracts.Cauldron;
   const ladle = contracts.Ladle__factory.connect(_baseAddresses!.Ladle, provider) as contracts.Ladle;
   const witch = contracts.Witch__factory.connect(_baseAddresses!.Witch, provider) as contracts.Witch;
-
+  
   /* 2. Build the oralceMap */
   const oracleMap = buildOracleMap(provider, chainId);
   /* 3. Build the moduleMap */
   const moduleMap = buildModuleMap(provider, chainId);
 
-  /* 4. Build the AssetRootMap - note : async */
-  const assetRootMap:  Map<string, IAssetRoot> = await buildAssetMap(chainId);
+  /* 4. Build the AssetRootMap - note: async */
+  const assetRootMap: Map<string, IAssetRoot> = await buildAssetMap(
+    cauldron,
+    ladle,
+    provider,
+    chainId,
+    appConfig
+  );
 
   /* 5. Build the seriesRootMAp - note : async */
   const seriesRootMap = await buildSeriesMap(cauldron, ladle, assetRootMap, provider, chainId, appConfig);
@@ -46,6 +53,6 @@ export const buildProtocol = async (
     moduleMap,
     assetRootMap,
     seriesRootMap,
-    strategyRootMap,
+    strategyRootMap
   };
 };

@@ -176,7 +176,7 @@ export interface ISignable {
   tokenType: TokenType;
 }
 
-export interface ISeriesRoot extends ISignable {
+export interface ISeriesRoot extends ISignable{
   id: string;
   displayName: string;
   displayNameMobile: string;
@@ -213,44 +213,7 @@ export enum TokenType {
   ERC720,
 }
 
-export interface IAssetInfo {
-  tokenType: TokenType;
-  tokenIdentifier?: number | string; // used for identifying tokens in a multitoken contract
 
-  name: string;
-  version: string;
-  symbol: string;
-  decimals: number;
-
-  isYieldBase?: boolean;
-  showToken: boolean; // Display/hide the token on the UI
-
-  digitFormat: number; // this is the 'reasonable' number of digits to show. accuracy equivalent to +- 1 us cent.
-  displaySymbol?: string; // override for symbol display
-
-  limitToSeries?: string[];
-
-  wrapHandlerAddresses?: Map<number, string>; // mapping a chain id to the corresponding wrap handler address
-  unwrapHandlerAddresses?: Map<number, string>; // mapping a chain id to the correpsonding unwrap handler address
-  proxyId?: string;
-}
-
-export interface IAssetRoot extends IAssetInfo, ISignable {
-  // fixed/static:
-  id: string;
-  image: any;
-  displayName: string;
-  displayNameMobile: string;
-  joinAddress: string;
-
-  // creation info
-  createdBlock: number;
-  createdTxHash: string;
-
-  isWrappedToken: boolean; // Note: this is if is a token used in wrapped form by the yield protocol (except ETH - which is handled differently)
-  wrappingRequired: boolean;
-  proxyId: string; // id to use throughout app when referencing an asset id; uses the unwrapped asset id when the asset is wrapped (i.e: wstETH is the proxy id for stETH)
-}
 
 export interface IAssetPair {
   id: string;
