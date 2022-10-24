@@ -11,7 +11,7 @@ export const buildAssetMap = async (
 ): Promise<Map<string, IAssetRoot>> => {
 
   const assetRootMap: Map<string, IAssetRoot> = new Map();
-
+  
   // const cacheKey = `assets_${chainId}`;
   // const cachedValues = appConfig.browserCaching ? JSON.parse(localStorage.getItem(cacheKey)!) : null;
 

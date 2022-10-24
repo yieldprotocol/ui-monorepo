@@ -12,7 +12,6 @@ export interface W3bNumber {
   dsp: number; // 'Display' number used only for display purposes ( eg. 1.00 DAI ) ( precision loss );
 }
 
-
 export interface IAssetRoot extends IAssetInfo, ISignable {
   // all fixed/static:
   id: string;
@@ -46,9 +45,6 @@ export interface IAsset extends IAssetRoot {
   /* User specific */
   balance: W3bNumber;
 }
-
-
-
 
 
 export interface IHistoryList {
