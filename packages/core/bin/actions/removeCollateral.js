@@ -14,17 +14,16 @@ const _addRemoveEth_1 = require("./_addRemoveEth");
 const _wrapUnwrapAsset_1 = require("./_wrapUnwrapAsset");
 const removeCollateral = (amount, vault, unwrapOnRemove = true) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Subscribe to and get the values from the observables:  */
-    (0, rxjs_1.combineLatest)([observables_1.protocolø, observables_1.chainIdø, observables_1.assetsø, observables_1.accountø, observables_1.providerø])
+    (0, rxjs_1.combineLatest)([observables_1.protocolø, observables_1.assetsø, observables_1.accountø, observables_1.providerø])
         .pipe((0, rxjs_1.take)(1)) // only take one and then finish.
-        .subscribe(([{ ladle }, chainId, assetMap, account, provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        var _a;
+        .subscribe(([{ ladle }, assetMap, account, provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         /* generate the txCode for tx tracking and tracing */
         const txCode = (0, utils_1.getProcessCode)(types_1.ActionCodes.REMOVE_COLLATERAL, vault.id);
         /* get associated series and ilk */
         const ilk = assetMap.get(vault.ilkId);
         const ladleAddress = ladle.address;
         /* get unwrap handler if required */
-        const unwrapHandlerAddress = (_a = ilk.unwrapHandlerAddresses) === null || _a === void 0 ? void 0 : _a.get(chainId);
+        const unwrapHandlerAddress = ilk.unwrapHandlerAddress;
         /* check if the ilk/asset is an eth asset variety OR if it is wrapped token, if so pour to Ladle */
         const isEthCollateral = assetsConfig_1.ETH_BASED_ASSETS.includes(ilk.proxyId);
         /* parse inputs to BigNumber in Wei */

@@ -25,7 +25,7 @@ export interface IAssetRoot extends ISignable {
   /* required fields + ISignable */
   joinAddress: string;
 
-  showToken: boolean; // Display/hide the token on the UI [ default: true ]
+  hideToken: boolean; // Display/hide the token on the UI [ default: false ]
   digitFormat: number; // this is the 'reasonable' number of digits to show. accuracy equivalent to +- 1 us cent. [ default : 6 ] 
 
   // all fixed/static:

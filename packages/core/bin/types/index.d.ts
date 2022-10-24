@@ -2,14 +2,22 @@ import { ethers, BigNumber, BigNumberish, ContractTransaction, Contract } from '
 import { Observable } from 'rxjs';
 import { Cauldron, FYToken, Ladle, Pool, Strategy, Witch } from '@yield-protocol/ui-contracts';
 import { ISelected } from '../observables/selected';
-import { IAssetInfo } from '../config';
 export { LadleActions, RoutedActions } from './operations';
 export interface W3bNumber {
     big: BigNumber;
     hStr: string;
     dsp: number;
 }
-export interface IAssetRoot extends IAssetInfo, ISignable {
+export interface IAssetRoot extends ISignable {
+    tokenType: TokenType;
+    name: string;
+    version: string;
+    address: string;
+    symbol: string;
+    decimals: number;
+    joinAddress: string;
+    hideToken: boolean;
+    digitFormat: number;
     id: string;
     tokenIdentifier: string | undefined;
     displayName: string;

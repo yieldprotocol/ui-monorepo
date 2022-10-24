@@ -25,10 +25,9 @@ const buildAssetMap = (chainId) => tslib_1.__awaiter(void 0, void 0, void 0, fun
             wrappingRequired,
             wrapHandlerAddress, 
             /* Default setting of assetInfo fields if required */
-            proxyId: asset.proxyId || id, displaySymbol: asset.displaySymbol || asset.symbol, showToken: asset.showToken || false });
+            proxyId: asset.proxyId || id, displaySymbol: asset.displaySymbol || asset.symbol, hideToken: asset.hideToken || false });
         assetRootMap.set(key, assetRoot);
     });
-    console.log(assetRootMap);
     return assetRootMap;
 });
 exports.buildAssetMap = buildAssetMap;

@@ -13,7 +13,6 @@ const wrapHandlerAbi = ['function wrap(address to)', 'function unwrap(address to
  * */
 const wrapAsset = (value, asset, to // optional send destination : DEFAULT is assetJoin address
 ) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _a;
     const account = yield (0, rxjs_1.lastValueFrom)(observables_1.accountø.pipe((0, rxjs_1.first)()));
     const chainId = yield (0, rxjs_1.lastValueFrom)(observables_1.chainIdø.pipe((0, rxjs_1.first)()));
     const accountProvider = yield (0, rxjs_1.lastValueFrom)(observables_1.accountProviderø.pipe((0, rxjs_1.first)())); //  await lastValueFrom(accountProviderø);
@@ -21,9 +20,7 @@ const wrapAsset = (value, asset, to // optional send destination : DEFAULT is as
     const signer = accountProvider.getSigner(account);
     /* SET the destination address DEFAULTs to the assetJoin Address */
     const toAddress = to || asset.joinAddress;
-    const wrapHandlerAddress = ((_a = asset.wrapHandlerAddresses) === null || _a === void 0 ? void 0 : _a.has(chainId))
-        ? asset.wrapHandlerAddresses.get(chainId)
-        : undefined;
+    const wrapHandlerAddress = asset.wrapHandlerAddress;
     /* NB! IF a wraphandler exists, we assume that it is Yield uses the wrapped version of the token */
     if (wrapHandlerAddress && value.gt(constants_1.ZERO_BN)) {
         const wrapHandlerContract = new ethers_1.Contract(wrapHandlerAddress, wrapHandlerAbi, signer);
@@ -65,13 +62,10 @@ exports.wrapAsset = wrapAsset;
  * @internal
  * */
 const unwrapAsset = (asset, receiver) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _b;
     const userSettings = yield (0, rxjs_1.lastValueFrom)(observables_1.userSettingsø.pipe((0, rxjs_1.first)()));
     const chainId = yield (0, rxjs_1.lastValueFrom)(observables_1.chainIdø.pipe((0, rxjs_1.first)()));
     const { unwrapTokens } = userSettings;
-    const unwrapHandlerAddress = ((_b = asset.unwrapHandlerAddresses) === null || _b === void 0 ? void 0 : _b.has(chainId))
-        ? asset.unwrapHandlerAddresses.get(chainId)
-        : undefined;
+    const unwrapHandlerAddress = asset.unwrapHandlerAddress;
     /* if there is an unwrap handler we assume the token needs to be unwrapped  ( unless the 'unwrapTokens' setting is false) */
     if (unwrapTokens && unwrapHandlerAddress) {
         console.log('Unwrapping tokens before return');

@@ -23,10 +23,10 @@ const rxjs_1 = require("rxjs");
  */
 const repayDebt = (amount, vault, reclaimCollateral = true) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     /* Subscribe to and get the values from the observables:  */
-    (0, rxjs_1.combineLatest)([observables_1.protocolø, observables_1.chainIdø, observables_1.assetsø, observables_1.seriesø, observables_1.accountø, observables_1.userSettingsø, observables_1.providerø])
+    (0, rxjs_1.combineLatest)([observables_1.protocolø, observables_1.assetsø, observables_1.seriesø, observables_1.accountø, observables_1.userSettingsø, observables_1.providerø])
         .pipe((0, rxjs_1.filter)(() => !!vault), (0, rxjs_1.take)(1) // only take one and then finish.
     )
-        .subscribe(([{ ladle }, chainId, assetMap, seriesMap, account, { slippageTolerance }, provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+        .subscribe(([{ ladle }, assetMap, seriesMap, account, { slippageTolerance }, provider]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         const txCode = (0, yieldUtils_1.getProcessCode)(types_1.ActionCodes.REPAY, vault.id);
         const ladleAddress = ladle.address;
         const series = seriesMap.get(vault.seriesId);
@@ -75,11 +75,10 @@ const repayDebt = (amount, vault, reclaimCollateral = true) => tslib_1.__awaiter
         const removeEthCallData = isEthCollateral ? yield (0, _addRemoveEth_1.removeEth)(constants_1.ONE_BN) : [];
         /* Address to send the funds to either ladle (if eth is used as collateral) or account */
         const reclaimToAddress = () => {
-            var _a, _b;
             if (isEthCollateral)
                 return ladleAddress;
-            if (unwrapAssetCallData.length && ((_a = ilk.unwrapHandlerAddresses) === null || _a === void 0 ? void 0 : _a.has(chainId)))
-                return (_b = ilk.unwrapHandlerAddresses) === null || _b === void 0 ? void 0 : _b.get(chainId); // if there is somethign to unwrap
+            if (unwrapAssetCallData.length && ilk.unwrapHandlerAddress)
+                return ilk.unwrapHandlerAddress; // if there is somethign to unwrap
             return account;
         };
         const addEthCallData = yield (() => tslib_1.__awaiter(void 0, void 0, void 0, function* () {

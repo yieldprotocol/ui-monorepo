@@ -1,5 +1,5 @@
-import { ISignable, TokenType } from '../types';
-export interface IAssetInfo extends ISignable {
+import { TokenType } from '../types';
+export interface IAssetInfo {
     tokenType: TokenType;
     name: string;
     version: string;
@@ -9,7 +9,7 @@ export interface IAssetInfo extends ISignable {
     joinAddress: string;
     isYieldBase?: boolean;
     tokenIdentifier?: number | string;
-    showToken?: boolean;
+    hideToken?: boolean;
     digitFormat?: number;
     displaySymbol?: string;
     limitToSeries?: string[];

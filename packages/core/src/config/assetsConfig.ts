@@ -19,7 +19,7 @@ export interface IAssetInfo {
   isYieldBase?: boolean; // used as a yield base ( borrowable ) asset 
   tokenIdentifier?: number | string; // used for identifying tokens in a multitoken contract
 
-  showToken? : boolean; // Display/hide the token on the UI [ default: true ]
+  hideToken? : boolean; // Display/hide the token on the UI [ default: true ]
   digitFormat?: number; // this is the 'reasonable' number of digits to show. accuracy equivalent to +- 1 us cent. [ default : 6 ] 
   displaySymbol?: string; // override for symbol display [default: token symbol]
   limitToSeries?: string[];
@@ -79,7 +79,6 @@ ASSETS_1.set(DAI, {
   decimals: 18,
   symbol: 'DAI',
 
-  showToken: true,
   digitFormat: 2,
   tokenType: TokenType.ERC20_DaiPermit,
   isYieldBase: true,
@@ -94,7 +93,6 @@ ASSETS_1.set(USDC, {
   decimals: 18,
   symbol: 'USDC',
 
-  showToken: true,
   digitFormat: 2,
   tokenType: TokenType.ERC20_Permit,
   isYieldBase: true,
@@ -107,7 +105,7 @@ ASSETS_1.set(WBTC, {
   name: 'Wrapped Bitcoin',
   decimals: 18,
   symbol: 'WBTC',
-  showToken: true,
+
   digitFormat: 6,
   tokenType: TokenType.ERC20,
 });
@@ -119,7 +117,7 @@ ASSETS_1.set(ENS, {
   name: 'Ethereum Naming Service',
   decimals: 18,
   symbol: 'ENS',
-  showToken: true,
+
   digitFormat: 2,
   tokenType: TokenType.ERC20_Permit,
 });
@@ -132,7 +130,7 @@ ASSETS_1.set(WETH, {
   decimals: 18,
   symbol: 'WETH',
   displaySymbol: 'ETH',
-  showToken: true,
+
   digitFormat: 6,
   tokenType: TokenType.ERC20,
   isYieldBase: true,
@@ -146,7 +144,7 @@ ASSETS_1.set(wstETH, {
   decimals: 18,
   symbol: 'wstETH',
   displaySymbol: 'wstETH',
-  showToken: true,
+
   digitFormat: 6,
   tokenType: TokenType.ERC20_Permit,
   wrapHandlerAddresses: new Map([]),
@@ -164,12 +162,14 @@ ASSETS_1.set(stETH, {
   name: 'Staked Eth',
   decimals: 18,
   symbol: 'stETH',
-  showToken: false,
+
   digitFormat: 6,
   tokenType: TokenType.ERC20_Permit,
   wrapHandlerAddresses: new Map([[1, '0x491aB93faa921C8E634F891F96512Be14fD3DbB1']]),
   unwrapHandlerAddresses: new Map([]),
   proxyId: wstETH,
+
+  hideToken: true,
 });
 
 ASSETS_1.set(LINK, {
@@ -180,7 +180,7 @@ ASSETS_1.set(LINK, {
   name: 'ChainLink',
   decimals: 18,
   symbol: 'LINK',
-  showToken: true,
+
   digitFormat: 2,
   tokenType: TokenType.ERC20,
 });
@@ -193,7 +193,7 @@ ASSETS_1.set(yvUSDC, {
   name: 'Yearn Vault USDC',
   decimals: 18,
   symbol: 'yvUSDC',
-  showToken: true,
+
   digitFormat: 2,
   tokenType: TokenType.ERC20,
   limitToSeries: ['0x303230350000', '0x303230360000', '0x303230370000', '0x303230380000', '0x303230390000'],
@@ -207,7 +207,7 @@ ASSETS_1.set(UNI, {
   name: 'Uniswap token',
   decimals: 18,
   symbol: 'UNI',
-  showToken: true,
+
   digitFormat: 4,
   tokenType: TokenType.ERC20_Permit,
 });
@@ -220,7 +220,7 @@ ASSETS_1.set(FDAI2203, {
   name: 'fDAI2203',
   decimals: 8,
   symbol: 'FDAI2203',
-  showToken: false,
+ 
   digitFormat: 2,
   tokenType: TokenType.ERC1155,
   tokenIdentifier: 563371972493313,
@@ -228,6 +228,8 @@ ASSETS_1.set(FDAI2203, {
 
   wrapHandlerAddresses: new Map([]),
   unwrapHandlerAddresses: new Map([]),
+
+  hideToken: true,
 });
 
 ASSETS_1.set(FUSDC2203, {
@@ -238,11 +240,13 @@ ASSETS_1.set(FUSDC2203, {
   name: 'fUSDC2203',
   decimals: 8,
   symbol: 'FUSDC2203',
-  showToken: false,
+  
   digitFormat: 2,
   tokenType: TokenType.ERC1155,
   tokenIdentifier: 844846949203969,
   limitToSeries: ['0x303230350000'],
+
+  hideToken: true,
 });
 
 ASSETS_1.set(FDAI2206, {
@@ -253,11 +257,13 @@ ASSETS_1.set(FDAI2206, {
   name: 'fDAI2206',
   decimals: 8,
   symbol: 'FDAI2206',
-  showToken: true,
+ 
   digitFormat: 2,
   tokenType: TokenType.ERC1155,
   tokenIdentifier: 563373963149313,
   limitToSeries: ['0x303130360000'],
+
+  hideToken: true,
 });
 
 ASSETS_1.set(FUSDC2206, {
@@ -268,7 +274,7 @@ ASSETS_1.set(FUSDC2206, {
   name: 'fUSDC2206',
   decimals: 8,
   symbol: 'FUSDC2206',
-  showToken: true,
+
   digitFormat: 2,
   tokenType: TokenType.ERC1155,
   tokenIdentifier: 844848939859969,
@@ -283,7 +289,7 @@ ASSETS_1.set(FDAI2209, {
   name: 'fDAI2209',
   decimals: 8,
   symbol: 'FDAI2209',
-  showToken: true,
+
   digitFormat: 2,
   tokenType: TokenType.ERC1155,
   tokenIdentifier: 563375953805313,
@@ -298,7 +304,7 @@ ASSETS_1.set(FUSDC2209, {
   name: 'fUSDC2209',
   decimals: 8,
   symbol: 'FUSDC2209',
-  showToken: true,
+
   digitFormat: 2,
   tokenType: TokenType.ERC1155,
   tokenIdentifier: 844850930515969,
@@ -313,10 +319,11 @@ ASSETS_1.set(FRAX, {
   name: 'frax',
   decimals: 18,
   symbol: 'FRAX',
-  showToken: true,
+
   digitFormat: 2,
   tokenType: TokenType.ERC20,
   limitToSeries: [],
+
   isYieldBase: true,
 });
 
@@ -345,7 +352,6 @@ ASSETS_42161.set(DAI, {
   decimals: 18,
   symbol: 'DAI',
 
-  showToken: true,
   digitFormat: 2,
   tokenType: TokenType.ERC20_Permit,
 
@@ -360,7 +366,6 @@ ASSETS_42161.set(USDC, {
   decimals: 18,
   symbol: 'USDC',
 
-  showToken: true,
   digitFormat: 2,
   tokenType: TokenType.ERC20_Permit,
 
@@ -376,7 +381,7 @@ ASSETS_42161.set(WETH, {
   symbol: 'WETH',
 
   displaySymbol: 'ETH',
-  showToken: true,
+
   digitFormat: 6,
   tokenType: TokenType.ERC20,
 
