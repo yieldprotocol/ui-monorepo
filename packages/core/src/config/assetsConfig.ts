@@ -1,7 +1,7 @@
-import { ISignable, TokenType } from '../types';
+import { TokenType } from '../types';
 
 
-export interface IAssetInfo extends ISignable {
+export interface IAssetInfo {
 
   tokenType: TokenType;
 

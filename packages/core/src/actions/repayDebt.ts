@@ -33,12 +33,12 @@ import { combineLatest, filter, map, take } from 'rxjs';
  */
 export const repayDebt = async (amount: string | undefined, vault: IVault, reclaimCollateral: boolean = true) => {
   /* Subscribe to and get the values from the observables:  */
-  combineLatest([protocolø, chainIdø, assetsø, seriesø, accountø, userSettingsø, providerø])
+  combineLatest([protocolø, assetsø, seriesø, accountø, userSettingsø, providerø])
     .pipe(
       filter(() => !!vault ),
       take(1) // only take one and then finish.
     ) 
-    .subscribe(async ([{ ladle }, chainId, assetMap, seriesMap, account, { slippageTolerance }, provider]) => {
+    .subscribe(async ([{ ladle }, assetMap, seriesMap, account, { slippageTolerance }, provider]) => {
       
       const txCode = getProcessCode(ActionCodes.REPAY, vault.id);
       const ladleAddress = ladle.address;
@@ -128,8 +128,8 @@ export const repayDebt = async (amount: string | undefined, vault: IVault, recla
       /* Address to send the funds to either ladle (if eth is used as collateral) or account */
       const reclaimToAddress = () => {
         if (isEthCollateral) return ladleAddress;
-        if (unwrapAssetCallData.length && ilk.unwrapHandlerAddresses?.has(chainId))
-          return ilk.unwrapHandlerAddresses?.get(chainId); // if there is somethign to unwrap
+        if (unwrapAssetCallData.length && ilk.unwrapHandlerAddress)
+          return ilk.unwrapHandlerAddress; // if there is somethign to unwrap
         return account;
       };
 

@@ -1,9 +1,5 @@
-
-
 import { ASSETS_1, ASSETS_42161, IAssetInfo } from '../config';
 import { IAssetRoot, ISignable } from '../types';
-
-
 
 /* This function is declared async, so that we can get assets from external api if reqd. */  
 export const buildAssetMap = async (

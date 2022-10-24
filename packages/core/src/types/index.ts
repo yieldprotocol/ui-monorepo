@@ -2,7 +2,6 @@ import { ethers, BigNumber, BigNumberish, ContractTransaction, Contract } from '
 import { Observable } from 'rxjs';
 import { Cauldron, FYToken, Ladle, Pool, Strategy, Witch } from '@yield-protocol/ui-contracts';
 import { ISelected } from '../observables/selected';
-import { IAssetInfo } from '../config';
 
 export { LadleActions, RoutedActions } from './operations';
 
@@ -12,7 +11,23 @@ export interface W3bNumber {
   dsp: number; // 'Display' number used only for display purposes ( eg. 1.00 DAI ) ( precision loss );
 }
 
-export interface IAssetRoot extends IAssetInfo, ISignable {
+export interface IAssetRoot extends ISignable {
+
+  tokenType: TokenType;
+
+  /* from ISignable for clarity */ 
+  name: string;
+  version: string;
+  address: string;
+  symbol: string;
+  decimals: number;
+
+  /* required fields + ISignable */
+  joinAddress: string;
+
+  showToken: boolean; // Display/hide the token on the UI [ default: true ]
+  digitFormat: number; // this is the 'reasonable' number of digits to show. accuracy equivalent to +- 1 us cent. [ default : 6 ] 
+
   // all fixed/static:
   id: string;
   tokenIdentifier: string|undefined
@@ -26,6 +41,7 @@ export interface IAssetRoot extends IAssetInfo, ISignable {
 
   wrapHandlerAddress: string | undefined;
   unwrapHandlerAddress: string | undefined;
+  
   isWrappedToken: boolean; // Note: this is if is a token used in wrapped form by the yield protocol (except ETH - which is handled differently)
   wrappingRequired: boolean;
   
