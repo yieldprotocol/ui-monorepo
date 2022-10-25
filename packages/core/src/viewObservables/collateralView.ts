@@ -51,7 +51,7 @@ const _totalDebtWithInputø: Observable<BigNumber[]> = combineLatest([borrowInpu
     const existingDebtAsWei = decimalNToDecimal18(existingDebt_, series!.decimals);
     const newDebt = debtInput.big.gt(ZERO_BN)
       ? buyBase(
-          series!.baseReserves.big,
+          series!.sharesReserves.big,
           series!.fyTokenReserves.big,
           debtInput.big,
           series!.getTimeTillMaturity(),

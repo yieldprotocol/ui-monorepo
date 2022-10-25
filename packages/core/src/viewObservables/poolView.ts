@@ -52,7 +52,7 @@ export const isBuyAndPoolPossibleø: Observable<boolean> = combineLatest([
 
     let _fyTokenToBuy = ZERO_BN;
     const _maxFyTokenOut = maxFyTokenOut(
-      strategySeries.baseReserves.big,
+      strategySeries.sharesReserves.big,
       strategySeries.fyTokenReserves.big,
       strategySeries.getTimeTillMaturity(),
       strategySeries.ts,
@@ -61,7 +61,7 @@ export const isBuyAndPoolPossibleø: Observable<boolean> = combineLatest([
     );
 
     [_fyTokenToBuy] = fyTokenForMint(
-      strategySeries.baseReserves.big,
+      strategySeries.sharesReserves.big,
       strategySeries.fyTokenRealReserves.big,
       strategySeries.fyTokenReserves.big,
       calculateSlippage(input.big, slippageTolerance.toString(), true),
@@ -139,7 +139,7 @@ export const removeLiquidityReturnø: Observable<W3bNumber[]> = combineLatest([
         input.big
       );
       const [_baseReceived, _fyTokenReceived] = burn(
-        strategySeries.baseReserves.big,
+        strategySeries.sharesReserves.big,
         strategySeries.fyTokenRealReserves.big,
         strategySeries.totalSupply.big,
         lpReceived
@@ -158,7 +158,7 @@ export const removeLiquidityReturnø: Observable<W3bNumber[]> = combineLatest([
         // diagnostics && console.log(_extraFyTokensToSell.toString(), 'FyTokens Need to be sold');
 
         const _extraFyTokenValue = sellFYToken(
-          strategySeries!.baseReserves.big,
+          strategySeries!.sharesReserves.big,
           strategySeries!.fyTokenRealReserves.big,
           _extraFyTokensToSell,
           secondsToFrom(strategySeries!.maturity.toString()),
@@ -203,7 +203,7 @@ export const removeLiquidityReturnø: Observable<W3bNumber[]> = combineLatest([
         input.big
       );
       const [_baseReceived, _fyTokenReceived] = burn(
-        strategySeries!.baseReserves.big,
+        strategySeries!.sharesReserves.big,
         strategySeries!.fyTokenRealReserves.big,
         strategySeries!.totalSupply.big,
         lpReceived
@@ -214,7 +214,7 @@ export const removeLiquidityReturnø: Observable<W3bNumber[]> = combineLatest([
         input.big,
         strategy?.strategyTotalSupply?.big!,
         strategy?.strategyPoolBalance?.big!,
-        strategySeries!.baseReserves.big,
+        strategySeries!.sharesReserves.big,
         strategySeries!.fyTokenRealReserves.big,
         strategySeries!.totalSupply.big,
         strategySeries!.getTimeTillMaturity(),

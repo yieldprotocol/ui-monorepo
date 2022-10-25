@@ -40,12 +40,12 @@ const repayDebt = (amount, vault, reclaimCollateral = true) => tslib_1.__awaiter
         const convexJoinContract = ui_contracts_1.ConvexJoin__factory.connect(ilk.joinAddress, provider);
         /* Parse amounts */
         const _amount = (0, yieldUtils_1.inputToTokenValue)(amount, base.decimals);
-        const _maxBaseIn = (0, ui_math_1.maxBaseIn)(series.baseReserves.big, series.fyTokenReserves.big, series.getTimeTillMaturity(), series.ts, series.g1, series.decimals);
+        const _maxBaseIn = (0, ui_math_1.maxBaseIn)(series.sharesReserves.big, series.fyTokenReserves.big, series.getTimeTillMaturity(), series.ts, series.g1, series.decimals);
         /* Check the max amount of the trade that the pool can handle */
         const tradeIsNotPossible = _amount.gt(_maxBaseIn);
         const _amountAsFyToken = series.isMature()
             ? _amount
-            : (0, ui_math_1.sellBase)(series.baseReserves.big, series.fyTokenReserves.big, _amount, (0, ui_math_1.secondsToFrom)(series.maturity.toString()), series.ts, series.g1, series.decimals);
+            : (0, ui_math_1.sellBase)(series.sharesReserves.big, series.fyTokenReserves.big, _amount, (0, ui_math_1.secondsToFrom)(series.maturity.toString()), series.ts, series.g1, series.decimals);
         const _amountAsFyTokenWithSlippage = (0, ui_math_1.calculateSlippage)(_amountAsFyToken, slippageTolerance.toString(), true // minimize
         );
         /* Check if amount is more than the debt */

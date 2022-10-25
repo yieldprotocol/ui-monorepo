@@ -40,12 +40,12 @@ export const minDebtLimitø: Observable<W3bNumber> = combineLatest([selectedø, 
 );
 
 /**
- * Check if the user can borrow the specified [[borrowInputø | amount]] based on current protocol baseReserves
+ * Check if the user can borrow the specified [[borrowInputø | amount]] based on current protocol sharesReserves
  * @category Borrow
  * */
 export const isBorrowPossibleø: Observable<boolean> = combineLatest([borrowInputø, selectedø]).pipe(
   map(([input, selected]) => {
-    if (selected.series! && input.big.gt(ZERO_BN) && input.big.lte(selected.series.baseReserves.big)) return true;
+    if (selected.series! && input.big.gt(ZERO_BN) && input.big.lte(selected.series.sharesReserves.big)) return true;
     
     input.big.gt(ZERO_BN) &&
       sendMsg({
@@ -89,7 +89,7 @@ export const isRollVaultPossibleø: Observable<boolean> = combineLatest([selecte
     if (vault!.accruedArt.big.eq(ZERO_BN)) return true;
 
     const _maxFyTokenIn = maxFyTokenIn(
-      futureSeries!.baseReserves.big,
+      futureSeries!.sharesReserves.big,
       futureSeries!.fyTokenReserves.big,
       futureSeries!.getTimeTillMaturity(),
       futureSeries!.ts,
@@ -98,7 +98,7 @@ export const isRollVaultPossibleø: Observable<boolean> = combineLatest([selecte
     );
 
     const newDebt = buyBase(
-      futureSeries!.baseReserves.big,
+      futureSeries!.sharesReserves.big,
       futureSeries!.fyTokenReserves.big,
       vault!.accruedArt.big,
       futureSeries!.getTimeTillMaturity(),
@@ -159,7 +159,7 @@ export const debtEstimateø: Observable<W3bNumber> = combineLatest([borrowInput�
   map(([input, selected]) => {
     const { series, vault } = selected!;
     const estimate = buyBase(
-      series!.baseReserves.big,
+      series!.sharesReserves.big,
       series!.fyTokenReserves.big,
       input.big,
       series!.getTimeTillMaturity(),

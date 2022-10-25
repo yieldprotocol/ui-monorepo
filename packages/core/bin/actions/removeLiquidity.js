@@ -50,8 +50,8 @@ const removeLiquidity = (amount, series, matchingVault, tradeFyToken = true) => 
         const [cachedBaseReserves, cachedFyTokenReserves] = yield series.poolContract.getCache();
         const cachedRealReserves = cachedFyTokenReserves.sub(series.totalSupply.big);
         const lpReceived = (0, ui_math_1.burnFromStrategy)(_strategy.poolTotalSupply, _strategy.strategyTotalSupply, _amount);
-        const [_baseTokenReceived, _fyTokenReceived] = (0, ui_math_1.burn)(series.baseReserves.big, series.fyTokenRealReserves.big, series.totalSupply.big, lpReceived);
-        const _newPool = (0, ui_math_1.newPoolState)(_baseTokenReceived.mul(-1), _fyTokenReceived.mul(-1), series.baseReserves.big, series.fyTokenRealReserves.big, series.totalSupply.big);
+        const [_baseTokenReceived, _fyTokenReceived] = (0, ui_math_1.burn)(series.sharesReserves.big, series.fyTokenRealReserves.big, series.totalSupply.big, lpReceived);
+        const _newPool = (0, ui_math_1.newPoolState)(_baseTokenReceived.mul(-1), _fyTokenReceived.mul(-1), series.sharesReserves.big, series.fyTokenRealReserves.big, series.totalSupply.big);
         const fyTokenTrade = (0, ui_math_1.sellFYToken)(_newPool.sharesReserves, _newPool.fyTokenVirtualReserves, _fyTokenReceived, series.getTimeTillMaturity(), series.ts, series.g2, series.decimals);
         // diagnostics && console.log('fyTokenTrade value: ', fyTokenTrade.toString());
         const fyTokenTradeSupported = fyTokenTrade.gt(ethers_1.ethers.constants.Zero);
@@ -62,7 +62,7 @@ const removeLiquidity = (amount, series, matchingVault, tradeFyToken = true) => 
         // const useMatchingVault: boolean = !!matchingVault && ( _fyTokenReceived.lte(matchingVaultDebt) || !tradeFyToken) ;
         const [minRatio, maxRatio] = (0, ui_math_1.calcPoolRatios)(cachedBaseReserves, cachedRealReserves);
         const fyTokenReceivedGreaterThanDebt = _fyTokenReceived.gt(_matchingVaultDebt); // i.e. debt below fytoken
-        const extrafyTokenTrade = (0, ui_math_1.sellFYToken)(series.baseReserves.big, series.fyTokenReserves.big, _fyTokenReceived.sub(_matchingVaultDebt), series.getTimeTillMaturity(), series.ts, series.g2, series.decimals);
+        const extrafyTokenTrade = (0, ui_math_1.sellFYToken)(series.sharesReserves.big, series.fyTokenReserves.big, _fyTokenReceived.sub(_matchingVaultDebt), series.getTimeTillMaturity(), series.ts, series.g2, series.decimals);
         /* if valid extraTrade > 0 and user selected to tradeFyToken */
         const extraTradeSupported = extrafyTokenTrade.gt(ethers_1.ethers.constants.Zero) && tradeFyToken;
         /* Diagnostics */

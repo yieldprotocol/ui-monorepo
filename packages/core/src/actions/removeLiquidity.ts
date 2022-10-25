@@ -66,7 +66,7 @@ export const removeLiquidity = async (
       const lpReceived = burnFromStrategy(_strategy.poolTotalSupply!, _strategy.strategyTotalSupply!, _amount);
 
       const [_baseTokenReceived, _fyTokenReceived] = burn(
-        series.baseReserves.big,
+        series.sharesReserves.big,
         series.fyTokenRealReserves.big,
         series.totalSupply.big,
         lpReceived
@@ -75,7 +75,7 @@ export const removeLiquidity = async (
       const _newPool = newPoolState(
         _baseTokenReceived.mul(-1),
         _fyTokenReceived.mul(-1),
-        series.baseReserves.big,
+        series.sharesReserves.big,
         series.fyTokenRealReserves.big,
         series.totalSupply.big
       );
@@ -104,7 +104,7 @@ export const removeLiquidity = async (
       const fyTokenReceivedGreaterThanDebt: boolean = _fyTokenReceived.gt(_matchingVaultDebt); // i.e. debt below fytoken
 
       const extrafyTokenTrade: BigNumber = sellFYToken(
-        series.baseReserves.big,
+        series.sharesReserves.big,
         series.fyTokenReserves.big,
         _fyTokenReceived.sub(_matchingVaultDebt),
         series.getTimeTillMaturity(),

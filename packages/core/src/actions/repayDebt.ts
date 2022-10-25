@@ -59,7 +59,7 @@ export const repayDebt = async (amount: string | undefined, vault: IVault, recla
       const _amount = inputToTokenValue(amount, base.decimals);
 
       const _maxBaseIn = maxBaseIn(
-        series.baseReserves.big,
+        series.sharesReserves.big,
         series.fyTokenReserves.big,
         series.getTimeTillMaturity(),
         series.ts,
@@ -73,7 +73,7 @@ export const repayDebt = async (amount: string | undefined, vault: IVault, recla
       const _amountAsFyToken = series.isMature()
         ? _amount
         : sellBase(
-            series.baseReserves.big,
+            series.sharesReserves.big,
             series.fyTokenReserves.big,
             _amount,
             secondsToFrom(series.maturity.toString()),

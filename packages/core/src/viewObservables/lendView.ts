@@ -18,7 +18,7 @@ export const maximumLendø: Observable<W3bNumber> = selectedø.pipe(
     if (!!series && base) {
       /* checks the protocol limits  (max Base allowed in ) */
       const _maxBaseIn = maxBaseIn(
-        series.baseReserves.big,
+        series.sharesReserves.big,
         series.fyTokenReserves.big,
         series.getTimeTillMaturity(),
         series.ts,
@@ -56,7 +56,7 @@ export const maximumCloseø: Observable<W3bNumber> = selectedø.pipe(
     if (series && series.isMature()) return series.fyTokenBalance!;
     /* else process */
     const value = sellFYToken(
-      series!.baseReserves.big,
+      series!.sharesReserves.big,
       series!.fyTokenReserves.big,
       series!.fyTokenBalance?.big || ZERO_BN,
       series!.getTimeTillMaturity(),
@@ -64,10 +64,10 @@ export const maximumCloseø: Observable<W3bNumber> = selectedø.pipe(
       series!.g2,
       series!.decimals
     );
-    const baseReservesWithMargin = series!.baseReserves.big.mul(9999).div(10000); // TODO: figure out why we can't use the base reserves exactly (margin added to facilitate transaction)
+    const baseReservesWithMargin = series!.sharesReserves.big.mul(9999).div(10000); // TODO: figure out why we can't use the base reserves exactly (margin added to facilitate transaction)
 
     /* If the trade isn't possible, set the max close as total base reserves */
-    if (value.lte(ZERO_BN) && series!.fyTokenBalance?.big.gt(series!.baseReserves.big))
+    if (value.lte(ZERO_BN) && series!.fyTokenBalance?.big.gt(series!.sharesReserves.big))
       return bnToW3bNumber(baseReservesWithMargin, series?.decimals!);
     if (value.lte(ZERO_BN)) return ZERO_W3B;
     /* else, closing is not limited so return the trade value */
@@ -81,9 +81,9 @@ export const maximumCloseø: Observable<W3bNumber> = selectedø.pipe(
  * */
 export const lendValueAtMaturityø: Observable<W3bNumber> = combineLatest([lendInputø, selectedø]).pipe(
   map(([input, { series }]) => {
-    const { baseReserves, fyTokenReserves } = series!;
+    const { sharesReserves, fyTokenReserves } = series!;
     const valueAtMaturity = sellBase(
-      baseReserves.big,
+      sharesReserves.big,
       fyTokenReserves.big,
       input.big,
       series!.getTimeTillMaturity(),
@@ -105,7 +105,7 @@ export const lendPostionValueø: Observable<W3bNumber> = selectedø.pipe(
     if (series && series.isMature()) return series.fyTokenBalance!;
     /* else process */
     const value = sellFYToken(
-      series!.baseReserves.big,
+      series!.sharesReserves.big,
       series!.fyTokenReserves.big,
       series!.fyTokenBalance?.big || ZERO_BN,
       series!.getTimeTillMaturity(),
@@ -127,7 +127,7 @@ export const maximumLendRollø: Observable<W3bNumber> = selectedø.pipe(
   filter((selected) => !!selected.futureSeries && !!selected.series),
   map(({ futureSeries, series }) => {
     const _maxBaseIn = maxBaseIn(
-      futureSeries!.baseReserves.big,
+      futureSeries!.sharesReserves.big,
       futureSeries!.fyTokenReserves.big,
       futureSeries!.getTimeTillMaturity(),
       futureSeries!.ts,
@@ -138,7 +138,7 @@ export const maximumLendRollø: Observable<W3bNumber> = selectedø.pipe(
     const _fyTokenValue = series!.isMature()
       ? series!.fyTokenBalance?.big || ZERO_BN
       : sellFYToken(
-          series!.baseReserves.big,
+          series!.sharesReserves.big,
           series!.fyTokenReserves.big,
           series!.fyTokenBalance?.big || ZERO_BN,
           series!.getTimeTillMaturity(),

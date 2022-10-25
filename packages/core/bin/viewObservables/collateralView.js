@@ -36,7 +36,7 @@ const _totalDebtWithInputø = (0, rxjs_1.combineLatest)([input_1.borrowInputø, 
     /* NB NOTE: this whole function ONLY deals with decimal18, existing values are converted to decimal18 */
     const existingDebtAsWei = (0, ui_math_1.decimalNToDecimal18)(existingDebt_, series.decimals);
     const newDebt = debtInput.big.gt(utils_1.ZERO_BN)
-        ? (0, ui_math_1.buyBase)(series.baseReserves.big, series.fyTokenReserves.big, debtInput.big, series.getTimeTillMaturity(), series.ts, series.g2, series.decimals)
+        ? (0, ui_math_1.buyBase)(series.sharesReserves.big, series.fyTokenReserves.big, debtInput.big, series.getTimeTillMaturity(), series.ts, series.g2, series.decimals)
         : utils_1.ZERO_BN;
     const newDebtAsWei = (0, ui_math_1.decimalNToDecimal18)(newDebt, series.decimals);
     const totalDebt = existingDebtAsWei.add(newDebtAsWei);

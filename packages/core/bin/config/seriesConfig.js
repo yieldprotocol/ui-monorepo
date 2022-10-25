@@ -80,18 +80,18 @@ exports.SERIES_1.set(DAI_2212_SERIES_ID, {
     fyTokenAddress: '0xcDfBf28Db3B1B7fC8efE08f988D955270A5c4752',
     poolAddress: '0x52956Fb3DC3361fd24713981917f2B6ef493DCcC',
 });
-exports.SERIES_1.set(WETH_2212_SERIES_ID, {
-    fyTokenAddress: '0x386a0A72FfEeB773381267D69B61aCd1572e074D',
-    poolAddress: '0x9D34dF69958675450ab8E53c8Df5531203398Dc9',
-});
-exports.SERIES_1.set(FRAX_2212_SERIES_ID, {
-    fyTokenAddress: '0xc20952b2c8bb6689e7ec2f70aeba392c378ec413',
-    poolAddress: '0xFa38F3717daD95085FF725aA93608Af3fa1D9e58',
-});
 exports.SERIES_1.set(USDC_2212_SERIES_ID, {
     fyTokenAddress: '0x38b8BF13c94082001f784A642165517F8760988f',
     poolAddress: '0xB2fff7FEA1D455F0BCdd38DA7DeE98af0872a13a',
 });
+exports.SERIES_1.set(WETH_2212_SERIES_ID, {
+    fyTokenAddress: '0x386a0A72FfEeB773381267D69B61aCd1572e074D',
+    poolAddress: '0x9D34dF69958675450ab8E53c8Df5531203398Dc9',
+});
+// SERIES_1.set(FRAX_2212_SERIES_ID, {
+//   fyTokenAddress: '0xc20952b2c8bb6689e7ec2f70aeba392c378ec413',
+//   poolAddress: '0xFa38F3717daD95085FF725aA93608Af3fa1D9e58',
+// });
 /* 2303 */
 exports.SERIES_1.set(USDC_2303_SERIES_ID, {
     fyTokenAddress: '0x22E1e5337C5BA769e98d732518b2128dE14b553C',
@@ -101,14 +101,14 @@ exports.SERIES_1.set(DAI_2303_SERIES_ID, {
     fyTokenAddress: '0x79A6Be1Ae54153AA6Fc7e4795272c63F63B2a6DC',
     poolAddress: '0xBdc7Bdae87dfE602E91FDD019c4C0334C38f6A46',
 });
-exports.SERIES_1.set(FRAX_2303_SERIES_ID, {
-    fyTokenAddress: '0x2eb907fb4b71390dC5CD00e6b81B7dAAcE358193',
-    poolAddress: '0x1D2eB98042006B1bAFd10f33743CcbB573429daa',
-});
 exports.SERIES_1.set(WETH_2303_SERIES_ID, {
     fyTokenAddress: '0x0FBd5ca8eE61ec921B3F61B707f1D7D64456d2d1',
     poolAddress: '0x1b2145139516cB97568B76a2FdbE37D2BCD61e63',
 });
+// SERIES_1.set(FRAX_2303_SERIES_ID, {
+//   fyTokenAddress: '0x2eb907fb4b71390dC5CD00e6b81B7dAAcE358193',
+//   poolAddress: '0x1D2eB98042006B1bAFd10f33743CcbB573429daa',
+// });
 /**
  *
  *

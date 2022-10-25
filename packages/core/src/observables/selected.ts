@@ -51,7 +51,7 @@ internalMessagesø
   )
   .subscribe(([, series, appConfig]) => {
     const nonMatureSeries = Array.from(series.values()).filter((s) => !s.isMature() )
-    selectSeries(appConfig.defaultSeriesId || nonMatureSeries[0]);
+    nonMatureSeries.length && selectSeries(appConfig.defaultSeriesId || nonMatureSeries[0]);
   });
 
 /**
@@ -109,7 +109,7 @@ export const selectSeries = async (series: ISeries | string, futureSeries: boole
   /* Try to get the series if argument is a string */
   const _series = (series as ISeries)?.id ? (series as ISeries) : seriesMap.get(series as string);
 
-  /* Update the selected$  (either series or futureSeries) */
+  /* Update the selected$ (either series or futureSeries) */
   futureSeries
     ? selected$.next({ ...selected$.value, futureSeries: _series || null })
     : selected$.next({
@@ -121,8 +121,8 @@ export const selectSeries = async (series: ISeries | string, futureSeries: boole
   /* log to console */
   console.log(
     _series
-      ? `Selected ${futureSeries ? '' : 'future '} Series: ${_series.id}`
-      : `${futureSeries ? '' : 'future '} Series unselected`
+      ? `Selected ${futureSeries ? 'future ': ''} Series: ${_series.id}`
+      : `${futureSeries ? 'future ': ''} Series unselected`
   );
 };
 

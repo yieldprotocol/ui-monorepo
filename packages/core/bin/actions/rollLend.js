@@ -24,7 +24,7 @@ const rollLend = (amount, fromSeries, toSeries) => tslib_1.__awaiter(void 0, voi
         const seriesIsMature = fromSeries.isMature();
         const _fyTokenValueOfInput = seriesIsMature
             ? _amount
-            : (0, ui_math_1.buyBase)(fromSeries.baseReserves.big, fromSeries.fyTokenReserves.big, _amount, fromSeries.getTimeTillMaturity(), fromSeries.ts, fromSeries.g2, fromSeries.decimals);
+            : (0, ui_math_1.buyBase)(fromSeries.sharesReserves.big, fromSeries.fyTokenReserves.big, _amount, fromSeries.getTimeTillMaturity(), fromSeries.ts, fromSeries.g2, fromSeries.decimals);
         console.log(_fyTokenValueOfInput.toString());
         const _minimumFYTokenReceived = (0, ui_math_1.calculateSlippage)(_fyTokenValueOfInput, slippageTolerance.toString(), true);
         const alreadyApproved = (yield fromSeries.fyTokenContract.allowance(account, ladleAddress)).gte(_amount);

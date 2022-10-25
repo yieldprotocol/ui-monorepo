@@ -95,7 +95,7 @@ export const borrow = async (
         const _expectedFyToken = getValuesFromNetwork 
           ? await series.poolContract.buyBasePreview(_amount)
           : buyBase(
-              series.baseReserves.big,
+              series.sharesReserves.big,
               series.fyTokenReserves.big,
               _amount,
               series.getTimeTillMaturity(),

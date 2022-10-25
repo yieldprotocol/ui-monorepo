@@ -29,7 +29,7 @@ messages_1.internalMessagesø
 (0, rxjs_1.withLatestFrom)(series_1.seriesø, appConfig_1.appConfigø))
     .subscribe(([, series, appConfig]) => {
     const nonMatureSeries = Array.from(series.values()).filter((s) => !s.isMature());
-    (0, exports.selectSeries)(appConfig.defaultSeriesId || nonMatureSeries[0]);
+    nonMatureSeries.length && (0, exports.selectSeries)(appConfig.defaultSeriesId || nonMatureSeries[0]);
 });
 /**
  * Set the selected Ilk once on load (either )
@@ -75,7 +75,7 @@ const selectSeries = (series, futureSeries = false) => tslib_1.__awaiter(void 0,
     const seriesMap = yield (0, rxjs_1.lastValueFrom)(series_1.seriesø.pipe((0, rxjs_1.first)()));
     /* Try to get the series if argument is a string */
     const _series = (series === null || series === void 0 ? void 0 : series.id) ? series : seriesMap.get(series);
-    /* Update the selected$  (either series or futureSeries) */
+    /* Update the selected$ (either series or futureSeries) */
     futureSeries
         ? selected$.next(Object.assign(Object.assign({}, selected$.value), { futureSeries: _series || null }))
         : selected$.next(Object.assign(Object.assign({}, selected$.value), { series: _series || null, 
@@ -83,8 +83,8 @@ const selectSeries = (series, futureSeries = false) => tslib_1.__awaiter(void 0,
             base: assetMap.get(_series.baseId) || selected$.value.base }));
     /* log to console */
     console.log(_series
-        ? `Selected ${futureSeries ? '' : 'future '} Series: ${_series.id}`
-        : `${futureSeries ? '' : 'future '} Series unselected`);
+        ? `Selected ${futureSeries ? 'future ' : ''} Series: ${_series.id}`
+        : `${futureSeries ? 'future ' : ''} Series unselected`);
 });
 exports.selectSeries = selectSeries;
 const selectVault = (vault) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {

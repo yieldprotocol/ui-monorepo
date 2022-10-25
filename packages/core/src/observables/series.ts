@@ -137,20 +137,34 @@ const _chargeSeries = (series: ISeriesRoot, provider: ethers.providers.BaseProvi
  * */
 const _updateSeriesInfo = async (series: ISeries): Promise<ISeries> => {
   /* Get all the data simultanenously in a promise.all */
-  const [fyTokenReserves, totalSupply, fyTokenRealReserves] = await Promise.all([
-    // series.poolContract.getBaseBalance(),
+  const [baseReserves, fyTokenReserves, totalSupply, fyTokenRealReserves] = await Promise.all([
+    series.poolContract.getBaseBalance(),
     series.poolContract.getFYTokenBalance(),
     series.poolContract.totalSupply(),
     series.fyTokenContract.balanceOf(series.poolAddress),
   ]);
 
-  const [sharesReserves, c, mu, currentSharePrice, sharesTokenAddress] = await Promise.all([
-    series.poolContract.getSharesBalance(),
-    series.poolContract.getC(),
-    series.poolContract.mu(),
-    series.poolContract.getCurrentSharePrice(),
-    series.poolContract.sharesToken(),
-  ]);
+  let sharesReserves: BigNumber ;
+  let currentSharePrice: BigNumber;
+
+  let c: BigNumber | undefined ;
+  let mu: BigNumber | undefined ;
+  let sharesTokenAddress: string | undefined ;
+
+  /* TODO remove this try catch - maybe explicitly reintrouce pool type? */ 
+  try {
+    [sharesReserves, c, mu, currentSharePrice, sharesTokenAddress] = await Promise.all([
+      series.poolContract.getSharesBalance(),
+      series.poolContract.getC(),
+      series.poolContract.mu(),
+      series.poolContract.getCurrentSharePrice(),
+      series.poolContract.sharesToken(),
+    ]);
+  } catch {
+    sharesReserves = baseReserves;
+    currentSharePrice = ethers.utils.parseUnits('1', series.decimals);
+    console.log('Adding a Non-TV pool contract that does not include c, mu, and shares');
+  }
 
   //   // convert base amounts to shares amounts (baseAmount is wad)
   //   const getShares = (baseAmount: BigNumber) =>
@@ -187,7 +201,7 @@ const _updateSeriesInfo = async (series: ISeries): Promise<ISeries> => {
   const apr = calculateAPR(floorDecimal(_sellRate), rateCheckAmount, series.maturity) || '0';
 
   // fetch the euler eToken supply APY from their subgraph
-  const poolAPY = sharesTokenAddress ? await getPoolAPY(sharesTokenAddress) : undefined;
+  const poolAPY =  sharesTokenAddress ? await getPoolAPY(sharesTokenAddress) : undefined;
 
   const seriesIsMature = series.isMature();
   const showSeries = true; // add logic to display particlaur series groups if required
@@ -236,6 +250,7 @@ const _updateSeriesAccountInfo = async (series: ISeries, account: string): Promi
 
 /* TODO  get this the hell out of Dodg into its own place */
 const getPoolAPY = async (sharesTokenAddr: string) => {
+
   const query = `
   query ($address: Bytes!) {
     eulerMarketStore(id: "euler-market-store") {
@@ -246,7 +261,7 @@ const getPoolAPY = async (sharesTokenAddr: string) => {
   }
 `;
 
-  const EULER_SUPGRAPH_ENDPOINT = 'https://api.thegraph.com/subgraphs/name/euler-xyz/euler-mainnet';
+  const EULER_SUBGRAPH_ENDPOINT = 'https://api.thegraph.com/subgraphs/name/euler-xyz/euler-mainnet';
   interface EulerRes {
     eulerMarketStore: {
       markets: {
@@ -254,10 +269,11 @@ const getPoolAPY = async (sharesTokenAddr: string) => {
       }[];
     };
   }
+
   try {
     const {
       eulerMarketStore: { markets },
-    } = await request<EulerRes>(EULER_SUPGRAPH_ENDPOINT, query, { address: sharesTokenAddr });
+    } = await request<EulerRes>(EULER_SUBGRAPH_ENDPOINT, query, { address: sharesTokenAddr });
     return ((+markets[0].supplyAPY * 100) / 1e27).toString();
   } catch (error) {
     console.log(`Could not get pool apy for pool with shares token: ${sharesTokenAddr}`, error);

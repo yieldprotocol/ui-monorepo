@@ -44,20 +44,27 @@ export interface ISeriesRoot extends ISignable {
     baseTokenAddress: string;
 }
 export interface ISeries extends ISeriesRoot {
-    apr: string;
-    baseReserves: W3bNumber;
+    sharesReserves: W3bNumber;
     fyTokenReserves: W3bNumber;
     fyTokenRealReserves: W3bNumber;
     totalSupply: W3bNumber;
     fyTokenContract: FYToken;
     poolContract: Pool;
+    apr: string;
+    poolAPY: string | undefined;
+    seriesIsMature: boolean;
+    showSeries: boolean;
+    c: BigNumber | undefined;
+    mu: BigNumber | undefined;
     getTimeTillMaturity: () => string;
     isMature: () => boolean;
     getFyTokenAllowance: (acc: string, spender: string) => Promise<BigNumber>;
     getPoolAllowance: (acc: string, spender: string) => Promise<BigNumber>;
-    poolTokens?: W3bNumber | undefined;
-    fyTokenBalance?: W3bNumber | undefined;
-    poolPercent?: string | undefined;
+    getShares: (baseAmount: BigNumber) => BigNumber;
+    getBase: (sharesAmount: BigNumber) => BigNumber;
+    poolTokenBalance?: W3bNumber;
+    fyTokenBalance?: W3bNumber;
+    poolPercentOwned?: string;
 }
 export interface IAssetRoot extends ISignable {
     tokenType: TokenType;
@@ -84,7 +91,6 @@ export interface IAssetRoot extends ISignable {
 }
 export interface IAsset extends IAssetRoot {
     assetContract: Contract;
-    isYieldBase: boolean;
     getBalance: (account: string) => Promise<BigNumber>;
     getAllowance: (account: string, spender: string) => Promise<BigNumber>;
     setAllowance?: (spender: string) => Promise<BigNumber | void>;

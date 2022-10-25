@@ -71,8 +71,6 @@ const _chargeAsset = (asset, provider) => {
     let assetContract;
     let getBalance;
     let getAllowance;
-    console.log('symbol: ', asset.symbol, asset.tokenType);
-    // TODO: possibly refactor this?
     switch (asset.tokenType) {
         case types_1.TokenType.Native_Token:
             assetContract = contracts.ERC20__factory.connect(asset.address, provider); // alhtough it doesn't do anything for a native token
@@ -106,6 +104,8 @@ const _chargeAsset = (asset, provider) => {
         assetContract,
         /* Attach the various functions required */
         getBalance,
-        getAllowance, balance: constants_1.ZERO_W3B });
+        getAllowance, 
+        /* initialise dynamic data fields */
+        balance: constants_1.ZERO_W3B });
 };
 //# sourceMappingURL=assets.js.map

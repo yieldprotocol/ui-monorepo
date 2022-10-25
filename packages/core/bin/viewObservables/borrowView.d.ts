@@ -11,7 +11,7 @@ export declare const maxDebtLimitø: Observable<W3bNumber>;
  * */
 export declare const minDebtLimitø: Observable<W3bNumber>;
 /**
- * Check if the user can borrow the specified [[borrowInputø | amount]] based on current protocol baseReserves
+ * Check if the user can borrow the specified [[borrowInputø | amount]] based on current protocol sharesReserves
  * @category Borrow
  * */
 export declare const isBorrowPossibleø: Observable<boolean>;
