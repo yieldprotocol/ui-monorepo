@@ -1,5 +1,9 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# monorepo
+bin/
+packages/math/tsconfig.tsbuildinfo
+
 # next.js
 /.next/
 /out/
