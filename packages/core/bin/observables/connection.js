@@ -4,7 +4,7 @@ exports.updateAccountProvider = exports.accountProviderø = exports.updateAccoun
 const tslib_1 = require("tslib");
 const ethers_1 = require("ethers");
 const rxjs_1 = require("rxjs");
-const defaultproviders_1 = require("../config/defaultproviders");
+const config_1 = require("../config");
 const appUtils_1 = require("../utils/appUtils");
 const appConfig_1 = require("./appConfig");
 const messages_1 = require("./messages");
@@ -83,7 +83,7 @@ exports.updateAccount = updateAccount;
  * The accountProvider is the sign provider (web3Provider) that handles the user account, signing and transacting.
  * It also adds a number of listeners to monitor account changes etc.
  **/
-const accountProvider$ = new rxjs_1.BehaviorSubject(defaultproviders_1.defaultAccountProvider);
+const accountProvider$ = new rxjs_1.BehaviorSubject(config_1.defaultAccountProvider);
 exports.accountProviderø = accountProvider$.pipe((0, rxjs_1.shareReplay)(1));
 const updateAccountProvider = (newProvider) => {
     // TODO: wrap the EIP provider into a ethers.web3Provider if required.

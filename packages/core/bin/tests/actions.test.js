@@ -6,7 +6,7 @@ const buildProtocol_1 = require("../buildProtocol");
 const observables_1 = require("../observables");
 const yObservables = tslib_1.__importStar(require("../observables"));
 const yActions = tslib_1.__importStar(require("../actions"));
-const assets_1 = require("../config/assets");
+const assetsConfig_1 = require("../config/assetsConfig");
 const types_1 = require("../types");
 const config = {
     defaultChainId: 1,
@@ -25,7 +25,7 @@ const { providerø, appConfigø, chainIdø, updateProtocol, assetsø, seriesø, 
 const { borrow, addLiquidity, repayDebt } = yActions;
 beforeAll((done) => {
     /* update the config to testing specs */
-    (0, observables_1.updateAppConfig)(config);
+    (0, observables_1.updateConfig)(config);
     /* Once provider, config and chainId have resolved, build the protocol */
     (0, rxjs_1.combineLatest)([providerø, appConfigø, chainIdø]).subscribe(([provider, config, chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         const protocol = yield (0, buildProtocol_1.buildProtocol)(provider, chainId, config);
@@ -58,7 +58,7 @@ test('Liquidity can be added to ETH pools, with Buy and Pool method', (done) => 
         next: (strategyMap) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
             return Promise.all([...strategyMap.values()].map((strategy) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
                 // strategy.strategyContract.
-                if (strategy.baseId === assets_1.WETH) {
+                if (strategy.baseId === assetsConfig_1.WETH) {
                     yield addLiquidity('100', strategy, types_1.AddLiquidityType.BORROW);
                     done();
                 }

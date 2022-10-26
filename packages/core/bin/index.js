@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.viewFunctions = exports.viewObservables = exports.yieldConstants = exports.yieldFunctions = exports.yieldObservables = void 0;
 const tslib_1 = require("tslib");
 const constants = tslib_1.__importStar(require("./utils/constants"));
-const assetConstants = tslib_1.__importStar(require("./config/assets"));
+const assetConstants = tslib_1.__importStar(require("./config/assetsConfig"));
 // TODO: import all dynamically when things are up and running
 // import * as yieldObservables from './observables';
 const actions_1 = require("./actions");
@@ -41,7 +41,7 @@ const yieldFunctions = {
     repayDebt: actions_1.repayDebt,
     addLiquidity: actions_1.addLiquidity,
     updateProvider: observables_1.updateProvider,
-    updateAppConfig: observables_1.updateAppConfig,
+    updateConfig: observables_1.updateConfig,
     updateAccount: observables_1.updateAccount,
     /* selector functions */
     selectIlk: observables_1.selectIlk,

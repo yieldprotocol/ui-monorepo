@@ -34,7 +34,7 @@ exports.updateProtocol = updateProtocol;
 messages_1.internalMessagesø
     .pipe((0, rxjs_1.takeWhile)((msg) => !(msg.has('assetsLoaded') && msg.has('seriesLoaded') && msg.has('strategiesLoaded')), true), (0, rxjs_1.finalize)(() => {
     (0, messages_1.sendMsg)({ message: 'Protocol Ready', id: 'protocolReady', type: types_1.MessageType.INTERNAL });
-    (0, messages_1.sendMsg)({ message: 'Protocol Ready (custom wait 5000ms)', timeoutOverride: 5000 });
+    (0, messages_1.sendMsg)({ message: 'Protocol Ready (custom wait 4500ms)', timeoutOverride: 4500 });
 }))
     .subscribe();
 //# sourceMappingURL=protocol.js.map

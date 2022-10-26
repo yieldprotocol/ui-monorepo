@@ -169,7 +169,7 @@ export const sign = async (requestedSignatures: ISignData[], processCode: string
      * CASE 3: FALLBACK / DEFAULT CASE: Approval by transaction 
      * ( after transaction success,  return blank ICallData value (IGNORED_CALLDATA). )
      * */
-    if (reqSig.target.tokenType === TokenType.ERC1155_) {
+    if (reqSig.target.tokenType === TokenType.ERC1155) {
       
       console.log( 'Approval via transaction: ERC1155')
       /* if token type is ERC1155 then set approval 'ApprovalForAll' */

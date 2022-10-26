@@ -14,10 +14,10 @@ const input_1 = require("./input");
  * @category Lend
  * */
 exports.maximumLendø = observables_1.selectedø.pipe((0, rxjs_1.map)(({ series, base }) => {
-    if (!!series) {
+    if (!!series && base) {
         /* checks the protocol limits  (max Base allowed in ) */
         const _maxBaseIn = (0, ui_math_1.maxBaseIn)(series.baseReserves.big, series.fyTokenReserves.big, series.getTimeTillMaturity(), series.ts, series.g1, series.decimals);
-        return (base === null || base === void 0 ? void 0 : base.balance.big.lt(_maxBaseIn))
+        return base.balance.big.lt(_maxBaseIn)
             ? base.balance
             : (0, yieldUtils_1.bnToW3bNumber)(_maxBaseIn, base === null || base === void 0 ? void 0 : base.decimals, base === null || base === void 0 ? void 0 : base.digitFormat);
     }

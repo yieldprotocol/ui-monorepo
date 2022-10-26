@@ -29,7 +29,7 @@ const ui_math_1 = require("@yield-protocol/ui-math");
 const ethers_1 = require("ethers");
 const rxjs_1 = require("rxjs");
 const chainActions_1 = require("../chainActions");
-const assets_1 = require("../config/assets");
+const assetsConfig_1 = require("../config/assetsConfig");
 const observables_1 = require("../observables");
 const types_1 = require("../types");
 const utils_1 = require("../utils");
@@ -83,7 +83,7 @@ const removeLiquidity = (amount, series, matchingVault, tradeFyToken = true) => 
         const alreadyApprovedPool = !_strategy
             ? (yield series.poolContract.allowance(account, ladleAddress)).gte(_amount)
             : false;
-        const isEthBase = assets_1.ETH_BASED_ASSETS.includes(_base.proxyId);
+        const isEthBase = assetsConfig_1.ETH_BASED_ASSETS.includes(_base.proxyId);
         const toAddress = isEthBase ? ladleAddress : account;
         const seriesIsMature = series.isMature();
         /* handle removeing eth BAse tokens:  */

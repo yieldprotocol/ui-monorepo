@@ -4,7 +4,7 @@ exports.borrow = void 0;
 const tslib_1 = require("tslib");
 const ethers_1 = require("ethers");
 const ui_math_1 = require("@yield-protocol/ui-math");
-const assets_1 = require("../config/assets");
+const assetsConfig_1 = require("../config/assetsConfig");
 const observables_1 = require("../observables");
 const chainActions_1 = require("../chainActions");
 const types_1 = require("../types");
@@ -68,11 +68,11 @@ const borrow = (amount, collateralAmount, vault, getValuesFromNetwork = true // 
         const _amount = (0, yieldUtils_1.inputToTokenValue)(amount, base.decimals);
         const _collAmount = (0, yieldUtils_1.inputToTokenValue)(collateralAmount, ilk.decimals);
         /* FLAG : is ETH  used as collateral */
-        const isEthCollateral = assets_1.ETH_BASED_ASSETS.includes(selected.ilk.proxyId);
+        const isEthCollateral = assetsConfig_1.ETH_BASED_ASSETS.includes(selected.ilk.proxyId);
         /* FLAG: is ETH being Borrowed */
-        const isEthBase = assets_1.ETH_BASED_ASSETS.includes(series.baseId);
+        const isEthBase = assetsConfig_1.ETH_BASED_ASSETS.includes(series.baseId);
         /* FLAG: is convex-type collateral */
-        const isConvexCollateral = assets_1.CONVEX_BASED_ASSETS.includes(selected.ilk.proxyId);
+        const isConvexCollateral = assetsConfig_1.CONVEX_BASED_ASSETS.includes(selected.ilk.proxyId);
         console.log('convex? ', isConvexCollateral);
         console.log('vault? ', vaultId);
         /* Calculate expected debt (fytokens) from EITHER network or calculated : default = Network */
@@ -107,7 +107,7 @@ const borrow = (amount, collateralAmount, vault, getValuesFromNetwork = true // 
                 spender: ilk.joinAddress,
                 amount: _collAmount,
                 ignoreIf: alreadyApproved === true || // Ignore if already approved
-                    assets_1.ETH_BASED_ASSETS.includes(ilk.id) || // Ignore if dealing with an eTH based collateral
+                    assetsConfig_1.ETH_BASED_ASSETS.includes(ilk.id) || // Ignore if dealing with an eTH based collateral
                     _collAmount.eq(ethers_1.ethers.constants.Zero), // || // ignore if zero collateral value
                 // wrapAssetCallData.length > 0, // Ignore if dealing with a wrapped collateral!
             },

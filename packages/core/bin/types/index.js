@@ -1,17 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ActionCodes = exports.YieldColors = exports.AddLiquidityType = exports.ActionType = exports.TradeType = exports.ProcessStage = exports.TxState = exports.MessageType = exports.ApprovalMethod = exports.TokenType = exports.RoutedActions = exports.LadleActions = void 0;
-var operations_1 = require("./operations");
-Object.defineProperty(exports, "LadleActions", { enumerable: true, get: function () { return operations_1.LadleActions; } });
-Object.defineProperty(exports, "RoutedActions", { enumerable: true, get: function () { return operations_1.RoutedActions; } });
+exports.ActionCodes = exports.YieldColors = exports.AddLiquidityType = exports.ActionType = exports.TradeType = exports.ProcessStage = exports.TxState = exports.MessageType = exports.ApprovalMethod = exports.TokenType = void 0;
+const tslib_1 = require("tslib");
+tslib_1.__exportStar(require("./messages"), exports);
+tslib_1.__exportStar(require("./operations"), exports);
 var TokenType;
 (function (TokenType) {
-    TokenType[TokenType["ERC20_"] = 0] = "ERC20_";
-    TokenType[TokenType["ERC20_Permit"] = 1] = "ERC20_Permit";
-    TokenType[TokenType["ERC20_DaiPermit"] = 2] = "ERC20_DaiPermit";
-    TokenType[TokenType["ERC20_MKR"] = 3] = "ERC20_MKR";
-    TokenType[TokenType["ERC1155_"] = 4] = "ERC1155_";
-    TokenType[TokenType["ERC720_"] = 5] = "ERC720_";
+    TokenType[TokenType["Native_Token"] = 0] = "Native_Token";
+    TokenType[TokenType["ERC20"] = 1] = "ERC20";
+    TokenType[TokenType["ERC20_Permit"] = 2] = "ERC20_Permit";
+    TokenType[TokenType["ERC20_DaiPermit"] = 3] = "ERC20_DaiPermit";
+    TokenType[TokenType["ERC20_MKR"] = 4] = "ERC20_MKR";
+    TokenType[TokenType["ERC1155"] = 5] = "ERC1155";
+    TokenType[TokenType["ERC720"] = 6] = "ERC720";
 })(TokenType = exports.TokenType || (exports.TokenType = {}));
 var ApprovalMethod;
 (function (ApprovalMethod) {
@@ -43,11 +44,6 @@ var ProcessStage;
     ProcessStage["PROCESS_COMPLETE"] = "Process complete";
     ProcessStage["PROCESS_COMPLETE_TIMEOUT"] = "Process complete: timeout";
 })(ProcessStage = exports.ProcessStage || (exports.ProcessStage = {}));
-// export enum MenuView {
-//   account = 'ACCOUNT',
-//   settings = 'SETTINGS',
-//   vaults = 'VAULTS',
-// }
 var TradeType;
 (function (TradeType) {
     TradeType["BUY"] = "BUY";
@@ -97,29 +93,4 @@ var ActionCodes;
     ActionCodes["TRANSFER_VAULT"] = "Transfer Vault";
     ActionCodes["MERGE_VAULT"] = "Merge Vault";
 })(ActionCodes = exports.ActionCodes || (exports.ActionCodes = {}));
-// export interface IBaseHistItem {
-//   blockNumber: number;
-//   date: number;
-//   transactionHash: string;
-//   series: ISeries;
-//   actionCode: ActionCodes;
-//   date_: string;
-//   primaryInfo: string;
-//   secondaryInfo?: string;
-// }
-// export interface IHistItemVault extends IBaseHistItem {
-//   ilkId: string;
-//   ink: BigNumber;
-//   art: BigNumber;
-//   ink_: String;
-//   art_: String;
-// }
-// export interface IHistItemPosition extends IBaseHistItem {
-//   bases: BigNumber;
-//   fyTokens: BigNumber;
-//   bases_: string;
-//   fyTokens_: string;
-//   poolTokens?: BigNumber;
-//   poolTokens_?: string;
-// }
 //# sourceMappingURL=index.js.map

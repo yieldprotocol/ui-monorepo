@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { combineLatest, take } from 'rxjs';
 import { sign, transact } from '../chainActions';
-import { ETH_BASED_ASSETS, CONVEX_BASED_ASSETS } from '../config/assets';
+import { ETH_BASED_ASSETS, CONVEX_BASED_ASSETS } from '../config/assetsConfig';
 import { ConvexLadleModule } from '@yield-protocol/ui-contracts';
 import {
   accountø,
@@ -12,7 +12,7 @@ import {
   protocolø,
 } from '../observables';
 import { MessageType, sendMsg } from '../observables/messages';
-import { IVault, IAsset, ActionCodes, ICallData, LadleActions } from '../types';
+import { IVault, ActionCodes, ICallData, LadleActions, IAsset } from '../types';
 import { ModuleActions } from '../types/operations';
 import { BLANK_VAULT, getProcessCode, ZERO_BN } from '../utils';
 import { inputToTokenValue } from '../utils/yieldUtils';

@@ -9,7 +9,7 @@ const contracts = tslib_1.__importStar(require("@yield-protocol/ui-contracts"));
 const types_1 = require("../types");
 const connection_1 = require("./connection");
 const protocol_1 = require("./protocol");
-const assets_1 = require("../config/assets");
+const assetsConfig_1 = require("../config/assetsConfig");
 const messages_1 = require("./messages");
 const yieldUtils_1 = require("../utils/yieldUtils");
 const seriesMap$ = new rxjs_1.BehaviorSubject(new Map([]));
@@ -92,7 +92,7 @@ const _updateDynamicInfo = (series) => tslib_1.__awaiter(void 0, void 0, void 0,
         series.poolContract.totalSupply(),
         series.fyTokenContract.balanceOf(series.poolAddress),
     ]);
-    const rateCheckAmount = ethers_1.ethers.utils.parseUnits(assets_1.ETH_BASED_ASSETS.includes(series.baseId) ? '.001' : '1', series.decimals);
+    const rateCheckAmount = ethers_1.ethers.utils.parseUnits(assetsConfig_1.ETH_BASED_ASSETS.includes(series.baseId) ? '.001' : '1', series.decimals);
     /* Calculates the base/fyToken unit selling price */
     const _sellRate = (0, ui_math_1.sellFYToken)(baseReserves, fyTokenReserves, rateCheckAmount, (0, ui_math_1.secondsToFrom)(series.maturity.toString()), series.ts, series.g2, series.decimals);
     const apr = (0, ui_math_1.calculateAPR)((0, ui_math_1.floorDecimal)(_sellRate), rateCheckAmount, series.maturity) || '0';

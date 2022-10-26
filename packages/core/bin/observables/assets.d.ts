@@ -1,8 +1,6 @@
 import { Observable } from 'rxjs';
 import { IAsset } from '../types';
-/**
- * Unsubscribed Assetmap observable
- */
+/** Unsubscribed Assetmap observable exposed for distribution */
 export declare const assetsø: Observable<Map<string, IAsset>>;
 /**
  * Update Assets function

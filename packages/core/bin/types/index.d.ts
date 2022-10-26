@@ -1,21 +1,133 @@
 import { ethers, BigNumber, BigNumberish, ContractTransaction, Contract } from 'ethers';
 import { Observable } from 'rxjs';
 import { Cauldron, FYToken, Ladle, Pool, Strategy, Witch } from '@yield-protocol/ui-contracts';
-export { LadleActions, RoutedActions } from './operations';
+import { ISelected } from '../observables/selected';
+export * from './messages';
+export * from './operations';
 export interface W3bNumber {
     big: BigNumber;
     hStr: string;
     dsp: number;
 }
-export interface IHistoryList {
-    lastBlock: number;
-    items: any[];
+export declare enum TokenType {
+    Native_Token = 0,
+    ERC20 = 1,
+    ERC20_Permit = 2,
+    ERC20_DaiPermit = 3,
+    ERC20_MKR = 4,
+    ERC1155 = 5,
+    ERC720 = 6
 }
-export interface IHistoryContextState {
-    historyLoading: boolean;
-    tradeHistory: IHistoryList;
-    poolHistory: IHistoryList;
-    vaultHistory: IHistoryList;
+export interface ISignable {
+    name: string;
+    version: string;
+    address: string;
+    symbol: string;
+    tokenType: TokenType;
+}
+export interface ISeriesRoot extends ISignable {
+    id: string;
+    displayName: string;
+    displayNameMobile: string;
+    decimals: number;
+    maturity: number;
+    maturityDate: Date;
+    fyTokenAddress: string;
+    poolAddress: string;
+    poolName: string;
+    poolVersion: string;
+    poolSymbol: string;
+    ts: BigNumber;
+    g1: BigNumber;
+    g2: BigNumber;
+    baseId: string;
+    baseTokenAddress: string;
+}
+export interface ISeries extends ISeriesRoot {
+    apr: string;
+    baseReserves: W3bNumber;
+    fyTokenReserves: W3bNumber;
+    fyTokenRealReserves: W3bNumber;
+    totalSupply: W3bNumber;
+    fyTokenContract: FYToken;
+    poolContract: Pool;
+    getTimeTillMaturity: () => string;
+    isMature: () => boolean;
+    getFyTokenAllowance: (acc: string, spender: string) => Promise<BigNumber>;
+    getPoolAllowance: (acc: string, spender: string) => Promise<BigNumber>;
+    poolTokens?: W3bNumber | undefined;
+    fyTokenBalance?: W3bNumber | undefined;
+    poolPercent?: string | undefined;
+}
+export interface IAssetRoot extends ISignable {
+    tokenType: TokenType;
+    name: string;
+    version: string;
+    address: string;
+    symbol: string;
+    decimals: number;
+    joinAddress: string;
+    hideToken: boolean;
+    digitFormat: number;
+    id: string;
+    tokenIdentifier: string | undefined;
+    displayName: string;
+    displayNameMobile: string;
+    isYieldBase: boolean;
+    displaySymbol: string;
+    limitToSeries: string[];
+    wrapHandlerAddress: string | undefined;
+    unwrapHandlerAddress: string | undefined;
+    isWrappedToken: boolean;
+    wrappingRequired: boolean;
+    proxyId: string;
+}
+export interface IAsset extends IAssetRoot {
+    assetContract: Contract;
+    isYieldBase: boolean;
+    getBalance: (account: string) => Promise<BigNumber>;
+    getAllowance: (account: string, spender: string) => Promise<BigNumber>;
+    setAllowance?: (spender: string) => Promise<BigNumber | void>;
+    balance: W3bNumber;
+}
+export interface IYieldProtocol {
+    protocolVersion: string;
+    cauldron: Cauldron;
+    ladle: Ladle;
+    witch: Witch;
+    oracleMap: Map<string, Contract>;
+    moduleMap: Map<string, Contract>;
+    assetRootMap: Map<string, IAssetRoot>;
+    seriesRootMap: Map<string, ISeriesRoot>;
+    strategyRootMap: Map<string, IStrategyRoot>;
+}
+export interface IYieldObservables {
+    protocolø: Observable<IYieldProtocol>;
+    providerø: Observable<ethers.providers.BaseProvider>;
+    accountø: Observable<string | undefined>;
+    accountProviderø: Observable<ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider>;
+    seriesø: Observable<Map<string, ISeries>>;
+    assetsø: Observable<Map<string, IAsset>>;
+    vaultsø: Observable<Map<string, IVault>>;
+    strategiesø: Observable<Map<string, IStrategy>>;
+    assetPairsø: Observable<Map<string, IAssetPair>>;
+    transactionsø: Observable<Map<string, IYieldProcess>>;
+    selectedø: Observable<ISelected>;
+    userSettingsø: Observable<IUserSettings>;
+    messagesø: Observable<Map<string, IMessage>>;
+}
+export interface IYieldFunctions {
+    updateProvider: (provider: ethers.providers.BaseProvider) => void;
+    updateConfig: (config: IYieldConfig) => void;
+    updateAccount: (account: string) => void;
+    selectIlk: (asset: string | IAsset) => void;
+    selectBase: (asset: string | IAsset) => void;
+    selectVault: (vault: string | IVault) => void;
+    selectSeries: (series: string | ISeries, futureSeries: boolean) => void;
+    selectStrategy: (strategy: string | IStrategy) => void;
+    borrow: () => Promise<void>;
+    repayDebt: any;
+    addLiquidity: any;
 }
 export interface IPriceContextState {
     pairMap: Map<string, IAssetPair>;
@@ -54,53 +166,6 @@ export interface IYieldConfig {
     suppressEventLogQueries: boolean;
     diagnostics: boolean;
 }
-export interface IYieldProtocol {
-    protocolVersion: string;
-    cauldron: Cauldron;
-    ladle: Ladle;
-    witch: Witch;
-    oracleMap: Map<string, Contract>;
-    moduleMap: Map<string, Contract>;
-    assetRootMap: Map<string, IAssetRoot>;
-    seriesRootMap: Map<string, ISeriesRoot>;
-    strategyRootMap: Map<string, IStrategyRoot>;
-}
-export interface IYieldObservables {
-    protocolø: Observable<IYieldProtocol>;
-    providerø: Observable<ethers.providers.BaseProvider>;
-    accountø: Observable<string | undefined>;
-    accountProviderø: Observable<ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider>;
-    seriesø: Observable<Map<string, ISeries>>;
-    assetsø: Observable<Map<string, IAsset>>;
-    vaultsø: Observable<Map<string, IVault>>;
-    strategiesø: Observable<Map<string, IStrategy>>;
-    assetPairsø: Observable<Map<string, IAssetPair>>;
-    transactionsø: Observable<Map<string, IYieldProcess>>;
-    selectedø: Observable<ISelected>;
-    userSettingsø: Observable<IUserSettings>;
-    messagesø: Observable<Map<string, IMessage>>;
-}
-export interface IYieldFunctions {
-    updateProvider: (provider: ethers.providers.BaseProvider) => void;
-    updateAppConfig: (config: IYieldConfig) => void;
-    updateAccount: (account: string) => void;
-    selectIlk: (asset: string | IAsset) => void;
-    selectBase: (asset: string | IAsset) => void;
-    selectVault: (vault: string | IVault) => void;
-    selectSeries: (series: string | ISeries, futureSeries: boolean) => void;
-    selectStrategy: (strategy: string | IStrategy) => void;
-    borrow: () => Promise<void>;
-    repayDebt: any;
-    addLiquidity: any;
-}
-export interface ISelected {
-    base: IAsset | null;
-    ilk: IAsset | null;
-    series: ISeries | null;
-    vault: IVault | null;
-    strategy: IStrategy | null;
-    futureSeries: ISeries | null;
-}
 export interface ISettingsContext {
     settingsState: ISettingsContextState;
     settingsActions: {
@@ -126,69 +191,6 @@ export interface ISettingsContextState {
     dashHidePoolPositions: boolean;
     dashCurrency: string;
 }
-export interface ISignable {
-    name: string;
-    version: string;
-    address: string;
-    symbol: string;
-    tokenType: TokenType;
-}
-export interface ISeriesRoot extends ISignable {
-    id: string;
-    displayName: string;
-    displayNameMobile: string;
-    decimals: number;
-    maturity: number;
-    maturity_: string;
-    fyTokenAddress: string;
-    poolAddress: string;
-    poolName: string;
-    poolVersion: string;
-    poolSymbol: string;
-    ts: BigNumber;
-    g1: BigNumber;
-    g2: BigNumber;
-    baseId: string;
-    baseTokenAddress: string;
-    createdBlock: number;
-    createdTxHash: string;
-}
-export declare enum TokenType {
-    ERC20_ = 0,
-    ERC20_Permit = 1,
-    ERC20_DaiPermit = 2,
-    ERC20_MKR = 3,
-    ERC1155_ = 4,
-    ERC720_ = 5
-}
-export interface IAssetInfo {
-    tokenType: TokenType;
-    tokenIdentifier?: number | string;
-    name: string;
-    version: string;
-    symbol: string;
-    decimals: number;
-    isYieldBase?: boolean;
-    showToken: boolean;
-    digitFormat: number;
-    displaySymbol?: string;
-    limitToSeries?: string[];
-    wrapHandlerAddresses?: Map<number, string>;
-    unwrapHandlerAddresses?: Map<number, string>;
-    proxyId?: string;
-}
-export interface IAssetRoot extends IAssetInfo, ISignable {
-    id: string;
-    image: any;
-    displayName: string;
-    displayNameMobile: string;
-    joinAddress: string;
-    createdBlock: number;
-    createdTxHash: string;
-    isWrappedToken: boolean;
-    wrappingRequired: boolean;
-    proxyId: string;
-}
 export interface IAssetPair {
     id: string;
     baseId: string;
@@ -210,56 +212,6 @@ export interface IStrategyRoot extends ISignable {
     baseId: string;
     decimals: number;
 }
-export interface IVaultRoot {
-    id: string;
-    ilkId: string;
-    baseId: string;
-    seriesId: string;
-    displayName: string;
-    baseDecimals: number;
-    ilkDecimals: number;
-    createdBlock: number;
-    createdTxHash: string;
-}
-export interface ISeries extends ISeriesRoot {
-    apr: string;
-    baseReserves: W3bNumber;
-    fyTokenReserves: W3bNumber;
-    fyTokenRealReserves: W3bNumber;
-    totalSupply: W3bNumber;
-    fyTokenContract: FYToken;
-    poolContract: Pool;
-    getTimeTillMaturity: () => string;
-    isMature: () => boolean;
-    getFyTokenAllowance: (acc: string, spender: string) => Promise<BigNumber>;
-    getPoolAllowance: (acc: string, spender: string) => Promise<BigNumber>;
-    poolTokens?: W3bNumber | undefined;
-    fyTokenBalance?: W3bNumber | undefined;
-    poolPercent?: string | undefined;
-}
-export interface IAsset extends IAssetRoot {
-    assetContract: Contract;
-    isYieldBase: boolean;
-    getBalance: (account: string) => Promise<BigNumber>;
-    getAllowance: (account: string, spender: string) => Promise<BigNumber>;
-    setAllowance?: (spender: string) => Promise<BigNumber | void>;
-    balance: W3bNumber;
-}
-export interface IDummyVault extends IVaultRoot {
-}
-export interface IVault extends IVaultRoot {
-    owner: string;
-    underLiquidation: boolean;
-    hasBeenLiquidated: boolean;
-    liquidationDate?: number;
-    liquidationDate_?: string;
-    isActive: boolean;
-    ink: W3bNumber;
-    art: W3bNumber;
-    accruedArt: W3bNumber;
-    rateAtMaturity: W3bNumber;
-    rate: W3bNumber;
-}
 export interface IStrategy extends IStrategyRoot {
     strategyContract: Strategy;
     currentSeriesId: string;
@@ -279,6 +231,30 @@ export interface IStrategy extends IStrategyRoot {
     accountPoolBalance?: W3bNumber;
     accountPoolPercent?: string | undefined;
     getAllowance: (acc: string, spender: string) => Promise<BigNumber>;
+}
+export interface IVaultRoot {
+    id: string;
+    ilkId: string;
+    baseId: string;
+    seriesId: string;
+    displayName: string;
+    baseDecimals: number;
+    ilkDecimals: number;
+    createdBlock: number;
+    createdTxHash: string;
+}
+export interface IVault extends IVaultRoot {
+    owner: string;
+    underLiquidation: boolean;
+    hasBeenLiquidated: boolean;
+    liquidationDate?: number;
+    liquidationDate_?: string;
+    isActive: boolean;
+    ink: W3bNumber;
+    art: W3bNumber;
+    accruedArt: W3bNumber;
+    rateAtMaturity: W3bNumber;
+    rate: W3bNumber;
 }
 export interface ICallData {
     args: (string | BigNumberish | boolean)[];

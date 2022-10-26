@@ -2,7 +2,7 @@ import { buyBase, calculateSlippage } from '@yield-protocol/ui-math';
 import { ethers } from 'ethers';
 import { combineLatest, take } from 'rxjs';
 import { sign, transact } from '../chainActions';
-import { ETH_BASED_ASSETS } from '../config/assets';
+import { ETH_BASED_ASSETS } from '../config/assetsConfig';
 import { accountø, assetsø, chainIdø, userSettingsø, protocolø } from '../observables';
 import { ISeries, ActionCodes, ICallData, LadleActions, RoutedActions } from '../types';
 import { getProcessCode, ONE_BN } from '../utils';

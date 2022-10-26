@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.inputToTokenValue = exports.bnToW3bNumber = exports.ratioToPercent = exports.getStrategySymbol = exports.formatStrategyName = exports.strategyAddrFromReceipt = exports.newSeriesIdFromReceipt = exports.vaultIdFromReceipt = exports.dateFromMaturity = exports.nameFromMaturity = exports.baseIdFromSeriesId = exports.getSignId = exports.getAssetPairId = exports.getProcessCode = exports.generateVaultName = void 0;
+exports.inputToTokenValue = exports.bnToW3bNumber = exports.ratioToPercent = exports.getStrategySymbol = exports.formatStrategyName = exports.strategyAddrFromReceipt = exports.newSeriesIdFromReceipt = exports.vaultIdFromReceipt = exports.dateFromMaturity = exports.baseIdFromSeriesId = exports.getSignId = exports.getAssetPairId = exports.getProcessCode = exports.generateVaultName = void 0;
 const tslib_1 = require("tslib");
 const date_fns_1 = require("date-fns");
 const ethers_1 = require("ethers");
@@ -39,13 +39,14 @@ exports.baseIdFromSeriesId = baseIdFromSeriesId;
  * Examples: full (defualt) : 'MMMM yyyy' ,  apr badge  : 'MMM yy' , mobile: 'MMM yyyy'
  * NOTE: subtraction used to accuount for time zone differences
  * */
-const nameFromMaturity = (maturity, style = 'MMMM yyyy') => (0, date_fns_1.format)((0, date_fns_1.subDays)(new Date(maturity * 1000), 2), style);
-exports.nameFromMaturity = nameFromMaturity;
+// export const nameFromMaturity = (maturity: number, style: string = 'MMMM yyyy') => {
+//   return format(subDays(new Date(maturity * 1000), 2), style);
+// }
 const dateFromMaturity = (maturity, style) => {
     return {
         date: new Date(maturity * 1000),
         display: (0, date_fns_1.format)(new Date(maturity * 1000), style || 'dd MMM yyyy'),
-        mobile: `${(0, exports.nameFromMaturity)(maturity, style || 'MMM yyyy')}`,
+        mobile: (0, date_fns_1.format)(new Date(maturity * 1000), style || 'MMM yyyy'), // `${nameFromMaturity(maturity, style || 'MMM yyyy')}`,
     };
 };
 exports.dateFromMaturity = dateFromMaturity;

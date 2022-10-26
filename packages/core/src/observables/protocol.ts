@@ -41,7 +41,7 @@ internalMessagesø
     ),
     finalize(() => {
       sendMsg({ message: 'Protocol Ready', id: 'protocolReady', type: MessageType.INTERNAL });
-      sendMsg({ message: 'Protocol Ready (custom wait 5000ms)', timeoutOverride: 5000 });
+      sendMsg({ message: 'Protocol Ready (custom wait 4500ms)', timeoutOverride: 4500 });
     })
   )
   .subscribe();

@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { buyBase, calculateSlippage, ONE_BN, ZERO_BN } from '@yield-protocol/ui-math';
 
-import { ETH_BASED_ASSETS, CONVEX_BASED_ASSETS } from '../config/assets';
+import { ETH_BASED_ASSETS, CONVEX_BASED_ASSETS } from '../config/assetsConfig';
 import { ConvexLadleModule } from '@yield-protocol/ui-contracts';
 
 import { accountø, assetsø,  protocolø, seriesø, vaultsø, selectedø, userSettingsø, updateVaults } from '../observables';
@@ -24,6 +24,7 @@ export const borrow = async (
   vault?: IVault | string,
   getValuesFromNetwork: boolean = true // Get market values by network call or offline calc (default: NETWORK)
 ) => {
+  
   /* Subscribe to and get the values from the observables:  */
   combineLatest([protocolø, assetsø, seriesø, vaultsø, accountø, selectedø, userSettingsø])
     .pipe(take(1)) // only take one and then finish.

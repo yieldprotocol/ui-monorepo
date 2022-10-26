@@ -15,7 +15,7 @@ import { closeInputø, lendInputø } from './input';
  * */
 export const maximumLendø: Observable<W3bNumber> = selectedø.pipe(
   map(({ series, base }) => {
-    if (!!series) {
+    if (!!series && base) {
       /* checks the protocol limits  (max Base allowed in ) */
       const _maxBaseIn = maxBaseIn(
         series.baseReserves.big,
@@ -25,7 +25,7 @@ export const maximumLendø: Observable<W3bNumber> = selectedø.pipe(
         series.g1,
         series.decimals
       );
-      return base?.balance.big.lt(_maxBaseIn)
+      return base.balance.big.lt(_maxBaseIn)
         ? base.balance
         : bnToW3bNumber(_maxBaseIn, base?.decimals!, base?.digitFormat);
     }

@@ -2,8 +2,8 @@ import { bytesToBytes32, decimal18ToDecimalN } from '@yield-protocol/ui-math';
 import { BigNumber, ethers } from 'ethers';
 import { BehaviorSubject, filter, first, lastValueFrom, map, Observable, share, shareReplay, withLatestFrom } from 'rxjs';
 
-import { ORACLES } from '../config/oracles';
-import { IAssetPair, ISelected } from '../types';
+import { ORACLE_INFO} from '../config';
+import { IAssetPair } from '../types';
 import { WAD_BN } from '../utils';
 import { protocolø } from './protocol';
 import { selectedø } from './selected';
@@ -41,7 +41,7 @@ export const updatePair = async (baseId: string, ilkId: string, chainId: number)
   const protocol = await lastValueFrom(protocolø.pipe(first()));
 
   const { cauldron, assetRootMap, oracleMap } = protocol;
-  const oracleName = ORACLES.get(chainId)?.get(baseId)?.get(ilkId);
+  const oracleName = ORACLE_INFO.get(chainId)?.get(baseId)?.get(ilkId);
 
   const PriceOracle = oracleMap.get(oracleName!);
   const base = assetRootMap.get(baseId);

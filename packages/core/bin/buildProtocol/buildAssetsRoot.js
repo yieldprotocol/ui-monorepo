@@ -33,7 +33,7 @@ const buildAssetMap = (cauldron, ladle, provider, chainId, appConfig) => tslib_1
             const assetInfo = assets_1.ASSETS.has(id) ? assets_1.ASSETS.get(id) : assets_1.ASSETS.get(assets_1.UNKNOWN);
             let { name, symbol, decimals, version } = assetInfo;
             /* On first load checks & corrects the ERC20 name/symbol/decimals (if possible ) */
-            if (assetInfo.tokenType === types_1.TokenType.ERC20_ ||
+            if (assetInfo.tokenType === types_1.TokenType.ERC20 ||
                 assetInfo.tokenType === types_1.TokenType.ERC20_Permit ||
                 assetInfo.tokenType === types_1.TokenType.ERC20_DaiPermit) {
                 const contract = contracts.ERC20__factory.connect(address, provider);
@@ -91,7 +91,6 @@ const buildAssetMap = (cauldron, ladle, provider, chainId, appConfig) => tslib_1
         (0, appUtils_1.setBrowserCachedValue)(`${chainId}_lastAssetUpdate`, _blockNum);
     }
     console.log(`Yield Protocol ASSET data updated [Block: ${_blockNum}]`);
-    // console.log( assetRootMap);
     return assetRootMap;
 });
 exports.buildAssetMap = buildAssetMap;

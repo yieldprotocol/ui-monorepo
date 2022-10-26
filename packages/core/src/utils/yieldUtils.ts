@@ -44,14 +44,15 @@ export function baseIdFromSeriesId(seriesId: string): string {
  * Examples: full (defualt) : 'MMMM yyyy' ,  apr badge  : 'MMM yy' , mobile: 'MMM yyyy'
  * NOTE: subtraction used to accuount for time zone differences
  * */
-export const nameFromMaturity = (maturity: number, style: string = 'MMMM yyyy') =>
-  format(subDays(new Date(maturity * 1000), 2), style);
+// export const nameFromMaturity = (maturity: number, style: string = 'MMMM yyyy') => {
+//   return format(subDays(new Date(maturity * 1000), 2), style);
+// }
 
 export const dateFromMaturity = (maturity: number, style?: string ) : {date: Date , display: string , mobile: string } => {
   return {
     date: new Date(maturity * 1000),
     display: format(new Date(maturity * 1000), style || 'dd MMM yyyy'),
-    mobile: `${nameFromMaturity(maturity, style || 'MMM yyyy')}`,
+    mobile: format(new Date(maturity * 1000), style || 'MMM yyyy'),  // `${nameFromMaturity(maturity, style || 'MMM yyyy')}`,
   }
 }
 
