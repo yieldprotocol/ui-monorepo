@@ -834,10 +834,12 @@ export function invariant(
   const Za = c_.div(mu_).mul(mu_.mul(sharesReserves_).pow(a));
   const Ya = fyTokenReserves_.pow(a);
   const numerator = Za.add(Ya);
+  console.log('🦄 ~ file: index.ts ~ line 837 ~ numerator ', +numerator / 1e18);
   const denominator = c_.div(mu_).add(ONE);
+  console.log('🦄 ~ file: index.ts ~ line 839 ~ denominator', +denominator / 1e18);
 
   const topTerm = c_.div(mu_).mul(numerator.div(denominator).pow(invA));
-  const res = topTerm.div(totalSupply_);
+  const res = topTerm.div(totalSupply_).mul(10 ** decimals);
 
   /* Handle precision variations */
   const safeRes = res.gt(MAX.sub(precisionFee)) ? MAX : res.add(precisionFee);

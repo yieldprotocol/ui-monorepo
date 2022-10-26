@@ -18,6 +18,7 @@ import {
   g2_DEFAULT,
   _getC,
   maxFyTokenOut,
+  invariant,
 } from '../index';
 
 chai.use(solidity);
@@ -38,6 +39,7 @@ describe('Shares YieldMath', () => {
 
   let sharesReserves: BigNumber;
   let fyTokenReserves: BigNumber;
+  let totalSupply: BigNumber;
   let c: BigNumber; // c: the price of vyToken to Token
   let cGreater: BigNumber; // greater c than c above
   let mu: BigNumber; // mu: the price of vyToken to Token (c) at initialization
@@ -52,6 +54,7 @@ describe('Shares YieldMath', () => {
   beforeEach(() => {
     sharesReserves = parseUnits('1000000', decimals); // 1,000,000 base reserves to decimals
     fyTokenReserves = parseUnits('1000000', decimals); // 1,000,000 fyToken reserves to decimals
+    totalSupply = parseUnits('1200000', decimals); // 1,200,000 total supply
     c = BigNumber.from('0x1199999999999999a'); // 1.1 in 64 bit
     cGreater = BigNumber.from('0x13333333333333333'); // 1.2 in 64 bit
     mu = BigNumber.from('0x10ccccccccccccccd'); // 1.05 in 64 bit
@@ -373,6 +376,37 @@ describe('Shares YieldMath', () => {
         timeTillMaturity = (77760000).toString();
         const result = maxBaseIn(sharesReserves, fyTokenReserves, timeTillMaturity, ts, g1, decimals, c, mu);
         expect(result).to.be.closeTo(parseUnits('160364.770', decimals), comparePrecision); // 160,364.770445
+      });
+    });
+
+    describe('invariant', () => {
+      // https://www.desmos.com/calculator/tl0of4wrju
+      it('should output a specific number with a specific input', () => {
+        c = BigNumber.from('0x1199999999999999a');
+        mu = BigNumber.from('0x10ccccccccccccccd');
+        ts = toBn(
+          new Decimal(
+            1 /
+              BigNumber.from(SECONDS_PER_YEAR)
+                .mul(10 * 25)
+                .toNumber()
+          ).mul(2 ** 64)
+        ); // inv of seconds in 10 years
+        sharesReserves = parseUnits('1100000', decimals);
+        fyTokenReserves = parseUnits('1500000', decimals);
+        timeTillMaturity = (77760000).toString();
+        const result = invariant(
+          sharesReserves,
+          fyTokenReserves,
+          totalSupply,
+          timeTillMaturity,
+          ts,
+          g2,
+          decimals,
+          c,
+          mu
+        );
+        expect(result).to.be.closeTo(parseUnits('1.15532443539', decimals), comparePrecision); // 1.15532443539
       });
     });
   });
