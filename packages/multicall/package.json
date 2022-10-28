@@ -1,6 +1,6 @@
 {
   "name": "@yield-protocol/ui-multicall",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "./bin/index.js",
   "repository": {
     "url": "git+https://github.com/yieldprotocol/ui-monorepo.git",
