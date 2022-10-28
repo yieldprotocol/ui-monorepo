@@ -1,9 +1,9 @@
-import DataLoader from 'dataloader';
-import { Contract } from 'ethers';
-import { FunctionFragment, Interface } from 'ethers/lib/utils';
-import { Multicall } from '../../contracts';
+import DataLoader from "dataloader";
+import { Contract } from "ethers";
+import { FunctionFragment, Interface } from "ethers/lib/utils";
+import { Multicall } from "../../contracts";
 // eslint-disable-next-line import/no-cycle
-import { MulticallContract } from './contract';
+import { MulticallContract } from "./contract";
 
 export type ContractCall = {
   fragment: FunctionFragment;
@@ -11,7 +11,10 @@ export type ContractCall = {
   params: any[];
 };
 
-type TargetContract = Pick<Contract, 'functions' | 'interface' | 'callStatic' | 'address'>;
+type TargetContract = Pick<
+  Contract,
+  "functions" | "interface" | "callStatic" | "address"
+>;
 
 export class EthersMulticall {
   private multicall: Multicall;
@@ -20,10 +23,16 @@ export class EthersMulticall {
 
   constructor(
     multicall: Multicall,
-    dataLoaderOptions: DataLoader.Options<ContractCall, any> = { cache: false, maxBatchSize: 250 }
+    dataLoaderOptions: DataLoader.Options<ContractCall, any> = {
+      cache: false,
+      maxBatchSize: 250,
+    }
   ) {
     this.multicall = multicall;
-    this.dataLoader = new DataLoader(this.doCalls.bind(this), dataLoaderOptions);
+    this.dataLoader = new DataLoader(
+      this.doCalls.bind(this),
+      dataLoaderOptions
+    );
   }
 
   get contract() {
@@ -33,14 +42,20 @@ export class EthersMulticall {
   private async doCalls(calls: readonly ContractCall[]) {
     const callRequests = calls.map((call) => ({
       target: call.address,
-      callData: new Interface([]).encodeFunctionData(call.fragment, call.params),
+      callData: new Interface([]).encodeFunctionData(
+        call.fragment,
+        call.params
+      ),
     }));
 
-    const response = await this.multicall.callStatic.aggregate(callRequests, false);
+    const response = await this.multicall.callStatic.aggregate(
+      callRequests,
+      false
+    );
 
     const result = calls.map((call, i) => {
       const signature = FunctionFragment.from(call.fragment).format();
-      const callIdentifier = [call.address, signature].join(':');
+      const callIdentifier = [call.address, signature].join(":");
       const [success, data] = response.returnData[i];
 
       if (!success) {
@@ -49,7 +64,10 @@ export class EthersMulticall {
 
       try {
         const outputs = call.fragment.outputs!;
-        const _result = new Interface([]).decodeFunctionResult(call.fragment, data);
+        const _result = new Interface([]).decodeFunctionResult(
+          call.fragment,
+          data
+        );
         return outputs.length === 1 ? _result[0] : _result;
       } catch (err) {
         return new Error(`Multicall call failed for ${callIdentifier}`);
@@ -61,16 +79,20 @@ export class EthersMulticall {
 
   wrap<T extends TargetContract>(contract: T) {
     const abi = contract.interface.fragments;
-    const multicallContract = new MulticallContract(contract.address, abi as any);
+    const multicallContract = new MulticallContract(
+      contract.address,
+      abi as any
+    );
 
     const funcs = abi.reduce((memo, frag) => {
-      if (frag.type !== 'function') return memo;
+      if (frag.type !== "function") return memo;
 
       const funcFrag = frag as FunctionFragment;
-      if (!['pure', 'view'].includes(funcFrag.stateMutability)) return memo;
+      if (!["pure", "view"].includes(funcFrag.stateMutability)) return memo;
 
       // Overwrite the function with a dataloader batched call
-      const multicallFunc = multicallContract[funcFrag.name].bind(multicallContract);
+      const multicallFunc =
+        multicallContract[funcFrag.name].bind(multicallContract);
       const newFunc = (...args: any) => {
         const contractCall = multicallFunc(...args);
         return this.dataLoader.load(contractCall);
@@ -81,7 +103,10 @@ export class EthersMulticall {
       return memo;
     }, {} as Record<string, (...args: any) => any>);
 
-    return Object.setPrototypeOf({ ...contract, ...funcs }, Contract.prototype) as any as T;
+    return Object.setPrototypeOf(
+      { ...contract, ...funcs },
+      Contract.prototype
+    ) as any as T;
   }
 }
 

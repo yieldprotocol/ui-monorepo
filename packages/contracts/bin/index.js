@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.YearnVaultMultiOracle__factory = exports.WrapEtherModule__factory = exports.Witch__factory = exports.UniswapV3Oracle__factory = exports.Transfer1155Module__factory = exports.Strategy__factory = exports.PoolOld__factory = exports.Pool__factory = exports.NotionalMultiOracle__factory = exports.LadleStorage__factory = exports.Ladle__factory = exports.Join1155__factory = exports.Join__factory = exports.FYToken__factory = exports.ERC20Permit__factory = exports.ERC20__factory = exports.ERC1155__factory = exports.ConvexLadleModule__factory = exports.ConvexJoin__factory = exports.CompoundMultiOracle__factory = exports.CompositeMultiOracle__factory = exports.ChainlinkUSDOracle__factory = exports.ChainlinkMultiOracle__factory = exports.Cauldron__factory = exports.AccumulatorOracle__factory = void 0;
+exports.YearnVaultMultiOracle__factory = exports.WrapEtherModule__factory = exports.Witch__factory = exports.UniswapV3Oracle__factory = exports.Transfer1155Module__factory = exports.Strategy__factory = exports.PoolOld__factory = exports.Pool__factory = exports.NotionalMultiOracle__factory = exports.Multicall__factory = exports.LadleStorage__factory = exports.Ladle__factory = exports.Join1155__factory = exports.Join__factory = exports.FYToken__factory = exports.ERC20Permit__factory = exports.ERC20__factory = exports.ERC1155__factory = exports.ConvexLadleModule__factory = exports.ConvexJoin__factory = exports.CompoundMultiOracle__factory = exports.CompositeMultiOracle__factory = exports.ChainlinkUSDOracle__factory = exports.ChainlinkMultiOracle__factory = exports.Cauldron__factory = exports.AccumulatorOracle__factory = void 0;
 var AccumulatorOracle__factory_1 = require("./factories/AccumulatorOracle__factory");
 Object.defineProperty(exports, "AccumulatorOracle__factory", { enumerable: true, get: function () { return AccumulatorOracle__factory_1.AccumulatorOracle__factory; } });
 var Cauldron__factory_1 = require("./factories/Cauldron__factory");
@@ -33,6 +33,8 @@ var Ladle__factory_1 = require("./factories/Ladle__factory");
 Object.defineProperty(exports, "Ladle__factory", { enumerable: true, get: function () { return Ladle__factory_1.Ladle__factory; } });
 var LadleStorage__factory_1 = require("./factories/LadleStorage__factory");
 Object.defineProperty(exports, "LadleStorage__factory", { enumerable: true, get: function () { return LadleStorage__factory_1.LadleStorage__factory; } });
+var Multicall__factory_1 = require("./factories/Multicall__factory");
+Object.defineProperty(exports, "Multicall__factory", { enumerable: true, get: function () { return Multicall__factory_1.Multicall__factory; } });
 var NotionalMultiOracle__factory_1 = require("./factories/NotionalMultiOracle__factory");
 Object.defineProperty(exports, "NotionalMultiOracle__factory", { enumerable: true, get: function () { return NotionalMultiOracle__factory_1.NotionalMultiOracle__factory; } });
 var Pool__factory_1 = require("./factories/Pool__factory");

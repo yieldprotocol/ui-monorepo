@@ -12,9 +12,12 @@
   "author": "Yield Inc.",
   "license": "MIT",
   "scripts": {
-    "compile": "tsc -b --force",
-    "type-contracts": "typechain --target=ethers-v5 './src/contracts/abis/*.json' --out-dir './src/contracts/'"
+    "compile": "tsc -b --force"
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "dataloader": "^2.1.0"
+  },
+  "peerDependencies": {
+    "dataloader": "^2"
+  }
 }
