@@ -1,9 +1,9 @@
 import DataLoader from "dataloader";
 import { Contract } from "ethers";
 import { FunctionFragment, Interface } from "ethers/lib/utils";
-import { Multicall } from "../../contracts";
 // eslint-disable-next-line import/no-cycle
 import { MulticallContract } from "./contract";
+import { Multicall } from "./contracts";
 
 export type ContractCall = {
   fragment: FunctionFragment;

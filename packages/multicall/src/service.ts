@@ -2,7 +2,7 @@ import { JsonRpcProvider } from "@ethersproject/providers";
 // eslint-disable-next-line import/no-named-as-default
 import EthersMulticall from "./ethers";
 import { MULTICALL_ADDRESSES } from "./addresses";
-import { Multicall__factory } from "../../contracts";
+import { Multicall__factory } from "./contracts";
 
 export class MulticallService {
   private readonly provider: JsonRpcProvider;
