@@ -837,7 +837,7 @@ export function invariant(
   const denominator = c_.div(mu_).add(ONE);
 
   const topTerm = c_.div(mu_).mul(numerator.div(denominator).pow(invA));
-  const res = topTerm.div(totalSupply_);
+  const res = topTerm.div(totalSupply_).mul(10 ** decimals);
 
   /* Handle precision variations */
   const safeRes = res.gt(MAX.sub(precisionFee)) ? MAX : res.add(precisionFee);
@@ -1289,4 +1289,93 @@ export const calcAccruedDebt = (rate: BigNumber, rateAtMaturity: BigNumber, debt
   const debtLessAccrued = debt_.mul(invRatio_);
 
   return [toBn(accruedDebt), toBn(debtLessAccrued)];
+};
+
+/**
+ * Calculates the amount of base needed to adjust a pool to a desired interest rate
+ *
+ * @param {BigNumber} sharesReserves shares reserves of the pool
+ * @param {BigNumber} fyTokenReserves virtual fyToken of the pool
+ * @param {number} timeTillMaturity fyToken of the pool
+ * @param {BigNumber} ts time stretch
+ * @param {BigNumber} g1 fee
+ * @param {BigNumber} g2 fee
+ * @param {number} desiredInterestRate desired interest rate for the pool, in decimal format (i.e.: .1 for 10%)
+ *
+ * @returns {BigNumber} // input into amo func
+ */
+
+export const changeRateNonTv = (
+  sharesReserves: BigNumber,
+  fyTokenReserves: BigNumber,
+  timeTillMaturity: string,
+  ts: BigNumber,
+  g1: BigNumber,
+  g2: BigNumber,
+  desiredInterestRate: number // in decimal format (i.e.: .1 is 10%)
+): BigNumber => {
+  // format series data
+  const _sharesReserves = new Decimal(sharesReserves.toString());
+  const _fyTokenReserves = new Decimal(fyTokenReserves.toString());
+
+  // time stretch in years
+  const u = getTimeStretchYears(ts);
+
+  // calculate current rate
+  const _currRate = calcInterestRate(fyTokenReserves, sharesReserves, ts);
+
+  // format desired rate
+  const _desiredRate = new Decimal(desiredInterestRate.toString());
+
+  // assess which g to use: decrease rates means sellBase, so g1; otherwise, buyBase, so g2
+  const g = _desiredRate.gt(_currRate) ? g1 : g2;
+  const [a, invA] = _computeA(timeTillMaturity, ts, g);
+
+  const top = _sharesReserves.pow(a).add(_fyTokenReserves.pow(a));
+  const bottom = ONE.add(ONE.add(_desiredRate).pow(u.mul(a)));
+
+  const sharesReservesNew = top.div(bottom).pow(invA);
+  const sharesDiff = sharesReservesNew.sub(_sharesReserves);
+
+  const fyTokenReservesNew = sharesReservesNew.mul(ONE.add(_desiredRate).pow(u));
+  const fyTokenDiff = fyTokenReservesNew.sub(_fyTokenReserves);
+
+  // result is the input into the amo func, which is the shares diff if decreasing rates, and the fyToken diff if increasing rates
+  // sellBase (decrease rates {shares goes in}) or sellFyToken (increase rates {shares come out})
+  return _desiredRate.gt(_currRate) ? toBn(fyTokenDiff.abs()) : toBn(sharesDiff.abs());
+};
+
+/**
+ * Calculates the current market interest rate
+ *
+ * @param {BigNumber} sharesReserves shares reserves of the pool
+ * @param {BigNumber} fyTokenReserves virtual fyToken of the pool
+ * @param {BigNumber} ts years associated with time stretch
+ * @param {BigNumber | string} mu
+ *
+ * @returns {Decimal} // market rate in number format (i.e.: 10% is .10)
+ */
+
+export const calcInterestRate = (
+  sharesReserves: BigNumber,
+  fyTokenReserves: BigNumber,
+  ts: BigNumber,
+  mu: BigNumber | string = mu_DEFAULT
+): Decimal => {
+  const _sharesReserves = new Decimal(sharesReserves.toString());
+  const _fyTokenReserves = new Decimal(fyTokenReserves.toString());
+  const _mu = _getMu(mu);
+  const timeStretchYears = getTimeStretchYears(ts);
+  return _fyTokenReserves.div(_sharesReserves.mul(_mu)).pow(ONE.div(timeStretchYears)).sub(ONE);
+};
+
+/**
+ * @param ts time stretch associated with series (i.e.: 10 years)
+ * @returns {Decimal} num years in decimals
+ */
+export const getTimeStretchYears = (ts: BigNumber): Decimal => {
+  const _ts = new Decimal(ts.toString()).div(2 ** 64);
+  const _secondsInOneYear = new Decimal(secondsInOneYear.toString());
+  const invTs = ONE.div(_ts);
+  return invTs.div(_secondsInOneYear);
 };

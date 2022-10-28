@@ -1,7 +1,7 @@
 import { maxBaseIn, sellBase, secondsToFrom, calculateSlippage } from '@yield-protocol/ui-math';
 import { ethers } from 'ethers';
-import { ETH_BASED_ASSETS, CONVEX_BASED_ASSETS } from '../config/assets';
-import { ConvexJoin__factory } from '../contracts';
+import { ETH_BASED_ASSETS, CONVEX_BASED_ASSETS } from '../config/assetsConfig';
+import { ConvexJoin__factory } from '@yield-protocol/ui-contracts';
 import { IVault, ActionCodes, ISeries, IAsset, ICallData, LadleActions, RoutedActions } from '../types';
 import { ZERO_BN, ONE_BN } from '../utils/constants';
 import { getProcessCode, inputToTokenValue } from '../utils/yieldUtils';
@@ -33,12 +33,12 @@ import { combineLatest, filter, map, take } from 'rxjs';
  */
 export const repayDebt = async (amount: string | undefined, vault: IVault, reclaimCollateral: boolean = true) => {
   /* Subscribe to and get the values from the observables:  */
-  combineLatest([protocolø, chainIdø, assetsø, seriesø, accountø, userSettingsø, providerø])
+  combineLatest([protocolø, assetsø, seriesø, accountø, userSettingsø, providerø])
     .pipe(
       filter(() => !!vault ),
       take(1) // only take one and then finish.
     ) 
-    .subscribe(async ([{ ladle }, chainId, assetMap, seriesMap, account, { slippageTolerance }, provider]) => {
+    .subscribe(async ([{ ladle }, assetMap, seriesMap, account, { slippageTolerance }, provider]) => {
       
       const txCode = getProcessCode(ActionCodes.REPAY, vault.id);
       const ladleAddress = ladle.address;
@@ -59,8 +59,8 @@ export const repayDebt = async (amount: string | undefined, vault: IVault, recla
       const _amount = inputToTokenValue(amount, base.decimals);
 
       const _maxBaseIn = maxBaseIn(
-        series.baseReserves.bn,
-        series.fyTokenReserves.bn,
+        series.baseReserves.big,
+        series.fyTokenReserves.big,
         series.getTimeTillMaturity(),
         series.ts,
         series.g1,
@@ -73,8 +73,8 @@ export const repayDebt = async (amount: string | undefined, vault: IVault, recla
       const _amountAsFyToken = series.isMature()
         ? _amount
         : sellBase(
-            series.baseReserves.bn,
-            series.fyTokenReserves.bn,
+            series.baseReserves.big,
+            series.fyTokenReserves.big,
             _amount,
             secondsToFrom(series.maturity.toString()),
             series.ts,
@@ -88,14 +88,14 @@ export const repayDebt = async (amount: string | undefined, vault: IVault, recla
       );
 
       /* Check if amount is more than the debt */
-      const amountGreaterThanEqualDebt: boolean = ethers.BigNumber.from(_amountAsFyToken).gte(vault.accruedArt.bn);
+      const amountGreaterThanEqualDebt: boolean = ethers.BigNumber.from(_amountAsFyToken).gte(vault.accruedArt.big);
 
       /* If requested, and all debt will be repaid, automatically remove collateral */
       const _collateralToRemove =
-        reclaimCollateral && amountGreaterThanEqualDebt ? vault.ink.bn.mul(-1) : ethers.constants.Zero;
+        reclaimCollateral && amountGreaterThanEqualDebt ? vault.ink.big.mul(-1) : ethers.constants.Zero;
 
       /* Cap the amount to transfer: check that if amount is greater than debt, used after maturity only repay the max debt (or accrued debt) */
-      const _amountCappedAtArt = vault.art.bn.gt(ZERO_BN) && vault.art.bn.lte(_amount) ? vault.art.bn : _amount;
+      const _amountCappedAtArt = vault.art.big.gt(ZERO_BN) && vault.art.big.lte(_amount) ? vault.art.big : _amount;
 
       /* Set the amount to transfer ( + 0.1% after maturity ) */
       const amountToTransfer = series.isMature() ? _amount.mul(10001).div(10000) : _amount; // After maturity + 0.1% for increases during tx time
@@ -128,8 +128,8 @@ export const repayDebt = async (amount: string | undefined, vault: IVault, recla
       /* Address to send the funds to either ladle (if eth is used as collateral) or account */
       const reclaimToAddress = () => {
         if (isEthCollateral) return ladleAddress;
-        if (unwrapAssetCallData.length && ilk.unwrapHandlerAddresses?.has(chainId))
-          return ilk.unwrapHandlerAddresses?.get(chainId); // if there is somethign to unwrap
+        if (unwrapAssetCallData.length && ilk.unwrapHandlerAddress)
+          return ilk.unwrapHandlerAddress; // if there is somethign to unwrap
         return account;
       };
 

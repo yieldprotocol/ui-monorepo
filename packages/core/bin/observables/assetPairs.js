@@ -5,7 +5,7 @@ const tslib_1 = require("tslib");
 const ui_math_1 = require("@yield-protocol/ui-math");
 const ethers_1 = require("ethers");
 const rxjs_1 = require("rxjs");
-const oracles_1 = require("../config/oracles");
+const config_1 = require("../config");
 const utils_1 = require("../utils");
 const protocol_1 = require("./protocol");
 const selected_1 = require("./selected");
@@ -36,7 +36,7 @@ const updatePair = (baseId, ilkId, chainId) => tslib_1.__awaiter(void 0, void 0,
     var _a, _b;
     const protocol = yield (0, rxjs_1.lastValueFrom)(protocol_1.protocolø.pipe((0, rxjs_1.first)()));
     const { cauldron, assetRootMap, oracleMap } = protocol;
-    const oracleName = (_b = (_a = oracles_1.ORACLES.get(chainId)) === null || _a === void 0 ? void 0 : _a.get(baseId)) === null || _b === void 0 ? void 0 : _b.get(ilkId);
+    const oracleName = (_b = (_a = config_1.ORACLE_INFO.get(chainId)) === null || _a === void 0 ? void 0 : _a.get(baseId)) === null || _b === void 0 ? void 0 : _b.get(ilkId);
     const PriceOracle = oracleMap.get(oracleName);
     const base = assetRootMap.get(baseId);
     const ilk = assetRootMap.get(ilkId);
@@ -66,10 +66,10 @@ const updatePair = (baseId, ilkId, chainId) => tslib_1.__awaiter(void 0, void 0,
             baseId,
             ilkId,
             limitDecimals: dec,
-            minDebtLimit: (0, yieldUtils_1.bnToW3Number)(minDebtLimit_, base.decimals, base.digitFormat),
-            maxDebtLimit: (0, yieldUtils_1.bnToW3Number)(maxDebtLimit_, base.decimals, base.digitFormat),
-            pairTotalDebt: (0, yieldUtils_1.bnToW3Number)(sum, base.decimals, base.digitFormat),
-            pairPrice: (0, yieldUtils_1.bnToW3Number)(price, base.decimals, base.digitFormat),
+            minDebtLimit: (0, yieldUtils_1.bnToW3bNumber)(minDebtLimit_, base.decimals, base.digitFormat),
+            maxDebtLimit: (0, yieldUtils_1.bnToW3bNumber)(maxDebtLimit_, base.decimals, base.digitFormat),
+            pairTotalDebt: (0, yieldUtils_1.bnToW3bNumber)(sum, base.decimals, base.digitFormat),
+            pairPrice: (0, yieldUtils_1.bnToW3bNumber)(price, base.decimals, base.digitFormat),
             minRatio: parseFloat(ethers_1.ethers.utils.formatUnits(ratio, 6)),
             baseDecimals: base.decimals,
             ilkDecimals: ilk.decimals,

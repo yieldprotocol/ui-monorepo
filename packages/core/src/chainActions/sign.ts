@@ -1,5 +1,5 @@
 import { signDaiPermit, signERC2612Permit } from 'eth-permit';
-import { ERC20Permit__factory, ERC1155__factory } from '../contracts';
+import { ERC20Permit__factory, ERC1155__factory } from '@yield-protocol/ui-contracts';
 import {
   ISignData,
   ICallData,
@@ -169,7 +169,7 @@ export const sign = async (requestedSignatures: ISignData[], processCode: string
      * CASE 3: FALLBACK / DEFAULT CASE: Approval by transaction 
      * ( after transaction success,  return blank ICallData value (IGNORED_CALLDATA). )
      * */
-    if (reqSig.target.tokenType === TokenType.ERC1155_) {
+    if (reqSig.target.tokenType === TokenType.ERC1155) {
       
       console.log( 'Approval via transaction: ERC1155')
       /* if token type is ERC1155 then set approval 'ApprovalForAll' */
@@ -187,7 +187,7 @@ export const sign = async (requestedSignatures: ISignData[], processCode: string
 
     } else {
 
-      console.log( 'Approval via transaction: ERC20')
+      console.log('Approval via transaction: ERC20')
       /* else use a regular approval */
       const connectedERC20 = ERC20Permit__factory.connect(reqSig.target.address, signer);
       await connectedERC20

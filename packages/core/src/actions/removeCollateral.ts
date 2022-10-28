@@ -1,8 +1,8 @@
 import { ethers } from 'ethers';
 import { transact } from '../chainActions';
-import { ETH_BASED_ASSETS, CONVEX_BASED_ASSETS } from '../config/assets';
+import { ETH_BASED_ASSETS, CONVEX_BASED_ASSETS } from '../config/assetsConfig';
 import { combineLatest, take } from 'rxjs';
-import { ConvexJoin__factory } from '../contracts';
+import { ConvexJoin__factory } from '@yield-protocol/ui-contracts';
 import { protocolø, accountø, assetsø, chainIdø, providerø } from '../observables';
 import { IVault, ActionCodes, ICallData, LadleActions, RoutedActions } from '../types';
 import { getProcessCode, ONE_BN, ZERO_BN } from '../utils';
@@ -12,9 +12,9 @@ import { unwrapAsset } from './_wrapUnwrapAsset';
 
 export const removeCollateral = async (amount: string, vault: IVault, unwrapOnRemove: boolean = true) => {
   /* Subscribe to and get the values from the observables:  */
-  combineLatest([protocolø, chainIdø, assetsø, accountø, providerø])
+  combineLatest([protocolø, assetsø, accountø, providerø])
     .pipe(take(1)) // only take one and then finish.
-    .subscribe(async ([{ ladle }, chainId, assetMap, account, provider]) => {
+    .subscribe(async ([{ ladle }, assetMap, account, provider]) => {
       /* generate the txCode for tx tracking and tracing */
       const txCode = getProcessCode(ActionCodes.REMOVE_COLLATERAL, vault.id);
 
@@ -23,7 +23,7 @@ export const removeCollateral = async (amount: string, vault: IVault, unwrapOnRe
       const ladleAddress = ladle.address;
 
       /* get unwrap handler if required */
-      const unwrapHandlerAddress = ilk.unwrapHandlerAddresses?.get(chainId);
+      const unwrapHandlerAddress = ilk.unwrapHandlerAddress;
       /* check if the ilk/asset is an eth asset variety OR if it is wrapped token, if so pour to Ladle */
       const isEthCollateral = ETH_BASED_ASSETS.includes(ilk.proxyId);
 

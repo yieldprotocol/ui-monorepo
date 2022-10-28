@@ -2,7 +2,7 @@ import {  finalize, map, Observable,shareReplay, Subject, take } from 'rxjs';
 import { IYieldConfig } from '../types';
 
 /* Handle configuration */
-import defaultConfig from '../config/yield.config';
+import {defaultConfig} from '../config';
 
 
 const appConfig$: Subject<IYieldConfig> = new Subject();
@@ -23,7 +23,7 @@ export const appConfigø: Observable<IYieldConfig> = appConfig$
   shareReplay(1),
 )
 
-export const updateAppConfig = (appConfig: Partial<IYieldConfig>) => {
+export const updateConfig = (appConfig: Partial<IYieldConfig>) => {
   appConfig$.next({ ...defaultConfig, ...appConfig });
 };
 

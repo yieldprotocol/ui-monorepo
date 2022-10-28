@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildAssetMap = void 0;
 const tslib_1 = require("tslib");
 const types_1 = require("../types");
-const contracts = tslib_1.__importStar(require("../contracts"));
+const contracts = tslib_1.__importStar(require("@yield-protocol/ui-contracts"));
 const assets_1 = require("../config/assets");
 const appUtils_1 = require("../utils/appUtils");
 const buildAssetMap = (cauldron, ladle, provider, chainId, appConfig) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
@@ -33,7 +33,7 @@ const buildAssetMap = (cauldron, ladle, provider, chainId, appConfig) => tslib_1
             const assetInfo = assets_1.ASSETS.has(id) ? assets_1.ASSETS.get(id) : assets_1.ASSETS.get(assets_1.UNKNOWN);
             let { name, symbol, decimals, version } = assetInfo;
             /* On first load checks & corrects the ERC20 name/symbol/decimals (if possible ) */
-            if (assetInfo.tokenType === types_1.TokenType.ERC20_ ||
+            if (assetInfo.tokenType === types_1.TokenType.ERC20 ||
                 assetInfo.tokenType === types_1.TokenType.ERC20_Permit ||
                 assetInfo.tokenType === types_1.TokenType.ERC20_DaiPermit) {
                 const contract = contracts.ERC20__factory.connect(address, provider);
@@ -91,7 +91,6 @@ const buildAssetMap = (cauldron, ladle, provider, chainId, appConfig) => tslib_1
         (0, appUtils_1.setBrowserCachedValue)(`${chainId}_lastAssetUpdate`, _blockNum);
     }
     console.log(`Yield Protocol ASSET data updated [Block: ${_blockNum}]`);
-    // console.log( assetRootMap);
     return assetRootMap;
 });
 exports.buildAssetMap = buildAssetMap;

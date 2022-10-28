@@ -1,3 +1,4 @@
+import * as assetConstants from './config/assetsConfig';
 import { IYieldFunctions } from './types';
 import * as yieldObservables from './observables';
 import * as viewObservables from './viewObservables';
@@ -27,14 +28,15 @@ declare const yieldConstants: {
     CONVEX_BASED_ASSETS: string[];
     ETH_BASED_ASSETS: string[];
     IGNORE_BASE_ASSETS: string[];
-    ASSETS: Map<string, import("./types").IAssetInfo>;
+    ASSETS_42161: Map<string, assetConstants.IAssetInfo>;
+    ASSETS_1: Map<string, assetConstants.IAssetInfo>;
     MAX_256: "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
     MAX_128: "0xffffffffffffffffffffffffffffffff";
     ZERO_BN: import("ethers").BigNumber;
-    ZERO_W3NUMBER: {
-        bn: import("ethers").BigNumber;
+    ZERO_W3B: {
+        big: import("ethers").BigNumber;
         hStr: string;
-        dsp: string;
+        dsp: number;
     };
     ONE_BN: import("ethers").BigNumber;
     MINUS_ONE_BN: import("ethers").BigNumber;

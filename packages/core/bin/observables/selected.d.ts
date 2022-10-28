@@ -1,5 +1,13 @@
 import { Observable } from 'rxjs';
-import { IAsset, ISelected, ISeries, IStrategy, IVault } from '../types';
+import { IAsset, ISeries, IStrategy, IVault } from '../types';
+export interface ISelected {
+    base: IAsset | null;
+    ilk: IAsset | null;
+    series: ISeries | null;
+    vault: IVault | null;
+    strategy: IStrategy | null;
+    futureSeries: ISeries | null;
+}
 export declare const selectedø: Observable<ISelected>;
 /**
  *  Functions to selecting elements

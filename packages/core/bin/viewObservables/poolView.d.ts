@@ -1,9 +1,9 @@
 import { Observable } from 'rxjs';
-import { IVault, W3Number } from '../types';
+import { IVault, W3bNumber } from '../types';
 /**
  * @category Pool | Add Liquidity
  */
-export declare const maximumAddLiquidityø: Observable<W3Number>;
+export declare const maximumAddLiquidityø: Observable<W3bNumber>;
 /**
  * Check if it is possible to use BUY and POOL strategy is available for a particular INPUT and selected strategy.
  * @category Pool | Add Liquidity
@@ -15,7 +15,7 @@ export declare const isBuyAndPoolPossibleø: Observable<boolean>;
  *
  * @category Pool | Remove Liquidity
  */
-export declare const maximumRemoveLiquidityø: Observable<W3Number>;
+export declare const maximumRemoveLiquidityø: Observable<W3bNumber>;
 /**
  * Get the vault ( if adding liquidity was done using the 'Borrow and Pool' method. )
  * @category Pool | Remove Liquidity
@@ -29,7 +29,7 @@ export declare const borrowAndPoolVaultø: Observable<IVault | undefined>;
  * @category Pool | Remove Liquidity
  *
  * */
-export declare const removeLiquidityReturnø: Observable<W3Number[]>;
+export declare const removeLiquidityReturnø: Observable<W3bNumber[]>;
 /**
  * Check if not all liquidity can be removed, and a partial removal is required.
  * @category Pool | Remove Liquidity

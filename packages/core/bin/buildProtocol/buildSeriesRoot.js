@@ -2,8 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildSeriesMap = void 0;
 const tslib_1 = require("tslib");
-const date_fns_1 = require("date-fns");
-const contracts = tslib_1.__importStar(require("../contracts"));
+const ui_contracts_1 = require("@yield-protocol/ui-contracts");
 const appUtils_1 = require("../utils/appUtils");
 const yieldUtils_1 = require("../utils/yieldUtils");
 const buildSeriesMap = (cauldron, ladle, assetRootMap, provider, chainId, appConfig) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
@@ -36,8 +35,8 @@ const buildSeriesMap = (cauldron, ladle, assetRootMap, provider, chainId, appCon
             if (poolMap.has(id)) {
                 // only add series if it has a pool
                 const poolAddress = poolMap.get(id);
-                const poolContract = contracts.Pool__factory.connect(poolAddress, provider);
-                const fyTokenContract = contracts.FYToken__factory.connect(fyToken, provider);
+                const poolContract = ui_contracts_1.Pool__factory.connect(poolAddress, provider);
+                const fyTokenContract = ui_contracts_1.FYToken__factory.connect(fyToken, provider);
                 const [name, symbol, version, decimals, poolName, poolVersion, poolSymbol, ts, g1, g2] = yield Promise.all([
                     fyTokenContract.name(),
                     fyTokenContract.symbol(),
@@ -72,9 +71,9 @@ const buildSeriesMap = (cauldron, ladle, assetRootMap, provider, chainId, appCon
                     createdBlock: _evnt.blockNumber,
                     createdTxHash: _evnt.transactionHash,
                     /* calc'd and display vals */
-                    maturity_: (0, date_fns_1.format)(new Date(maturity * 1000), 'dd MMMM yyyy'),
-                    displayName: (0, date_fns_1.format)(new Date(maturity * 1000), 'dd MMM yyyy'),
-                    displayNameMobile: `${(0, yieldUtils_1.nameFromMaturity)(maturity, 'MMM yyyy')}`,
+                    maturityDate: (0, yieldUtils_1.dateFromMaturity)(maturity).date,
+                    displayName: (0, yieldUtils_1.dateFromMaturity)(maturity).display,
+                    displayNameMobile: (0, yieldUtils_1.dateFromMaturity)(maturity).mobile, //`${nameFromMaturity(maturity, 'MMM yyyy')}`,
                 };
                 seriesList.push(newSeries);
             }

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildStrategyMap = void 0;
 const tslib_1 = require("tslib");
-const contracts = tslib_1.__importStar(require("../contracts"));
+const contracts = tslib_1.__importStar(require("@yield-protocol/ui-contracts"));
 const protocol_1 = require("../config/protocol");
 const appUtils_1 = require("../utils/appUtils");
 const buildStrategyMap = (provider, chainId, appConfig) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {

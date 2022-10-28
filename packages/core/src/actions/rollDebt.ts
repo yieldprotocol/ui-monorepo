@@ -12,7 +12,7 @@ export const rollDebt = async (vault: IVault, toSeries: ISeries) => {
       const txCode = getProcessCode(ActionCodes.ROLL_DEBT, vault.id);
 
       const base = assetMap.get(vault.baseId);
-      const hasDebt = vault.accruedArt.bn.gt(ZERO_BN);
+      const hasDebt = vault.accruedArt.big.gt(ZERO_BN);
 
       const calls: ICallData[] = [
         {

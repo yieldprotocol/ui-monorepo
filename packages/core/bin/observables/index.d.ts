@@ -1,4 +1,4 @@
-export { appConfigø, updateAppConfig } from './appConfig';
+export { appConfigø, updateConfig } from './appConfig';
 export { assetsø, updateAssets } from './assets';
 export { assetPairsø, updatePair } from './assetPairs';
 export { providerø, updateProvider, accountProviderø, updateAccountProvider, accountø, updateAccount, chainIdø, updateChainId, } from './connection';

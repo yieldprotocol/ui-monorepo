@@ -1,5 +1,5 @@
 import { sellBase, calculateSlippage } from '@yield-protocol/ui-math';
-import { ETH_BASED_ASSETS } from '../config/assets';
+import { ETH_BASED_ASSETS } from '../config/assetsConfig';
 import {
   chainIdø,
   accountø,
@@ -34,8 +34,8 @@ export const lend = async (amount: string, series: ISeries) => {
         const _amount = inputToTokenValue(amount, base?.decimals);
 
         const _inputAsFyToken = sellBase(
-          series.baseReserves.bn,
-          series.fyTokenReserves.bn,
+          series.baseReserves.big,
+          series.fyTokenReserves.big,
           _amount,
           series.getTimeTillMaturity(),
           series.ts,

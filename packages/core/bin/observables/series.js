@@ -5,11 +5,11 @@ const tslib_1 = require("tslib");
 const rxjs_1 = require("rxjs");
 const ethers_1 = require("ethers");
 const ui_math_1 = require("@yield-protocol/ui-math");
-const contracts = tslib_1.__importStar(require("../contracts"));
+const contracts = tslib_1.__importStar(require("@yield-protocol/ui-contracts"));
 const types_1 = require("../types");
 const connection_1 = require("./connection");
 const protocol_1 = require("./protocol");
-const assets_1 = require("../config/assets");
+const assetsConfig_1 = require("../config/assetsConfig");
 const messages_1 = require("./messages");
 const yieldUtils_1 = require("../utils/yieldUtils");
 const seriesMap$ = new rxjs_1.BehaviorSubject(new Map([]));
@@ -92,11 +92,11 @@ const _updateDynamicInfo = (series) => tslib_1.__awaiter(void 0, void 0, void 0,
         series.poolContract.totalSupply(),
         series.fyTokenContract.balanceOf(series.poolAddress),
     ]);
-    const rateCheckAmount = ethers_1.ethers.utils.parseUnits(assets_1.ETH_BASED_ASSETS.includes(series.baseId) ? '.001' : '1', series.decimals);
+    const rateCheckAmount = ethers_1.ethers.utils.parseUnits(assetsConfig_1.ETH_BASED_ASSETS.includes(series.baseId) ? '.001' : '1', series.decimals);
     /* Calculates the base/fyToken unit selling price */
     const _sellRate = (0, ui_math_1.sellFYToken)(baseReserves, fyTokenReserves, rateCheckAmount, (0, ui_math_1.secondsToFrom)(series.maturity.toString()), series.ts, series.g2, series.decimals);
     const apr = (0, ui_math_1.calculateAPR)((0, ui_math_1.floorDecimal)(_sellRate), rateCheckAmount, series.maturity) || '0';
-    return Object.assign(Object.assign({}, series), { baseReserves: (0, yieldUtils_1.bnToW3Number)(baseReserves, series.decimals), fyTokenReserves: (0, yieldUtils_1.bnToW3Number)(fyTokenReserves, series.decimals), fyTokenRealReserves: (0, yieldUtils_1.bnToW3Number)(fyTokenRealReserves, series.decimals), totalSupply: (0, yieldUtils_1.bnToW3Number)(totalSupply, series.decimals), apr: `${Number(apr).toFixed(2)}` });
+    return Object.assign(Object.assign({}, series), { baseReserves: (0, yieldUtils_1.bnToW3bNumber)(baseReserves, series.decimals), fyTokenReserves: (0, yieldUtils_1.bnToW3bNumber)(fyTokenReserves, series.decimals), fyTokenRealReserves: (0, yieldUtils_1.bnToW3bNumber)(fyTokenRealReserves, series.decimals), totalSupply: (0, yieldUtils_1.bnToW3bNumber)(totalSupply, series.decimals), apr: `${Number(apr).toFixed(2)}` });
 });
 /**
  *
@@ -109,7 +109,7 @@ const _updateAccountInfo = (series, account) => tslib_1.__awaiter(void 0, void 0
         series.poolContract.balanceOf(account),
         series.fyTokenContract.balanceOf(account),
     ]);
-    const poolPercent = (0, ui_math_1.mulDecimal)((0, ui_math_1.divDecimal)(poolTokens, series.totalSupply.bn), '100');
-    return Object.assign(Object.assign({}, series), { poolTokens: (0, yieldUtils_1.bnToW3Number)(poolTokens, series.decimals), fyTokenBalance: (0, yieldUtils_1.bnToW3Number)(fyTokenBalance, series.decimals), poolPercent });
+    const poolPercent = (0, ui_math_1.mulDecimal)((0, ui_math_1.divDecimal)(poolTokens, series.totalSupply.big), '100');
+    return Object.assign(Object.assign({}, series), { poolTokens: (0, yieldUtils_1.bnToW3bNumber)(poolTokens, series.decimals), fyTokenBalance: (0, yieldUtils_1.bnToW3bNumber)(fyTokenBalance, series.decimals), poolPercent });
 });
 //# sourceMappingURL=series.js.map

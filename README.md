@@ -34,3 +34,12 @@
 ### 4. Publish indivdual packages changes  (in packages/* dir ):  ###
 > `yarn version --patch`
 > `yarn publish`
+
+
+### 5. Link packages use individual package locally in other repo ### 
+
+>`yarn compile` (in packages/* dir ) 
+>`yarn link`  (in packages/* dir ) 
+
+>`yarn link [package name] ` ( in other repo dir)
+>`yarn install --force ` ( in other repo dir)

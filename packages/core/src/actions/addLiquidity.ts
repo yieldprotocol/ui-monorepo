@@ -2,7 +2,7 @@ import { calculateSlippage, fyTokenForMint, calcPoolRatios, splitLiquidity } fro
 import { ethers, BigNumber } from 'ethers';
 import { combineLatest, take } from 'rxjs';
 import { sign, transact } from '../chainActions';
-import { ETH_BASED_ASSETS } from '../config/assets';
+import { ETH_BASED_ASSETS } from '../config/assetsConfig';
 import {
   accountø,
   assetsø,
@@ -57,7 +57,7 @@ export const addLiquidity = async (
       const _amountLessSlippage = calculateSlippage(_amount, slippageTolerance.toString(), true);
 
       const [cachedBaseReserves, cachedFyTokenReserves] = await _series?.poolContract.getCache()!;
-      const cachedRealReserves = cachedFyTokenReserves.sub(_series?.totalSupply.bn.sub(ONE_BN));
+      const cachedRealReserves = cachedFyTokenReserves.sub(_series?.totalSupply.big.sub(ONE_BN));
 
       const [_fyTokenToBeMinted] = fyTokenForMint(
         cachedBaseReserves,

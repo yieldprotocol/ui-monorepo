@@ -1,17 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ActionCodes = exports.YieldColors = exports.AddLiquidityType = exports.ActionType = exports.TradeType = exports.MenuView = exports.ProcessStage = exports.TxState = exports.MessageType = exports.ApprovalMethod = exports.TokenType = exports.RoutedActions = exports.LadleActions = void 0;
-var operations_1 = require("./operations");
-Object.defineProperty(exports, "LadleActions", { enumerable: true, get: function () { return operations_1.LadleActions; } });
-Object.defineProperty(exports, "RoutedActions", { enumerable: true, get: function () { return operations_1.RoutedActions; } });
+exports.ActionCodes = exports.YieldColors = exports.AddLiquidityType = exports.ActionType = exports.TradeType = exports.ProcessStage = exports.TxState = exports.MessageType = exports.ApprovalMethod = exports.TokenType = void 0;
+const tslib_1 = require("tslib");
+tslib_1.__exportStar(require("./messages"), exports);
+tslib_1.__exportStar(require("./operations"), exports);
 var TokenType;
 (function (TokenType) {
-    TokenType[TokenType["ERC20_"] = 0] = "ERC20_";
-    TokenType[TokenType["ERC20_Permit"] = 1] = "ERC20_Permit";
-    TokenType[TokenType["ERC20_DaiPermit"] = 2] = "ERC20_DaiPermit";
-    TokenType[TokenType["ERC20_MKR"] = 3] = "ERC20_MKR";
-    TokenType[TokenType["ERC1155_"] = 4] = "ERC1155_";
-    TokenType[TokenType["ERC720_"] = 5] = "ERC720_";
+    TokenType[TokenType["Native_Token"] = 0] = "Native_Token";
+    TokenType[TokenType["ERC20"] = 1] = "ERC20";
+    TokenType[TokenType["ERC20_Permit"] = 2] = "ERC20_Permit";
+    TokenType[TokenType["ERC20_DaiPermit"] = 3] = "ERC20_DaiPermit";
+    TokenType[TokenType["ERC20_MKR"] = 4] = "ERC20_MKR";
+    TokenType[TokenType["ERC1155"] = 5] = "ERC1155";
+    TokenType[TokenType["ERC720"] = 6] = "ERC720";
 })(TokenType = exports.TokenType || (exports.TokenType = {}));
 var ApprovalMethod;
 (function (ApprovalMethod) {
@@ -43,12 +44,6 @@ var ProcessStage;
     ProcessStage["PROCESS_COMPLETE"] = "Process complete";
     ProcessStage["PROCESS_COMPLETE_TIMEOUT"] = "Process complete: timeout";
 })(ProcessStage = exports.ProcessStage || (exports.ProcessStage = {}));
-var MenuView;
-(function (MenuView) {
-    MenuView["account"] = "ACCOUNT";
-    MenuView["settings"] = "SETTINGS";
-    MenuView["vaults"] = "VAULTS";
-})(MenuView = exports.MenuView || (exports.MenuView = {}));
 var TradeType;
 (function (TradeType) {
     TradeType["BUY"] = "BUY";

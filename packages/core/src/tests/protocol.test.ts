@@ -1,6 +1,6 @@
 import { combineLatest, finalize, takeWhile, take, subscribeOn, first, lastValueFrom, withLatestFrom } from 'rxjs';
 import { buildProtocol } from '../buildProtocol';
-import { internalMessagesø, updateAppConfig } from '../observables';
+import { internalMessagesø, updateConfig } from '../observables';
 import { ethers } from 'ethers';
 
 import * as yObservables from '../observables';
@@ -24,7 +24,7 @@ const { providerø, appConfigø, chainIdø, updateProtocol, assetsø, seriesø, 
 
 beforeAll((done) => {
   /* update the config to testing specs */
-  updateAppConfig(config);
+  updateConfig(config);
   /* Once provider, config and chainId have resolved, build the protocol */
   combineLatest([providerø, appConfigø, chainIdø]).subscribe(async ([provider, config, chainId]) => {
     const protocol = await buildProtocol(provider, chainId, config);
@@ -60,7 +60,7 @@ test('The assets load, and each have a correct, connected token contract', (done
       await Promise.all(
         [...msgMap.values()].map(async (asset: IAsset) => {
           /* check if contract is connected correctly for non-ERC1155 tokens */
-          if (asset.tokenType === TokenType.ERC1155_) {
+          if (asset.tokenType === TokenType.ERC1155) {
             /* TODO: better check for other token types */
             return expect(1).toBe(1);
           } else {

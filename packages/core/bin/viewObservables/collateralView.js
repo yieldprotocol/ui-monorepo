@@ -32,11 +32,11 @@ const _selectedPairø = (0, rxjs_1.combineLatest)([observables_1.selectedø, ass
 const _totalDebtWithInputø = (0, rxjs_1.combineLatest)([input_1.borrowInputø, observables_1.selectedø]).pipe((0, rxjs_1.filter)(([, { series }]) => !!series), (0, rxjs_1.distinctUntilChanged)(([a], [b]) => a === b), // this is a check so that the observable isn't 'doubled up' with the same input value.
 (0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø), (0, rxjs_1.map)(([[debtInput, selected], config]) => {
     const { vault, series } = selected; // we can safetly assume 'series' is defined - not vault.
-    const existingDebt_ = (vault === null || vault === void 0 ? void 0 : vault.accruedArt.bn) || utils_1.ZERO_BN;
+    const existingDebt_ = (vault === null || vault === void 0 ? void 0 : vault.accruedArt.big) || utils_1.ZERO_BN;
     /* NB NOTE: this whole function ONLY deals with decimal18, existing values are converted to decimal18 */
     const existingDebtAsWei = (0, ui_math_1.decimalNToDecimal18)(existingDebt_, series.decimals);
-    const newDebt = debtInput.bn.gt(utils_1.ZERO_BN)
-        ? (0, ui_math_1.buyBase)(series.baseReserves.bn, series.fyTokenReserves.bn, debtInput.bn, series.getTimeTillMaturity(), series.ts, series.g2, series.decimals)
+    const newDebt = debtInput.big.gt(utils_1.ZERO_BN)
+        ? (0, ui_math_1.buyBase)(series.baseReserves.big, series.fyTokenReserves.big, debtInput.big, series.getTimeTillMaturity(), series.ts, series.g2, series.decimals)
         : utils_1.ZERO_BN;
     const newDebtAsWei = (0, ui_math_1.decimalNToDecimal18)(newDebt, series.decimals);
     const totalDebt = existingDebtAsWei.add(newDebtAsWei);
@@ -56,10 +56,10 @@ const _totalDebtWithInputø = (0, rxjs_1.combineLatest)([input_1.borrowInputø, 
 const _totalCollateralWithInputø = (0, rxjs_1.combineLatest)([input_1.collateralInputø, observables_1.selectedø]).pipe((0, rxjs_1.filter)(([, { ilk }]) => !!ilk), (0, rxjs_1.distinctUntilChanged)(([a], [b]) => a === b), (0, rxjs_1.withLatestFrom)(appConfig_1.appConfigø), (0, rxjs_1.map)(([[collInput, selected], config]) => {
     const { vault, ilk } = selected;
     if (ilk) {
-        const existingCollateral_ = (vault === null || vault === void 0 ? void 0 : vault.ink.bn) || utils_1.ZERO_BN; // if no vault simply return zero.
+        const existingCollateral_ = (vault === null || vault === void 0 ? void 0 : vault.ink.big) || utils_1.ZERO_BN; // if no vault simply return zero.
         const existingCollateralAsWei = (0, ui_math_1.decimalNToDecimal18)(existingCollateral_, ilk.decimals);
         /* TODO: there is a weird bug if inputting before selecting ilk. */
-        const newCollateralAsWei = (0, ui_math_1.decimalNToDecimal18)(collInput.bn, ilk.decimals);
+        const newCollateralAsWei = (0, ui_math_1.decimalNToDecimal18)(collInput.big, ilk.decimals);
         const totalCollateral = existingCollateralAsWei.add(newCollateralAsWei);
         appConfig_1.appConfigø.subscribe(({ diagnostics }) => diagnostics && console.log('Total Collateral (d18): ', totalCollateral.toString()));
         return [totalCollateral, existingCollateralAsWei]; // as decimal18
@@ -85,7 +85,7 @@ exports.collateralizationRatioø = (0, rxjs_1.combineLatest)([
         ((_b = totalDebt[0]) === null || _b === void 0 ? void 0 : _b.gt(utils_1.ZERO_BN)) &&
         !!assetPair) {
         /* NOTE: this function ONLY deals with decimal18, existing values are converted to decimal18 */
-        const pairPriceInWei = (0, ui_math_1.decimalNToDecimal18)(assetPair.pairPrice.bn, assetPair.baseDecimals);
+        const pairPriceInWei = (0, ui_math_1.decimalNToDecimal18)(assetPair.pairPrice.big, assetPair.baseDecimals);
         const ratio = (0, ui_math_1.calculateCollateralizationRatio)(totalCollat[0], pairPriceInWei, totalDebt[0], false);
         config.diagnostics && console.log('Collateralisation ratio:', ratio);
         return ratio;
@@ -130,7 +130,7 @@ exports.isUnhealthyCollateralizationø = (0, rxjs_1.combineLatest)([
     observables_1.selectedø,
     exports.minCollateralizationRatioø,
 ]).pipe((0, rxjs_1.filter)(([, { vault }]) => !!vault), (0, rxjs_1.map)(([ratio, { vault }, minRatio]) => {
-    if (vault === null || vault === void 0 ? void 0 : vault.accruedArt.bn.lte(utils_1.ZERO_BN))
+    if (vault === null || vault === void 0 ? void 0 : vault.accruedArt.big.lte(utils_1.ZERO_BN))
         return false;
     return ratio < minRatio + 0.2;
 }), (0, rxjs_1.share)());
@@ -144,9 +144,9 @@ exports.minCollateralRequiredø = (0, rxjs_1.combineLatest)([
     _totalDebtWithInputø,
     _totalCollateralWithInputø,
 ]).pipe((0, rxjs_1.map)(([assetPair, minCollatRatio, totalDebt, totalCollat]) => {
-    const _pairPriceInWei = (0, ui_math_1.decimalNToDecimal18)(assetPair.pairPrice.bn, assetPair.baseDecimals);
+    const _pairPriceInWei = (0, ui_math_1.decimalNToDecimal18)(assetPair.pairPrice.big, assetPair.baseDecimals);
     const _calcMin = (0, ui_math_1.calculateMinCollateral)(_pairPriceInWei, totalDebt[0], minCollatRatio.toString(), totalCollat[1]);
-    return (0, yieldUtils_1.bnToW3Number)(_calcMin, assetPair === null || assetPair === void 0 ? void 0 : assetPair.baseDecimals);
+    return (0, yieldUtils_1.bnToW3bNumber)(_calcMin, assetPair === null || assetPair === void 0 ? void 0 : assetPair.baseDecimals);
 }), (0, rxjs_1.share)());
 /**
  *  Minimum Safe collatearalization level expressed asa ratio
@@ -171,7 +171,7 @@ exports.minimumSafePercentø = exports.minimumSafeRatioø.pipe((0, rxjs_1.map)((
  * Maximum collateral based selected Ilk and users balance
  * @category Borrow | Collateral
  */
-exports.maxCollateralø = observables_1.selectedø.pipe((0, rxjs_1.map)((selectedø) => selectedø.ilk ? selectedø.ilk.balance : constants_1.ZERO_W3NUMBER), (0, rxjs_1.share)());
+exports.maxCollateralø = observables_1.selectedø.pipe((0, rxjs_1.map)((selectedø) => selectedø.ilk ? selectedø.ilk.balance : constants_1.ZERO_W3B), (0, rxjs_1.share)());
 /**
  * Calculate the maximum amount of collateral that can be removed
  * without leaving the vault undercollateralised
@@ -183,10 +183,10 @@ exports.maxRemovableCollateralø = (0, rxjs_1.combineLatest)([
     exports.minCollateralRequiredø,
 ]).pipe((0, rxjs_1.map)(([{ vault }, totalCollat, minReqd]) => {
     if (vault) {
-        const tot_ = vault.accruedArt.bn.gt(minReqd.bn) ? totalCollat[1].sub(utils_1.ONE_BN) : totalCollat[1];
-        return (0, yieldUtils_1.bnToW3Number)(tot_, vault.baseDecimals);
+        const tot_ = vault.accruedArt.big.gt(minReqd.big) ? totalCollat[1].sub(utils_1.ONE_BN) : totalCollat[1];
+        return (0, yieldUtils_1.bnToW3bNumber)(tot_, vault.baseDecimals);
     }
-    return constants_1.ZERO_W3NUMBER;
+    return constants_1.ZERO_W3B;
 }), (0, rxjs_1.share)());
 /**
  * Price at which the vault will get liquidated

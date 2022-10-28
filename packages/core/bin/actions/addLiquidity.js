@@ -6,7 +6,7 @@ const ui_math_1 = require("@yield-protocol/ui-math");
 const ethers_1 = require("ethers");
 const rxjs_1 = require("rxjs");
 const chainActions_1 = require("../chainActions");
-const assets_1 = require("../config/assets");
+const assetsConfig_1 = require("../config/assetsConfig");
 const observables_1 = require("../observables");
 const types_1 = require("../types");
 const utils_1 = require("../utils");
@@ -29,7 +29,7 @@ const addLiquidity = (amount, strategy, method = types_1.AddLiquidityType.BUY, m
         const _amount = (0, yieldUtils_1.inputToTokenValue)(amount, _base === null || _base === void 0 ? void 0 : _base.decimals);
         const _amountLessSlippage = (0, ui_math_1.calculateSlippage)(_amount, slippageTolerance.toString(), true);
         const [cachedBaseReserves, cachedFyTokenReserves] = yield (_series === null || _series === void 0 ? void 0 : _series.poolContract.getCache());
-        const cachedRealReserves = cachedFyTokenReserves.sub(_series === null || _series === void 0 ? void 0 : _series.totalSupply.bn.sub(utils_1.ONE_BN));
+        const cachedRealReserves = cachedFyTokenReserves.sub(_series === null || _series === void 0 ? void 0 : _series.totalSupply.big.sub(utils_1.ONE_BN));
         const [_fyTokenToBeMinted] = (0, ui_math_1.fyTokenForMint)(cachedBaseReserves, cachedRealReserves, cachedFyTokenReserves, _amountLessSlippage, _series.getTimeTillMaturity(), _series.ts, _series.g1, _series.decimals, slippageTolerance);
         const [minRatio, maxRatio] = (0, ui_math_1.calcPoolRatios)(cachedBaseReserves, cachedRealReserves);
         const [_baseToPool, _baseToFyToken] = (0, ui_math_1.splitLiquidity)(cachedBaseReserves, cachedRealReserves, _amountLessSlippage, true);
@@ -37,7 +37,7 @@ const addLiquidity = (amount, strategy, method = types_1.AddLiquidityType.BUY, m
         /* if approveMAx, check if signature is still required */
         const alreadyApproved = (yield _base.getAllowance(account, ladleAddress)).gte(_amount);
         /* if ethBase */
-        const isEthBase = assets_1.ETH_BASED_ASSETS.includes(_base.proxyId);
+        const isEthBase = assetsConfig_1.ETH_BASED_ASSETS.includes(_base.proxyId);
         /* DIAGNOSITCS */
         console.log('input: ', _amount.toString(), 'inputLessSlippage: ', _amountLessSlippage.toString(), 'base: ', cachedBaseReserves.toString(), 'real: ', cachedRealReserves.toString(), 'virtual: ', cachedFyTokenReserves.toString(), '>> baseSplit: ', _baseToPool.toString(), '>> fyTokenSplit: ', _baseToFyToken.toString(), '>> baseSplitWithSlippage: ', _baseToPoolWithSlippage.toString(), '>> minRatio', minRatio.toString(), '>> maxRatio', maxRatio.toString(), 'matching vault id', matchingVaultId);
         /**

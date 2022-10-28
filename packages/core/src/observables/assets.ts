@@ -1,22 +1,19 @@
-import { BehaviorSubject, Observable, share, combineLatest, withLatestFrom, filter, skip, shareReplay } from 'rxjs';
+import { BehaviorSubject, Observable, withLatestFrom, filter, shareReplay } from 'rxjs';
 import { BigNumber, Contract, ethers } from 'ethers';
 
-import { IAsset, IAssetRoot, TokenType, IYieldProtocol } from '../types';
+import { IAsset, IAssetRoot, TokenType, W3bNumber } from '../types';
 import { accountø, providerø } from './connection';
 import { protocolø } from './protocol';
 
-import * as contracts from '../contracts';
-import { ASSETS, ETH_BASED_ASSETS } from '../config/assets';
-import { ZERO_BN } from '../utils/constants';
-import { truncateValue } from '../utils';
+import * as contracts from '@yield-protocol/ui-contracts';
+import { ZERO_BN, ZERO_W3B } from '../utils/constants';
 import { MessageType, sendMsg } from './messages';
-import { bnToW3Number } from '../utils/yieldUtils';
+import { bnToW3bNumber } from '../utils/yieldUtils';
 
 
 const assetMap$: BehaviorSubject<Map<string, IAsset>> = new BehaviorSubject(new Map([]));
-/**
- * Unsubscribed Assetmap observable
- */
+
+/** Unsubscribed Assetmap observable exposed for distribution */
 export const assetsø: Observable<Map<string, IAsset>> = assetMap$.pipe(shareReplay(1));
 
 /**
@@ -29,8 +26,14 @@ export const updateAssets = async (assetList?: IAsset[], account?: string) => {
   const list = assetList?.length ? assetList : Array.from(assetMap$.value.values());
   await Promise.all(
     list.map(async (asset: IAsset) => {
-      const assetUpdate = account ? await _updateAccountInfo(asset, account) : asset;
-      assetMap$.next(new Map(assetMap$.value.set(asset.id, assetUpdate))); // note: new Map to enforce ref update
+      /* if there is an account update the asset balance */ 
+      if ( account ){
+        const balance_ = asset.name !== 'UNKNOWN' ? await asset.getBalance(account) : ZERO_BN;
+        const assetWithBalance = {...asset, balance : bnToW3bNumber( balance_, asset.decimals, 2 ) } 
+        assetMap$.next(new Map(assetMap$.value.set(asset.id, assetWithBalance))); // note: new Map to enforce ref update
+      } else {
+        assetMap$.next(new Map(assetMap$.value.set(asset.id, asset))); // note: new Map to enforce ref update
+      }
     })
   );
 };
@@ -69,9 +72,12 @@ protocolø
   };
 });
 
-
-/* Add on extra/calculated ASSET info, contract instances and methods (note: no async ) + add listners */
-const _chargeAsset = (asset: any, provider: ethers.providers.BaseProvider): IAsset => {
+/**
+ * 
+ * Add on extra/calculated ASSET info, live contract instances and methods (nb note: NOTHING ASYNC ) + add listners 
+ * 
+ * */
+const _chargeAsset = (asset: IAssetRoot, provider: ethers.providers.BaseProvider): IAsset => {
   /* add any asset listeners required */
 
   /* attach either contract, (or contract of the wrappedToken ) */
@@ -79,16 +85,21 @@ const _chargeAsset = (asset: any, provider: ethers.providers.BaseProvider): IAss
   let getBalance: (acc: string, asset?: string) => Promise<BigNumber>;
   let getAllowance: (acc: string, spender: string, asset?: string) => Promise<BigNumber>;
 
-  // TODO: possibly refactor this?
   switch (asset.tokenType) {
-    case TokenType.ERC20_:
+
+    case TokenType.Native_Token:
+      assetContract = contracts.ERC20__factory.connect(asset.address, provider); // alhtough it doesn't do anything for a native token
+      getBalance = async (acc) => provider?.getBalance(acc);
+      getAllowance = async (acc) => provider?.getBalance(acc);
+      break;
+
+    case TokenType.ERC20:
       assetContract = contracts.ERC20__factory.connect(asset.address, provider);
-      getBalance = async (acc) =>
-        ETH_BASED_ASSETS.includes(asset.proxyId) ? provider?.getBalance(acc) : assetContract.balanceOf(acc);
+      getBalance = async (acc) => assetContract.balanceOf(acc);
       getAllowance = async (acc: string, spender: string) => assetContract.allowance(acc, spender);
       break;
 
-    case TokenType.ERC1155_:
+    case TokenType.ERC1155:
       assetContract = contracts.ERC1155__factory.connect(asset.address, provider);
       getBalance = async (acc) => assetContract.balanceOf(acc, asset.tokenIdentifier);
       getAllowance = async (acc: string, spender: string) => assetContract.isApprovedForAll(acc, spender);
@@ -102,31 +113,22 @@ const _chargeAsset = (asset: any, provider: ethers.providers.BaseProvider): IAss
     default:
       // Default is a ERC20Permit;
       assetContract = contracts.ERC20Permit__factory.connect(asset.address, provider);
-      getBalance = async (acc) =>
-        ETH_BASED_ASSETS.includes(asset.id) ? provider?.getBalance(acc) : assetContract.balanceOf(acc);
+      getBalance = async (acc) => assetContract.balanceOf(acc);
       getAllowance = async (acc: string, spender: string) => assetContract.allowance(acc, spender);
       break;
   }
 
   return {
-    ...asset,
+    ...asset,  
+
     /* Attach the asset contract */
     assetContract,
-    /* re-add in the wrap handler addresses when charging, because cache doesn't preserve map */
-    wrapHandlerAddresses: ASSETS.get(asset.id)?.wrapHandlerAddresses,
-    unwrapHandlerAddresses: ASSETS.get(asset.id)?.unwrapHandlerAddresses,
-    /* attach the various functions required */
+
+    /* Attach the various functions required */
     getBalance,
     getAllowance,
-  };
-};
 
-const _updateAccountInfo = async (asset: IAsset, account: string | undefined): Promise<IAsset> => {
-  /* Setup users asset info  */
-  const balance_ = asset.name !== 'UNKNOWN' && account ? await asset.getBalance(account) : ZERO_BN;
-  
-  return {
-    ...asset,
-    balance : bnToW3Number( balance_, asset.decimals, 2 ) // asset.digitFormat ) 
+    /* initialise dynamic data fields */
+    balance: ZERO_W3B
   };
 };

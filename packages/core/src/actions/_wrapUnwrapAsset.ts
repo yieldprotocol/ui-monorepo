@@ -24,9 +24,7 @@ export const wrapAsset = async (
 
   /* SET the destination address DEFAULTs to the assetJoin Address */
   const toAddress = to || asset.joinAddress;
-  const wrapHandlerAddress = asset.wrapHandlerAddresses?.has(chainId)
-    ? asset.wrapHandlerAddresses.get(chainId)
-    : undefined;
+  const wrapHandlerAddress = asset.wrapHandlerAddress;
 
   /* NB! IF a wraphandler exists, we assume that it is Yield uses the wrapped version of the token */
   if (wrapHandlerAddress && value.gt(ZERO_BN)) {
@@ -77,9 +75,7 @@ export const unwrapAsset = async (asset: IAsset, receiver: string ): Promise<ICa
   const chainId = await lastValueFrom(chainIdø.pipe(first()));
   const { unwrapTokens } = userSettings;
 
-  const unwrapHandlerAddress = asset.unwrapHandlerAddresses?.has(chainId)
-    ? asset.unwrapHandlerAddresses.get(chainId)
-    : undefined;
+  const unwrapHandlerAddress = asset.unwrapHandlerAddress;
 
   /* if there is an unwrap handler we assume the token needs to be unwrapped  ( unless the 'unwrapTokens' setting is false) */
   if (unwrapTokens && unwrapHandlerAddress) {

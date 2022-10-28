@@ -1,7 +1,7 @@
 import { BehaviorSubject, finalize, Observable, share, shareReplay, takeWhile, tap } from 'rxjs';
 import { Contract, ethers } from 'ethers';
 import { IAssetRoot, ISeriesRoot, IStrategyRoot, IYieldConfig, IYieldProtocol, MessageType } from '../types';
-import * as contracts from '../contracts';
+import * as contracts from '@yield-protocol/ui-contracts';
 import { internalMessagesø, sendMsg } from './messages';
 
 // TODO: try to get rid of this init?
@@ -41,7 +41,7 @@ internalMessagesø
     ),
     finalize(() => {
       sendMsg({ message: 'Protocol Ready', id: 'protocolReady', type: MessageType.INTERNAL });
-      sendMsg({ message: 'Protocol Ready (custom wait 5000ms)', timeoutOverride: 5000 });
+      sendMsg({ message: 'Protocol Ready (custom wait 4500ms)', timeoutOverride: 4500 });
     })
   )
   .subscribe();

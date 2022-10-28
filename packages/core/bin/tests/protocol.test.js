@@ -23,7 +23,7 @@ const config = {
 const { providerø, appConfigø, chainIdø, updateProtocol, assetsø, seriesø, strategiesø } = yObservables;
 beforeAll((done) => {
     /* update the config to testing specs */
-    (0, observables_1.updateAppConfig)(config);
+    (0, observables_1.updateConfig)(config);
     /* Once provider, config and chainId have resolved, build the protocol */
     (0, rxjs_1.combineLatest)([providerø, appConfigø, chainIdø]).subscribe(([provider, config, chainId]) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         const protocol = yield (0, buildProtocol_1.buildProtocol)(provider, chainId, config);
@@ -52,7 +52,7 @@ test('The assets load, and each have a correct, connected token contract', (done
         next: (msgMap) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
             yield Promise.all([...msgMap.values()].map((asset) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
                 /* check if contract is connected correctly for non-ERC1155 tokens */
-                if (asset.tokenType === types_1.TokenType.ERC1155_) {
+                if (asset.tokenType === types_1.TokenType.ERC1155) {
                     /* TODO: better check for other token types */
                     return expect(1).toBe(1);
                 }

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.lend = void 0;
 const tslib_1 = require("tslib");
 const ui_math_1 = require("@yield-protocol/ui-math");
-const assets_1 = require("../config/assets");
+const assetsConfig_1 = require("../config/assetsConfig");
 const observables_1 = require("../observables");
 const chainActions_1 = require("../chainActions");
 const types_1 = require("../types");
@@ -21,12 +21,12 @@ const lend = (amount, series) => tslib_1.__awaiter(void 0, void 0, void 0, funct
         const ladleAddress = ladle.address;
         const base = assetMap.get(series.baseId);
         const _amount = (0, yieldUtils_1.inputToTokenValue)(amount, base === null || base === void 0 ? void 0 : base.decimals);
-        const _inputAsFyToken = (0, ui_math_1.sellBase)(series.baseReserves.bn, series.fyTokenReserves.bn, _amount, series.getTimeTillMaturity(), series.ts, series.g1, series.decimals);
+        const _inputAsFyToken = (0, ui_math_1.sellBase)(series.baseReserves.big, series.fyTokenReserves.big, _amount, series.getTimeTillMaturity(), series.ts, series.g1, series.decimals);
         const _inputAsFyTokenWithSlippage = (0, ui_math_1.calculateSlippage)(_inputAsFyToken, slippageTolerance.toString(), true);
         /* if approveMAx, check if signature is required */
         const alreadyApproved = (yield base.getAllowance(account, ladleAddress)).gte(_amount);
         /* ETH is used as a base */
-        const isEthBase = assets_1.ETH_BASED_ASSETS.includes(series.baseId);
+        const isEthBase = assetsConfig_1.ETH_BASED_ASSETS.includes(series.baseId);
         const permitCallData = yield (0, chainActions_1.sign)([
             {
                 target: base,

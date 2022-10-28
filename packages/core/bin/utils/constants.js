@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OPTIMISM = exports.ARBITRUM = exports.ETHEREUM = exports.IGNORED_CALLDATA = exports.BLANK_SERIES = exports.BLANK_VAULT = exports.BLANK_ADDRESS = exports.RATE = exports.CHI = exports.CHAI_BYTES = exports.ETH_BYTES = exports.SECONDS_PER_YEAR = exports.WAD_BN = exports.WAD_RAY_BN = exports.MINUS_ONE_BN = exports.ONE_BN = exports.ZERO_W3NUMBER = exports.ZERO_BN = exports.MAX_128 = exports.MAX_256 = void 0;
+exports.OPTIMISM = exports.ARBITRUM = exports.ETHEREUM = exports.IGNORED_CALLDATA = exports.BLANK_SERIES = exports.BLANK_VAULT = exports.BLANK_ADDRESS = exports.RATE = exports.CHI = exports.CHAI_BYTES = exports.ETH_BYTES = exports.SECONDS_PER_YEAR = exports.WAD_BN = exports.WAD_RAY_BN = exports.MINUS_ONE_BN = exports.ONE_BN = exports.ZERO_W3B = exports.ZERO_BN = exports.MAX_128 = exports.MAX_256 = void 0;
 const ethers_1 = require("ethers");
 /* constants */
 exports.MAX_256 = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
 exports.MAX_128 = '0xffffffffffffffffffffffffffffffff';
 exports.ZERO_BN = ethers_1.ethers.constants.Zero;
-exports.ZERO_W3NUMBER = { bn: ethers_1.ethers.constants.Zero, hStr: '0', dsp: '0' };
+exports.ZERO_W3B = { big: ethers_1.ethers.constants.Zero, hStr: '0', dsp: 0 };
 exports.ONE_BN = ethers_1.ethers.constants.One;
 exports.MINUS_ONE_BN = ethers_1.ethers.constants.One.mul(-1);
 exports.WAD_RAY_BN = ethers_1.BigNumber.from('1000000000000000000000000000');

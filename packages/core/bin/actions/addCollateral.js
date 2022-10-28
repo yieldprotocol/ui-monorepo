@@ -5,7 +5,7 @@ const tslib_1 = require("tslib");
 const ethers_1 = require("ethers");
 const rxjs_1 = require("rxjs");
 const chainActions_1 = require("../chainActions");
-const assets_1 = require("../config/assets");
+const assetsConfig_1 = require("../config/assetsConfig");
 const observables_1 = require("../observables");
 const messages_1 = require("../observables/messages");
 const types_1 = require("../types");
@@ -52,9 +52,9 @@ const addCollateral = (amount, vault) => tslib_1.__awaiter(void 0, void 0, void 
         /* parse inputs to BigNumber in Wei */
         const _amount = (0, yieldUtils_1.inputToTokenValue)(amount, ilk.decimals);
         /* check if the ilk/asset is an eth asset variety, if so pour to Ladle */
-        const isEthCollateral = assets_1.ETH_BASED_ASSETS.includes(ilk === null || ilk === void 0 ? void 0 : ilk.proxyId);
+        const isEthCollateral = assetsConfig_1.ETH_BASED_ASSETS.includes(ilk === null || ilk === void 0 ? void 0 : ilk.proxyId);
         /* is convex-type collateral */
-        const isConvexCollateral = assets_1.CONVEX_BASED_ASSETS.includes(ilk === null || ilk === void 0 ? void 0 : ilk.proxyId);
+        const isConvexCollateral = assetsConfig_1.CONVEX_BASED_ASSETS.includes(ilk === null || ilk === void 0 ? void 0 : ilk.proxyId);
         const ConvexLadleModuleContract = moduleMap.get('ConvexLadleModule');
         /* if approveMAx, check if signature is required : note: getAllowance may return FALSE if ERC1155 */
         const _allowance = yield (ilk === null || ilk === void 0 ? void 0 : ilk.getAllowance(account, ilk.joinAddress));
@@ -72,7 +72,7 @@ const addCollateral = (amount, vault) => tslib_1.__awaiter(void 0, void 0, void 
             },
         ], txCode);
         /* Handle adding eth if required (ie. if the ilk is ETH_BASED). If not, else simply sent ZERO to the addEth fn */
-        const addEthCallData = yield (0, _addRemoveEth_1.addEth)(assets_1.ETH_BASED_ASSETS.includes(ilk === null || ilk === void 0 ? void 0 : ilk.proxyId) ? _amount : utils_1.ZERO_BN, undefined, ilk === null || ilk === void 0 ? void 0 : ilk.proxyId);
+        const addEthCallData = yield (0, _addRemoveEth_1.addEth)(assetsConfig_1.ETH_BASED_ASSETS.includes(ilk === null || ilk === void 0 ? void 0 : ilk.proxyId) ? _amount : utils_1.ZERO_BN, undefined, ilk === null || ilk === void 0 ? void 0 : ilk.proxyId);
         /* pour destination based on ilk/asset is an eth asset variety */
         const pourToAddress = () => {
             if (isEthCollateral)

@@ -2,14 +2,13 @@ import { bytesToBytes32, decimal18ToDecimalN } from '@yield-protocol/ui-math';
 import { BigNumber, ethers } from 'ethers';
 import { BehaviorSubject, filter, first, lastValueFrom, map, Observable, share, shareReplay, withLatestFrom } from 'rxjs';
 
-import { ORACLES } from '../config/oracles';
-import { IAssetPair, ISelected } from '../types';
+import { ORACLE_INFO} from '../config';
+import { IAssetPair } from '../types';
 import { WAD_BN } from '../utils';
 import { protocolø } from './protocol';
 import { selectedø } from './selected';
-import { bnToW3Number, getAssetPairId } from '../utils/yieldUtils';
+import { bnToW3bNumber, getAssetPairId } from '../utils/yieldUtils';
 import { chainIdø } from './connection';
-
 
 const assetPairMap$: BehaviorSubject<Map<string, IAssetPair>> = new BehaviorSubject(new Map([]));
 export const assetPairsø: Observable<Map<string, IAssetPair>> = assetPairMap$.pipe(shareReplay(1));
@@ -18,7 +17,7 @@ export const assetPairsø: Observable<Map<string, IAssetPair>> = assetPairMap$.p
  *
  * Watch selected elements, on every change if both a base and ilk are selected,
  * and they don't already exist in the assetPairMap, update them.
- *
+ * 
  * */
 selectedø
   .pipe(
@@ -42,7 +41,7 @@ export const updatePair = async (baseId: string, ilkId: string, chainId: number)
   const protocol = await lastValueFrom(protocolø.pipe(first()));
 
   const { cauldron, assetRootMap, oracleMap } = protocol;
-  const oracleName = ORACLES.get(chainId)?.get(baseId)?.get(ilkId);
+  const oracleName = ORACLE_INFO.get(chainId)?.get(baseId)?.get(ilkId);
 
   const PriceOracle = oracleMap.get(oracleName!);
   const base = assetRootMap.get(baseId);
@@ -82,10 +81,10 @@ export const updatePair = async (baseId: string, ilkId: string, chainId: number)
       baseId,
       ilkId,
       limitDecimals: dec,
-      minDebtLimit:  bnToW3Number(minDebtLimit_, base.decimals, base.digitFormat), // NB use limit decimals here > might not be same as base/ilk decimals
-      maxDebtLimit:  bnToW3Number(maxDebtLimit_, base.decimals, base.digitFormat), // NB use limit decimals here > might not be same as base/ilk decimals
-      pairTotalDebt: bnToW3Number( sum, base.decimals, base.digitFormat ) ,
-      pairPrice: bnToW3Number(price, base.decimals, base.digitFormat) , // value of 1 ilk (1x10**n) in terms of base.
+      minDebtLimit:  bnToW3bNumber(minDebtLimit_, base.decimals, base.digitFormat), // NB use limit decimals here > might not be same as base/ilk decimals
+      maxDebtLimit:  bnToW3bNumber(maxDebtLimit_, base.decimals, base.digitFormat), // NB use limit decimals here > might not be same as base/ilk decimals
+      pairTotalDebt: bnToW3bNumber( sum, base.decimals, base.digitFormat ) ,
+      pairPrice: bnToW3bNumber(price, base.decimals, base.digitFormat) , // value of 1 ilk (1x10**n) in terms of base.
       minRatio: parseFloat(ethers.utils.formatUnits(ratio, 6)), // pre-format ratio
       baseDecimals: base.decimals!,
       ilkDecimals: ilk.decimals!,

@@ -29,7 +29,7 @@ const ui_math_1 = require("@yield-protocol/ui-math");
 const ethers_1 = require("ethers");
 const rxjs_1 = require("rxjs");
 const chainActions_1 = require("../chainActions");
-const assets_1 = require("../config/assets");
+const assetsConfig_1 = require("../config/assetsConfig");
 const observables_1 = require("../observables");
 const types_1 = require("../types");
 const utils_1 = require("../utils");
@@ -48,21 +48,21 @@ const removeLiquidity = (amount, series, matchingVault, tradeFyToken = true) => 
         const _strategy = selected.strategy;
         const _amount = (0, yieldUtils_1.inputToTokenValue)(amount, _base.decimals);
         const [cachedBaseReserves, cachedFyTokenReserves] = yield series.poolContract.getCache();
-        const cachedRealReserves = cachedFyTokenReserves.sub(series.totalSupply.bn);
+        const cachedRealReserves = cachedFyTokenReserves.sub(series.totalSupply.big);
         const lpReceived = (0, ui_math_1.burnFromStrategy)(_strategy.poolTotalSupply, _strategy.strategyTotalSupply, _amount);
-        const [_baseTokenReceived, _fyTokenReceived] = (0, ui_math_1.burn)(series.baseReserves.bn, series.fyTokenRealReserves.bn, series.totalSupply.bn, lpReceived);
-        const _newPool = (0, ui_math_1.newPoolState)(_baseTokenReceived.mul(-1), _fyTokenReceived.mul(-1), series.baseReserves.bn, series.fyTokenRealReserves.bn, series.totalSupply.bn);
+        const [_baseTokenReceived, _fyTokenReceived] = (0, ui_math_1.burn)(series.baseReserves.big, series.fyTokenRealReserves.big, series.totalSupply.big, lpReceived);
+        const _newPool = (0, ui_math_1.newPoolState)(_baseTokenReceived.mul(-1), _fyTokenReceived.mul(-1), series.baseReserves.big, series.fyTokenRealReserves.big, series.totalSupply.big);
         const fyTokenTrade = (0, ui_math_1.sellFYToken)(_newPool.sharesReserves, _newPool.fyTokenVirtualReserves, _fyTokenReceived, series.getTimeTillMaturity(), series.ts, series.g2, series.decimals);
         // diagnostics && console.log('fyTokenTrade value: ', fyTokenTrade.toString());
         const fyTokenTradeSupported = fyTokenTrade.gt(ethers_1.ethers.constants.Zero);
         const matchingVaultId = matchingVault === null || matchingVault === void 0 ? void 0 : matchingVault.id;
-        const _matchingVaultDebt = (matchingVault === null || matchingVault === void 0 ? void 0 : matchingVault.accruedArt.bn) || utils_1.ZERO_BN;
+        const _matchingVaultDebt = (matchingVault === null || matchingVault === void 0 ? void 0 : matchingVault.accruedArt.big) || utils_1.ZERO_BN;
         // Choose use use matching vault:
         const useMatchingVault = !!matchingVault && _matchingVaultDebt.gt(ethers_1.ethers.constants.Zero);
         // const useMatchingVault: boolean = !!matchingVault && ( _fyTokenReceived.lte(matchingVaultDebt) || !tradeFyToken) ;
         const [minRatio, maxRatio] = (0, ui_math_1.calcPoolRatios)(cachedBaseReserves, cachedRealReserves);
         const fyTokenReceivedGreaterThanDebt = _fyTokenReceived.gt(_matchingVaultDebt); // i.e. debt below fytoken
-        const extrafyTokenTrade = (0, ui_math_1.sellFYToken)(series.baseReserves.bn, series.fyTokenReserves.bn, _fyTokenReceived.sub(_matchingVaultDebt), series.getTimeTillMaturity(), series.ts, series.g2, series.decimals);
+        const extrafyTokenTrade = (0, ui_math_1.sellFYToken)(series.baseReserves.big, series.fyTokenReserves.big, _fyTokenReceived.sub(_matchingVaultDebt), series.getTimeTillMaturity(), series.ts, series.g2, series.decimals);
         /* if valid extraTrade > 0 and user selected to tradeFyToken */
         const extraTradeSupported = extrafyTokenTrade.gt(ethers_1.ethers.constants.Zero) && tradeFyToken;
         /* Diagnostics */
@@ -83,7 +83,7 @@ const removeLiquidity = (amount, series, matchingVault, tradeFyToken = true) => 
         const alreadyApprovedPool = !_strategy
             ? (yield series.poolContract.allowance(account, ladleAddress)).gte(_amount)
             : false;
-        const isEthBase = assets_1.ETH_BASED_ASSETS.includes(_base.proxyId);
+        const isEthBase = assetsConfig_1.ETH_BASED_ASSETS.includes(_base.proxyId);
         const toAddress = isEthBase ? ladleAddress : account;
         const seriesIsMature = series.isMature();
         /* handle removeing eth BAse tokens:  */
