@@ -1427,6 +1427,6 @@ export const getFyTokenPrice = (
   mu: BigNumber | string = mu_DEFAULT
 ): number => {
   const sharesOut = sellFYToken(sharesReserves, fyTokenReserves, input, timeTillMaturity, ts, g2, decimals, c, mu);
-  const baseValueOfInput = +getBaseFromShares(sharesOut, fyTokenReserves, decimals);
+  const baseValueOfInput = getBaseFromShares(sharesOut, fyTokenReserves, decimals);
   return +baseValueOfInput / +input;
 };
