@@ -1379,3 +1379,54 @@ export const getTimeStretchYears = (ts: BigNumber): Decimal => {
   const invTs = ONE.div(_ts);
   return invTs.div(_secondsInOneYear);
 };
+
+/**
+ * Calculates the amount of base from shares
+ * @param shares amount of shares
+ * @param currentSharePrice current share price in base terms
+ * @param decimals
+ * @returns base amount of shares
+ */
+export const getBaseFromShares = (shares: BigNumber, currentSharePrice: BigNumber, decimals: number): BigNumber =>
+  toBn(new Decimal(shares.toString()).mul(new Decimal(currentSharePrice.toString())).div(10 ** decimals));
+
+/**
+ * Calculates the amount of shares from base
+ * @param base amount of base
+ * @param currentSharePrice current share price in base terms
+ * @param decimals
+ * @returns shares amount of base
+ *
+ */
+export const getSharesFromBase = (base: BigNumber, currentSharePrice: BigNumber, decimals: number): BigNumber =>
+  toBn(new Decimal(base.toString()).mul(10 ** decimals).div(new Decimal(currentSharePrice.toString())));
+
+/**
+ * Calculates the amount of base from fyToken
+ * @param input amount of fyToken used as input to estimate the fyToken price in base terms; in decimals format
+ * @param sharesReserves shares reserves of the pool
+ * @param fyTokenReserves fyToken reserves of the pool
+ * @param timeTillMaturity time till maturity of the pool
+ * @param ts time stretch
+ * @param g2 fee
+ * @param decimals
+ * @param c
+ * @param mu
+ * @returns fyToken price in base terms
+ *
+ */
+export const getFyTokenPrice = (
+  input: BigNumber,
+  sharesReserves: BigNumber,
+  fyTokenReserves: BigNumber,
+  timeTillMaturity: BigNumber | string,
+  ts: BigNumber | string,
+  g2: BigNumber | string,
+  decimals: number,
+  c: BigNumber | string = c_DEFAULT,
+  mu: BigNumber | string = mu_DEFAULT
+): number => {
+  const sharesOut = sellFYToken(sharesReserves, fyTokenReserves, input, timeTillMaturity, ts, g2, decimals, c, mu);
+  const baseValueOfInput = +getBaseFromShares(sharesOut, fyTokenReserves, decimals);
+  return +baseValueOfInput / +input;
+};
