@@ -35,10 +35,10 @@ import * as yieldObservables from './observables';
 import * as viewObservables from './viewObservables';
 
 
-import ASSETS from './config/new/assets';
-import SERIES from './config/new/series';
-import ORACLES from './config/new/oracles';
-import STRATEGIES from './config/new/strategies';
+import { ASSETS } from './config/new/assets';
+import { SERIES } from './config/new/series';
+import { ORACLES } from './config/new/oracles';
+import { STRATEGIES } from './config/new/strategies';
 
 
 /**

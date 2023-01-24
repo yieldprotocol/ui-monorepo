@@ -1,6 +1,6 @@
 import {BaseProvider} from "@ethersproject/providers";
 import { Strategy__factory } from "@yield-protocol/ui-contracts";
-import STRATEGIES, { StrategyInfo } from "./strategies";
+import { STRATEGIES, StrategyInfo } from "./strategies";
 
 export const validateStrategies = async (provider: BaseProvider) => {
     const preText = '### STRATEGY VALIDATION ERROR ### ';
