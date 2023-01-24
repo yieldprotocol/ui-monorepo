@@ -30,7 +30,7 @@
     
   },
   "typedocOptions": {
-    "entryPoints": ["src/observables","src/viewObservables", "src/types", "src/actions", "src/config/new" ],
+    "entryPoints": ["src/observables","src/viewObservables", "src/types", "src/actions", "src/config" ],
     "out": "../../docs",
     "excludeInternal": true,
   } 
