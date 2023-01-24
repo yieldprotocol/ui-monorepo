@@ -513,3 +513,33 @@ export declare const calcPoolRatios: (sharesReserves: BigNumber, fyTokenRealRese
  * @returns {[BigNumber, BigNumber]} accruedDebt, debt less accrued value
  */
 export declare const calcAccruedDebt: (rate: BigNumber, rateAtMaturity: BigNumber, debt: BigNumber) => BigNumber[];
+/**
+ * Calculates the amount of base needed to adjust a pool to a desired interest rate
+ *
+ * @param {BigNumber} sharesReserves shares reserves of the pool
+ * @param {BigNumber} fyTokenReserves virtual fyToken of the pool
+ * @param {number} timeTillMaturity fyToken of the pool
+ * @param {BigNumber} ts time stretch
+ * @param {BigNumber} g1 fee
+ * @param {BigNumber} g2 fee
+ * @param {number} desiredInterestRate desired interest rate for the pool, in decimal format (i.e.: .1 for 10%)
+ *
+ * @returns {BigNumber} // input into amo func
+ */
+export declare const changeRateNonTv: (sharesReserves: BigNumber, fyTokenReserves: BigNumber, timeTillMaturity: string, ts: BigNumber, g1: BigNumber, g2: BigNumber, desiredInterestRate: number) => BigNumber;
+/**
+ * Calculates the current market interest rate
+ *
+ * @param {BigNumber} sharesReserves shares reserves of the pool
+ * @param {BigNumber} fyTokenReserves virtual fyToken of the pool
+ * @param {BigNumber} ts years associated with time stretch
+ * @param {BigNumber | string} mu
+ *
+ * @returns {Decimal} // market rate in number format (i.e.: 10% is .10)
+ */
+export declare const calcInterestRate: (sharesReserves: BigNumber, fyTokenReserves: BigNumber, ts: BigNumber, mu?: BigNumber | string) => Decimal;
+/**
+ * @param ts time stretch associated with series (i.e.: 10 years)
+ * @returns {Decimal} num years in decimals
+ */
+export declare const getTimeStretchYears: (ts: BigNumber) => Decimal;

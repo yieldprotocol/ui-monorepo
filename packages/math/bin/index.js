@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.calculateMinCollateral = exports.calculateCollateralizationRatio = exports.calculateAPR = exports.calculateSlippage = exports.splitLiquidity = exports.fyTokenForMint = exports.invariant = exports.maxFyTokenOut = exports.maxFyTokenIn = exports.maxBaseOut = exports.maxBaseIn = exports.buyFYToken = exports.buyBase = exports.sellFYToken = exports.sellBase = exports.burnForBase = exports.mintWithBase = exports.burnFromStrategy = exports.burn = exports.mint = exports._getC = exports.divDecimal = exports.mulDecimal = exports.baseIdFromSeriesId = exports.toBn = exports.floorDecimal = exports.secondsToFrom = exports.bytesToBytes32 = exports.decimal18ToDecimalN = exports.decimalNToDecimal18 = exports.mu_DEFAULT = exports.c_DEFAULT = exports.g2_DEFAULT = exports.g1_DEFAULT = exports.k = exports.secondsInTenYears = exports.secondsInOneYear = exports.SECONDS_PER_YEAR = exports.WAD_BN = exports.WAD_RAY_BN = exports.MINUS_ONE_BN = exports.ONE_BN = exports.ZERO_BN = exports.RAY_DEC = exports.MAX_DEC = exports.TWO_DEC = exports.ONE_DEC = exports.ZERO_DEC = exports.MAX_128 = exports.MAX_256 = void 0;
-exports.calcAccruedDebt = exports.calcPoolRatios = exports.getPoolPercent = exports.strategyTokenValue = exports.newPoolState = exports.calcLiquidationPrice = exports.calculateBorrowingPower = void 0;
+exports.getTimeStretchYears = exports.calcInterestRate = exports.changeRateNonTv = exports.calcAccruedDebt = exports.calcPoolRatios = exports.getPoolPercent = exports.strategyTokenValue = exports.newPoolState = exports.calcLiquidationPrice = exports.calculateBorrowingPower = void 0;
 /* eslint-disable @typescript-eslint/naming-convention */
 const ethers_1 = require("ethers");
 const decimal_js_1 = require("decimal.js");
@@ -646,16 +646,11 @@ function invariant(sharesReserves, fyTokenReserves, totalSupply, timeTillMaturit
     const Za = c_.div(mu_).mul(mu_.mul(sharesReserves_).pow(a));
     const Ya = fyTokenReserves_.pow(a);
     const numerator = Za.add(Ya);
-    console.log('🦄 ~ file: index.ts ~ line 837 ~ numerator ', +numerator / 1e18);
     const denominator = c_.div(mu_).add(ONE);
-    console.log('🦄 ~ file: index.ts ~ line 839 ~ denominator', +denominator / 1e18);
     const topTerm = c_.div(mu_).mul(numerator.div(denominator).pow(invA));
-    console.log('🦄 ~ file: index.ts ~ line 840 ~ topTerm', +topTerm / 1e18);
     const res = topTerm.div(totalSupply_).mul(Math.pow(10, decimals));
-    console.log('🦄 ~ file: index.ts ~ line 842 ~ res', +res / 1e18);
     /* Handle precision variations */
     const safeRes = res.gt(MAX.sub(precisionFee)) ? MAX : res.add(precisionFee);
-    console.log('🦄 ~ file: index.ts ~ line 851 ~ decimal18ToDecimalN(toBn(safeRes), decimals)', (0, exports.decimal18ToDecimalN)((0, exports.toBn)(safeRes), decimals));
     /* convert to back to token native decimals, if required */
     return (0, exports.decimal18ToDecimalN)((0, exports.toBn)(safeRes), decimals);
 }
@@ -979,4 +974,71 @@ const calcAccruedDebt = (rate, rateAtMaturity, debt) => {
     return [(0, exports.toBn)(accruedDebt), (0, exports.toBn)(debtLessAccrued)];
 };
 exports.calcAccruedDebt = calcAccruedDebt;
+/**
+ * Calculates the amount of base needed to adjust a pool to a desired interest rate
+ *
+ * @param {BigNumber} sharesReserves shares reserves of the pool
+ * @param {BigNumber} fyTokenReserves virtual fyToken of the pool
+ * @param {number} timeTillMaturity fyToken of the pool
+ * @param {BigNumber} ts time stretch
+ * @param {BigNumber} g1 fee
+ * @param {BigNumber} g2 fee
+ * @param {number} desiredInterestRate desired interest rate for the pool, in decimal format (i.e.: .1 for 10%)
+ *
+ * @returns {BigNumber} // input into amo func
+ */
+const changeRateNonTv = (sharesReserves, fyTokenReserves, timeTillMaturity, ts, g1, g2, desiredInterestRate // in decimal format (i.e.: .1 is 10%)
+) => {
+    // format series data
+    const _sharesReserves = new decimal_js_1.Decimal(sharesReserves.toString());
+    const _fyTokenReserves = new decimal_js_1.Decimal(fyTokenReserves.toString());
+    // time stretch in years
+    const u = (0, exports.getTimeStretchYears)(ts);
+    // calculate current rate
+    const _currRate = (0, exports.calcInterestRate)(fyTokenReserves, sharesReserves, ts);
+    // format desired rate
+    const _desiredRate = new decimal_js_1.Decimal(desiredInterestRate.toString());
+    // assess which g to use: decrease rates means sellBase, so g1; otherwise, buyBase, so g2
+    const g = _desiredRate.gt(_currRate) ? g1 : g2;
+    const [a, invA] = _computeA(timeTillMaturity, ts, g);
+    const top = _sharesReserves.pow(a).add(_fyTokenReserves.pow(a));
+    const bottom = ONE.add(ONE.add(_desiredRate).pow(u.mul(a)));
+    const sharesReservesNew = top.div(bottom).pow(invA);
+    const sharesDiff = sharesReservesNew.sub(_sharesReserves);
+    const fyTokenReservesNew = sharesReservesNew.mul(ONE.add(_desiredRate).pow(u));
+    const fyTokenDiff = fyTokenReservesNew.sub(_fyTokenReserves);
+    // result is the input into the amo func, which is the shares diff if decreasing rates, and the fyToken diff if increasing rates
+    // sellBase (decrease rates {shares goes in}) or sellFyToken (increase rates {shares come out})
+    return _desiredRate.gt(_currRate) ? (0, exports.toBn)(fyTokenDiff.abs()) : (0, exports.toBn)(sharesDiff.abs());
+};
+exports.changeRateNonTv = changeRateNonTv;
+/**
+ * Calculates the current market interest rate
+ *
+ * @param {BigNumber} sharesReserves shares reserves of the pool
+ * @param {BigNumber} fyTokenReserves virtual fyToken of the pool
+ * @param {BigNumber} ts years associated with time stretch
+ * @param {BigNumber | string} mu
+ *
+ * @returns {Decimal} // market rate in number format (i.e.: 10% is .10)
+ */
+const calcInterestRate = (sharesReserves, fyTokenReserves, ts, mu = exports.mu_DEFAULT) => {
+    const _sharesReserves = new decimal_js_1.Decimal(sharesReserves.toString());
+    const _fyTokenReserves = new decimal_js_1.Decimal(fyTokenReserves.toString());
+    const _mu = _getMu(mu);
+    const timeStretchYears = (0, exports.getTimeStretchYears)(ts);
+    return _fyTokenReserves.div(_sharesReserves.mul(_mu)).pow(ONE.div(timeStretchYears)).sub(ONE);
+};
+exports.calcInterestRate = calcInterestRate;
+/**
+ * @param ts time stretch associated with series (i.e.: 10 years)
+ * @returns {Decimal} num years in decimals
+ */
+const getTimeStretchYears = (ts) => {
+    const _ts = new decimal_js_1.Decimal(ts.toString()).div(Math.pow(2, 64));
+    const _secondsInOneYear = new decimal_js_1.Decimal(exports.secondsInOneYear.toString());
+    const invTs = ONE.div(_ts);
+    return invTs.div(_secondsInOneYear);
+};
+exports.getTimeStretchYears = getTimeStretchYears;
 //# sourceMappingURL=index.js.map
