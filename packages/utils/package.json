@@ -1,6 +1,6 @@
 {
   "name": "@yield-protocol/ui-utils",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "./bin/index.js",
   "repository": {
     "url": "git+https://github.com/yieldprotocol/ui-monorepo.git",
@@ -11,7 +11,6 @@
   },
   "description": "",
   "author": "Yield Inc.",
-
   "scripts": {
     "compile": "tsc -b --force",
     "docs": "typedoc"
@@ -22,7 +21,6 @@
       "react-app/jest"
     ]
   },
-
   "dependencies": {
     "date-fns": "^2.24.0",
     "eslint-config-next": "^12.1.3",
@@ -31,7 +29,6 @@
     "rxjs": "^7.5.5",
     "unique-names-generator": "^4.6.0"
   },
-  
   "devDependencies": {
     "@babel/core": "^7.18.2",
     "@babel/preset-env": "^7.18.2",
