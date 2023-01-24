@@ -606,13 +606,13 @@ export function buyFYToken(
  *
  * @returns { BigNumber } max amount of shares that can be bought from the pool
  *
- * y = fyToken
- * z = vyToken
- * x = Δy
+ * y = maxSharesIn
+ * Y = fyTokenReserves (virtual)
+ * Z = sharesReserves
  *
- *      1/μ * ( (               sum                 )^(   invA    ) - z
- *      1/μ * ( ( (  cua   ) * Za  + Ya ) / (c/μ + 1) )^(   invA    ) - z
- * Δz = 1/μ * ( ( ( cμ^a * z^a + μy^a) / (c + μ) )^(1 / (1 - t)) - z
+ * y = 1/μ ( (       numerator           ) / (  denominator  ) )^invA  - Z
+ * y = 1/μ ( ( (    Za      ) + (  Ya  ) ) / (  denominator  ) )^invA  - Z
+ * y = 1/μ ( ( c/μ * (μZ)^a   +    Y^a   ) / (     c/u + 1   ) )^(1/a) - Z
  *
  */
 export function maxBaseIn(
@@ -636,14 +636,12 @@ export function maxBaseIn(
   const c_ = _getC(c);
   const mu_ = _getMu(mu);
 
-  const cua = c_.mul(mu_.pow(a));
-  const Za = sharesReserves_.pow(a);
-  const Ya = mu_.mul(fyTokenReserves_.pow(a));
-  const top = cua.mul(Za).add(Ya);
-  const bottom = c_.add(mu_);
-  const sum = top.div(bottom);
+  const Za = c_.div(mu_).mul(mu_.mul(sharesReserves_).pow(a));
+  const Ya = fyTokenReserves_.pow(a);
+  const numerator = Za.add(Ya);
+  const denominator = c_.div(mu_).add(ONE);
 
-  const res = ONE.div(mu_).mul(sum.pow(invA)).sub(sharesReserves_);
+  const res = ONE.div(mu_).mul(numerator.div(denominator).pow(invA)).sub(sharesReserves_);
 
   /* Handle precision variations */
   const safeRes = res.gt(MAX.sub(precisionFee)) ? MAX : res.add(precisionFee);
@@ -727,11 +725,10 @@ export function maxFyTokenIn(
  * y = maxFyTokenOut
  * Y = fyTokenReserves (virtual)
  * Z = sharesReserves
- * cmu = cμ^a
  *
- *         ( (       sum                 ) / (  denominator  ) )^invA
- *         ( ( (    Za      ) + (  Ya  ) ) / (  denominator  ) )^invA
- * y = Y - ( ( ( cμ^a * Z^a ) + ( μY^a ) ) / (    c + μ    ) )^(1/a)
+ * y = Y - ( (       numerator           ) / (  denominator  ) )^invA
+ * y = Y - ( ( (    Za      ) + (  Ya  ) ) / (  denominator  ) )^invA
+ * y = Y - ( (   c/μ * (μZ)^a +    Y^a   ) / (    c/μ + 1    ) )^(1/a)
  *
  * @param { BigNumber | string } sharesReserves
  * @param { BigNumber | string } fyTokenReserves
@@ -766,14 +763,12 @@ export function maxFyTokenOut(
 
   const [a, invA] = _computeA(timeTillMaturity, ts, g1);
 
-  const cmu = c_.mul(mu_.pow(a));
+  const Za = c_.div(mu_).mul(mu_.mul(sharesReserves_).pow(a));
+  const Ya = fyTokenReserves_.pow(a);
+  const numerator = Za.add(Ya);
+  const denominator = c_.div(mu_).add(ONE);
 
-  const Za = cmu.mul(sharesReserves_.pow(a));
-  const Ya = mu_.mul(fyTokenReserves_.pow(a));
-  const sum = Za.add(Ya);
-  const denominator = c_.add(mu_);
-
-  const res = fyTokenReserves_.sub(sum.div(denominator).pow(invA));
+  const res = fyTokenReserves_.sub(numerator.div(denominator).pow(invA));
 
   /* Handle precision variations */
   const safeRes = res.gt(MAX.sub(precisionFee)) ? MAX : res.add(precisionFee);
