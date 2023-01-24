@@ -19,7 +19,7 @@ export interface StrategyInfo {
 }
 
 // map each chain id to its corresponding strategies' data
-const STRATEGIES = new Map<number, StrategyInfo[]>();
+export const STRATEGIES = new Map<number, StrategyInfo[]>();
 
 STRATEGIES.set(1, [
   /* V1 strategies */
@@ -236,5 +236,3 @@ STRATEGIES.set(42161, [
     version: '1',
   },
 ]);
-
-export default STRATEGIES;

@@ -2,7 +2,7 @@ import { BaseProvider } from '@ethersproject/providers';
 import { Pool__factory, FYToken__factory, Cauldron__factory } from '@yield-protocol/ui-contracts';
 // import { Cauldron__factory, FYToken__factory, Pool__factory } from '../contracts';
 
-import SERIES, { ISeriesStatic } from './series';
+import { SERIES, ISeriesStatic } from './series';
 
 // TODO validate series
 export const validateSeries = async (provider: BaseProvider, cauldronAddress: string) => {
