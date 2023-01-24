@@ -2,8 +2,20 @@ import * as assetConstants from './config/assetsConfig';
 import { IYieldFunctions } from './types';
 import * as yieldObservables from './observables';
 import * as viewObservables from './viewObservables';
+/**
+ * On app start (and on providerø, chainId$ or appConfig$ observed changes ),
+ * appConfig gathers all the required information from env etc.
+ * sets things up, and then the stream finishes indicating that everything is ready to go.
+ */
+declare const initProtocol: import("rxjs").Subscription;
 declare const viewFunctions: any;
 declare const yieldFunctions: IYieldFunctions;
+declare const yieldConfig: {
+    series: Map<number, Map<string, import("./config/new/series").ISeriesStatic>>;
+    assets: Map<number, Map<string, import("./config/new/assets").AssetStaticInfo>>;
+    strategies: Map<number, import("./config/new/strategies").StrategyInfo[]>;
+    oracles: Map<number, Map<string, Map<string, string>>>;
+};
 declare const yieldConstants: {
     UNKNOWN: "0x000000000000";
     WETH: "0x303000000000";
@@ -59,4 +71,4 @@ declare const yieldConstants: {
     ARBITRUM: "ARBITRUM";
     OPTIMISM: "OPTIMISM";
 };
-export { yieldObservables, yieldFunctions, yieldConstants, viewObservables, viewFunctions };
+export { initProtocol, yieldObservables, yieldFunctions, yieldConstants, viewObservables, viewFunctions, yieldConfig };

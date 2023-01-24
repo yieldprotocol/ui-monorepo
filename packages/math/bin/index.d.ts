@@ -543,3 +543,90 @@ export declare const calcInterestRate: (sharesReserves: BigNumber, fyTokenReserv
  * @returns {Decimal} num years in decimals
  */
 export declare const getTimeStretchYears: (ts: BigNumber) => Decimal;
+/**
+ * Calculates the amount of base from shares
+ * @param shares amount of shares
+ * @param currentSharePrice current share price in base terms
+ * @param decimals
+ * @returns {BigNumber} base amount of shares
+ */
+export declare const getBaseFromShares: (shares: BigNumber, currentSharePrice: BigNumber, decimals: number) => BigNumber;
+/**
+ * Calculates the amount of shares from base
+ * @param base amount of base
+ * @param currentSharePrice current share price in base terms
+ * @param decimals
+ * @returns {BigNumber} shares amount of base
+ *
+ */
+export declare const getSharesFromBase: (base: BigNumber, currentSharePrice: BigNumber, decimals: number) => BigNumber;
+/**
+ * Calculates the amount of base from fyToken
+ * @param input amount of fyToken used as input to estimate the fyToken price in base terms; in decimals format
+ * @param sharesReserves shares reserves of the pool
+ * @param fyTokenReserves fyToken reserves of the pool
+ * @param timeTillMaturity time till maturity of the pool
+ * @param ts time stretch
+ * @param g2 fee
+ * @param decimals
+ * @param c
+ * @param mu
+ * @returns {number} fyToken price in base terms
+ *
+ */
+export declare const getFyTokenPrice: (input: BigNumber, sharesReserves: BigNumber, fyTokenReserves: BigNumber, timeTillMaturity: BigNumber | string, ts: BigNumber | string, g2: BigNumber | string, decimals: number, c?: BigNumber | string, mu?: BigNumber | string) => number;
+/**
+ * Calculate the total base value of the pool
+ * total = shares value in base + fyToken value in base
+ *
+ * @param input amount of fyToken used as input to estimate the fyToken price in base terms; in decimals format
+ * @param sharesReserves shares reserves of the pool
+ * @param fyTokenReserves fyToken reserves of the pool
+ * @param totalSupply total supply of the pool
+ * @param timeTillMaturity time till maturity of the pool
+ * @param ts time stretch
+ * @param g2 fee
+ * @param decimals
+ * @param c
+ * @param mu
+ * @returns {number} total base value of pool in decimals terms
+ */
+export declare const getPoolBaseValue: (input: BigNumber, sharesReserves: BigNumber, fyTokenReserves: BigNumber, totalSupply: BigNumber, timeTillMaturity: string, ts: BigNumber | string, g2: BigNumber | string, decimals: number, currentSharePrice: BigNumber, c?: BigNumber | string, mu?: BigNumber | string) => number;
+/**
+ * Calculate (estimate) the apy associated with how much fees have accrued to LP's using invariant func
+ * @param currentPool pool data now
+ * @param initPool pool data at start of pool
+ * @returns {number}
+ */
+export declare const getFeesAPY: (currentPool: {
+    sharesReserves: BigNumber;
+    fyTokenReserves: BigNumber;
+    totalSupply: BigNumber;
+    timeTillMaturity: string;
+    ts: BigNumber | string;
+    g2: BigNumber | string;
+    decimals: number;
+    c: BigNumber | undefined;
+    mu: BigNumber | undefined;
+}, initPool: {
+    sharesReserves: BigNumber;
+    fyTokenReserves: BigNumber;
+    totalSupply: BigNumber;
+    timeTillMaturity: string;
+    ts: BigNumber | string;
+    g2: BigNumber | string;
+    decimals: number;
+    c: BigNumber | undefined;
+    mu: BigNumber | undefined;
+}) => number;
+/**
+ * Calculate (estimate) the apy associated with how much interest would be captured by LP position using market rates and fyToken proportion of the pool
+ *
+ * @returns {number} estimated fyToken interest from LP position
+ */
+export declare const getFyTokenAPY: (sharesReserves: BigNumber, fyTokenReserves: BigNumber, totalSupply: BigNumber, input: BigNumber, timeTillMaturity: string, ts: BigNumber, g2: BigNumber, decimals: number, currentSharePrice: BigNumber, c?: BigNumber | string, mu?: BigNumber | string) => number;
+/**
+ * Calculates estimated apy from shares portion of pool
+ * @returns {number} shares apy of pool
+ */
+export declare const getSharesAPY: (sharesReserves: BigNumber, fyTokenReserves: BigNumber, totalSupply: BigNumber, timeTillMaturity: string, ts: BigNumber, g2: BigNumber, decimals: number, currentSharePrice: BigNumber, currentPoolAPY: number, c?: BigNumber | string, mu?: BigNumber | string) => number;

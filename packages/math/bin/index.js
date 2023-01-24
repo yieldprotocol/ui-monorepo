@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.calculateMinCollateral = exports.calculateCollateralizationRatio = exports.calculateAPR = exports.calculateSlippage = exports.splitLiquidity = exports.fyTokenForMint = exports.invariant = exports.maxFyTokenOut = exports.maxFyTokenIn = exports.maxBaseOut = exports.maxBaseIn = exports.buyFYToken = exports.buyBase = exports.sellFYToken = exports.sellBase = exports.burnForBase = exports.mintWithBase = exports.burnFromStrategy = exports.burn = exports.mint = exports._getC = exports.divDecimal = exports.mulDecimal = exports.baseIdFromSeriesId = exports.toBn = exports.floorDecimal = exports.secondsToFrom = exports.bytesToBytes32 = exports.decimal18ToDecimalN = exports.decimalNToDecimal18 = exports.mu_DEFAULT = exports.c_DEFAULT = exports.g2_DEFAULT = exports.g1_DEFAULT = exports.k = exports.secondsInTenYears = exports.secondsInOneYear = exports.SECONDS_PER_YEAR = exports.WAD_BN = exports.WAD_RAY_BN = exports.MINUS_ONE_BN = exports.ONE_BN = exports.ZERO_BN = exports.RAY_DEC = exports.MAX_DEC = exports.TWO_DEC = exports.ONE_DEC = exports.ZERO_DEC = exports.MAX_128 = exports.MAX_256 = void 0;
-exports.getTimeStretchYears = exports.calcInterestRate = exports.changeRateNonTv = exports.calcAccruedDebt = exports.calcPoolRatios = exports.getPoolPercent = exports.strategyTokenValue = exports.newPoolState = exports.calcLiquidationPrice = exports.calculateBorrowingPower = void 0;
+exports.getSharesAPY = exports.getFyTokenAPY = exports.getFeesAPY = exports.getPoolBaseValue = exports.getFyTokenPrice = exports.getSharesFromBase = exports.getBaseFromShares = exports.getTimeStretchYears = exports.calcInterestRate = exports.changeRateNonTv = exports.calcAccruedDebt = exports.calcPoolRatios = exports.getPoolPercent = exports.strategyTokenValue = exports.newPoolState = exports.calcLiquidationPrice = exports.calculateBorrowingPower = void 0;
 /* eslint-disable @typescript-eslint/naming-convention */
 const ethers_1 = require("ethers");
 const decimal_js_1 = require("decimal.js");
@@ -1041,4 +1041,114 @@ const getTimeStretchYears = (ts) => {
     return invTs.div(_secondsInOneYear);
 };
 exports.getTimeStretchYears = getTimeStretchYears;
+/**
+ * Calculates the amount of base from shares
+ * @param shares amount of shares
+ * @param currentSharePrice current share price in base terms
+ * @param decimals
+ * @returns {BigNumber} base amount of shares
+ */
+const getBaseFromShares = (shares, currentSharePrice, decimals) => (0, exports.toBn)(new decimal_js_1.Decimal(shares.toString()).mul(new decimal_js_1.Decimal(currentSharePrice.toString())).div(Math.pow(10, decimals)));
+exports.getBaseFromShares = getBaseFromShares;
+/**
+ * Calculates the amount of shares from base
+ * @param base amount of base
+ * @param currentSharePrice current share price in base terms
+ * @param decimals
+ * @returns {BigNumber} shares amount of base
+ *
+ */
+const getSharesFromBase = (base, currentSharePrice, decimals) => (0, exports.toBn)(new decimal_js_1.Decimal(base.toString()).mul(Math.pow(10, decimals)).div(new decimal_js_1.Decimal(currentSharePrice.toString())));
+exports.getSharesFromBase = getSharesFromBase;
+/**
+ * Calculates the amount of base from fyToken
+ * @param input amount of fyToken used as input to estimate the fyToken price in base terms; in decimals format
+ * @param sharesReserves shares reserves of the pool
+ * @param fyTokenReserves fyToken reserves of the pool
+ * @param timeTillMaturity time till maturity of the pool
+ * @param ts time stretch
+ * @param g2 fee
+ * @param decimals
+ * @param c
+ * @param mu
+ * @returns {number} fyToken price in base terms
+ *
+ */
+const getFyTokenPrice = (input, sharesReserves, fyTokenReserves, timeTillMaturity, ts, g2, decimals, c = exports.c_DEFAULT, mu = exports.mu_DEFAULT) => {
+    const sharesOut = sellFYToken(sharesReserves, fyTokenReserves, input, timeTillMaturity, ts, g2, decimals, c, mu);
+    const baseValueOfInput = (0, exports.getBaseFromShares)(sharesOut, fyTokenReserves, decimals);
+    return +baseValueOfInput / +input;
+};
+exports.getFyTokenPrice = getFyTokenPrice;
+/**
+ * Calculate the total base value of the pool
+ * total = shares value in base + fyToken value in base
+ *
+ * @param input amount of fyToken used as input to estimate the fyToken price in base terms; in decimals format
+ * @param sharesReserves shares reserves of the pool
+ * @param fyTokenReserves fyToken reserves of the pool
+ * @param totalSupply total supply of the pool
+ * @param timeTillMaturity time till maturity of the pool
+ * @param ts time stretch
+ * @param g2 fee
+ * @param decimals
+ * @param c
+ * @param mu
+ * @returns {number} total base value of pool in decimals terms
+ */
+const getPoolBaseValue = (input, sharesReserves, fyTokenReserves, totalSupply, timeTillMaturity, ts, g2, decimals, currentSharePrice, c = exports.c_DEFAULT, mu = exports.mu_DEFAULT) => {
+    const fyTokenPrice = (0, exports.getFyTokenPrice)(input, sharesReserves, fyTokenReserves, timeTillMaturity, ts, g2, decimals, c, mu); // fyToken price in base terms
+    const sharesBaseVal = +(0, exports.getBaseFromShares)(sharesReserves, currentSharePrice, decimals);
+    const realReserves = +fyTokenReserves - +totalSupply;
+    const fyTokenBaseVal = realReserves * fyTokenPrice;
+    return sharesBaseVal + fyTokenBaseVal;
+};
+exports.getPoolBaseValue = getPoolBaseValue;
+/**
+ * Calculate (estimate) the apy associated with how much fees have accrued to LP's using invariant func
+ * @param currentPool pool data now
+ * @param initPool pool data at start of pool
+ * @returns {number}
+ */
+const getFeesAPY = (currentPool, initPool) => {
+    // destructure current pool
+    const { sharesReserves: currentSharesReserves, fyTokenReserves: currentFYTokenReserves, totalSupply: currentTotalSupply, timeTillMaturity: currentTimeTillMaturity, ts: currentTs, g2: currentG2, decimals: currentDecimals, c: currentC, mu: currentMu, } = currentPool;
+    // destruct init pool
+    const { sharesReserves: initSharesReserves, fyTokenReserves: initFYTokenReserves, totalSupply: initTotalSupply, timeTillMaturity: initTimeTillMaturity, ts: initTs, g2: initG2, decimals: initDecimals, c: initC, mu: initMu, } = initPool;
+    // calculate current invariant
+    const currentInvariant = invariant(currentSharesReserves, currentFYTokenReserves, currentTotalSupply, currentTimeTillMaturity, currentTs, currentG2, currentDecimals, currentC, currentMu);
+    // calculate initial invariant
+    const initInvariant = invariant(initSharesReserves, initFYTokenReserves, initTotalSupply, initTimeTillMaturity, initTs, initG2, initDecimals, initC, initMu);
+    // estimate apy
+    const res = (0, exports.calculateAPR)(initInvariant, currentInvariant, +initTimeTillMaturity, +currentTimeTillMaturity); // currentTimeTillMaturity - initTimeTillMaturity = time elapsed
+    return !isNaN(+res) ? +res : 0;
+};
+exports.getFeesAPY = getFeesAPY;
+/**
+ * Calculate (estimate) the apy associated with how much interest would be captured by LP position using market rates and fyToken proportion of the pool
+ *
+ * @returns {number} estimated fyToken interest from LP position
+ */
+const getFyTokenAPY = (sharesReserves, fyTokenReserves, totalSupply, input, timeTillMaturity, ts, g2, decimals, currentSharePrice, c = exports.c_DEFAULT, mu = exports.mu_DEFAULT) => {
+    const marketInterestRate = (0, exports.calcInterestRate)(sharesReserves, fyTokenReserves, ts, mu).mul(100); // interest rate is formatted in decimal (.1) so multiply by 100 to get percent
+    const fyTokenPrice = (0, exports.getFyTokenPrice)(input, sharesReserves, fyTokenReserves, timeTillMaturity, ts, g2, decimals, c, mu);
+    const poolBaseValue = (0, exports.getPoolBaseValue)(input, sharesReserves, fyTokenReserves, totalSupply, timeTillMaturity, ts, g2, decimals, currentSharePrice, c, mu);
+    // real reserves * fyTokenPrice in base terms / poolBaseValue = fyToken proportion of pool
+    const fyTokenValRatio = ((+fyTokenReserves - +totalSupply) * fyTokenPrice) / poolBaseValue;
+    // fyTokenValRatio * marketInterestRate = estimated fyToken interest from LP position
+    return +marketInterestRate * fyTokenValRatio;
+};
+exports.getFyTokenAPY = getFyTokenAPY;
+/**
+ * Calculates estimated apy from shares portion of pool
+ * @returns {number} shares apy of pool
+ */
+const getSharesAPY = (sharesReserves, fyTokenReserves, totalSupply, timeTillMaturity, ts, g2, decimals, currentSharePrice, currentPoolAPY, c = exports.c_DEFAULT, mu = exports.mu_DEFAULT) => {
+    const input = (0, exports.toBn)(new decimal_js_1.Decimal(Math.pow(10, decimals)));
+    const poolBaseValue = (0, exports.getPoolBaseValue)(input, sharesReserves, fyTokenReserves, totalSupply, timeTillMaturity, ts, g2, decimals, currentSharePrice, c, mu);
+    const sharesBaseVal = +(0, exports.getBaseFromShares)(sharesReserves, currentSharePrice, decimals);
+    const sharesValRatio = sharesBaseVal / poolBaseValue; // shares proportion of pool
+    return currentPoolAPY * sharesValRatio;
+};
+exports.getSharesAPY = getSharesAPY;
 //# sourceMappingURL=index.js.map

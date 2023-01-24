@@ -29,17 +29,24 @@ import {
 
 import { combineLatest } from 'rxjs';
 import { buildProtocol } from './buildProtocol';
-import { IYieldFunctions } from './types';
+import { IYieldConfig, IYieldFunctions } from './types';
 
 import * as yieldObservables from './observables';
 import * as viewObservables from './viewObservables';
+
+
+import ASSETS from './config/new/assets';
+import SERIES from './config/new/series';
+import ORACLES from './config/new/oracles';
+import STRATEGIES from './config/new/strategies';
+
 
 /**
  * On app start (and on providerø, chainId$ or appConfig$ observed changes ),
  * appConfig gathers all the required information from env etc.
  * sets things up, and then the stream finishes indicating that everything is ready to go.
  */
-combineLatest([yieldObservables.providerø, yieldObservables.appConfigø, yieldObservables.chainIdø]).subscribe(
+const initProtocol = combineLatest([yieldObservables.providerø, yieldObservables.appConfigø, yieldObservables.chainIdø]).subscribe(
   async ([provider, config, chainId]) => {
     console.log( provider )
     updateProtocol( await buildProtocol(provider, chainId, config) );
@@ -75,7 +82,14 @@ const yieldFunctions: IYieldFunctions = {
   selectStrategy,
 };
 
+const yieldConfig = {
+  series: SERIES,
+  assets: ASSETS,
+  strategies: STRATEGIES,
+  oracles: ORACLES,
+}
+
 /* Expose constants that might be useful */
 const yieldConstants = { ...constants, ...assetConstants };
 
-export { yieldObservables, yieldFunctions, yieldConstants, viewObservables, viewFunctions };
+export { initProtocol, yieldObservables, yieldFunctions, yieldConstants, viewObservables, viewFunctions, yieldConfig  };
