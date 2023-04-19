@@ -1,6 +1,6 @@
 {
   "name": "@yield-protocol/ui-multicall",
-  "version": "1.0.4",
+  "version": "1.0.9",
   "main": "./bin/index.js",
   "repository": {
     "url": "git+https://github.com/yieldprotocol/ui-monorepo.git",
@@ -15,7 +15,10 @@
     "compile": "typechain --target=ethers-v5 './src/contracts/abis/*.json' --out-dir './src/contracts/' && tsc -b --force"
   },
   "dependencies": {
+    "@ethersproject/abi": "^5.7.0",
+    "@ethersproject/providers": "^5.7.2",
     "dataloader": "^2.1.0",
+    "ethers": "5.7.0",
     "typechain": "^8.1.0"
   },
   "peerDependencies": {

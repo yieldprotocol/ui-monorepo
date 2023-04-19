@@ -80,14 +80,14 @@ export class EthersMulticall {
   wrap<T extends TargetContract>(contract: T) {
     const abi = contract.interface.fragments;
     const multicallContract = new MulticallContract(
-      contract.address,
+      contract.address as unknown as string,
       abi as any
     );
 
     const funcs = abi.reduce((memo, frag) => {
       if (frag.type !== "function") return memo;
 
-      const funcFrag = frag as FunctionFragment;
+      const funcFrag = frag as unknown as FunctionFragment;
       if (!["pure", "view"].includes(funcFrag.stateMutability)) return memo;
 
       // Overwrite the function with a dataloader batched call
