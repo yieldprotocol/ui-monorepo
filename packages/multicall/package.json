@@ -15,7 +15,10 @@
     "compile": "typechain --target=ethers-v5 './src/contracts/abis/*.json' --out-dir './src/contracts/' && tsc -b --force"
   },
   "dependencies": {
+    "@ethersproject/abi": "^5.7.0",
+    "@ethersproject/providers": "^5.7.2",
     "dataloader": "^2.1.0",
+    "ethers": "^6.3.0",
     "typechain": "^8.1.0"
   },
   "peerDependencies": {
