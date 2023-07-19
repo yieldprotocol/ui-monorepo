@@ -210,6 +210,9 @@ function burn(sharesReserves, fyTokenRealReserves, totalSupply, lpTokens) {
     const Y = new decimal_js_1.Decimal(fyTokenRealReserves.toString());
     const S = new decimal_js_1.Decimal(totalSupply.toString());
     const x = new decimal_js_1.Decimal(lpTokens.toString());
+    if (S.isZero()) {
+        return [(0, exports.toBn)(ZERO), (0, exports.toBn)(ZERO)];
+    }
     const z = x.mul(Z).div(S);
     const y = x.mul(Y).div(S);
     return [(0, exports.toBn)(z), (0, exports.toBn)(y)];

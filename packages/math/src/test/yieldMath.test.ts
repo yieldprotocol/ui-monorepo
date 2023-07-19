@@ -19,6 +19,7 @@ import {
   _getC,
   maxFyTokenOut,
   invariant,
+  burn
 } from '../index';
 
 chai.use(solidity);
@@ -779,4 +780,20 @@ describe('Shares YieldMath', () => {
       expect(sellFYTokenResult).to.be.closeTo(parseUnits('3419048', decimals), comparePrecision); // 3,419,048
     });
   });
+  describe('burn with a totalSupply of zero', () => {
+
+    it('should return [0, 0] when total supply is zero', () => {
+      const ZERO_BN = BigNumber.from('0');
+      const lpTokens = BigNumber.from('4000');
+      
+      sharesReserves = BigNumber.from('1000');
+      fyTokenReserves = BigNumber.from('2000');
+      totalSupply = ZERO_BN;
+      
+      const [z, y] = burn(sharesReserves, fyTokenReserves, totalSupply, lpTokens);
+      
+      expect(z.toString()).to.equal(ZERO_BN);
+      expect(y.toString()).to.equal(ZERO_BN);
+  });
+  })
 });
