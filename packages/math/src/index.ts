@@ -255,6 +255,9 @@ export function burn(
   const Y = new Decimal(fyTokenRealReserves.toString());
   const S = new Decimal(totalSupply.toString());
   const x = new Decimal(lpTokens.toString());
+  if (S.isZero()) {
+        return [toBn(ZERO), toBn(ZERO)];
+    }
   const z = x.mul(Z).div(S);
   const y = x.mul(Y).div(S);
   return [toBn(z), toBn(y)];
