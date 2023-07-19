@@ -395,5 +395,20 @@ describe('Shares YieldMath', () => {
             (0, chai_1.expect)(sellFYTokenResult).to.be.closeTo(parseUnits('3419048', decimals), comparePrecision); // 3,419,048
         });
     });
+    describe('burn function tests', () => {
+        it('should return [0, 0] when total supply is zero', () => {
+            const sharesReserves = ethers_1.BigNumber.from('1000');
+            const fyTokenRealReserves = ethers_1.BigNumber.from('2000');
+            const totalSupply = ethers_1.BigNumber.from('0');
+            const lpTokens = ethers_1.BigNumber.from('4000');
+            
+            const [z, y] = index_1.burn(sharesReserves, fyTokenRealReserves, totalSupply, lpTokens);
+            
+            chai_1.expect(z.toString()).to.equal(new decimal_js_1.Decimal(0).toString());
+            chai_1.expect(y.toString()).to.equal(new decimal_js_1.Decimal(0).toString());
+        });
+    
+       
+    });
 });
 //# sourceMappingURL=yieldMath.test.js.map
