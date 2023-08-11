@@ -39,7 +39,7 @@ const NOTIONAL_MULTI_ORACLE = 'NotionalMultiOracle';
 const ACCUMULATOR_ORACLE = 'AccumulatorOracle';
 
 // map chain id to oracle info
-const ORACLES = new Map<number, Map<string, Map<string, string>>>();
+export const ORACLES = new Map<number, Map<string, Map<string, string>>>();
 
 // map asset (quote) and other asset (base) to a specific oracle based on where there is relevant price info for the pair
 const CHAIN_ID_1_ASSET_ORACLE_INFO = new Map<string, Map<string, string>>();
@@ -213,5 +213,3 @@ ORACLES.set(5, CHAIN_ID_1_ASSET_ORACLE_INFO);
 ORACLES.set(42, CHAIN_ID_1_ASSET_ORACLE_INFO);
 ORACLES.set(42161, CHAIN_ID_421611_ASSET_ORACLE_INFO);
 ORACLES.set(421611, CHAIN_ID_421611_ASSET_ORACLE_INFO);
-
-export default ORACLES;

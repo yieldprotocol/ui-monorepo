@@ -1,5 +1,3 @@
-
-
 const commonProperties = { version: '1', poolVersion: '1', decimals: 18 }
 
 export interface ISeriesStatic {
@@ -23,39 +21,37 @@ export interface ISeriesStatic {
   g2: string;
 }
 
-const USDC_2112 = '0x303230340000';
-const USDC_2203 = '0x303230350000';
-const USDC_2206 = '0x303230360000';
-const USDC_2209 = '0x303230370000';
-const USDC_2212 = '0x303230380000';
-const USDC_2303 = '0x303230390000';
+export const USDC_2112 = '0x303230340000';
+export const USDC_2203 = '0x303230350000';
+export const USDC_2206 = '0x303230360000';
+export const USDC_2209 = '0x303230370000';
+export const USDC_2212 = '0x303230380000';
+export const USDC_2303 = '0x303230390000';
 
-const DAI_2112 = '0x303130340000';
-const DAI_2203 = '0x303130350000';
-const DAI_2206 = '0x303130360000';
-const DAI_2209 = '0x303130370000';
-const DAI_2212 = '0x303130380000';
-const DAI_2303 = '0x303130390000';
+export const DAI_2112 = '0x303130340000';
+export const DAI_2203 = '0x303130350000';
+export const DAI_2206 = '0x303130360000';
+export const DAI_2209 = '0x303130370000';
+export const DAI_2212 = '0x303130380000';
+export const DAI_2303 = '0x303130390000';
 
-const WETH_2206 = '0x303030360000';
-const WETH_2209 = '0x303030370000';
-const WETH_2212 = '0x303030380000';
-const WETH_2303 = '0x303030390000';
+export const WETH_2206 = '0x303030360000';
+export const WETH_2209 = '0x303030370000';
+export const WETH_2212 = '0x303030380000';
+export const WETH_2303 = '0x303030390000';
 
-const FRAX_2206 = '0x303330360000';
-const FRAX_2209 = '0x303330370000';
-const FRAX_2212 = '0x313830380000';
-const FRAX_2303 = '0x313830390000';
+export const FRAX_2206 = '0x303330360000';
+export const FRAX_2209 = '0x303330370000';
+export const FRAX_2212 = '0x313830380000';
+export const FRAX_2303 = '0x313830390000';
 
 // 2306 - New Naming Structure
-const USDC_2306 = '0x0032ff00028b';
-const DAI_2306 = '0x0031ff00028b';
-const WETH_2306 = '0x0030ff00028b';
-const FRAX_2306 = '0x0138ff00028b';
+export const USDC_2306 = '0x0032ff00028b';
+export const DAI_2306 = '0x0031ff00028b';
+export const WETH_2306 = '0x0030ff00028b';
+export const FRAX_2306 = '0x0138ff00028b';
 
-
-
-const SERIES = new Map<number, Map<string, ISeriesStatic>>();
+export const SERIES = new Map<number, Map<string, ISeriesStatic>>();
 
 SERIES.set(
   1,
@@ -928,5 +924,3 @@ SERIES.set(
     ],
   ])
 );
-
-export default SERIES;

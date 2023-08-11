@@ -525,9 +525,7 @@ ASSETS_42161.set(WETH, {
 });
 
 
-const ASSETS = new Map( [
+export const ASSETS = new Map( [
   [1, ASSETS_1],
   [42161, ASSETS_42161],
 ])
-
-export default ASSETS;
